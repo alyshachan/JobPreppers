@@ -1,3 +1,109 @@
+header {
+  display: flex;
+}
+
+body {
+  background-color: #e7f2ec;
+  justify-content: center;
+}
+
+h1 {
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+hr {
+  flex-grow: 1;
+  height: 1px;
+  margin-left: 10px;
+}
+
+.main-panel {
+  background-color: white;
+  border-radius: 15px;
+  width: 1300px;
+  display: flex;
+  gap: 50px;
+  box-sizing: border-box;
+  padding: 20px 50px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  width: 800px;
+}
+
+.main-personal {
+  text-align: center;
+  width: 300px;
+  /* background-color: aquamarine; */
+}
+
+.main-professional {
+  /* background-color: brown; */
+}
+
+.name {
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 80px;
+  margin-bottom: 0px;
+  margin-top: 100px;
+}
+
+.education {
+  display: flex;
+  align-items: center;
+}
+
+.skills {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 15px;
+}
+
+.education-content {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.section-element-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.section-element-subtitle {
+  color: #757575;
+  margin-top: 0px;
+}
+
+.skill-box {
+  background-color: white;
+  border-radius: 15px;
+  width: 90%;
+  padding: 5px 20px;
+  box-sizing: border-box;
+  box-shadow: 2px 2px 25px -2px rgba(0, 0, 0, 0.25); */
+}
+
+.rect {
+  background-color: red;
+  width: 50px;
+  height: 50px;
+}
+
+.circle {
+  background-color: red;
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: 90px;
+  left: 240px;
+}
+/* 
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -39,4 +145,4 @@
 
 .read-the-docs {
   color: #888;
-}
+} */

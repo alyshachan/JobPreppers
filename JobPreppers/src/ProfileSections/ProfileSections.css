@@ -1,0 +1,68 @@
+header {
+    display: flex;
+  }
+  
+  body {
+    background-color: #e7f2ec;
+    justify-content: center;
+  }
+  
+  h1 {
+    font-size: xx-large;
+    font-weight: bold;
+  }
+  
+  hr {
+    border: none;
+    border-top: 1px solid #757575;
+    margin-left: 10px;
+    width: 100%;
+  }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    width: 800px;
+    margin: -10px;
+  }
+
+  .section-content{
+    padding-left: 30px;
+  }
+
+  .section-element-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .section-element-subtitle {
+    color: #757575;
+    margin-top: 0px;
+  }
+
+  .education {
+    display: flex;
+    align-items: center;
+  }
+  
+  .education-content {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+  }
+  
+  .rect {
+    background-color: red;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .circle {
+    background-color: red;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 90px;
+    left: 240px;
+  }
