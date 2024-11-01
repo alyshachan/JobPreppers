@@ -1,38 +1,26 @@
+import ListBox from "./ListBox";
 import "./ProfileSections.css";
 import SectionHeader from "./SectionHeader";
 
-function SkillsSection() {
+function SkillsSection({ skillsDict }) {
+  const displayedItems = Object.entries(skillsDict).slice(0, 4);
+  const hasMoreItems = Object.keys(skillsDict).length > 4;
   return (
     <>
       <SectionHeader header={"Skills"} />
 
       <div className="section-content">
         <div className="skills">
-          <div className="skill-box">
-            <p className="section-element-title">Programming Languages</p>
-            <p>Python, Java, C, C++</p>
-          </div>
-
-          <div className="skill-box">
-            <p className="section-element-title">
-              Machine Learning & Data Analysis
-            </p>
-            <p>Data Analysis, PyTorch, SkLearn</p>
-          </div>
-
-          <div className="skill-box">
-            <p className="section-element-title">Software Tools</p>
-            <p>Data Analysis, PyTorch, SkLearn</p>
-          </div>
-
-          <div className="skill-box">
-            <p className="section-element-title">Robotics & Engineering</p>
-            <p>
-              Robotics, Electrical Engineering, Network Systems, Computer
-              Systems
-            </p>
-          </div>
+          {displayedItems.map(([title, list], index) => (
+            <ListBox key={index} title={title} list={list} />
+          ))}
         </div>
+
+        {hasMoreItems && (
+          <div className="see-all-div">
+            <button className="see-all">See all Skills -&gt;</button>
+          </div>
+        )}
       </div>
     </>
   );

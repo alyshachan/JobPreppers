@@ -7,13 +7,20 @@ import SkillsSection from "./ProfileSections/SkillsSection";
 
 function App() {
   // const [count, setCount] = useState(0);
+  const skills = {
+    "Programming Languages": ["Python", "Java", "C", "C++", "C#"],
+    "Machine Learning & Data Analysis": ["Data Analysis", "PyTorch", "Scikit-learn (SkLearn)"],
+    "Software Tools": ["Git", "Docker", "MySQL", "Linux", "Figma"],
+    "Robotics & Engineering": ["Robotics", "Electrical Engineering", "Network Systems", "Computer Systems"],
+    "Additional Skills": ["React", "Node.js", "TypeScript", "HTML/CSS"]
+  };
 
   return (
     <>
       <body>
+        
         <div className="main-panel">
           <div className="main-personal">
-            <div className="circle" />
             <p className="name">Justin Ellis</p>
             <p>Computer Science Student at the University of Utah</p>
             <p className="section-element-subtitle">
@@ -24,10 +31,12 @@ function App() {
 
           <div className="main-professional">
             <EducationSection />
-            <SkillsSection />
+            <SkillsSection skillsDict={skills}/>
           </div>
         </div>
+
       </body>
+      
 
       {/* <div>
         <a href="https://vite.dev" target="_blank">
