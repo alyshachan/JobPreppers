@@ -3,6 +3,25 @@ body {
   justify-content: center;
 }
 
+h1 {
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #757575;
+  margin-left: 10px;
+  width: 100%;
+}
+
+button{
+  background-color: #4BA173;
+  border-radius: 30px;
+  padding: 2px 10px;
+  color: white;
+}
+
 .main-panel {
   background-color: white;
   border-radius: 15px;
@@ -57,7 +76,12 @@ body {
   border-radius: 50%;
   width: 200px;
   height: 200px;
+  position: absolute;
+  top: 90px;
+  left: 240px;
 }
+
+
 /* 
 #root {
   max-width: 1280px;

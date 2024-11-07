@@ -4,6 +4,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import EducationSection from "./ProfileSections/EducationSection";
 import SkillsSection from "./ProfileSections/SkillsSection";
+import ExperienceSection from "./ProfileSections/ExperienceSection"
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -29,7 +30,7 @@ function App() {
       <body>
         <div className="main-panel">
           <div className="main-personal">
-            <div className="circle" />
+            {/* <div className="circle" /> */}
             <p className="name">Justin Ellis</p>
             <p>Computer Science Student at the University of Utah</p>
             <p className="section-element-subtitle">
@@ -40,7 +41,8 @@ function App() {
 
           <div className="main-professional">
             <EducationSection />
-            <SkillsSection skillsDict={skills} />
+            <SkillsSection skillsDict={skills}/>
+            <ExperienceSection />
           </div>
         </div>
       </body>
