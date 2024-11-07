@@ -30,7 +30,7 @@ function App() {
       <body>
         <div className="main-panel">
           <div className="main-personal">
-            {/* <div className="circle" /> */}
+            <div className="circle" />
             <p className="name">Justin Ellis</p>
             <p>Computer Science Student at the University of Utah</p>
             <p className="section-element-subtitle">
