@@ -1,0 +1,6 @@
+@JobPreppersProto_HostAddress = http://localhost:5163
+
+GET {{JobPreppersProto_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
