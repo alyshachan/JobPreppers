@@ -7,29 +7,26 @@ import "./App.css";
 
 import NavBar from "./NavBar";
 import { Route, Routes } from "react-router-dom";
-import Jobs from "./Pages/Jobs"
+import Jobs from "./Pages/Jobs";
 import Profile from "./Pages/Profile";
 import Resume from "./Pages/Resume"
 import Interview from "./Pages/Interview";
+import Login from "./Pages/Login";
 
 
 function App() {
   
   return (
     <>
-    
       <NavBar />
-      <div className="container">
       <Routes>
         <Route path="/" element={<Profile/>}/>
+        <Route path="/Login" element={<Login/>}/>
+        <Route path="/Profile" element={<Profile/>}/>
         <Route path="/Jobs" element={<Jobs/>}/>
         <Route path="/Interview" element={<Interview/>}/>
         <Route path="/Resume" element={<Resume/>}/>
-
-
-
       </Routes>
-      </div>
     </>
   );
 }
