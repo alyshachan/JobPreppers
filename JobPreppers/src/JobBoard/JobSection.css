@@ -1,0 +1,30 @@
+.section-search {
+  display: flex;
+  align-items: center;
+  width: 800px;
+  margin: -10px;
+}
+
+input[type="text"] {
+  padding-left: 2.5rem; /* Space for FiSearch icon */
+  padding-right: 2.5rem; /* Space for CloseIcon */
+  width: 75%;
+  align: center;
+}
+
+.icon-button {
+  position: absolute;
+  border: none;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.FiSearch {
+  position: absolute;
+  border: none;
+  transform: translateY(-100%);
+  left: 10px;
+  top: 50%;
+}

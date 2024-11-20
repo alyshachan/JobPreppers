@@ -1,11 +1,13 @@
 
-
+import JobBox from "../JobBoard/JobBox";
 function Jobs(){
     return(
         <>
-        <h1>Jobs</h1>
+        <div className="FilterSection">
+        <JobBox></JobBox>
+        </div>
         </>
-    )
+    );
 }
 
 export default Jobs;
