@@ -77,7 +77,11 @@ WSGI_APPLICATION = 'django_jp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': 'JobPreppersDB',
+        'USER': 'JobPrepper',
+        'PASSWORD': 'ILoveCanes2025!',
+        'HOST': 'jobprepperscapstone.cbgwos8q0ls4.us-east-2.rds.amazonaws.com',
+        'PORT': '3307',
     }
 }
 
