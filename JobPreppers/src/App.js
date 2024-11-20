@@ -19,7 +19,6 @@ function App() {
     <>
     
       <NavBar />
-      <div className="container">
       <Routes>
         <Route path="/" element={<Profile/>}/>
         <Route path="/Jobs" element={<Jobs/>}/>
@@ -29,7 +28,6 @@ function App() {
 
 
       </Routes>
-      </div>
     </>
   );
 }
