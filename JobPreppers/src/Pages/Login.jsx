@@ -13,6 +13,32 @@
   ```
 */
 export default function Login() {
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+
+  //   try {
+  //     const response = fetch("http://localhost:3000/Profile", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ email, password }), // to api
+  //     },
+  //     )
+  //     if (response.ok) {
+  //       const data = await response.json()
+
+  //       console.log("Login successful:", data);
+  //       // Handle successful login (e.g., redirect, store token)
+  //     } else {
+  //       const errorData = await response.json();
+  //       setErrorMessage(errorData.message || "Something went wrong");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during login:", error);
+  //     setErrorMessage("Network error, please try again.");
+  //   }
+  //   }
     return (
       <>
         {/*
