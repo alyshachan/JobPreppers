@@ -1,5 +1,6 @@
 import "./ProfileSections.css";
-import SectionHeader from "./SectionHeader";
+import SectionHeader from "../Components/SectionHeader"
+
 
 function ExperienceSection() {
   return (

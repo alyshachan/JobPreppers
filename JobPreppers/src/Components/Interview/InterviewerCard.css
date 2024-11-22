@@ -1,0 +1,66 @@
+.interviewerCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  margin-bottom: -100px;
+  z-index: 0;
+}
+
+.card {
+  border-radius: 15px;
+  width: 375px;
+  padding: 100px 0 0;
+  text-align: center;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  background-color: white;
+}
+
+.title {
+  color: #757575;
+  margin: 5px 0;
+}
+
+.rating {
+  font-size: 1.2rem;
+  color: #ffb81d;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.cardButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-left: -20px;
+  margin-right: -20px;
+  width: calc(100% + 40px);
+  border-top: 1px solid #757575;
+}
+
+.viewProfileButton,
+.scheduleButton {
+  flex: 1;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 0;
+  text-align: center;
+}
+
+.viewProfileButton {
+  color: #757575;
+  border-right: 1px solid #757575;
+  padding: 20px 10px 20px 20px;
+}
+
+.scheduleButton {
+  color: #4ba173;
+  padding: 20px 20px 20px 10px;
+}
