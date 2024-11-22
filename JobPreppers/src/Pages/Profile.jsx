@@ -20,8 +20,8 @@ function Profile(){
       };
     return(
         <>
-        <div className="content">
-        <div className="main-panel">
+        <div className="content !mt-[175px]">
+        <div className="main-panel !flex-row gap-[50px]">
             <div className="main-personal">
               <div className="circle" />
               <p className="name">Justin Ellis</p>

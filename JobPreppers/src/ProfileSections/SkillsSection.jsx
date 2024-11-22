@@ -1,6 +1,6 @@
 import ListBox from "./ListBox";
 import "./ProfileSections.css";
-import SectionHeader from "./SectionHeader";
+import SectionHeader from "../Components/SectionHeader"
 
 function SkillsSection({ skillsDict }) {
   const displayedItems = Object.entries(skillsDict).slice(0, 4);

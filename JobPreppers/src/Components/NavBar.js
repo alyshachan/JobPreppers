@@ -1,47 +1,56 @@
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-import './App.css';
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import {Link, useMatch, useResolvedPath} from "react-router-dom"
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+} from "@headlessui/react";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Link, useMatch, useResolvedPath } from "react-router-dom";
 
 const navigation = [
-    { name: 'Feed', href: '/', current: true },
-    { name: 'Jobs', href: '/Jobs', current: false },
-    { name: 'Interview', href: '/Interview', current: false },
-    { name: 'Resume', href: '/Resume', current: false },
-  ]
-  
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-  }
+  { name: "Feed", href: "/", current: true },
+  { name: "Jobs", href: "/Jobs", current: false },
+  { name: "Interview", href: "/Interview", current: false },
+  { name: "Resume", href: "/Resume", current: false },
+];
 
-  function CustomLink ({to, children, className, ...props}){
-    const resolvedPath = useResolvedPath(to);
-    const isActive = useMatch({ path: resolvedPath.pathname, end: true });
-    return (
-      <div className={isActive ? "active" : ""}>
-        <Link 
-          to={to} 
-          {...props}
-          className={classNames(
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
+function CustomLink({ to, children, className, ...props }) {
+  const resolvedPath = useResolvedPath(to);
+  const isActive = useMatch({ path: resolvedPath.pathname, end: true });
+  return (
+    <div className={isActive ? "active" : ""}>
+      <Link
+        to={to}
+        {...props}
+        className={classNames(
           className,
-          isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-          'block rounded-md px-3 py-2 text-base font-medium',
-      )}>
-          {children}
-        </Link>
-      </div>
-    )
-  }
-  
-  function NavBar() {
-   
-    
-    return (
-      <Disclosure as="nav" className="bg-[#4BA173] w-full padding">
+          isActive
+            ? "bg-gray-900 text-white"
+            : "text-gray-300 hover:bg-gray-700 hover:text-white",
+          "block rounded-md px-3 py-2 text-base font-medium"
+        )}
+      >
+        {children}
+      </Link>
+    </div>
+  );
+}
+
+function NavBar() {
+  return (
+    <Disclosure as="nav" className="bg-[#4BA173] w-full padding">
       <div className="mx-auto w-full px-2">
         <div className="relative flex h-24 items-center justify-between">
           {/* Mobile menu button */}
@@ -49,8 +58,14 @@ const navigation = [
             <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
               <span className="absolute -inset-0.5" />
               <span className="sr-only">Open main menu</span>
-              <Bars3Icon aria-hidden="true" className="block h-6 w-6 group-data-[open]:hidden" />
-              <XMarkIcon aria-hidden="true" className="hidden h-6 w-6 group-data-[open]:block" />
+              <Bars3Icon
+                aria-hidden="true"
+                className="block h-6 w-6 group-data-[open]:hidden"
+              />
+              <XMarkIcon
+                aria-hidden="true"
+                className="hidden h-6 w-6 group-data-[open]:block"
+              />
             </DisclosureButton>
           </div>
 
@@ -66,9 +81,9 @@ const navigation = [
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4 justify-end">
                 {navigation.map((item) => (
-                   <CustomLink key={item.name} to={item.href}>
-                   {item.name}
-               </CustomLink>
+                  <CustomLink key={item.name} to={item.href}>
+                    {item.name}
+                  </CustomLink>
                 ))}
               </div>
             </div>
@@ -134,16 +149,14 @@ const navigation = [
       <DisclosurePanel className="sm:hidden">
         <div className="space-y-1 px-2 pb-3 pt-2">
           {navigation.map((item) => {
-
-              <DisclosureButton
-                key={item.name}
-                as={CustomLink}  
-                to={item.href}
-                className="rounded-md px-3 py-2 text-sm font-medium"
-              >
-                {item.name}
-              </DisclosureButton>
-
+            <DisclosureButton
+              key={item.name}
+              as={CustomLink}
+              to={item.href}
+              className="rounded-md px-3 py-2 text-sm font-medium"
+            >
+              {item.name}
+            </DisclosureButton>;
           })}
         </div>
       </DisclosurePanel>
@@ -151,7 +164,4 @@ const navigation = [
   );
 }
 
-
-
-
-  export default NavBar;
+export default NavBar;

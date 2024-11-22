@@ -29,7 +29,7 @@ function SearchColumn(){
     return (
         <>
             <h1>Jobs</h1>
-          <div className="content">
+          <div className="searchContent">
           
             
             <TextField

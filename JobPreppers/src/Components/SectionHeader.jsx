@@ -1,6 +1,6 @@
-import "./ProfileSections.css";
+import "./SectionHeader.css";
 
-function SectionHeader({header}) {
+function SectionHeader({ header }) {
   return (
     <>
       <div className="section-header">
