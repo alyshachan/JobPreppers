@@ -10,6 +10,7 @@
 .filter-column-container {
   display: flex;
   align-items: center;
+  justify-content: center; /* Centers horizontally */
   margin: 15px;
   flex-direction: column;
   width: 100%;
@@ -36,5 +37,7 @@
 
 .filter-button:hover {
   color: black;
+  background-color: #f0fbf5;
   border: 2px solid #4ba173;
+  /* font:  */
 }
