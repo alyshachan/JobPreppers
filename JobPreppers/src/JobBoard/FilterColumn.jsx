@@ -17,7 +17,6 @@ export default function FilterColumn(){
         <Company></Company>
         <JobType></JobType>
         <DueDate></DueDate>
-
         </Stack>
     </div>
     

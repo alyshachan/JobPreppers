@@ -1,6 +1,7 @@
 import SearchColumn from "../JobBoard/SearchColumn";
 import "../JobBoard/JobSection.css"
 import FilterColumn from "../JobBoard/FilterColumn";
+import JobDescription from "../JobBoard/JobDescription";
 
 
 function Jobs() {
@@ -9,6 +10,7 @@ function Jobs() {
     <div className="job-section-container">
         <SearchColumn></SearchColumn>
         <FilterColumn></FilterColumn>
+        <JobDescription></JobDescription>
     </div>
     </>
  )

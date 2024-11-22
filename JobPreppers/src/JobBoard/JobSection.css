@@ -30,6 +30,16 @@
   background-color: #63d297;
 }
 
+.learn-more-button.MuiButton-contained {
+  background-color: #63d297;
+  align: right;
+}
+
+.description-box {
+  display: flex;
+  gap: 5px;
+}
+
 .filter-button.MuiButton-outlined {
   color: #4ba173;
   border: 2px solid #4ba173;
