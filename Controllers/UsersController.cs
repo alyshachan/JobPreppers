@@ -1,12 +1,60 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using JobPreppersProto.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace JobPreppersProto.Controllers
 {
-    public class UsersController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UsersController : ControllerBase
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        public UsersController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
         }
+
+        // GET: api/users
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
+        {
+            // Fetch all users from the database
+            var users = await _context.Users.ToListAsync();
+
+            if (users == null || users.Count == 0)
+            {
+                return NotFound("No users found.");
+            }
+
+            return Ok(users);
+        }
+        [HttpPost("check")]
+        public async Task<IActionResult> CheckUserExists([FromBody] LoginRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
+            {
+                return BadRequest("Email and Password are required.");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email && u.Password == request.Password);
+
+            if (user == null)
+            {
+                return Unauthorized(new { message = "Invalid email or password." });
+            }
+
+            return Ok(new { message = "Login successful.", userId = user.UserId });
+        }
+
+        // Define the request model
+        public class LoginRequest
+        {
+            public string Email { get; set; }
+            public string Password { get; set; }
+        }
+
     }
 }
