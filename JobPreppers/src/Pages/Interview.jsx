@@ -27,7 +27,7 @@ function Interview() {
   return (
     <>
       <div className="content !flex-column">
-        <div className="main-panel justify-center">
+        <div className="main-panel items-center">
           <Calendar
             onOpenEventDialog={handleOpenEventDialog}
             onEventSubmit={handleEventSubmit}

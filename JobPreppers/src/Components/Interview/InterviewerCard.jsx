@@ -4,7 +4,7 @@ function InterviewerCard({ name, title, rating, onViewProfile, onSchedule }) {
   return (
     <>
       <div className="interviewerCard">
-        <div className="circle" />
+        <div className="circle w-[200px]" />
 
         <div className="card">
           <h1>{name}</h1>

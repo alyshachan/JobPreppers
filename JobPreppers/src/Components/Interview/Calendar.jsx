@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { IconButton } from "@mui/material";
@@ -26,20 +26,25 @@ function Calendar({ onOpenEventDialog, selectedDate, setSelectedDate }) {
   const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
   const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
   const [visibleMonths, setVisibleMonths] = useState(3); // Default to 3 calendars
+  const mainPanelRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setVisibleMonths(1);
-      } else if (window.innerWidth < 1024) {
-        setVisibleMonths(2);
-      } else {
-        setVisibleMonths(3);
+      if (mainPanelRef.current) {
+        const mainPanelWidth = mainPanelRef.current.offsetWidth;
+
+        if (mainPanelWidth < 600) {
+          setVisibleMonths(1); // Small width -> 1 calendar
+        } else if (mainPanelWidth < 1000) {
+          setVisibleMonths(2); // Medium width -> 2 calendars
+        } else {
+          setVisibleMonths(3); // Large width -> 3 calendars
+        }
       }
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize();
+    handleResize(); // Check on mount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -112,14 +117,14 @@ function Calendar({ onOpenEventDialog, selectedDate, setSelectedDate }) {
   };
 
   return (
-    <div className="calendarNavigationWrapper">
+    <div ref={mainPanelRef} className="calendarNavigationWrapper">
       <div className="navButton">
         <IconButton onClick={prevMonth} className="navButton">
           <ChevronLeftIcon />
         </IconButton>
       </div>
 
-      <div className="calendarWrapper">
+      <div className={`calendarWrapper ${visibleMonths ? `month-${visibleMonths}` : ''}`}>
         {[...Array(visibleMonths).keys()].map((offset) =>
           renderCalendar(offset)
         )}

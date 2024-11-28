@@ -8,9 +8,9 @@ function Jobs() {
  return(
     <>
     <div className="job-section-container">
-        <SearchColumn></SearchColumn>
-        <FilterColumn></FilterColumn>
-        <JobDescription></JobDescription>
+        <SearchColumn />
+        <FilterColumn />
+        <JobDescription />
     </div>
     </>
  )

@@ -1,6 +1,7 @@
 .searchContent {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: row;
   position: absolute;
   width: 100%;

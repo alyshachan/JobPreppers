@@ -3,9 +3,16 @@
   color: #4ba173;
   border-radius: 4px;
   width: 200px;
+  height: 56px;
 }
 
 .drop-down .MuiAutocomplete-inputRoot {
+  display: flex;
+  /* flex-wrap: nowrap; Prevent wrapping of chips */
+  height: 56px; /* Fixed height to prevent resizing */
+}
+
+.drop-down .MuiTextField-root {
   display: flex;
   /* flex-wrap: nowrap; Prevent wrapping of chips */
   height: 56px; /* Fixed height to prevent resizing */
@@ -15,6 +22,7 @@
   color: #4ba173;
   border: 2px solid #4ba173;
   width: 200px;
+  height: 56px;
 }
 
 .filter-button:hover {

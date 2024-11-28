@@ -12,11 +12,11 @@ export default function FilterColumn(){
     <>
     <div className="filter-column-container">
         <Stack direction="row" spacing={2} sx={{ width: "100%", justifyContent: 'center'}}>
-        <Salary></Salary>
-        <Distance></Distance>
-        <Company></Company>
-        <JobType></JobType>
-        <DueDate></DueDate>
+        <Salary />
+        <Distance />
+        <Company />
+        <JobType />
+        <DueDate />
         </Stack>
     </div>
     
