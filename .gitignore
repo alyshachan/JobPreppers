@@ -1,0 +1,37 @@
+# Ignore everything
+*
+
+# Allow solution files and Gitignore itself
+!*.sln
+!.gitignore
+
+# Allow the JobPreppersDemo folder and its contents
+!JobPreppersDemo/
+!JobPreppersDemo/**
+
+# Ignore all files in bin and obj directories
+JobPreppersDemo/**/bin/
+JobPreppersDemo/**/obj/
+
+# Ignore Visual Studio-specific and temporary files
+.vs/
+*.user
+*.suo
+*.log
+*.pdb
+*.exe
+*.dll
+*.cache
+
+# Ignore runtime-generated and debug files
+**/*.runtimeconfig.json
+**/*.deps.json
+**/*.nuget.g.props
+**/*.nuget.g.targets
+
+# Ignore debug and release build directories
+**/Debug/
+**/Release/
+
+# Ignore environment-specific and sensitive files
+JobPreppersDemo/
