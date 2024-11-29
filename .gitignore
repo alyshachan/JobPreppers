@@ -1,5 +1,3 @@
-# Ignore everything
-*
 
 # Allow solution files and Gitignore itself
 !*.sln
@@ -12,9 +10,14 @@
 # Ignore all files in bin and obj directories
 JobPreppersDemo/**/bin/
 JobPreppersDemo/**/obj/
+JobPreppersDemo/appsettings.json
+JobPreppersDemo/appsettings.Development.json
+JobPreppersDemo/Properties/
+JobPreppersDemo/Properties/**
 
 # Ignore Visual Studio-specific and temporary files
 .vs/
+.git/
 *.user
 *.suo
 *.log
@@ -33,5 +36,3 @@ JobPreppersDemo/**/obj/
 **/Debug/
 **/Release/
 
-# Ignore environment-specific and sensitive files
-JobPreppersDemo/
