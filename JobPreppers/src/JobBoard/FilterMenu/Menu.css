@@ -19,8 +19,8 @@
   height: 56px; /* Fixed height to prevent resizing */
 }
 
-.MuiOutlinedInput-root fieldset {
-  border-color: transparent !important; /* Always transparent */
+.filter-column-container .MuiOutlinedInput-root fieldset {
+  border-color: transparent !important;
 }
 
 .drop-down .MuiInputLabel-root.Mui-focused, 
