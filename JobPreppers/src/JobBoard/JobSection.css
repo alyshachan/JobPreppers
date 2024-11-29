@@ -3,9 +3,8 @@
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  position: absolute;
   width: 100%;
-  margin: -10px;
+  gap: 10px;
 }
 
 .filter-column-container {
@@ -15,6 +14,13 @@
   margin: 15px;
   flex-direction: column;
   width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  transition: justify-content 0.3s ease;
+}
+
+.filter-column-container.overflow-x {
+  align-items: start;
 }
 
 .job-section-container {
