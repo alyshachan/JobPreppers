@@ -8,7 +8,6 @@ import "./App.css";
 import NavBar from "./Components/NavBar";
 import { Route, Routes } from "react-router-dom";
 import Jobs from "./Pages/Jobs";
-import Jobs from "./Pages/Jobs";
 import Profile from "./Pages/Profile";
 import Resume from "./Pages/Resume";
 import Interview from "./Pages/Interview";
