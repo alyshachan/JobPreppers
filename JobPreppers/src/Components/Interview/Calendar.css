@@ -1,0 +1,74 @@
+.calendarNavigationWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: calc(100% - 40px);
+  aspect-ratio: 4/1;
+}
+
+.calendarWrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  width: 100%;
+}
+
+.calendarWrapper.month-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.calendarWrapper.month-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.calendarWrapper.month-1 {
+  grid-template-columns: 1fr;
+}
+
+.navButton {
+  display: flex;
+  align-items: start;
+  padding: 10px;
+}
+
+.calendar {
+  padding: 1rem;
+  border-radius: 15px;
+  aspect-ratio: 1;
+}
+
+.navigateDate {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.navigateDate .month {
+  font-weight: bold;
+  text-align: center;
+}
+
+.weekdays,
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+
+.weekdays span {
+  font-weight: bold;
+}
+
+.days span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.currentDay {
+  color: white;
+  background-color: #4ba173;
+  border-radius: 50%;
+}

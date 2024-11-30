@@ -1,5 +1,5 @@
 import "./ProfileSections.css";
-import SectionHeader from "./SectionHeader";
+import SectionHeader from "../Components/SectionHeader";
 
 function EducationSection() {
   return (
