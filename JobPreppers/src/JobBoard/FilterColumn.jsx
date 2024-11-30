@@ -35,6 +35,7 @@ export default function FilterColumn() {
           spacing={2}
           sx={{
             width: "100%",
+            paddingTop: "10px",
             justifyContent: isOverflowing ? "flex-start" : "center",
           }}
         >
