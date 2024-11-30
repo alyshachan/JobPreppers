@@ -3,6 +3,8 @@
   color: #4ba173;
   border-radius: 4px;
   width: 200px;
+  min-width: 150px;
+  height: 56px;
 }
 
 .drop-down .MuiAutocomplete-inputRoot {
@@ -11,10 +13,36 @@
   height: 56px; /* Fixed height to prevent resizing */
 }
 
+.drop-down .MuiTextField-root {
+  display: flex;
+  /* flex-wrap: nowrap; Prevent wrapping of chips */
+  height: 56px; /* Fixed height to prevent resizing */
+}
+
+.filter-column-container .MuiOutlinedInput-root fieldset {
+  border-color: transparent !important;
+}
+
+.drop-down .MuiInputLabel-root.Mui-focused, 
+.drop-down .MuiInputLabel-root.MuiFormLabel-filled,
+.drop-down .MuiInputLabel-root.MuiInputLabel-shrink
+ {
+  background-color: #e7f2ec; /* Change background color */
+}
+
 .filter-button.MuiButton-outlined {
   color: #4ba173;
   border: 2px solid #4ba173;
   width: 200px;
+  min-width: 150px;
+  height: 56px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.MuiButton-root {
+  text-transform: none !important;
+  font-weight: normal !important;
 }
 
 .filter-button:hover {

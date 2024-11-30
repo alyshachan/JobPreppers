@@ -2,15 +2,27 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
-  width: 100%;
+  width: calc(100% - 40px);
   aspect-ratio: 4/1;
 }
 
 .calendarWrapper {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Default to 3 columns */
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   width: 100%;
+}
+
+.calendarWrapper.month-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.calendarWrapper.month-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.calendarWrapper.month-1 {
+  grid-template-columns: 1fr;
 }
 
 .navButton {
@@ -59,16 +71,4 @@
   color: white;
   background-color: #4ba173;
   border-radius: 50%;
-}
-
-@media (max-width: 1024px) {
-  .calendarWrapper {
-    grid-template-columns: repeat(2, 1fr); /* 2 calendars for medium screens */
-  }
-}
-
-@media (max-width: 768px) {
-  .calendarWrapper {
-    grid-template-columns: 1fr; /* 1 calendar for small screens */
-  }
 }

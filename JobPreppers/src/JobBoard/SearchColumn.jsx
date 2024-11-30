@@ -28,10 +28,7 @@ function SearchColumn(){
 
     return (
         <>
-            <h1>Jobs</h1>
           <div className="searchContent">
-          
-            
             <TextField
               label="Search"
               id="search-input"

@@ -1,19 +1,20 @@
 import SearchColumn from "../JobBoard/SearchColumn";
-import "../JobBoard/JobSection.css"
+import "../JobBoard/JobSection.css";
 import FilterColumn from "../JobBoard/FilterColumn";
 import JobDescription from "../JobBoard/JobDescription";
 
-
 function Jobs() {
- return(
+  return (
     <>
-    <div className="job-section-container">
-        <SearchColumn></SearchColumn>
-        <FilterColumn></FilterColumn>
-        <JobDescription></JobDescription>
-    </div>
+      <div className="content">
+        <div className="main-panel !bg-transparent !shadow-none !p-0 items-center">
+          <SearchColumn />
+          <FilterColumn />
+        </div>
+        <JobDescription />
+      </div>
     </>
- )
+  );
 }
 
 export default Jobs;
