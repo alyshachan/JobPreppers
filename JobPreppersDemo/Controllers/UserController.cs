@@ -49,6 +49,20 @@ namespace JobPreppersProto.Controllers
 
             return Ok(new { message = "Login successful.", userId = user.userID });
         }
+        [HttpGet("GetUser/{id}")]
+        public async Task<IActionResult> GetUserInfo(int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.userID == id);
+            if (user == null)
+            {
+                return NotFound(new { message = "Invalid User" });
+            }
+            return Ok(new
+            {
+                message = "Found user",
+                user = user
+            });
+        }
 
         // Define the request model
         public class LoginRequest
