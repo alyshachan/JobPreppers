@@ -17,6 +17,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   transition: justify-content 0.3s ease;
+  min-height: 100px;
 }
 
 .filter-column-container.overflow-x {

@@ -118,7 +118,7 @@ function NavBar() {
               >
                 <MenuItem>
                   <Link
-                    to="#"
+                    to="/Profile"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
                     Your Profile
@@ -134,7 +134,7 @@ function NavBar() {
                 </MenuItem>
                 <MenuItem>
                   <Link
-                    to="#"
+                    to="/Login"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
                     Sign out
