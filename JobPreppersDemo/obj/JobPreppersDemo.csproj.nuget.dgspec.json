@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\alysh\\OneDrive\\Desktop\\Alysha\\CS 4000\\JobPreppers\\job-preppers\\JobPreppersDemo\\JobPreppersDemo.csproj": {}
+    "C:\\Users\\Trang Tran\\job-preppers\\JobPreppersDemo\\JobPreppersDemo.csproj": {}
   },
   "projects": {
-    "C:\\Users\\alysh\\OneDrive\\Desktop\\Alysha\\CS 4000\\JobPreppers\\job-preppers\\JobPreppersDemo\\JobPreppersDemo.csproj": {
+    "C:\\Users\\Trang Tran\\job-preppers\\JobPreppersDemo\\JobPreppersDemo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\alysh\\OneDrive\\Desktop\\Alysha\\CS 4000\\JobPreppers\\job-preppers\\JobPreppersDemo\\JobPreppersDemo.csproj",
+        "projectUniqueName": "C:\\Users\\Trang Tran\\job-preppers\\JobPreppersDemo\\JobPreppersDemo.csproj",
         "projectName": "JobPreppersDemo",
-        "projectPath": "C:\\Users\\alysh\\OneDrive\\Desktop\\Alysha\\CS 4000\\JobPreppers\\job-preppers\\JobPreppersDemo\\JobPreppersDemo.csproj",
-        "packagesPath": "C:\\Users\\alysh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\alysh\\OneDrive\\Desktop\\Alysha\\CS 4000\\JobPreppers\\job-preppers\\JobPreppersDemo\\obj\\",
+        "projectPath": "C:\\Users\\Trang Tran\\job-preppers\\JobPreppersDemo\\JobPreppersDemo.csproj",
+        "packagesPath": "C:\\Users\\Trang Tran\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Trang Tran\\job-preppers\\JobPreppersDemo\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\alysh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Trang Tran\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

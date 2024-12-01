@@ -41,13 +41,13 @@ public partial class ApplicationDbContext : DbContext
 
             entity.Property(e => e.company).HasMaxLength(100);
             entity.Property(e => e.description).HasColumnType("text");
-            entity.Property(e => e.fill_by_date).HasColumnType("datetime");
             entity.Property(e => e.location).HasMaxLength(100);
             entity.Property(e => e.pay_range).HasMaxLength(50);
             entity.Property(e => e.postedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp");
             entity.Property(e => e.title).HasMaxLength(100);
+            entity.Property(e => e.type).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Resume>(entity =>
