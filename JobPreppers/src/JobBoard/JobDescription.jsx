@@ -9,21 +9,40 @@ import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import PlaceIcon from '@mui/icons-material/Place';
 import amazonIcon from './Img/amazon-icon.png';
 import './JobSection.css';
+import { useState, useEffect } from 'react';
+
 
 function JobDescription(){
+
+    const [jobs, setJobs] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/job")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setJobs(data);
+      })
+      .catch((error) => console.error('Error fetching jobs:', error));
+  }, []);
+
     return(
         <>
-            <Card sx={{ minWidth: 500 }}>
-            <CardHeader
-                avatar={
-                <Avatar src={amazonIcon} aria-label="recipe"> A
-                </Avatar>}
+        {jobs.map((job) => (
+            <Card key={job.jobID} sx={{ minWidth: 500 , margin:2 }}>
 
-                title="Software Engineer"
-                subheader="Amazon"
+                    <CardHeader
+                    avatar={
+                        <Avatar src={amazonIcon} aria-label="recipe"> {job.company[0]}
+                </Avatar>}
+                    
+                    title={job.title}
+                    subheader={job.company}
 
                 action={
-                    <>
+                     <>
                     <IconButton aria-label="bookmark">
                         <BookmarkBorderIcon/>
                     </IconButton>
@@ -43,13 +62,13 @@ function JobDescription(){
                 <Box className="description-box" >
                     <PaidIcon></PaidIcon>
                     <Typography variant='body'  sx={{ color: 'text.secondary' }}> 
-                        $80,000
+                       {job.pay_range}
                     </Typography>
                 </Box>
                 <Box  className="description-box">
                     <AccessTimeFilledIcon/>
                     <Typography variant='body'  sx={{ color: 'text.secondary' }}> 
-                        Full-Time
+                        {job.type}
                     </Typography>
 
                 </Box>
@@ -57,7 +76,7 @@ function JobDescription(){
                 <Box  className="description-box">
                     <PlaceIcon/>
                     <Typography variant='body'  sx={{ color: 'text.secondary' }}> 
-                        Seattle, Washington
+                        {job.location}
                     </Typography>
 
 
@@ -71,18 +90,19 @@ function JobDescription(){
             <CardActions >
             <Box
                 sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
                 }}
-            >
-                <Typography variant='body'  sx={{ color: 'text.secondary' }}> Apply by March 15, 2025</Typography>
+                >
+                <Typography variant='body'  sx={{ color: 'text.secondary' }}> Apply by {job.fill_by_date}</Typography>
                 <Button variant="contained" className='learn-more-button'> Learn More</Button>
             </Box>
             </CardActions>
             
             </Card>
+        ))}
         
         
         

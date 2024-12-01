@@ -17,7 +17,9 @@ public partial class Job
 
     public DateTime? postedAt { get; set; }
 
-    public DateTime fill_by_date { get; set; }
+    public DateOnly fill_by_date { get; set; }
 
     public string company { get; set; } = null!;
+
+    public string type { get; set; } = null!;
 }
