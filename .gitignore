@@ -1,0 +1,21 @@
+# Ignore build outputs
+bin/
+obj/
+
+# Ignore user-specific settings
+.vs/
+*.user
+*.suo
+
+# Ignore logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore appsettings files (sensitive configurations)
+appsettings*.json
+
+# Ignore Properties folder (auto-generated files)
+Properties/
