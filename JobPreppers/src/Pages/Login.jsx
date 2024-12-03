@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../provider/authProvider";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setAuthData } = useAuth(); // custom hook for authprovider
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -14,14 +17,20 @@ export default function Login() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: 'include', // include cookies
       });
 
       if (response.ok) {
         const data = await response.json();
-        // Show a success popup\
-        navigate("/profile");
-        window.alert(data.message); // Displays "Login successful."
-        setError(""); // Clear any previous error message
+
+        if (data.user) {
+
+          setAuthData(data.user) // make the user object accessible to the entire app if authenticated
+          // Show a success popup
+          navigate("/profile");
+          window.alert(data.message); // Displays "Login successful."
+          setError(""); // Clear any previous error message
+        }
       } else {
         const errorData = await response.json();
         setError(errorData.message); // Show error message from the backend

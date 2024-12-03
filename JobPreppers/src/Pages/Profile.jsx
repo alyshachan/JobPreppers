@@ -1,7 +1,9 @@
 import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
+
 function Profile() {
+  
   const skills = {
     "Programming Languages": ["Python", "Java", "C", "C++", "C#"],
     "Machine Learning & Data Analysis": [

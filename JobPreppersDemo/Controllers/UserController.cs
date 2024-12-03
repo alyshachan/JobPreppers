@@ -2,8 +2,12 @@
 using JobPreppersDemo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace JobPreppersProto.Controllers
 {
@@ -32,6 +36,31 @@ namespace JobPreppersProto.Controllers
 
             return Ok(users);
         }
+
+        private string GenerateJwtToken(User user)
+        {
+            var claims = new[]
+            {
+        new Claim(ClaimTypes.NameIdentifier, user.userID.ToString()), // userid
+        new Claim(ClaimTypes.Name, user.username), // username
+        new Claim(ClaimTypes.Email, user.email), // email
+    };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("thisisuperlongbecauseitneedstobe256bits"));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddHours(1), //token expire time
+                SigningCredentials = credentials,
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token); // return jwt token
+        }
+
         [HttpPost("check")]
         public async Task<IActionResult> CheckUserExists([FromBody] LoginRequest request)
         {
@@ -47,8 +76,32 @@ namespace JobPreppersProto.Controllers
                 return Unauthorized(new { message = "Invalid email or password." });
             }
 
-            return Ok(new { message = "Login successful.", userId = user.userID });
+            var token = GenerateJwtToken(user);
+            return Ok(new { message = "Login successful.", userId = user.userID, token = token});
         }
+
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetMe()
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { message = "Invalid token." });
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.userID.ToString() == userId);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+
+            return Ok(new { userId = user.userID, email = user.email, name = user.username });
+        }
+
+
         [HttpGet("GetUser/{id}")]
         public async Task<IActionResult> GetUserInfo(int id)
         {
