@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch("http://localhost:5001/api/Users/check", {
+      const response = await fetch("http://localhost:5001/api/Users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

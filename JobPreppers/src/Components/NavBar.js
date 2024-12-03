@@ -13,7 +13,9 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link, useMatch, useResolvedPath } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
+import { useAuth } from "../provider/authProvider";
 
 const navigation = [
   { name: "Feed", href: "/", current: true },
@@ -48,7 +50,40 @@ function CustomLink({ to, children, className, ...props }) {
   );
 }
 
-function NavBar({firstName, lastName, profilePicture}) {
+function NavBar({ firstName, lastName, profilePicture }) {
+  const { setAuthData } = useAuth(); // custom hook for authprovider
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogoutSubmit = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+
+    try {
+      const response = await fetch("http://localhost:5001/api/Users/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        navigate("/Login");
+        if (data.user) {
+          console.log("User logged out");
+          setAuthData(null); // make the user object accessible to the entire app if authenticated
+          window.alert(data.message); // Displays "Login successful."
+          setError(""); // Clear any previous error message
+        }
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      console.log(err)
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
   return (
     <Disclosure as="nav" className="bg-[#4BA173] w-full padding">
       <div className="mx-auto w-full px-2">
@@ -138,6 +173,7 @@ function NavBar({firstName, lastName, profilePicture}) {
                   <Link
                     to="/Login"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                    onClick = {handleLogoutSubmit}
                   >
                     Sign out
                   </Link>

@@ -51,6 +51,11 @@ namespace JobPreppersProto.Controllers
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("thisisuperlongbecauseitneedstobe256bits"));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            Console.WriteLine("CLAIMS");
+            foreach (var claim in claims)
+            {
+                Console.WriteLine($"{claim.Type}: {claim.Value}");
+            }
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
@@ -65,7 +70,7 @@ namespace JobPreppersProto.Controllers
             return tokenHandler.WriteToken(token); // return jwt token
         }
 
-        [HttpPost("check")]
+        [HttpPost("login")]
         public async Task<IActionResult> CheckUserExists([FromBody] LoginRequest request)
         {
             if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
@@ -88,14 +93,21 @@ namespace JobPreppersProto.Controllers
 
             var cookieOptions = new CookieOptions
             {
-                HttpOnly = true, 
+                HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict, 
-                Expires = DateTime.UtcNow.AddDays(7) 
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7)
             };
 
             Response.Cookies.Append("authToken", token, cookieOptions);
             return Ok(new { message = "Welcome to JobPreppers, " + user.username, user = user, token = token });
+        }
+
+        [HttpPost("logout")]
+        public IActionResult Logout() {
+            Console.WriteLine("User has logged out, deleting auth token");
+            Response.Cookies.Delete("authToken");
+            return Ok(new { message = "Logged out successfully." });
         }
 
         [HttpGet("me")]
@@ -103,7 +115,8 @@ namespace JobPreppersProto.Controllers
         public async Task<IActionResult> GetMe()
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == "userID")?.Value;
-            Console.WriteLine("HLEP HELP HELP");
+            var username = User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
+
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(new { message = "Invalid token." });
@@ -116,6 +129,7 @@ namespace JobPreppersProto.Controllers
                 return NotFound(new { message = "User not found." });
             }
 
+            Console.WriteLine($"Just performed an authentication check for user {userId}, {username}");
             return Ok(new { userId = user.userID, email = user.email, name = user.username });
         }
 
