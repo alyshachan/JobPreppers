@@ -18,4 +18,6 @@ public partial class User
     public string email { get; set; } = null!;
 
     public virtual ICollection<Resume> Resumes { get; set; } = new List<Resume>();
+
+    public virtual ICollection<userSkill> userSkills { get; set; } = new List<userSkill>();
 }
