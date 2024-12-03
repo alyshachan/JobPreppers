@@ -29,7 +29,9 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<userSkill> userSkills { get; set; }
 
-    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseMySql("name=ConnectionStrings:DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
