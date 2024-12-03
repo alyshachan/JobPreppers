@@ -12,6 +12,7 @@ import Profile from "./Pages/Profile";
 import Resume from "./Pages/Resume";
 import Interview from "./Pages/Interview";
 import Login from "./Pages/Login";
+import Signup from "./Pages/Signup";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Profile />} />
         <Route path="/Login" element={<Login/>}/>
+        <Route path="/Signup" element={<Signup />} />
         <Route path="/Profile" element={<Profile/>}/>
         <Route path="/Jobs" element={<Jobs />} />
         <Route path="/Interview" element={<Interview />} />
