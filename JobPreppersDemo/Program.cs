@@ -23,19 +23,38 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql")));
 
 builder.Services.AddControllers();
+builder.Services.AddLogging(options =>
+{
+    options.AddConsole();
+    options.AddDebug();    
+});
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") // URL of your React app
+        policy.WithOrigins("http://localhost:3000") // react url
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
 
     });
 });
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                // Look for the token in the cookies
+                var token = context.Request.Cookies["authToken"];
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Token = token;
+                }
+                return Task.CompletedTask;
+            }
+        };
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,

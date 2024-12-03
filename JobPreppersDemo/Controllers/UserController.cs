@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
 
 
 namespace JobPreppersProto.Controllers
@@ -44,6 +45,7 @@ namespace JobPreppersProto.Controllers
         new Claim(ClaimTypes.NameIdentifier, user.userID.ToString()), // userid
         new Claim(ClaimTypes.Name, user.username), // username
         new Claim(ClaimTypes.Email, user.email), // email
+        new Claim(JwtRegisteredClaimNames.Aud, "yourdomain.com"),
     };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("thisisuperlongbecauseitneedstobe256bits"));
@@ -54,6 +56,8 @@ namespace JobPreppersProto.Controllers
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(1), //token expire time
                 SigningCredentials = credentials,
+                Issuer = "yourdomain.com",
+                Audience = "yourdomain.com",
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -77,14 +81,28 @@ namespace JobPreppersProto.Controllers
             }
 
             var token = GenerateJwtToken(user);
-            return Ok(new { message = "Login successful.", userId = user.userID, token = token});
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true, 
+                Secure = true,
+                SameSite = SameSiteMode.Strict, 
+                Expires = DateTime.UtcNow.AddDays(7) 
+            };
+
+            Response.Cookies.Append("authToken", token, cookieOptions);
+            return Ok(new { message = "Welcome to JobPreppers, " + user.username, user = user, token = token });
         }
 
         [HttpGet("me")]
         [Authorize]
         public async Task<IActionResult> GetMe()
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "userID")?.Value;
+
+            Debug.WriteLine("hello?");
+            Debug.WriteLine(userId);
+            Console.WriteLine(userId);
 
             if (string.IsNullOrEmpty(userId))
             {

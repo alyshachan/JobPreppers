@@ -11,17 +11,21 @@ export const AuthProvider = ({ children }) => {
     // Check if the token exists in the cookies (HTTP-only cookie managed by the browser)
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch("http://localhost:5001/api/users/me", {
-            credentials: 'include', // include cookies
+        console.log("Attempting an auth request")
+        const response = await fetch("http://localhost:5001/api/Users/me", {
+            credentials: "include", // include cookies
           });
 
         if (response.ok) {
             const data = await response.json();
+            console.log("Just performed an authentication check")
             if (data.user) {
                 setUser(data.user);
+                console.log("yipppe!!")
             }
         }
       } catch (error) {
+        console.log("No signed in user detected. :(")
         setUser(null); // Clear user data if the token is invalid or expired
       }
     };

@@ -13,18 +13,18 @@ export default function Login() {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch("http://localhost:5001/api/users/check", {
+      const response = await fetch("http://localhost:5001/api/Users/check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-        credentials: 'include', // include cookies
+        credentials: "include", // include cookies
       });
 
       if (response.ok) {
         const data = await response.json();
-
+        console.log(data)
         if (data.user) {
-
+          
           setAuthData(data.user) // make the user object accessible to the entire app if authenticated
           // Show a success popup
           navigate("/profile");
@@ -36,6 +36,7 @@ export default function Login() {
         setError(errorData.message); // Show error message from the backend
       }
     } catch (err) {
+      console.log(err)
       setError("An error occurred. Please try again."); // Catch and display any request error
     }
   };
