@@ -37,7 +37,7 @@ const JobType = ({ setFilters, jobs }) => {
           multiple
           id="checkboxes-tags-demo"
           className="drop-down"
-          options={jobs}
+          options={List_Value}
           limitTags={1}
           disableCloseOnSelect
           getOptionLabel={(option) => option.value}

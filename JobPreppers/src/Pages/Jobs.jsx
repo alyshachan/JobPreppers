@@ -14,7 +14,7 @@ function Jobs() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await fetch("http://localhost:5001/api/job");
+        const res = await fetch("http://localhost:5000/api/job");
         if (res.ok) {
           const data = await res.json();
           console.log(data);

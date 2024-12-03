@@ -35,7 +35,7 @@ export default function Company({ setFilters, jobs }) {
 
   useEffect(() => {
     const fetchCompanies = async () => {
-      const response = await fetch("http://localhost:5001/api/job"); // Replace with your actual API
+      const response = await fetch("http://localhost:5000/api/job"); // Replace with your actual API
       if (response.ok) {
         const data = await response.json();
         // Outputs: "boolean"
