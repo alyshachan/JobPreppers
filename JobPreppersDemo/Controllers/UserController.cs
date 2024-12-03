@@ -42,9 +42,9 @@ namespace JobPreppersProto.Controllers
         {
             var claims = new[]
             {
-        new Claim(ClaimTypes.NameIdentifier, user.userID.ToString()), // userid
-        new Claim(ClaimTypes.Name, user.username), // username
-        new Claim(ClaimTypes.Email, user.email), // email
+        new Claim("userID", user.userID.ToString()), // userid
+        new Claim("username", user.username), // username
+        new Claim("email", user.email), // email
         new Claim(JwtRegisteredClaimNames.Aud, "yourdomain.com"),
     };
 
@@ -80,7 +80,11 @@ namespace JobPreppersProto.Controllers
                 return Unauthorized(new { message = "Invalid email or password." });
             }
 
+            Console.WriteLine(user.userID);
+            Console.WriteLine(user.username);
+            Console.WriteLine(user.email);
             var token = GenerateJwtToken(user);
+            Console.WriteLine("Generated token: " + token);
 
             var cookieOptions = new CookieOptions
             {
@@ -99,11 +103,7 @@ namespace JobPreppersProto.Controllers
         public async Task<IActionResult> GetMe()
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == "userID")?.Value;
-
-            Debug.WriteLine("hello?");
-            Debug.WriteLine(userId);
-            Console.WriteLine(userId);
-
+            Console.WriteLine("HLEP HELP HELP");
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(new { message = "Invalid token." });

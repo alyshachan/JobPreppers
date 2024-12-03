@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+Console.WriteLine("PLease work");
+
 if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
@@ -42,19 +44,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Events = new JwtBearerEvents
-        {
-            OnMessageReceived = context =>
-            {
-                // Look for the token in the cookies
-                var token = context.Request.Cookies["authToken"];
-                if (!string.IsNullOrEmpty(token))
-                {
-                    context.Token = token;
-                }
-                return Task.CompletedTask;
-            }
-        };
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -63,10 +52,40 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = "yourdomain.com",
             ValidAudience = "yourdomain.com",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("thisisuperlongbecauseitneedstobe256bits")),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("thisisuperlongbecauseitneedstobe256bits"))
+        };
 
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                return Task.CompletedTask;
+            },
+            OnChallenge = context =>
+            {
+                if (string.IsNullOrEmpty(context.ErrorDescription))
+                {
+                    context.Response.Headers["WWW-Authenticate"] =
+                        "Bearer realm=\"yourdomain.com\", error=\"invalid_token\", error_description=\"The token is invalid or expired.\"";
+                }
+
+                return Task.CompletedTask;
+            },
+            OnMessageReceived = context =>
+            {
+                var token = context.HttpContext.Request.Cookies["authToken"];
+     
+                // Console.WriteLine(token);
+                if (!string.IsNullOrEmpty(token));
+                {
+                    context.Token = token;
+                }
+                return Task.CompletedTask;
+            },
         };
     });
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
