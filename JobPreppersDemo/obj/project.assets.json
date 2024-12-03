@@ -4031,11 +4031,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Trang Tran\\job-preppers\\JobPreppersDemo\\JobPreppersDemo.csproj",
+      "projectUniqueName": "C:\\Users\\Trang Tran\\job-preppers-1\\JobPreppersDemo\\JobPreppersDemo.csproj",
       "projectName": "JobPreppersDemo",
-      "projectPath": "C:\\Users\\Trang Tran\\job-preppers\\JobPreppersDemo\\JobPreppersDemo.csproj",
+      "projectPath": "C:\\Users\\Trang Tran\\job-preppers-1\\JobPreppersDemo\\JobPreppersDemo.csproj",
       "packagesPath": "C:\\Users\\Trang Tran\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Trang Tran\\job-preppers\\JobPreppersDemo\\obj\\",
+      "outputPath": "C:\\Users\\Trang Tran\\job-preppers-1\\JobPreppersDemo\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

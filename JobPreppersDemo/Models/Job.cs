@@ -1,7 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace JobPreppersDemo.Models;
+namespace JobPreppersDemo.Models
+{
+    public class FilterRequest
+    {
+        public DateTime? Date { get; set; }
+        public List<string>? Type { get; set; }
+
+        public List<string>? Company { get; set; }
+
+    }
+}
+
 
 public partial class Job
 {
@@ -17,9 +28,13 @@ public partial class Job
 
     public DateTime? postedAt { get; set; }
 
-    public DateOnly fill_by_date { get; set; }
+    public DateTime? fill_by_date { get; set; }
 
     public string company { get; set; } = null!;
 
     public string type { get; set; } = null!;
+
+    public string? benefits { get; set; }
 }
+
+

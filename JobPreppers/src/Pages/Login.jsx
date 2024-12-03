@@ -10,7 +10,7 @@ export default function Login() {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch("http://localhost:5000/api/users/check", {
+      const response = await fetch("http://localhost:5001/api/users/check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -34,12 +34,17 @@ export default function Login() {
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h1 className="mt-10 text-center font-bold tracking-tight text-gray-900">Log In</h1>
+        <h1 className="mt-10 text-center font-bold tracking-tight text-gray-900">
+          Log In
+        </h1>
       </div>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-900">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-900"
+            >
               Email address
             </label>
             <div className="mt-2">
@@ -56,7 +61,10 @@ export default function Login() {
             </div>
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-900">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-900"
+            >
               Password
             </label>
             <div className="mt-2">
@@ -72,7 +80,8 @@ export default function Login() {
               />
             </div>
           </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>} {/* Show error message */}
+          {error && <p className="text-red-500 text-sm">{error}</p>}{" "}
+          {/* Show error message */}
           <div>
             <button
               type="submit"
