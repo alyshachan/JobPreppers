@@ -28,7 +28,7 @@ builder.Services.AddControllers();
 builder.Services.AddLogging(options =>
 {
     options.AddConsole();
-    options.AddDebug();    
+    options.AddDebug();
 });
 builder.Services.AddCors(options =>
 {
@@ -75,9 +75,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             OnMessageReceived = context =>
             {
                 var token = context.HttpContext.Request.Cookies["authToken"];
-     
+
                 // Console.WriteLine(token);
-                if (!string.IsNullOrEmpty(token));
+                if (!string.IsNullOrEmpty(token)) ;
                 {
                     context.Token = token;
                 }
@@ -107,7 +107,6 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 app.UseCors("AllowReactApp");
-app.Urls.Add("http://localhost:5000");
 app.UseAuthentication();
 app.UseAuthorization();
 app.Urls.Add("http://localhost:5000");
