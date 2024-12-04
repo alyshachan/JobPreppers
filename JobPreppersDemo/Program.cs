@@ -107,7 +107,7 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 app.UseCors("AllowReactApp");
-app.Urls.Add("http://localhost:5001");
+app.Urls.Add("http://localhost:5000");
 app.UseAuthentication();
 app.UseAuthorization();
 

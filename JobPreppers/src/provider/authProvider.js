@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch("http://localhost:5001/api/Users/me", {
+        const response = await fetch("http://localhost:5000/api/Users/me", {
             credentials: "include", // include cookies
           });
 

@@ -9,15 +9,11 @@ export default function Login() {
   const navigate = useNavigate();
   const {user, setAuthData } = useAuth(); // custom hook for authprovider
 
-  // useEffect(() => {
-  //   console.log("User data changed:", user);
-  // }, [user]);
-
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
   
     try {
-      const response = await fetch("http://localhost:5001/api/Users/login", {
+      const response = await fetch("http://localhost:5000/api/Users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
