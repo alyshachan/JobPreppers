@@ -13,7 +13,9 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link, useMatch, useResolvedPath } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
+import { useAuth } from "../provider/authProvider";
 
 const navigation = [
   { name: "Feed", href: "/", current: true },
@@ -48,7 +50,41 @@ function CustomLink({ to, children, className, ...props }) {
   );
 }
 
-function NavBar() {
+function NavBar({ firstName, lastName, profilePicture }) {
+  const { user, setAuthData } = useAuth(); // custom hook for authprovider
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogoutSubmit = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+
+    try {
+      const response = await fetch("http://localhost:5001/api/Users/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        navigate("/Login");
+        if (data) {
+          setAuthData(null); // on log out, clear the context
+          window.alert(data.message); // Displays "Login successful."
+          setError(""); // Clear any previous error message
+        }
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
+
+  if (user == null) {
+    return
+  }
   return (
     <Disclosure as="nav" className="bg-[#4BA173] w-full padding">
       <div className="mx-auto w-full px-2">
@@ -100,6 +136,8 @@ function NavBar() {
               <BellIcon aria-hidden="true" className="h-6 w-6" />
             </button>
 
+            Hello {user.first_name} {user.last_name}
+
             <Menu as="div" className="relative ml-3">
               <div>
                 <MenuButton className="relative flex rounded-full bg-[#4BA173] text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
@@ -107,7 +145,7 @@ function NavBar() {
                   <span className="sr-only">Open user menu</span>
                   <img
                     alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    src={profilePicture}
                     className="h-8 w-8 rounded-full"
                   />
                 </MenuButton>
@@ -136,6 +174,7 @@ function NavBar() {
                   <Link
                     to="/Login"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                    onClick = {handleLogoutSubmit}
                   >
                     Sign out
                   </Link>

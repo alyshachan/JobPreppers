@@ -1,7 +1,10 @@
 import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
+import { useAuth } from "../provider/authProvider";
+
 function Profile() {
+  const {user, setAuthData } = useAuth(); // custom hook for authprovider
   const skills = {
     "Programming Languages": ["Python", "Java", "C", "C++", "C#"],
     "Machine Learning & Data Analysis": [
@@ -18,13 +21,21 @@ function Profile() {
     ],
     "Additional Skills": ["React", "Node.js", "TypeScript", "HTML/CSS"],
   };
+
+  if (user == null) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
       <div className="content !mt-[175px]">
         <div className="main-panel !flex-row gap-[50px]">
           <div className="main-personal">
-            <div className="circle" />
-            <p className="name">Justin Ellis</p>
+            <div className="circle">
+              <img className="rounded-full"/>
+            </div>
+            <p className="name">
+              {user.first_name} {user.last_name}
+            </p>
             <p>Computer Science Student at the University of Utah</p>
             <p className="section-element-subtitle">
               Salt Lake City, UT
