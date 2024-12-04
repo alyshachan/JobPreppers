@@ -1,27 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../provider/authProvider";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const {user, setAuthData } = useAuth(); // custom hook for authprovider
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
-
+  
     try {
-      const response = await fetch("http://localhost:5000/api/users/check", {
+      const response = await fetch("http://localhost:5000/api/Users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: "include", // include cookies
       });
 
       if (response.ok) {
         const data = await response.json();
-        // Show a success popup\
-        navigate("/profile");
-        window.alert(data.message); // Displays "Login successful."
-        setError(""); // Clear any previous error message
+        if (data.user) {
+          
+          setAuthData({
+            userID: data.user.userID,
+            username: data.user.username,
+            first_name: data.user.first_name,
+            last_name: data.user.last_name,
+            email: data.user.email,
+          })
+          // Show a success popup
+          navigate("/profile");
+          window.alert(data.message); // Displays "Login successful."
+          setError(""); // Clear any previous error message
+        }
       } else {
         const errorData = await response.json();
         setError(errorData.message); // Show error message from the backend

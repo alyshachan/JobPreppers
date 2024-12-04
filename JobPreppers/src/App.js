@@ -12,20 +12,23 @@ import Profile from "./Pages/Profile";
 import Resume from "./Pages/Resume";
 import Interview from "./Pages/Interview";
 import Login from "./Pages/Login";
+import { AuthProvider } from "./provider/authProvider";
 
 
 function App() {
   return (
     <>
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Profile />} />
-        <Route path="/Login" element={<Login/>}/>
-        <Route path="/Profile" element={<Profile/>}/>
-        <Route path="/Jobs" element={<Jobs />} />
-        <Route path="/Interview" element={<Interview />} />
-        <Route path="/Resume" element={<Resume />} />
-      </Routes>
+      <AuthProvider>
+        <NavBar/>
+        <Routes>
+          <Route path="/" element={<Login/>} />
+          <Route path="/Login" element={<Login/>}/>
+          <Route path="/Profile" element={<Profile/>}/>
+          <Route path="/Jobs" element={<Jobs />} />
+          <Route path="/Interview" element={<Interview />} />
+          <Route path="/Resume" element={<Resume />} />
+        </Routes>
+      </AuthProvider>
     </>
   );
 }

@@ -1,55 +1,21 @@
-# Prerequisites
-*.d
+# Ignore build outputs
+bin/
+obj/
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+# Ignore user-specific settings
+.vs/
+*.user
+*.suo
 
-# Linker output
-*.ilk
-*.map
-*.exp
+# Ignore logs
+*.log
 
-# Precompiled Headers
-*.gch
-*.pch
+# OS-specific files
+.DS_Store
+Thumbs.db
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
+# Ignore appsettings files (sensitive configurations)
+appsettings*.json
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
-JobPreppersDemo/obj/
-JobPreppersDemo/bin/
-JobPreppersDemo/Properties
+# Ignore Properties folder (auto-generated files)
+Properties/

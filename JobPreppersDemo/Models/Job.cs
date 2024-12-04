@@ -22,4 +22,6 @@ public partial class Job
     public string company { get; set; } = null!;
 
     public string type { get; set; } = null!;
+
+    public string? benefits { get; set; }
 }
