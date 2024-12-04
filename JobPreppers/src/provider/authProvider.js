@@ -7,27 +7,35 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
+  // useEffect(() => { for debug
+  //   if (user) {
+  //     console.log("User state updated:");
+  //     console.log(user);
+  //   }
+  // }, [user]);
+
   useEffect(() => {
-    // Check if the token exists in the cookies (HTTP-only cookie managed by the browser)
     const checkAuthStatus = async () => {
       try {
-        console.log("Attempting an auth request")
         const response = await fetch("http://localhost:5001/api/Users/me", {
             credentials: "include", // include cookies
           });
 
         if (response.ok) {
             const data = await response.json();
-            console.log("Just performed an authentication check")
-            console.log(data)
             if (data) {
-                setUser(data);
-                console.log("yipppe!!")
+              const newUser = {
+                userID: data.userID,
+                username: data.username,
+                first_name: data.first_name,
+                last_name: data.last_name,
+                email: data.email,
+              };
+              setUser(newUser);
             }
         }
       } catch (error) {
-        console.log("No signed in user detected. :(")
-        setUser(null); // Clear user data if the token is invalid or expired
+        setUser(null); // clear user data if the token is invalid or expired
       }
     };
 
@@ -36,8 +44,6 @@ export const AuthProvider = ({ children }) => {
 
   const setAuthData = (newUser) => {
     setUser(newUser); // Set user data after successful login
-    console.log("New user set:")
-    console.log(newUser)
   };
 
 

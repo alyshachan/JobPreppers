@@ -51,7 +51,7 @@ function CustomLink({ to, children, className, ...props }) {
 }
 
 function NavBar({ firstName, lastName, profilePicture }) {
-  const { setAuthData } = useAuth(); // custom hook for authprovider
+  const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -67,10 +67,8 @@ function NavBar({ firstName, lastName, profilePicture }) {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         navigate("/Login");
         if (data) {
-          console.log("User logged out");
           setAuthData(null); // on log out, clear the context
           window.alert(data.message); // Displays "Login successful."
           setError(""); // Clear any previous error message
@@ -80,10 +78,13 @@ function NavBar({ firstName, lastName, profilePicture }) {
         setError(errorData.message); // Show error message from the backend
       }
     } catch (err) {
-      console.log(err)
       setError("An error occurred. Please try again."); // Catch and display any request error
     }
   };
+
+  if (user == null) {
+    return
+  }
   return (
     <Disclosure as="nav" className="bg-[#4BA173] w-full padding">
       <div className="mx-auto w-full px-2">
@@ -135,7 +136,7 @@ function NavBar({ firstName, lastName, profilePicture }) {
               <BellIcon aria-hidden="true" className="h-6 w-6" />
             </button>
 
-            Hello {firstName} {lastName}
+            Hello {user.first_name} {user.last_name}
 
             <Menu as="div" className="relative ml-3">
               <div>

@@ -9,9 +9,9 @@ export default function Login() {
   const navigate = useNavigate();
   const {user, setAuthData } = useAuth(); // custom hook for authprovider
 
-  useEffect(() => {
-    console.log("User data changed:", user);
-  }, [user]);
+  // useEffect(() => {
+  //   console.log("User data changed:", user);
+  // }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -28,16 +28,13 @@ export default function Login() {
         const data = await response.json();
         if (data.user) {
           
-          console.log("Setting auth data");
-          console.log(data.user.username)
           setAuthData({
             userID: data.user.userID,
             username: data.user.username,
+            first_name: data.user.first_name,
+            last_name: data.user.last_name,
             email: data.user.email,
-          }) // make the user object accessible to the entire app if authenticated
-
-          // console.log("Current auth data:")
-          // console.log(user);
+          })
           // Show a success popup
           navigate("/profile");
           window.alert(data.message); // Displays "Login successful."
@@ -48,7 +45,6 @@ export default function Login() {
         setError(errorData.message); // Show error message from the backend
       }
     } catch (err) {
-      console.log(err)
       setError("An error occurred. Please try again."); // Catch and display any request error
     }
   };

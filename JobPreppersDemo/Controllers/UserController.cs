@@ -51,11 +51,6 @@ namespace JobPreppersProto.Controllers
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("thisisuperlongbecauseitneedstobe256bits"));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            Console.WriteLine("CLAIMS");
-            foreach (var claim in claims)
-            {
-                Console.WriteLine($"{claim.Type}: {claim.Value}");
-            }
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
@@ -85,12 +80,7 @@ namespace JobPreppersProto.Controllers
                 return Unauthorized(new { message = "Invalid email or password." });
             }
 
-            Console.WriteLine(user.userID);
-            Console.WriteLine(user.username);
-            Console.WriteLine(user.email);
             var token = GenerateJwtToken(user);
-            Console.WriteLine("Generated token: " + token);
-
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
@@ -105,7 +95,6 @@ namespace JobPreppersProto.Controllers
 
         [HttpPost("logout")]
         public IActionResult Logout() {
-            Console.WriteLine("User has logged out, deleting auth token");
             Response.Cookies.Delete("authToken");
             return Ok(new { message = "Logged out successfully." });
         }
@@ -114,23 +103,28 @@ namespace JobPreppersProto.Controllers
         [Authorize]
         public async Task<IActionResult> GetMe()
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "userID")?.Value;
+            var userID = User.Claims.FirstOrDefault(c => c.Type == "userID")?.Value;
             var username = User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
 
-            if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userID))
             {
                 return Unauthorized(new { message = "Invalid token." });
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.userID.ToString() == userId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.userID.ToString() == userID);
 
             if (user == null)
             {
                 return NotFound(new { message = "User not found." });
             }
 
-            Console.WriteLine($"Just performed an authentication check for user {userId}, {username}");
-            return Ok(new { userId = user.userID, username = user.username, email = user.email });
+            // Console.WriteLine($"Just performed an authentication check for user {userID}, {username}");
+            return Ok(new { 
+                userID = user.userID, 
+                username = user.username,
+                first_name = user.first_name,
+                last_name = user.last_name, 
+                email = user.email });
         }
 
 

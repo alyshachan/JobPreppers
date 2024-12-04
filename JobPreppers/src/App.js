@@ -16,17 +16,17 @@ import { AuthProvider } from "./provider/authProvider";
 
 
 function App() {
-  const firstName = "Goku"
-  const lastName = "Son"
-  const pfp = "https://pbs.twimg.com/profile_images/1366466342354751491/JyhZpbtu_400x400.jpg"
+  // const firstName = "Goku"
+  // const lastName = "Son"
+  // const pfp = "https://pbs.twimg.com/profile_images/1366466342354751491/JyhZpbtu_400x400.jpg"
   return (
     <>
       <AuthProvider>
-        <NavBar firstName={firstName} lastName={lastName} profilePicture={pfp}/>
+        <NavBar/>
         <Routes>
-          <Route path="/" element={<Profile firstName={firstName} lastName={lastName} profilePicture={pfp}/>} />
+          <Route path="/" element={<Profile/>} />
           <Route path="/Login" element={<Login/>}/>
-          <Route path="/Profile" element={<Profile firstName={firstName} lastName={lastName} profilePicture={pfp}/>}/>
+          <Route path="/Profile" element={<Profile/>}/>
           <Route path="/Jobs" element={<Jobs />} />
           <Route path="/Interview" element={<Interview />} />
           <Route path="/Resume" element={<Resume />} />
