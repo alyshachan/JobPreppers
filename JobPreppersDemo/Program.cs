@@ -39,11 +39,16 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "JobPreppersDemo API");
+        c.RoutePrefix = string.Empty; // Set Swagger UI as the root (e.g., localhost:5000)
+    });
 }
 
 //app.UseHttpsRedirection();
 app.UseCors("AllowReactApp");
+app.Urls.Add("http://localhost:5000");
 app.UseAuthorization();
 
 app.MapControllers();
