@@ -1,8 +1,10 @@
 import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
+import { useAuth } from "../provider/authProvider";
 
 function Profile({ firstName, lastName, profilePicture }) {
+  const {user, setAuthData } = useAuth(); // custom hook for authprovider
   const skills = {
     "Programming Languages": ["Python", "Java", "C", "C++", "C#"],
     "Machine Learning & Data Analysis": [
@@ -28,7 +30,7 @@ function Profile({ firstName, lastName, profilePicture }) {
               <img src={profilePicture} className="rounded-full"/>
             </div>
             <p className="name">
-              {firstName} {lastName}
+              {user.username}
             </p>
             <p>Computer Science Student at the University of Utah</p>
             <p className="section-element-subtitle">

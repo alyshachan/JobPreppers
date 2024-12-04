@@ -130,7 +130,7 @@ namespace JobPreppersProto.Controllers
             }
 
             Console.WriteLine($"Just performed an authentication check for user {userId}, {username}");
-            return Ok(new { userId = user.userID, email = user.email, name = user.username });
+            return Ok(new { userId = user.userID, username = user.username, email = user.email });
         }
 
 

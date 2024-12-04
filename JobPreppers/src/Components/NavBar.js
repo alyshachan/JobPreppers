@@ -69,9 +69,9 @@ function NavBar({ firstName, lastName, profilePicture }) {
         const data = await response.json();
         console.log(data);
         navigate("/Login");
-        if (data.user) {
+        if (data) {
           console.log("User logged out");
-          setAuthData(null); // make the user object accessible to the entire app if authenticated
+          setAuthData(null); // on log out, clear the context
           window.alert(data.message); // Displays "Login successful."
           setError(""); // Clear any previous error message
         }

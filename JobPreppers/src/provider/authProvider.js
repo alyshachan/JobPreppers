@@ -19,8 +19,9 @@ export const AuthProvider = ({ children }) => {
         if (response.ok) {
             const data = await response.json();
             console.log("Just performed an authentication check")
-            if (data.user) {
-                setUser(data.user);
+            console.log(data)
+            if (data) {
+                setUser(data);
                 console.log("yipppe!!")
             }
         }
@@ -35,7 +36,10 @@ export const AuthProvider = ({ children }) => {
 
   const setAuthData = (newUser) => {
     setUser(newUser); // Set user data after successful login
+    console.log("New user set:")
+    console.log(newUser)
   };
+
 
   const contextValue = useMemo(() => ({ user, setAuthData }), [user]);
 

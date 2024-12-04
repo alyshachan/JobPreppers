@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 
@@ -7,11 +7,15 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { setAuthData } = useAuth(); // custom hook for authprovider
+  const {user, setAuthData } = useAuth(); // custom hook for authprovider
+
+  useEffect(() => {
+    console.log("User data changed:", user);
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
-
+  
     try {
       const response = await fetch("http://localhost:5001/api/Users/login", {
         method: "POST",
@@ -22,10 +26,18 @@ export default function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
         if (data.user) {
           
-          setAuthData(data.user) // make the user object accessible to the entire app if authenticated
+          console.log("Setting auth data");
+          console.log(data.user.username)
+          setAuthData({
+            userID: data.user.userID,
+            username: data.user.username,
+            email: data.user.email,
+          }) // make the user object accessible to the entire app if authenticated
+
+          // console.log("Current auth data:")
+          // console.log(user);
           // Show a success popup
           navigate("/profile");
           window.alert(data.message); // Displays "Login successful."
