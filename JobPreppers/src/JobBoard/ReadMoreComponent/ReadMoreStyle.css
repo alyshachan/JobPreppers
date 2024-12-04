@@ -1,0 +1,39 @@
+.custom-divider.MuiDivider-root {
+  border: 2px solid #63d297;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.apply-button.MuiButton-contained {
+  border: 2px solid #4ba173;
+  color: white;
+  background-color: #4ba173;
+}
+
+.apply-button.MuiButton-contained:hover {
+  color: black;
+  background-color: #f0fbf5;
+  border: 2px solid #4ba173;
+}
+
+.bookmark-button.MuiButton-contained {
+  border: 2px solid #4ba173;
+  color: #4ba173;
+  background-color: #f0fbf5;
+  margin-right: 5px;
+}
+
+.bookmark-button.MuiButton-contained:hover {
+  border: 2px solid #4ba173;
+  color: white;
+  background-color: #4ba173;
+  /* color: #4ba173;
+  background-color: white; */
+  margin-right: 5px;
+}
+
+.start-text.MuiTypography-root {
+  font-size: 20px;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}

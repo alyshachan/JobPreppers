@@ -94,7 +94,7 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -110,6 +110,7 @@ app.UseCors("AllowReactApp");
 app.Urls.Add("http://localhost:5000");
 app.UseAuthentication();
 app.UseAuthorization();
+app.Urls.Add("http://localhost:5000");
 
 app.MapControllers();
 
