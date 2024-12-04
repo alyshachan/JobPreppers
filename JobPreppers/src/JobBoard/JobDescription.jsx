@@ -63,12 +63,21 @@ function JobDescription({ setDrawerOpen, jobs }) {
               spacing={2}
               sx={{ width: "100%", display: "flex", justifyContent: "center" }}
             >
-              <Box className="description-box">
-                <PaidIcon />
-                <Typography variant="body" sx={{ color: "text.secondary" }}>
-                  {job.pay_range}
-                </Typography>
-              </Box>
+              {job.max_salary == null ? (
+                <Box className="description-box">
+                  <PaidIcon />
+                  <Typography variant="body" sx={{ color: "text.secondary" }}>
+                    ${job.min_salary}
+                  </Typography>
+                </Box>
+              ) : (
+                <Box className="description-box">
+                  <PaidIcon />
+                  <Typography variant="body" sx={{ color: "text.secondary" }}>
+                    ${job.min_salary} - ${job.max_salary}
+                  </Typography>
+                </Box>
+              )}
               <Box className="description-box">
                 <AccessTimeFilledIcon />
                 <Typography variant="body" sx={{ color: "text.secondary" }}>

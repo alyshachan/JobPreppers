@@ -7,7 +7,7 @@ import DueDate from "./FilterMenu/DueDate";
 import Company from "./FilterMenu/Company";
 import { useEffect, useState, useRef } from "react";
 
-export default function FilterColumn({ setJobs, jobs }) {
+export default function FilterColumn({ setJobs, jobs, userCoordinate }) {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const containerRef = useRef(null);
   const [error, setError] = useState(null); // Define error state here
@@ -16,13 +16,13 @@ export default function FilterColumn({ setJobs, jobs }) {
     date: null,
     type: [],
     company: [],
-    // salary: null,
+    min_salary: 0,
     // distance: null,
   });
   useEffect(() => {
     const handleSearch = async () => {
       // e.preventDefault(); // Prevent default form submission
-      console.log("Date: ", { filters });
+      console.log("Filter: ", { filters });
       try {
         const response = await fetch("http://localhost:5000/api/job/filter", {
           method: "POST",
@@ -73,7 +73,7 @@ export default function FilterColumn({ setJobs, jobs }) {
             justifyContent: isOverflowing ? "flex-start" : "center",
           }}
         >
-          <Salary />
+          <Salary setFilters={setFilters} />
           <Distance />
           <Company setFilters={setFilters} jobs={jobs} />
           <JobType setFilters={setFilters} />

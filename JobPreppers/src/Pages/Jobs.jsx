@@ -10,6 +10,7 @@ function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [jobs, setJobs] = useState([]);
+  const [userCoordinate, setUserCoordinate] = useState(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -51,8 +52,12 @@ function Jobs() {
         >
           <div className="content">
             <div className="main-panel !bg-transparent !shadow-none !p-0 items-center">
-              <SearchColumn />
-              <FilterColumn setJobs={setJobs} jobs={jobs} />
+              <SearchColumn setUserCoordinate={setUserCoordinate} />
+              <FilterColumn
+                setJobs={setJobs}
+                jobs={jobs}
+                userCoordinate={userCoordinate}
+              />
             </div>
             <JobDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
           </div>

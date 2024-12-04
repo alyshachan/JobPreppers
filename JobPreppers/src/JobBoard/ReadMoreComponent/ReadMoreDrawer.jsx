@@ -20,12 +20,21 @@ export default function ReadMoreDrawer({ open, job, onClose }) {
         <Divider className="custom-divider" />
         <Box>
           <Typography className="start-text">Brief Overview </Typography>
-          <Box className="description-box">
-            <PaymentsIcon />
-            <Typography variant="body" sx={{ color: "text.secondary" }}>
-              {job.pay_range}
-            </Typography>
-          </Box>
+          {job.max_salary == null ? (
+            <Box className="description-box">
+              <PaymentsIcon />
+              <Typography variant="body" sx={{ color: "text.secondary" }}>
+                ${job.min_salary}
+              </Typography>
+            </Box>
+          ) : (
+            <Box className="description-box">
+              <PaymentsIcon />
+              <Typography variant="body" sx={{ color: "text.secondary" }}>
+                ${job.min_salary} - ${job.max_salary}
+              </Typography>
+            </Box>
+          )}
           <Box className="description-box">
             <WorkIcon />
             <Typography variant="body" sx={{ color: "text.secondary" }}>

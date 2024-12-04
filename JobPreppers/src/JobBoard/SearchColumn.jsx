@@ -8,17 +8,16 @@ import "../JobBoard/JobSection.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function SearchColumn() {
+function SearchColumn({ setUserCoordinate }) {
   const [jobName, setJobName] = useState("");
+  // Still need to cache but that for later
   const [location, setLocation] = useState(null);
-  const [userCoordinate, setUserCoordinate] = useState(null);
+  const [locationChanged, setLocationChanged] = useState(false);
   useEffect(() => {
     const getUserLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
-            setLocation(position);
-            setUserCoordinate(position.coordinate);
             const { latitude, longitude } = position.coords;
             setUserCoordinate({ latitude, longitude });
             const fetchedAddress = await getAddressFromCoordinates(
@@ -48,6 +47,34 @@ function SearchColumn() {
       return "Error fetching address";
     }
   };
+
+  const submitAddress = async () => {
+    console.log("Location: ", { location });
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+      location
+    )}&format=json`;
+
+    if (!location) {
+      alert("Please enter a location.");
+      return;
+    }
+
+    if (locationChanged) {
+      try {
+        const response = await axios.get(url);
+        if (response.data && response.data.length > 0) {
+          const { lat, lon } = response.data[0];
+          setUserCoordinate({ latitude: lat, longitude: lon });
+          console.log({ lat, lon });
+        } else {
+          console.log("No results found for the location");
+        }
+      } catch (error) {
+        console.error("Error fetching coordinates:", error);
+      }
+    }
+  };
+
   const clearName = (e) => {
     e.preventDefault();
     if (jobName) {
@@ -90,7 +117,10 @@ function SearchColumn() {
           id="location-input"
           className="mt-8 bg-white w-[40%]"
           value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          onChange={(e) => {
+            setLocation(e.target.value);
+            setLocationChanged(true);
+          }}
           slotProps={{
             input: {
               startAdornment: <LocationOnIcon position="start" />,
@@ -99,7 +129,11 @@ function SearchColumn() {
                   <IconButton aria-label="close" onClick={clearLocation}>
                     <CloseOutlinedIcon />
                   </IconButton>
-                  <button className="search-button" variant="contained">
+                  <button
+                    className="search-button"
+                    variant="contained"
+                    onClick={submitAddress}
+                  >
                     {" "}
                     Search{" "}
                   </button>

@@ -58,7 +58,10 @@ namespace JobPreppersDemo.Controllers
                 query = query.Where(job => request.Company.Contains(job.company));
             }
 
-
+            if (request.Min_Salary != 0)
+            {
+                query = query.Where(job => job.min_salary >= request.Min_Salary);
+            }
 
             var filteredJobs = await query.ToListAsync();
 
@@ -67,6 +70,7 @@ namespace JobPreppersDemo.Controllers
             {
                 return Ok(new List<Job>()); // Return an empty list with HTTP 200
             }
+
 
 
             return Ok(filteredJobs);
