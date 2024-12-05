@@ -99,9 +99,9 @@ namespace JobPreppersProto.Controllers
             return Ok(new { message = "Logged out successfully." });
         }
 
-        [HttpGet("me")]
+        [HttpGet("auth")]
         [Authorize]
-        public async Task<IActionResult> GetMe()
+        public async Task<IActionResult> Authenticate()
         {
             var userID = User.Claims.FirstOrDefault(c => c.Type == "userID")?.Value;
             var username = User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;

@@ -2,9 +2,12 @@ import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import { useAuth } from "../provider/authProvider";
+import React, {useEffect } from 'react';
 
 function Profile() {
+
   const {user, setAuthData } = useAuth(); // custom hook for authprovider
+
   const skills = {
     "Programming Languages": ["Python", "Java", "C", "C++", "C#"],
     "Machine Learning & Data Analysis": [
@@ -21,10 +24,35 @@ function Profile() {
     ],
     "Additional Skills": ["React", "Node.js", "TypeScript", "HTML/CSS"],
   };
+  
+  useEffect(() => {
+    const requestSkills = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/UserSkills/${user.userID}`, {
+          credentials: "include", // include cookies
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data) {
+            console.log("User skill response received!!")
+            console.log(data)
+            };
+          }
+        }
+       catch (error) {
+        console.log("In")
+        console.log(error)
+      }
+    };
+
+    requestSkills(); // Invoke the function
+  }); // Add dependencies
 
   if (user == null) {
     return <div>Loading...</div>;
   }
+  
   return (
     <>
       <div className="content !mt-[175px]">
