@@ -3,30 +3,46 @@ import { Box, Slider, Button, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import "./Menu.css";
+import { calculateDistance } from "./CalculateDistance";
 
 const marks = [
   {
-    value: 10,
-    label: "10m",
+    value: 50,
+    label: "50m",
   },
+  // {
+  //   value: 35,
+  //   label: "35m",
+  // },
+  // {
+  //   value: 60,
+  //   label: "60m",
+  // },
+  // {
+  //   value: 85,
+  //   label: "85m",
+  // },
+
   {
-    value: 35,
-    label: "35m",
+    value: 250,
+    label: "250m",
   },
+
   {
-    value: 60,
-    label: "60m",
+    value: 400,
+    label: "400m",
   },
+
   {
-    value: 85,
-    label: "85m",
+    value: 550,
+    label: "550m",
   },
 ];
 
 function valuetext(value) {
   return `${value} miles`;
 }
-export default function Distance() {
+export default function Distance({ jobs, userCoordinate, setJobs }) {
   const [sliderValue, setSliderValue] = useState(5);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [address, setAddress] = useState(""); // Store the address input
@@ -51,6 +67,24 @@ export default function Distance() {
 
   const handleShowResult = () => {
     console.log(`Distance: ${sliderValue}miles`);
+    const filteredJobs = jobs.filter((job) => {
+      const distanceInMiles = calculateDistance(
+        userCoordinate.latitude,
+        userCoordinate.longitude,
+        job.latitude,
+        job.longitude
+      );
+      console.log("job.latitude : ", job.latitude);
+      console.log("job.longitude : ", job.longitude);
+
+      console.log("Calculated Distance: ", distanceInMiles);
+      // Filter jobs that are smaller than or equal to the slider value
+      return distanceInMiles <= sliderValue;
+    });
+
+    console.log(filteredJobs);
+    setJobs(filteredJobs);
+
     handleClose();
     return sliderValue;
   };
@@ -82,13 +116,14 @@ export default function Distance() {
           <Box className="slider-box">
             <Slider
               aria-label="Custom marks"
-              defaultValue={5}
+              defaultValue={10}
               getAriaValueText={valuetext}
-              step={10}
+              step={20}
               value={sliderValue}
               onChange={handleSliderChange}
               valueLabelDisplay="auto"
               marks={marks}
+              max={600}
               className="slider"
             />
             {/* Need to add cancel and submit at the bottom */}

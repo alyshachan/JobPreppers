@@ -30,7 +30,8 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<userSkill> userSkills { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("name=ConnectionStrings:DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySql("server=jobprepperscapstone.cbgwos8q0ls4.us-east-2.rds.amazonaws.com;database=JobPreppersDB;port=3307;user id=JobPrepper;password=ILoveCanes2025!;sslmode=None", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

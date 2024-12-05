@@ -19,7 +19,7 @@ function SearchColumn({ setUserCoordinate }) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
-            setUserCoordinate({ latitude, longitude });
+            setUserCoordinate({ latitude: latitude, longitude: longitude });
             const fetchedAddress = await getAddressFromCoordinates(
               latitude,
               longitude

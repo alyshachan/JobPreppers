@@ -7,7 +7,7 @@ import "./Menu.css";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const JobType = ({ setFilters, jobs }) => {
+const JobType = ({ setFilters }) => {
   // Memoizing the options list to avoid unnecessary re-renders
   const List_Value = [
     { id: 0, value: "Full-Time" },
@@ -19,48 +19,46 @@ const JobType = ({ setFilters, jobs }) => {
     { id: 6, value: "Volunteer" },
   ];
 
-  const [selectValue, setSelectValue] = useState([]);
+  const [value, setValue] = useState([]);
 
   const handleChange = (event, newValue) => {
-    // Assuming `newValue` is an array (for multiple selections)
-    setSelectValue(newValue);
+    setValue(newValue); // Updates selectValue state
+    console.log("New Value: ", newValue); // Logs the latest selection
     setFilters((prev) => ({
       ...prev,
-      type: newValue.map((type) => type.value),
+      type: newValue.map((type) => type.value), // Uses latest selection for filters
     }));
   };
 
   return (
-    <>
-      <div>
-        <Autocomplete
-          multiple
-          id="checkboxes-tags-demo"
-          className="drop-down"
-          options={List_Value}
-          limitTags={1}
-          disableCloseOnSelect
-          getOptionLabel={(option) => option.value}
-          value={selectValue}
-          onChange={handleChange}
-          renderOption={(props, option, { selected }) => {
-            const { key, ...optionProps } = props;
-            return (
-              <li key={key} {...optionProps}>
-                <Checkbox
-                  icon={icon}
-                  checkedIcon={checkedIcon}
-                  style={{ marginRight: 8 }}
-                  checked={selected}
-                />
-                {option.value}
-              </li>
-            );
-          }}
-          renderInput={(params) => <TextField {...params} label="Job Type" />}
-        />
-      </div>
-    </>
+    <Autocomplete
+      multiple
+      id="checkboxes-tags-demo"
+      className="drop-down"
+      options={List_Value}
+      disableCloseOnSelect
+      value={value}
+      onChange={handleChange}
+      limitTags={1}
+      getOptionLabel={(option) => option.value}
+      renderOption={(props, option, { selected }) => {
+        const { key, ...optionProps } = props;
+        console.log(optionProps, "is selected:", selected);
+
+        return (
+          <li key={key} {...optionProps}>
+            <Checkbox
+              icon={icon}
+              checkedIcon={checkedIcon}
+              style={{ marginRight: 8 }}
+              checked={selected}
+            />
+            {option.value}
+          </li>
+        );
+      }}
+      renderInput={(params) => <TextField {...params} label="Job Type" />}
+    />
   );
 };
 

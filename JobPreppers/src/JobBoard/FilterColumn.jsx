@@ -17,8 +17,8 @@ export default function FilterColumn({ setJobs, jobs, userCoordinate }) {
     type: [],
     company: [],
     min_salary: 0,
-    // distance: null,
   });
+
   useEffect(() => {
     const handleSearch = async () => {
       // e.preventDefault(); // Prevent default form submission
@@ -45,7 +45,9 @@ export default function FilterColumn({ setJobs, jobs, userCoordinate }) {
         setError("An error occurred. Please try again."); // Catch and display any request error
       }
     };
-    handleSearch();
+    if (userCoordinate.latitude !== null && userCoordinate.longitude !== null) {
+      handleSearch();
+    }
   }, [filters]);
 
   const checkOverflow = () => {
@@ -74,7 +76,11 @@ export default function FilterColumn({ setJobs, jobs, userCoordinate }) {
           }}
         >
           <Salary setFilters={setFilters} />
-          <Distance />
+          <Distance
+            jobs={jobs}
+            userCoordinate={userCoordinate}
+            setJobs={setJobs}
+          />
           <Company setFilters={setFilters} jobs={jobs} />
           <JobType setFilters={setFilters} />
           <DueDate setFilters={setFilters} />

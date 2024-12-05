@@ -10,7 +10,10 @@ function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [jobs, setJobs] = useState([]);
-  const [userCoordinate, setUserCoordinate] = useState(null);
+  const [userCoordinate, setUserCoordinate] = useState({
+    latitude: null,
+    longitude: null,
+  });
 
   useEffect(() => {
     const fetchJobs = async () => {

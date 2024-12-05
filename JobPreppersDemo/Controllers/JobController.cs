@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using JobPreppersDemo.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using JobPreppersDemo.Models;
+// using NetTopologySuite.Geometries;
 namespace JobPreppersDemo.Models
 {
     public class FilterRequest
@@ -15,6 +17,12 @@ namespace JobPreppersDemo.Models
         public List<string>? Company { get; set; }
 
         public int Min_Salary { get; set; }
+
+        public double Latitude { get; set; }
+
+        public double Longitude { get; set; }
+
+        public int Distance { get; set; }
 
     }
 
@@ -74,6 +82,15 @@ namespace JobPreppersDemo.Controllers
             {
                 query = query.Where(job => job.min_salary >= request.Min_Salary);
             }
+
+            // if (request.Distance != 0)
+            // {
+            //     query = query.Where(
+            //         j => (DbGeography.FromText($"POINT({j.longitude} {j.latitude})", 4326)
+            //             .Distance(DbGeography.FromText($"POINT({request.Longitude} {request.Latitude})", 4326))) <= request.Distance
+            //     );
+            // }
+
 
             var filteredJobs = await query.ToListAsync();
 

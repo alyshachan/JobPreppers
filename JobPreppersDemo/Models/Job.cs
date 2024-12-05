@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 
 namespace JobPreppersDemo.Models;
+
 public partial class Job
 {
-
     public int jobID { get; set; }
 
     public string title { get; set; } = null!;
@@ -26,4 +26,8 @@ public partial class Job
     public int min_salary { get; set; }
 
     public int? max_salary { get; set; }
+
+    public double latitude { get; set; }
+
+    public double longitude { get; set; }
 }

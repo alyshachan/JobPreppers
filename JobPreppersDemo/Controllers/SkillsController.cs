@@ -6,13 +6,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using static JobPreppersDemo.Controllers.SkillsController;
 
+
 namespace JobPreppersDemo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class SkillsController : Controller
     {
-       
+
         private readonly ApplicationDbContext _context;
         public class SkillRequest
         {
@@ -49,8 +50,8 @@ namespace JobPreppersDemo.Controllers
                     return StatusCode(500, ex.Message);
                 }
             }
-           
+
         }
-       
+
     }
 }
