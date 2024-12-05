@@ -37,7 +37,7 @@ function JobDescription({ setDrawerOpen, jobs }) {
   return (
     <>
       {jobs.map((job) => (
-        <Card key={job.jobID} sx={{ minWidth: 500, margin: 2 }}>
+        <Card key={job.jobID} sx={{ width: "500px" , minWidth:"30%", margin: 2 }}>
           <CardHeader
             avatar={
               <Avatar src={amazonIcon} aria-label="recipe">
@@ -57,41 +57,50 @@ function JobDescription({ setDrawerOpen, jobs }) {
               </>
             }
           />
-          <CardContent>
-            <Stack
-              direction="column"
-              spacing={2}
-              sx={{ width: "100%", display: "flex", justifyContent: "center" }}
-            >
-              {job.max_salary == null ? (
-                <Box className="description-box">
-                  <PaidIcon />
-                  <Typography variant="body" sx={{ color: "text.secondary" }}>
-                    ${job.min_salary}
-                  </Typography>
-                </Box>
-              ) : (
-                <Box className="description-box">
-                  <PaidIcon />
-                  <Typography variant="body" sx={{ color: "text.secondary" }}>
-                    ${job.min_salary} - ${job.max_salary}
-                  </Typography>
-                </Box>
-              )}
-              <Box className="description-box">
-                <AccessTimeFilledIcon />
-                <Typography variant="body" sx={{ color: "text.secondary" }}>
-                  {job.type}
-                </Typography>
-              </Box>
-              <Box className="description-box">
-                <PlaceIcon />
-                <Typography variant="body" sx={{ color: "text.secondary" }}>
-                  {job.location}
-                </Typography>
-              </Box>
-            </Stack>
-          </CardContent>
+<CardContent>
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center", // Center the entire content in the CardContent
+      width: "100%",
+    }}
+  >
+    <Stack
+      direction="column"
+      spacing={2}
+    >
+      {job.max_salary == null ? (
+        <Box className="description-box">
+          <PaidIcon />
+          <Typography variant="body" sx={{ color: "text.secondary" }}>
+            ${job.min_salary}
+          </Typography>
+        </Box>
+      ) : (
+        <Box className="description-box">
+          <PaidIcon />
+          <Typography variant="body" sx={{ color: "text.secondary" }}>
+            ${job.min_salary} - ${job.max_salary}
+          </Typography>
+        </Box>
+      )}
+      <Box className="description-box">
+        <AccessTimeFilledIcon />
+        <Typography variant="body" sx={{ color: "text.secondary" }}>
+          {job.type}
+        </Typography>
+      </Box>
+      <Box className="description-box">
+        <PlaceIcon />
+        <Typography variant="body" sx={{ color: "text.secondary" }}>
+          {job.location}
+        </Typography>
+      </Box>
+    </Stack>
+  </Box>
+</CardContent>
+
           <CardActions>
             <Box
               sx={{

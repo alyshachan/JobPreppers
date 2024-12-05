@@ -6,6 +6,8 @@ import FilterColumn from "../JobBoard/FilterColumn";
 import JobDescription from "../JobBoard/JobDescription";
 import ReadMore from "../JobBoard/ReadMoreComponent/ReadMoreDrawer";
 
+const drawerWidth = 600;
+
 function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -37,17 +39,17 @@ function Jobs() {
           display: "flex",
           width: "100%",
           height: "100vh",
-    flexDirection: { xs: "column", md: "row" }, // Column layout for small screens, row for medium+
         }}
       >
         {/* Main Content Area */}
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            flexBasis: drawerOpen ? "55%" : "100%", // Main content takes up 50% when drawer is open
-            transition: "flex-basis 0.3s ease-in-out",
-            overflowY: "auto",
+            display: drawerOpen && { xs: "flex", md: "block" }, // Hide Main Content on small screens when Drawer is open
+            flexBasis: drawerOpen ? `calc(200% - ${drawerWidth})` : "100%",
+            transition: "flex 0.3s ease-in-out",
+            overflowY: drawerOpen ? "auto" : "none",
+            flexDirection: { xs: "column", md: "row" },
+            width: "100%",
           }}
         >
           <div className="content">
@@ -67,9 +69,9 @@ function Jobs() {
         <Box
           sx={{
             display: drawerOpen ? "flex" : "none", // Only show when the drawer is open
-            flexBasis: drawerOpen ? "50%" : "0%", // Drawer occupies 50% when open
+            flexBasis: drawerOpen ? "100%" : "0%", // Drawer occupies 50% when open
             transition: "flex-basis 0.3s ease-in-out",
-            overflowY: "auto",
+            backgroundColor: "red",
           }}
         >
           <ReadMore />

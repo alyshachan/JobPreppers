@@ -3,8 +3,8 @@ import { Drawer, Box, Typography, Divider } from "@mui/material";
 import Header from "./Header";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import WorkIcon from "@mui/icons-material/Work";
-import "./ReadMoreStyle.css";
 import PlaceIcon from "@mui/icons-material/Place";
+import "./ReadMoreStyle.css";
 
 const drawerWidth = 600;
 
@@ -12,7 +12,22 @@ export default function ReadMoreDrawer({ open, job, onClose }) {
   if (!job) return null; // Render nothing if no job is selected
 
   return (
-    <Drawer anchor="right" variant="persistent" open={open} onClose={onClose}>
+    <Drawer
+      anchor="right"
+      variant="persistent"
+      open={open}
+      onClose={onClose}
+      hideBackdrop
+      sx={{
+        width: {
+          xs: "100%", // Full width on small screens
+          sm: "50%",  // 50% width on medium screens
+          md: drawerWidth,  // Fixed width (600px) on large screens
+        },
+        flexShrink: 0, // Prevent shrinking of the drawer
+        transition: "width 0.3s ease-in-out", // Smooth transition for opening/closing
+      }}
+    >
       <Box sx={{ width: drawerWidth, padding: 2 }}>
         <Header job={job} onClose={onClose} />
 
