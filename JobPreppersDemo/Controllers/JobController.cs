@@ -76,7 +76,16 @@ namespace JobPreppersDemo.Controllers
             return Ok(filteredJobs);
         }
     }
+    public class FilterRequest
+    {
+        public DateTime? Date { get; set; }
+        public List<string>? Type { get; set; }
 
+        public List<string>? Company { get; set; }
+
+        public int Min_Salary { get; set; }
+
+    }
 
 
 }
