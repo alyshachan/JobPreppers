@@ -37,7 +37,7 @@ function Jobs() {
           display: "flex",
           width: "100%",
           height: "100vh",
-          transition: "all 0.3s ease-in-out",
+    flexDirection: { xs: "column", md: "row" }, // Column layout for small screens, row for medium+
         }}
       >
         {/* Main Content Area */}
