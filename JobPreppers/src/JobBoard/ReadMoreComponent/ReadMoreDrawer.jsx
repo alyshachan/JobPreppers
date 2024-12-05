@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Drawer, Box, Typography, Divider } from "@mui/material";
 import Header from "./Header";
 import PaymentsIcon from "@mui/icons-material/Payments";
@@ -6,10 +6,22 @@ import WorkIcon from "@mui/icons-material/Work";
 import PlaceIcon from "@mui/icons-material/Place";
 import "./ReadMoreStyle.css";
 
-const drawerWidth = 600;
-
 export default function ReadMoreDrawer({ open, job, onClose }) {
-  if (!job) return null; // Render nothing if no job is selected
+  const [isNarrow, setIsNarrow] = useState(window.innerWidth < 1200); // Initial state based on window width
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsNarrow(window.innerWidth < 1200); // Update isNarrow based on window width
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize); // Cleanup
+  }, []);
+
+  const drawerWidth = isNarrow ? "100%" : "600px";
+
+  if (!job) return null;
 
   return (
     <Drawer
@@ -18,14 +30,11 @@ export default function ReadMoreDrawer({ open, job, onClose }) {
       open={open}
       onClose={onClose}
       hideBackdrop
-      sx={{
-        width: {
-          xs: "100%", // Full width on small screens
-          sm: "50%",  // 50% width on medium screens
-          md: drawerWidth,  // Fixed width (600px) on large screens
+      PaperProps={{
+        sx: {
+          width: drawerWidth,
+          transition: "width 0.3s ease-in-out", // Smooth transition for opening/closing
         },
-        flexShrink: 0, // Prevent shrinking of the drawer
-        transition: "width 0.3s ease-in-out", // Smooth transition for opening/closing
       }}
     >
       <Box sx={{ width: drawerWidth, padding: 2 }}>
