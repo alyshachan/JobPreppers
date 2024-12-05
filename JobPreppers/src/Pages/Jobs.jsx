@@ -6,8 +6,6 @@ import FilterColumn from "../JobBoard/FilterColumn";
 import JobDescription from "../JobBoard/JobDescription";
 import ReadMore from "../JobBoard/ReadMoreComponent/ReadMoreDrawer";
 
-const drawerWidth = 600;
-
 function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -45,7 +43,7 @@ function Jobs() {
         <Box
           sx={{
             display: drawerOpen && { xs: "flex", md: "block" }, // Hide Main Content on small screens when Drawer is open
-            flexBasis: drawerOpen ? `calc(200% - ${drawerWidth})` : "100%",
+            flexBasis: drawerOpen ? "68%" : "100%",
             transition: "flex 0.3s ease-in-out",
             overflowY: drawerOpen ? "auto" : "none",
             flexDirection: { xs: "column", md: "row" },
@@ -68,10 +66,9 @@ function Jobs() {
         {/* Drawer Area */}
         <Box
           sx={{
-            display: drawerOpen ? "flex" : "none", // Only show when the drawer is open
-            flexBasis: drawerOpen ? "100%" : "0%", // Drawer occupies 50% when open
+            display: drawerOpen ? "flex" : "none", 
+            flexBasis: drawerOpen ? "600px" : "0%", 
             transition: "flex-basis 0.3s ease-in-out",
-            backgroundColor: "red",
           }}
         >
           <ReadMore />

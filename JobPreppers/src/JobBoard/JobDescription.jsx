@@ -37,7 +37,7 @@ function JobDescription({ setDrawerOpen, jobs }) {
   return (
     <>
       {jobs.map((job) => (
-        <Card key={job.jobID} sx={{ width: "500px" , minWidth:"30%", margin: 2 }}>
+        <Card key={job.jobID} sx={{ maxWidth: "500px" , width:"40%", margin: 2 }}>
           <CardHeader
             avatar={
               <Avatar src={amazonIcon} aria-label="recipe">
