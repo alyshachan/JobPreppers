@@ -8,7 +8,8 @@ function EducationSection() {
       
       <div className="section-content">
         <div className="education">
-          <div className="rect" />
+          {/* <div className="rect" /> */}
+          <img className="rect !bg-white" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"/>
 
           <div className="education-content">
             <p className="section-element-title">University of Utah</p>

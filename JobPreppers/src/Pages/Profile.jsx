@@ -1,6 +1,7 @@
 import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
+import ProjectSection from "../ProfileSections/ProjectSection";
 import { useAuth } from "../provider/authProvider";
 import React, { useEffect, useState } from 'react';
 
@@ -81,9 +82,17 @@ function Profile() {
           <div className="main-professional">
             <EducationSection />
             <SkillsSection skillsDict={skillsTest} />
-            <ExperienceSection />
           </div>
         </div>
+
+        <div className="main-panel">
+          <ExperienceSection />
+        </div>
+
+        <div className="main-panel">
+          <ProjectSection />
+        </div>
+
       </div>
     </>
   );
