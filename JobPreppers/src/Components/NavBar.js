@@ -18,7 +18,7 @@ import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 
 const navigation = [
-  { name: "Feed", href: "/", current: true },
+  { name: "Feed", href: "/Feed", current: true },
   { name: "Jobs", href: "/Jobs", current: false },
   { name: "Interview", href: "/Interview", current: false },
   { name: "Resume", href: "/Resume", current: false },
