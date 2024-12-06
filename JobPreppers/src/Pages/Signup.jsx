@@ -13,17 +13,19 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
+    console.log("sup sup B)")
+
     try {
-      const response = await fetch("http://localhost:5000/api/users/check", {
+      const response = await fetch("http://localhost:5000/api/Users/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ firstName, lastName, username, email, password}),
       });
 
       if (response.ok) {
         const data = await response.json();
-        // Show a success popup\
-        navigate("/profile");
+        console.log(data)
+        navigate("/login");
         window.alert(data.message); // Displays "Login successful."
         setError(""); // Clear any previous error message
       } else {
@@ -150,6 +152,7 @@ export default function Signup() {
             <button
               type="submit"
               className="flex w-full justify-center rounded-md bg-[#4BA173] px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-[#085630] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              // onClick={() => navigate("/Login")}
             >
               Create New Account
             </button>
