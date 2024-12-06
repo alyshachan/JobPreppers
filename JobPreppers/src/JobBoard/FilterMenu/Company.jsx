@@ -8,15 +8,6 @@ import "./Menu.css";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-// Need to connect to Job Search
-const companies = [
-  { id: 0, value: "Amazon" },
-  { id: 1, value: "Google" },
-  { id: 2, value: "Micron" },
-  { id: 3, value: "Lucid" },
-  { id: 4, value: "L3Harris" },
-  { id: 5, value: "DoorDash" },
-];
 
 export default function Company({ setFilters, jobs }) {
   const [selectValue, setSelectValue] = useState([]);
