@@ -62,19 +62,24 @@ function Interview() {
           <h1 className="items-start">Schedule Mock Interview</h1>
           <div className="flex flex-row overflow-x-auto pl-[50px] gap-x-[50px]">
             <InterviewerCard
-              name="Recruiter Justin"
+              name="Justin Ellis"
               title="Recruiter @ T.D. Williamson"
-              rating="4.8"
+              rating="3.9"
             />
             <InterviewerCard
-              name="another Justin"
-              title="Recruiter @ T.D. Williamson"
-              rating="4.8"
+              name="Jim De St. Germain"
+              title="Prof at Utah"
+              rating="4.2"
             />
             <InterviewerCard
-              name="third Justin"
-              title="Recruiter @ T.D. Williamson"
-              rating="4.8"
+              name="David Bean"
+              title="Startup CTO, Industrial Adjunct Professor"
+              rating="5.0"
+            />
+            <InterviewerCard
+              name="Trang Tran"
+              title="CS Student at University of Utah"
+              rating="4.3"
             />
           </div>
         </div>
