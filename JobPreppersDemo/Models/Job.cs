@@ -1,20 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace JobPreppersDemo.Models
-{
-    public class FilterRequest
-    {
-        public DateTime? Date { get; set; }
-        public List<string>? Type { get; set; }
+namespace JobPreppersDemo.Models;
 
-        public List<string>? Company { get; set; }
-
-        public int Min_Salary { get; set; }
-
-    }
-
-}
 
 public partial class Job
 {
