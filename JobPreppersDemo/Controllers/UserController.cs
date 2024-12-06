@@ -94,7 +94,8 @@ namespace JobPreppersProto.Controllers
         }
 
         [HttpPost("logout")]
-        public IActionResult Logout() {
+        public IActionResult Logout()
+        {
             Response.Cookies.Delete("authToken");
             return Ok(new { message = "Logged out successfully." });
         }
@@ -119,12 +120,14 @@ namespace JobPreppersProto.Controllers
             }
 
             // Console.WriteLine($"Just performed an authentication check for user {userID}, {username}");
-            return Ok(new { 
-                userID = user.userID, 
+            return Ok(new
+            {
+                userID = user.userID,
                 username = user.username,
                 first_name = user.first_name,
-                last_name = user.last_name, 
-                email = user.email });
+                last_name = user.last_name,
+                email = user.email
+            });
         }
 
 
@@ -143,12 +146,76 @@ namespace JobPreppersProto.Controllers
             });
         }
 
+        [HttpPost("signup")]
+        public async Task<IActionResult> AddNewUser([FromBody] SignupRequest request)
+        {
+            Console.WriteLine("HELOOOOOOOOOOOOOOOOOOO");
+            Console.WriteLine(request);
+
+
+            if (request == null ||
+            string.IsNullOrEmpty(request.FirstName) ||
+            string.IsNullOrEmpty(request.LastName) ||
+            string.IsNullOrEmpty(request.Username) ||
+            string.IsNullOrEmpty(request.Email) ||
+            string.IsNullOrEmpty(request.Password))
+            {
+                return BadRequest("All fields are required.");
+            }
+
+            try
+            {
+                //check if user already exits
+                var user = await _context.Users.FirstOrDefaultAsync(s => s.username == request.Username);
+                //if not create user and add to user table
+                if (user == null)
+                {
+                    user = new User
+                    {
+                        first_name = request.FirstName,
+                        last_name = request.LastName,
+                        username = request.Username,
+                        email = request.Email,
+                        password = request.Password
+                    };
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return BadRequest("User already exists");
+
+                }
+                return Ok(new
+                {
+                    Message = "Successfully added user.",
+                    User = user
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
         // Define the request model
         public class LoginRequest
         {
             public string Email { get; set; }
             public string Password { get; set; }
         }
+
+        public class SignupRequest
+        {
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Username { get; set; }
+            public string Email { get; set; }
+            public string Password { get; set; }
+        }
+
 
     }
 }
