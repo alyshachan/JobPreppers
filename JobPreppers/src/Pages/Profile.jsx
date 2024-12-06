@@ -4,7 +4,6 @@ import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
 import { useAuth } from "../provider/authProvider";
 import React, { useEffect, useState } from 'react';
-import { Buffer } from 'buffer';
 
 function Profile() {
 
