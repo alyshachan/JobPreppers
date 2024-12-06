@@ -33,16 +33,51 @@ namespace JobPreppersDemo.Controllers
             return Ok(jobs);
         }
 
+        [HttpPost("filter")]
+        public async Task<IActionResult> FilterJobs([FromBody] FilterRequest request)
+        {
 
-        // // View Rendering for Index
-        // [HttpGet("/job")]
-        // public IActionResult Index()
-        // {
-        //     // Example data you want to log
-        //     var jobs = _context.Jobs.ToList();
+            var query = _context.Jobs.AsQueryable();
 
-        //     ViewData["Jobs"] = System.Text.Json.JsonSerializer.Serialize(jobs);
-        //     return View();
-        // }
+            Console.WriteLine($"Received date: {request.Date}");
+
+            if (request.Date != null)
+            {
+                var filterDate = request.Date.Value.Date;
+                query = query.Where(job => job.fill_by_date >= filterDate);
+            }
+
+            if (request.Type != null && request.Type.Any())
+            {
+
+                query = query.Where(job => request.Type.Contains(job.type));
+            }
+
+            if (request.Company != null && request.Company.Any())
+            {
+                query = query.Where(job => request.Company.Contains(job.company));
+            }
+
+            if (request.Min_Salary != 0)
+            {
+                query = query.Where(job => job.min_salary >= request.Min_Salary);
+            }
+
+            var filteredJobs = await query.ToListAsync();
+
+
+            if (filteredJobs == null || filteredJobs.Count == 0)
+            {
+                return Ok(new List<Job>()); // Return an empty list with HTTP 200
+            }
+
+
+
+            return Ok(filteredJobs);
+        }
     }
+
+
+
 }
+

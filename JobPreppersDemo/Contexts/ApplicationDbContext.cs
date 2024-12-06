@@ -21,13 +21,16 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Resume> Resumes { get; set; }
 
+    public virtual DbSet<Skill> Skills { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<test> tests { get; set; }
 
+    public virtual DbSet<userSkill> userSkills { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=jobprepperscapstone.cbgwos8q0ls4.us-east-2.rds.amazonaws.com;database=JobPreppersDB;port=3307;user id=JobPrepper;password=ILoveCanes2025!;sslmode=None", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
+        => optionsBuilder.UseMySql("name=ConnectionStrings:DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,10 +42,11 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.jobID).HasName("PRIMARY");
 
+            entity.Property(e => e.benefits).HasColumnType("text");
             entity.Property(e => e.company).HasMaxLength(100);
             entity.Property(e => e.description).HasColumnType("text");
+            entity.Property(e => e.fill_by_date).HasColumnType("datetime");
             entity.Property(e => e.location).HasMaxLength(100);
-            entity.Property(e => e.pay_range).HasMaxLength(50);
             entity.Property(e => e.postedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp");
@@ -69,6 +73,15 @@ public partial class ApplicationDbContext : DbContext
                 .HasConstraintName("Resume_ibfk_1");
         });
 
+        modelBuilder.Entity<Skill>(entity =>
+        {
+            entity.HasKey(e => e.skillID).HasName("PRIMARY");
+
+            entity.HasIndex(e => e.Name, "Name").IsUnique();
+
+            entity.Property(e => e.Category).HasMaxLength(255);
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.userID).HasName("PRIMARY");
@@ -89,6 +102,23 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("test");
+        });
+
+        modelBuilder.Entity<userSkill>(entity =>
+        {
+            entity.HasKey(e => e.userSkillID).HasName("PRIMARY");
+
+            entity.HasIndex(e => e.skillID, "skillID");
+
+            entity.HasIndex(e => e.userID, "userID");
+
+            entity.HasOne(d => d.skill).WithMany(p => p.userSkills)
+                .HasForeignKey(d => d.skillID)
+                .HasConstraintName("userSkills_ibfk_2");
+
+            entity.HasOne(d => d.user).WithMany(p => p.userSkills)
+                .HasForeignKey(d => d.userID)
+                .HasConstraintName("userSkills_ibfk_1");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -45,7 +45,11 @@
 
 .description-box {
   display: flex;
-  gap: 5px;
+  gap: 8px; /* Space between icon and text */
+  justify-content: flex-start; /* Horizontally center the icon and text */
+  width: 100%; /* Ensure the box takes up the full width */
+  align-items: center;
+  transform: translateX(140px);
 }
 
 .filter-button.MuiButton-outlined {

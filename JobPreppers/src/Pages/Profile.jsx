@@ -1,15 +1,32 @@
 import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
+import { useAuth } from "../provider/authProvider";
+import React, { useEffect, useState } from 'react';
+
 function Profile() {
-  const skills = {
-    "Programming Languages": ["Python", "Java", "C", "C++", "C#"],
+
+  const { user, setAuthData } = useAuth(); // custom hook for authprovider
+
+  const demskills = {
+    "Programming Languages": [
+      "Python",
+      "Java",
+      "C",
+      "C++",
+      "C#"
+    ],
     "Machine Learning & Data Analysis": [
       "Data Analysis",
       "PyTorch",
       "Scikit-learn (SkLearn)",
     ],
-    "Software Tools": ["Git", "Docker", "MySQL", "Linux", "Figma"],
+    "Software Tools": [
+      "Git",
+      "Docker",
+      "MySQL",
+      "Linux",
+      "Figma"],
     "Robotics & Engineering": [
       "Robotics",
       "Electrical Engineering",
@@ -18,13 +35,70 @@ function Profile() {
     ],
     "Additional Skills": ["React", "Node.js", "TypeScript", "HTML/CSS"],
   };
+
+  // const skillsTest = {}
+
+  const [skillsTest, setSkillsTest] = useState({});
+
+  useEffect(() => {
+    const requestSkills = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/UserSkills/${user.userID}`, {
+          credentials: "include", // include cookies
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data) {
+            let newSkillsTest = {}
+            for (var userSkillID in data) {
+
+              var skills = data[userSkillID]
+
+              if (!newSkillsTest[skills.category]) {
+                newSkillsTest[skills.category] = [skills.name]
+              }
+              else {
+                newSkillsTest[skills.category].push(skills.name)
+              }
+            }
+            setSkillsTest(prevState => {
+              if (JSON.stringify(prevState) !== JSON.stringify(newSkillsTest)) {
+                return newSkillsTest;
+              }
+              return prevState;
+            });
+          }
+        };
+
+      }
+      catch (error) {
+        console.log(error)
+      }
+    };
+
+    if (user) {
+      requestSkills();  // populate skills
+    }
+  }, [user]);  // only populate when user exists
+
+
+
+  if (user == null) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <div className="content !mt-[175px]">
         <div className="main-panel !flex-row gap-[50px]">
           <div className="main-personal">
-            <div className="circle" />
-            <p className="name">Justin Ellis</p>
+            <div className="circle">
+              <img className="rounded-full" />
+            </div>
+            <p className="name">
+              {user.first_name} {user.last_name}
+            </p>
             <p>Computer Science Student at the University of Utah</p>
             <p className="section-element-subtitle">
               Salt Lake City, UT
@@ -34,7 +108,7 @@ function Profile() {
 
           <div className="main-professional">
             <EducationSection />
-            <SkillsSection skillsDict={skills} />
+            <SkillsSection skillsDict={skillsTest} />
             <ExperienceSection />
           </div>
         </div>
