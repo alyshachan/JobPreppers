@@ -13,8 +13,6 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
-    console.log("sup sup B)")
-
     try {
       const response = await fetch("http://localhost:5000/api/Users/signup", {
         method: "POST",
@@ -24,7 +22,6 @@ export default function Signup() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
         navigate("/login");
         window.alert(data.message); // Displays "Login successful."
         setError(""); // Clear any previous error message

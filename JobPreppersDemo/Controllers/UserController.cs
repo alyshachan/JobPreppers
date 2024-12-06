@@ -119,7 +119,6 @@ namespace JobPreppersProto.Controllers
                 return NotFound(new { message = "User not found." });
             }
 
-            // Console.WriteLine($"Just performed an authentication check for user {userID}, {username}");
             return Ok(new
             {
                 userID = user.userID,
@@ -149,10 +148,6 @@ namespace JobPreppersProto.Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> AddNewUser([FromBody] SignupRequest request)
         {
-            Console.WriteLine("HELOOOOOOOOOOOOOOOOOOO");
-            Console.WriteLine(request);
-
-
             if (request == null ||
             string.IsNullOrEmpty(request.FirstName) ||
             string.IsNullOrEmpty(request.LastName) ||

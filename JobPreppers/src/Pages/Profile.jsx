@@ -8,34 +8,6 @@ function Profile() {
 
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
 
-  const demskills = {
-    "Programming Languages": [
-      "Python",
-      "Java",
-      "C",
-      "C++",
-      "C#"
-    ],
-    "Machine Learning & Data Analysis": [
-      "Data Analysis",
-      "PyTorch",
-      "Scikit-learn (SkLearn)",
-    ],
-    "Software Tools": [
-      "Git",
-      "Docker",
-      "MySQL",
-      "Linux",
-      "Figma"],
-    "Robotics & Engineering": [
-      "Robotics",
-      "Electrical Engineering",
-      "Network Systems",
-      "Computer Systems",
-    ],
-    "Additional Skills": ["React", "Node.js", "TypeScript", "HTML/CSS"],
-  };
-
   // const skillsTest = {}
 
   const [skillsTest, setSkillsTest] = useState({});

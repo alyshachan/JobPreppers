@@ -12,8 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-Console.WriteLine("PLease work");
-
 if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
@@ -76,7 +74,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             {
                 var token = context.HttpContext.Request.Cookies["authToken"];
 
-                // Console.WriteLine(token);
                 if (!string.IsNullOrEmpty(token)) ;
                 {
                     context.Token = token;

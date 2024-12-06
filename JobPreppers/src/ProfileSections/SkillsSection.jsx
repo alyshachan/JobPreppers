@@ -22,9 +22,6 @@ function SkillsSection({ skillsDict }) {
   const displayedItems = Object.entries(skillsDict).slice(0, 4);
   const hasMoreItems = Object.keys(skillsDict).length > 4;
 
-  // console.log("displayed items")
-  // console.log(displayedItems)
-
   return (
     <div ref={containerRef}>
       <SectionHeader header={"Skills"} />

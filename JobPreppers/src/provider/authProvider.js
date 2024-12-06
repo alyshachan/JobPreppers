@@ -7,13 +7,6 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // useEffect(() => { for debug
-  //   if (user) {
-  //     console.log("User state updated:");
-  //     console.log(user);
-  //   }
-  // }, [user]);
-
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
