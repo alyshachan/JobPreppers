@@ -50,7 +50,7 @@ function CustomLink({ to, children, className, ...props }) {
   );
 }
 
-function NavBar({ firstName, lastName, profilePicture }) {
+function NavBar() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -136,16 +136,14 @@ function NavBar({ firstName, lastName, profilePicture }) {
               <BellIcon aria-hidden="true" className="h-6 w-6" />
             </button>
 
-            Hello {user.first_name} {user.last_name}
-
             <Menu as="div" className="relative ml-3">
               <div>
                 <MenuButton className="relative flex rounded-full bg-[#4BA173] text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
                   <img
-                    alt=""
-                    src={profilePicture}
+                    alt="Profile Picture"
+                    src={"data:image/png;base64," + user.profile_pic.toString().toString('base64')}
                     className="h-8 w-8 rounded-full"
                   />
                 </MenuButton>

@@ -96,6 +96,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.last_name).HasMaxLength(50);
             entity.Property(e => e.password).HasMaxLength(255);
             entity.Property(e => e.username).HasMaxLength(50);
+            entity.Property(e=>e.profile_pic).HasMaxLength(200000);
         });
 
         modelBuilder.Entity<test>(entity =>
