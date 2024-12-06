@@ -49,7 +49,6 @@
   justify-content: flex-start; /* Horizontally center the icon and text */
   width: 100%; /* Ensure the box takes up the full width */
   align-items: center;
-  transform: translateX(140px);
 }
 
 .filter-button.MuiButton-outlined {
