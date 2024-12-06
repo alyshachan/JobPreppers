@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 function Profile() {
 
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
+  const {initialUser, setIntialUser} = useState(null);
 
   // const skillsTest = {}
 
@@ -21,11 +22,14 @@ function Profile() {
 
         if (response.ok) {
           const data = await response.json();
+          console.log("API Response: ", data);  // Log the response to verify the structure
+
           if (data) {
             let newSkillsTest = {}
             for (var userSkillID in data) {
 
               var skills = data[userSkillID]
+
 
               if (!newSkillsTest[skills.category]) {
                 newSkillsTest[skills.category] = [skills.name]
@@ -50,10 +54,42 @@ function Profile() {
     };
 
     if (user) {
-      requestSkills();  // populate skills
+      requestSkills(); // populate skills
+      console.log("User: ", user)
     }
   }, [user]);  // only populate when user exists
 
+
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/GetUser/${user.userID}`, {
+          credentials: "include", // include cookies
+        });
+
+               
+        if (res.ok) {
+          const data = await res.json();
+          console.log("GetUser: ", data);
+          setIntialUser(data);
+        } else {
+          console.error("Failed to fetch User");
+        }
+      } catch (error) {
+        console.error("Error fetching User:", error);
+      }
+    };
+
+    fetchUser();
+  }, [user]);
+
+
+  // const userPic = initialUser.profile_pic ? (
+  //   <img src={`data:image/png;base64,${Buffer.from(initialUser.profile_pic).toString('base64')}`} alt="Profile" />
+  // ) : (
+  //   <div>No Profile Picture</div>
+  // );
 
 
   if (user == null) {
@@ -65,8 +101,8 @@ function Profile() {
       <div className="content !mt-[175px]">
         <div className="main-panel !flex-row gap-[50px]">
           <div className="main-personal">
-            <div className="circle">
-              <img className="rounded-full" />
+            <div id="circle" className="circle">
+             {/* {userPic} */}
             </div>
             <p className="name">
               {user.first_name} {user.last_name}

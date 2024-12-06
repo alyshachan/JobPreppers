@@ -125,7 +125,8 @@ namespace JobPreppersProto.Controllers
                 username = user.username,
                 first_name = user.first_name,
                 last_name = user.last_name,
-                email = user.email
+                email = user.email,
+                profile_pic = user.profile_pic
             });
         }
 
@@ -138,6 +139,8 @@ namespace JobPreppersProto.Controllers
             {
                 return NotFound(new { message = "Invalid User" });
             }
+
+
             return Ok(new
             {
                 message = "Found user",
