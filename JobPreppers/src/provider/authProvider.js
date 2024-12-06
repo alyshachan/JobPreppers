@@ -7,17 +7,10 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // useEffect(() => { for debug
-  //   if (user) {
-  //     console.log("User state updated:");
-  //     console.log(user);
-  //   }
-  // }, [user]);
-
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/Users/me", {
+        const response = await fetch("http://localhost:5000/api/Users/auth", {
             credentials: "include", // include cookies
           });
 

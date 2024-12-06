@@ -25,7 +25,7 @@ namespace JobPreppersDemo.Controllers
         {
             _context = context;
         }
-        [HttpGet("{userID}skills")]
+        [HttpGet("{userID}")]
         public async Task<IActionResult> GetAllUserSKills(int userID)
         {
             try
