@@ -90,12 +90,14 @@ function Profile() {
     return <div>Loading...</div>;
   }
 
+  const userPic = (user.profile_pic == null) ? "https://cdn.discordapp.com/attachments/1275166863864893632/1314439526835421184/115-1150152_default-profile-picture-avatar-png-green.png?ex=6753c6b4&is=67527534&hm=83836f3f3773d0eb1c075b2fd6825f9e37c9a2ee05ccd58fd32fe17644ae8404&" : "data:image/png;base64," + user.profile_pic.toString().toString('base64');
+
   return (
     <>
       <div className="content !mt-[175px]">
         <div className="main-panel !flex-row gap-[50px]">
           <div className="main-personal">
-            <img className="circle !bg-transparent" alt="Profile Picture" src={"data:image/png;base64," + user.profile_pic.toString().toString('base64')}/>
+            <img className="circle !bg-transparent" alt="Profile Picture" src={userPic}/>
             <p className="name">
               {user.first_name} {user.last_name}
             </p>
