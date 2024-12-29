@@ -2,6 +2,7 @@ import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
+import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 import { useAuth } from "../provider/authProvider";
 import React, { useEffect, useState } from 'react';
 
@@ -89,7 +90,7 @@ function Profile() {
     return <div>Loading...</div>;
   }
 
-  const userPic = (user.profile_pic == null) ? "https://cdn.discordapp.com/attachments/1275166863864893632/1314439526835421184/115-1150152_default-profile-picture-avatar-png-green.png?ex=6753c6b4&is=67527534&hm=83836f3f3773d0eb1c075b2fd6825f9e37c9a2ee05ccd58fd32fe17644ae8404&" : "data:image/png;base64," + user.profile_pic.toString().toString('base64');
+  const userPic = (user.profile_pic == null) ? defaultProfilePicture : "data:image/png;base64," + user.profile_pic.toString().toString('base64');
 
   return (
     <>

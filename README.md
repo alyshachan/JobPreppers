@@ -1,5 +1,18 @@
 # Job Preppers
 
+## How to run files
+### Frontend:
+job-preppers > JobPreppers
+```
+npm i
+npm run start
+```
+
+### Frontend:
+job-preppers > JobPreppersDemo
+```
+dotnet run
+```
 
 
 ## Getting started

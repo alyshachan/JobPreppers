@@ -15,7 +15,9 @@ import {
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
-import { useAuth } from "../provider/authProvider"
+import { useAuth } from "../provider/authProvider";
+import defaultProfilePicture from "../Components/defaultProfilePicture.png"
+
 const navigation = [
   { name: "Feed", href: "/Feed", current: true },
   { name: "Jobs", href: "/Jobs", current: false },
@@ -89,7 +91,7 @@ function NavBar() {
     return
   }
 
-  const userPic = (user.profile_pic == null) ? "https://cdn.discordapp.com/attachments/1275166863864893632/1314439526835421184/115-1150152_default-profile-picture-avatar-png-green.png?ex=6753c6b4&is=67527534&hm=83836f3f3773d0eb1c075b2fd6825f9e37c9a2ee05ccd58fd32fe17644ae8404&" : "data:image/png;base64," + user.profile_pic.toString().toString('base64');
+  const userPic = (user.profile_pic == null) ? defaultProfilePicture : "data:image/png;base64," + user.profile_pic.toString().toString('base64');
   
   return (
     <Disclosure as="nav" className="bg-[#4BA173] w-full padding">
