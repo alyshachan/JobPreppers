@@ -1,0 +1,44 @@
+.sectionContent {
+  padding: 30px;
+}
+
+.sectionPictureContent {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.education {
+  display: flex;
+  align-items: center;
+}
+
+hr.experience {
+  margin: 2rem;
+}
+
+.experience {
+  display: flex;
+  align-items: center;
+  width: 95%;
+}
+
+.experienceContentLeft {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.experienceContentRight {
+  text-align: right;
+  float: right;
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.experienceContent {
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+  margin-left: 5rem;
+}

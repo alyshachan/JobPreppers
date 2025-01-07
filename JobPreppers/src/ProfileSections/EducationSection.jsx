@@ -1,6 +1,8 @@
 import "./ProfileSections.css";
 import SectionHeader from "../Components/Profile/SectionHeader";
 import EditIcon from "@mui/icons-material/Edit";
+import profileSectionStyles from "../Components/Profile/ProfileSections.module.css"
+import styles from "../Components/JobPreppers.module.css"
 
 import { IconButton } from "@mui/material";
 function EducationSection({ edit }) {
@@ -8,18 +10,16 @@ function EducationSection({ edit }) {
     <>
       <SectionHeader header={"Education"} edit={edit} />
 
-      <div className="section-content">
-        <div className="education">
+      <div className={profileSectionStyles.sectionContent}>
+        <div className={profileSectionStyles.education}>
           <img
-            className="rect !bg-white"
+            className={styles.companyPicture}
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
           />
 
-          <div className="education-details">
-            <div className="education-content">
-              <p className="section-element-title">University of Utah</p>
-              <p className="section-element-subtitle">2020 - 2024</p>
-            </div>
+          <div className={profileSectionStyles.sectionPictureContent}>
+            <p className={styles.title}>University of Utah</p>
+            <p className={styles.subtitle}>2020 - 2024</p>
           </div>
 
           {edit && (

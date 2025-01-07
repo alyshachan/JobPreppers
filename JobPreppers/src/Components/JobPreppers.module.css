@@ -19,10 +19,31 @@
     flex-direction: column;
   }
 
+  .panelTransparent {
+    border-radius: 15px;
+    width: 70%;
+    display: flex;
+    box-sizing: border-box;
+    padding: 20px 50px;
+    margin: 20px;
+    flex-direction: column;
+  }
+
   .profilePicture {
     border-radius: 50%;
     width: 200px;
     height: 200px;
+  }
+
+  .companyPicture{
+    width: 50px;
+    height: 50px;
+  }
+
+  .rect {
+    background-color: red;
+    width: 50px;
+    height: 50px;
   }
 
   .circle {

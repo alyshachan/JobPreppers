@@ -5,6 +5,7 @@ import Calendar from "../Components/Interview/Calendar";
 import AddEventDialog from "../Components/Interview/AddEventDialog";
 import UpcomingEvents from "../Components/Interview/UpcomingEvents";
 import InterviewerCard from "../Components/Interview/InterviewerCard";
+import styles from "../Components/JobPreppers.module.css"
 
 function Interview() {
   const [events, setEvents] = useState([]);
@@ -26,8 +27,8 @@ function Interview() {
 
   return (
     <>
-      <div className="content !flex-column">
-        <div className="main-panel items-center">
+      <div className={`${styles.content} !flex-column`}>
+        <div className={`${styles.panel} items-center`}>
           <Calendar
             onOpenEventDialog={handleOpenEventDialog}
             onEventSubmit={handleEventSubmit}
@@ -45,7 +46,7 @@ function Interview() {
           />
         )}
 
-        <div className="main-panel">
+        <div className={styles.panel}>
           <SectionHeader header="Upcoming Events" />
           <div className="overflow-x-auto">
             {events && events.length > 0 ? (
@@ -58,7 +59,7 @@ function Interview() {
           </div>
         </div>
 
-        <div className="main-panel !bg-transparent !shadow-none !p-0">
+        <div className={`${styles.panelTransparent} !p-0`}>
           <h1 className="items-start">Schedule Mock Interview</h1>
           <div className="flex flex-row overflow-x-auto pl-[50px] gap-x-[50px]">
             <InterviewerCard

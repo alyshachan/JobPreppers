@@ -1,7 +1,8 @@
 import "./ProfileSections.css";
 import SectionHeader from "../Components/Profile/SectionHeader";
 import EditIcon from "@mui/icons-material/Edit";
-
+import profileSectionStyles from "../Components/Profile/ProfileSections.module.css";
+import styles from "../Components/JobPreppers.module.css";
 import { IconButton } from "@mui/material";
 
 function ExperienceSection({ edit }) {
@@ -9,24 +10,26 @@ function ExperienceSection({ edit }) {
     <>
       <SectionHeader header={"Experience"} edit={edit} />
 
-      <div className="section-content">
-        <div className="experience">
-          <div className={`experience-header ${edit ? "!w-full" : ""}`}>
+      <div className={profileSectionStyles.sectionContent}>
+        <div className={profileSectionStyles.sectionPictureContent}>
+          <div
+            className={`${profileSectionStyles.experience} ${
+              edit ? "!w-full" : ""
+            }`}
+          >
             <img
-              className="rect"
+              className={styles.companyPicture}
               src="https://yt3.googleusercontent.com/ytc/AIdro_lF19YDdjWace_2mr1mAjdfPpFKk_WENZimcl1MG4GUzw=s900-c-k-c0x00ffffff-no-rj"
             />
 
-            <div className="experience-info-left">
-              <p className="section-element-title">
-                Software Engineering Intern
-              </p>
-              <p className="section-element-subtitle">T.D Williamson</p>
+            <div className={profileSectionStyles.experienceContentLeft}>
+              <p className={styles.title}>Software Engineering Intern</p>
+              <p className={styles.subtitle}>T.D Williamson</p>
             </div>
 
-            <div className="experience-info-right">
-              <p className="section-element-title">October 2024-Present</p>
-              <p className="section-element-subtitle">3 months</p>
+            <div className={profileSectionStyles.experienceContentRight}>
+              <p className={styles.title}>October 2024-Present</p>
+              <p className={styles.subtitle}>3 months</p>
             </div>
             {edit && (
               <div className="ml-5">
@@ -38,26 +41,37 @@ function ExperienceSection({ edit }) {
           </div>
         </div>
 
-        <hr className="m-8" />
+        <hr className={profileSectionStyles.experience} />
 
-        <div className="experience">
-          <div className="experience-header">
+        <div className={profileSectionStyles.sectionPictureContent}>
+          <div
+            className={`${profileSectionStyles.experience} ${
+              edit ? "!w-full" : ""
+            }`}
+          >
             <img
-              className="rect !bg-white"
+              className={styles.companyPicture}
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
             />
 
-            <div className="experience-info-left">
-              <p className="section-element-title">Web Development Intern</p>
-              <p className="section-element-subtitle">University of Utah</p>
+            <div className={profileSectionStyles.experienceContentLeft}>
+              <p className={styles.title}>Web Development Intern</p>
+              <p className={styles.subtitle}>University of Utah</p>
             </div>
 
-            <div className="experience-info-right">
-              <p className="section-element-title">July 2024-October 2024</p>
-              <p className="section-element-subtitle">4 months</p>
+            <div className={profileSectionStyles.experienceContentRight}>
+              <p className={styles.title}>July 2024-October 2024</p>
+              <p className={styles.subtitle}>4 months</p>
             </div>
+            {edit && (
+              <div className="ml-5">
+                <IconButton>
+                  <EditIcon />
+                </IconButton>
+              </div>
+            )}
           </div>
-          <div className="experience-body ml-20">
+          <div className={profileSectionStyles.experienceContent}>
             <ul className="list-disc">
               <li>
                 Utilized best SEO practices to improve site traction by 25%
@@ -68,7 +82,7 @@ function ExperienceSection({ edit }) {
           </div>
         </div>
 
-        <hr className="m-8" />
+        <hr className={profileSectionStyles.experience} />
 
         <div className="experience">
           <div className="experience-header">
