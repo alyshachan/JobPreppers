@@ -13,4 +13,27 @@
     line-height: 80px;
     margin-bottom: 0px;
   }
+
+  .addNewSection{
+    background-color: white;
+    border-radius: 15px;
+    width: 70%;
+    display: flex;
+    box-sizing: border-box;
+    padding: 20px 50px;
+    margin: 20px;
+    flex-direction: column;
+    
+    border-style: dashed;
+    border-width: 4px;
+    border-color: #4ba173;
+    text-align: center;
+    font-weight: bold;
+    font-size:xx-large;
+    color: #4ba173;
+  }
+
+  .addNewSection:hover{
+    background-color: #edf2f7;
+  }
   

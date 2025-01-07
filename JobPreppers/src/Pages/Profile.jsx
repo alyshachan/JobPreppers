@@ -93,40 +93,39 @@ function Profile({edit = false}) {
   return (
     <>
       <div className={`${styles.content} !mt-[175px]`}>
-        <div className={`${styles.panel} !flex-row gap-[50px]`}>
 
+        <div className={`${styles.panel} !flex-row gap-[50px]`}>
           <div className={profileStyles.personalInfo}>
             <img className={styles.profilePicture} alt="Profile Picture" src={userPic}/>
-
             <p className={profileStyles.name}>
               {user.first_name} {user.last_name}
             </p>
             <p>Computer Science Student at the University of Utah</p>
             <p className={styles.subtitle}>
-              Salt Lake City, UT
-              <br /> United States
+              Salt Lake City, UT<br />
+              United States
             </p>
           </div>
 
-          <div className="main-professional">
+          <div>
             <EducationSection edit={edit}/>
             <SkillsSection skillsDict={skillsTest} edit={edit}/>
           </div>
         </div>
 
-        <div className="main-panel">
+        <div className={styles.panel}>
           <ExperienceSection edit={edit}/>
         </div>
 
-        <div className="main-panel">
+        <div className={styles.panel}>
           <ProjectSection edit={edit}/>
         </div>
 
-        <a>
-          <button className="main-panel !shadow-none border-dashed border-2 border-[#4ba173] text-center text-[#4ba173] font-bold text-2xl">
+        {edit && (
+        <a className={profileStyles.addNewSection}>
           Add new section
-          </button>
-        </a>
+        </a> 
+        )}
 
       </div>
     </>

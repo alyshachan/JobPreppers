@@ -20,7 +20,7 @@ function SkillsSection({ skillsDict, edit }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const displayedItems = Object.entries(skillsDict).slice(0, 4);
+  const displayedItems = edit == true ? Object.entries(skillsDict) : Object.entries(skillsDict).slice(0, 4);
   const hasMoreItems = Object.keys(skillsDict).length > 4;
 
   return (
@@ -34,12 +34,12 @@ function SkillsSection({ skillsDict, edit }) {
               title={title}
               list={list}
               edit={edit}
-              sliceItems={true}
-              showAllItems={false}
+              sliceItems={!edit}
+              showAllItems={edit}
             />
           ))}
         </div>
-        {hasMoreItems && (
+        {hasMoreItems && !edit && (
           <div className="see-all-div">
             <a href="./Skills">
               <button className="see-all">
