@@ -1,14 +1,17 @@
 import "./ProfileSections.css";
 import SectionHeader from "../Components/SectionHeader";
+import EditIcon from "@mui/icons-material/Edit";
 
-function ExperienceSection({edit}) {
+import { IconButton } from "@mui/material";
+
+function ExperienceSection({ edit }) {
   return (
     <>
-      <SectionHeader header={"Experience"} edit={edit}/>
+      <SectionHeader header={"Experience"} edit={edit} />
 
       <div className="section-content">
         <div className="experience">
-          <div className="experience-header">
+          <div className={`experience-header ${edit ? "!w-full" : ""}`}>
             <img
               className="rect"
               src="https://yt3.googleusercontent.com/ytc/AIdro_lF19YDdjWace_2mr1mAjdfPpFKk_WENZimcl1MG4GUzw=s900-c-k-c0x00ffffff-no-rj"
@@ -25,6 +28,13 @@ function ExperienceSection({edit}) {
               <p className="section-element-title">October 2024-Present</p>
               <p className="section-element-subtitle">3 months</p>
             </div>
+            {edit && (
+              <div className="ml-5">
+                <IconButton>
+                  <EditIcon />
+                </IconButton>
+              </div>
+            )}
           </div>
         </div>
 
@@ -80,16 +90,20 @@ function ExperienceSection({edit}) {
           <div className="experience-body ml-20">
             <ul className="list-disc">
               <li>
-              Researched and implemented various sensors to improve mobility for the robot H.E.R.M.E.S
+                Researched and implemented various sensors to improve mobility
+                for the robot H.E.R.M.E.S
               </li>
-              <li>Utilized computer vision libraries to achieve basic autonomous movements
+              <li>
+                Utilized computer vision libraries to achieve basic autonomous
+                movements
               </li>
-              <li>Presented contributions to a group of researchers and non technical employees
+              <li>
+                Presented contributions to a group of researchers and non
+                technical employees
               </li>
             </ul>
           </div>
         </div>
-
       </div>
     </>
   );

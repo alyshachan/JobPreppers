@@ -30,7 +30,7 @@ function SkillsSection({ skillsDict, edit}) {
 
       <div className={`skills ${isNarrow ? "narrow" : ""}`}>
         {displayedItems.map(([title, list], index) => (
-          <ListBox key={index} title={title} list={list} sliceItems={true} showAllItems={false}/>
+          <ListBox key={index} title={title} list={list} edit={edit} sliceItems={true} showAllItems={false}/>
         ))}
       </div>
       {hasMoreItems && (

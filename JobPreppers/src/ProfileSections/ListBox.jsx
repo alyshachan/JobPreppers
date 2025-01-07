@@ -1,13 +1,31 @@
 import React from "react";
 import "./ProfileSections.css";
+import { IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 
-function ListBox({ key, title, list, sliceItems = true, showAllItems = false }) {
+function ListBox({
+  key,
+  title,
+  list,
+  edit,
+  sliceItems = true,
+  showAllItems = false,
+}) {
   const displayedItems = sliceItems ? list.slice(0, 4) : list;
   const hasMoreItems = list.length > 4 && !showAllItems;
 
   return (
     <div className="skill-box">
-      <p className="section-element-title">{title}</p>
+      {edit ? (
+        <div className="flex flex-row justify-between">
+          <p className="section-element-title">{title}</p>
+          <IconButton>
+            <EditIcon />
+          </IconButton>
+        </div>
+      ) : (
+        <p className="section-element-title">{title}</p>
+      )}
 
       <div className="section-element-list">
         {displayedItems.map((item, index) => (
