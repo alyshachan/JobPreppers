@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import ListBox from "./ListBox";
 import "./ProfileSections.css";
-import SectionHeader from "../Components/SectionHeader";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import SectionHeader from "../Components/Profile/SectionHeader";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-function SkillsSection({ skillsDict, edit}) {
+function SkillsSection({ skillsDict, edit }) {
   const [isNarrow, setIsNarrow] = useState(false);
   const containerRef = useRef(null);
 
@@ -25,24 +25,31 @@ function SkillsSection({ skillsDict, edit}) {
 
   return (
     <div ref={containerRef}>
-      <SectionHeader header={"Skills"} edit={edit}/>
+      <SectionHeader header={"Skills"} edit={edit} />
       <div className="section-content">
-
-      <div className={`skills ${isNarrow ? "narrow" : ""}`}>
-        {displayedItems.map(([title, list], index) => (
-          <ListBox key={index} title={title} list={list} edit={edit} sliceItems={true} showAllItems={false}/>
-        ))}
-      </div>
-      {hasMoreItems && (
-        <div className="see-all-div">
-          <a href="./Skills">
-          <button className="see-all">See all Skills <ArrowForwardIcon className="mt-1 ml-1"/></button>
-            </a>
+        <div className={`skills ${isNarrow ? "narrow" : ""}`}>
+          {displayedItems.map(([title, list], index) => (
+            <ListBox
+              key={index}
+              title={title}
+              list={list}
+              edit={edit}
+              sliceItems={true}
+              showAllItems={false}
+            />
+          ))}
         </div>
-      )}
-    </div>
-
+        {hasMoreItems && (
+          <div className="see-all-div">
+            <a href="./Skills">
+              <button className="see-all">
+                See all Skills <ArrowForwardIcon className="mt-1 ml-1" />
+              </button>
+            </a>
+          </div>
+        )}
       </div>
+    </div>
   );
 }
 

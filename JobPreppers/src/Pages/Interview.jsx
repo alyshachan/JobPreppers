@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import SectionHeader from "../Components/SectionHeader";
+import SectionHeader from "../Components/Profile/SectionHeader";
 import Calendar from "../Components/Interview/Calendar";
 import AddEventDialog from "../Components/Interview/AddEventDialog";
 import UpcomingEvents from "../Components/Interview/UpcomingEvents";

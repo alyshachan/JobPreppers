@@ -1,5 +1,5 @@
 import "./ProfileSections.css";
-import SectionHeader from "../Components/SectionHeader";
+import SectionHeader from "../Components/Profile/SectionHeader";
 import EditIcon from "@mui/icons-material/Edit";
 
 import { IconButton } from "@mui/material";
@@ -17,18 +17,18 @@ function EducationSection({ edit }) {
 
           <div className="education-details">
             <div className="education-content">
-              <p className="section-element-title">University of Utah</p> 
+              <p className="section-element-title">University of Utah</p>
               <p className="section-element-subtitle">2020 - 2024</p>
             </div>
           </div>
 
           {edit && (
-              <div className="ml-auto mb-auto">
-                <IconButton>
-                  <EditIcon />
-                </IconButton>
-              </div>
-            )}
+            <div className="ml-auto mb-auto">
+              <IconButton>
+                <EditIcon />
+              </IconButton>
+            </div>
+          )}
         </div>
       </div>
     </>

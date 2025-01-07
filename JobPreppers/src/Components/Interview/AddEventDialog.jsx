@@ -16,7 +16,7 @@ import { styled } from "@mui/material/styles";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import moment from "moment";
 
-import SectionHeader from "../../Components/SectionHeader";
+import SectionHeader from "../../Components/Profile/SectionHeader";
 import "./AddEventDialog.css";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({

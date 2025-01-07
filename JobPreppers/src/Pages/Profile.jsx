@@ -5,14 +5,14 @@ import ProjectSection from "../ProfileSections/ProjectSection";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 import { useAuth } from "../provider/authProvider";
 import React, { useEffect, useState } from 'react';
+import styles from "../Components/JobPreppers.module.css"
+import profileStyles from "../Components/Profile/Profile.module.css"
+
 
 function Profile({edit = false}) {
 
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
-  const {initialUser, setIntialUser} = useState(null);
-
-  // const skillsTest = {}
-
+  const {initialUser, setIntialUser} = useState(null); // !mt-[175px]
   const [skillsTest, setSkillsTest] = useState({});
 
   useEffect(() => {
@@ -61,8 +61,6 @@ function Profile({edit = false}) {
     }
   }, [user]);  // only populate when user exists
 
-
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -94,15 +92,17 @@ function Profile({edit = false}) {
 
   return (
     <>
-      <div className="content !mt-[175px]">
-        <div className="main-panel !flex-row gap-[50px]">
-          <div className="main-personal">
-            <img className="circle !bg-transparent" alt="Profile Picture" src={userPic}/>
-            <p className="name">
+      <div className={`${styles.content} !mt-[175px]`}>
+        <div className={`${styles.panel} !flex-row gap-[50px]`}>
+
+          <div className={profileStyles.personalInfo}>
+            <img className={styles.profilePicture} alt="Profile Picture" src={userPic}/>
+
+            <p className={profileStyles.name}>
               {user.first_name} {user.last_name}
             </p>
             <p>Computer Science Student at the University of Utah</p>
-            <p className="section-element-subtitle">
+            <p className={styles.subtitle}>
               Salt Lake City, UT
               <br /> United States
             </p>
@@ -121,6 +121,12 @@ function Profile({edit = false}) {
         <div className="main-panel">
           <ProjectSection edit={edit}/>
         </div>
+
+        <a>
+          <button className="main-panel !shadow-none border-dashed border-2 border-[#4ba173] text-center text-[#4ba173] font-bold text-2xl">
+          Add new section
+          </button>
+        </a>
 
       </div>
     </>

@@ -1,5 +1,5 @@
 import "./ProfileSections.css";
-import SectionHeader from "../Components/SectionHeader";
+import SectionHeader from "../Components/Profile/SectionHeader";
 import EditIcon from "@mui/icons-material/Edit";
 
 import { IconButton } from "@mui/material";

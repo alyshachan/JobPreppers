@@ -1,0 +1,44 @@
+.content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+
+  .panel {
+    background-color: white;
+    border-radius: 15px;
+    width: 70%;
+    display: flex;
+    box-sizing: border-box;
+    padding: 20px 50px;
+    margin: 20px;
+    box-shadow: 2px 2px 25px -2px rgba(0, 0, 0, 0.25);
+    flex-direction: column;
+  }
+
+  .profilePicture {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+  }
+
+  .circle {
+    background-color: red;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+  }
+
+  .title {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .subtitle {
+    color: #757575;
+    margin-top: 0px;
+  }
+  
