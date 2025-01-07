@@ -1,9 +1,9 @@
 import React from "react";
 import "./ProfileSections.css";
 
-function ListBox({ key, title, list }) {
-  const displayedItems = list.slice(0, 4);
-  const hasMoreItems = list.length > 4;
+function ListBox({ key, title, list, sliceItems = true, showAllItems = false }) {
+  const displayedItems = sliceItems ? list.slice(0, 4) : list;
+  const hasMoreItems = list.length > 4 && !showAllItems;
 
   return (
     <div className="skill-box">
@@ -18,8 +18,8 @@ function ListBox({ key, title, list }) {
           </React.Fragment>
         ))}
 
-        {/* Show 'See more' button if there are more than 4 items */}
-        {hasMoreItems && (
+        {/* Show 'See more' button if there are more than 4 items and showAllItems is false */}
+        {hasMoreItems && !showAllItems && (
           <div className="section-element-list-more">
             ...
             <button className="see-more">See more</button>

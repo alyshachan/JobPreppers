@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ListBox from "./ListBox";
 import "./ProfileSections.css";
 import SectionHeader from "../Components/SectionHeader";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 function SkillsSection({ skillsDict }) {
   const [isNarrow, setIsNarrow] = useState(false);
@@ -29,12 +30,14 @@ function SkillsSection({ skillsDict }) {
 
       <div className={`skills ${isNarrow ? "narrow" : ""}`}>
         {displayedItems.map(([title, list], index) => (
-          <ListBox key={index} title={title} list={list} />
+          <ListBox key={index} title={title} list={list} sliceItems={true} showAllItems={false}/>
         ))}
       </div>
       {hasMoreItems && (
         <div className="see-all-div">
-          <button className="see-all">See all Skills -&gt;</button>
+          <a href="./Skills">
+          <button className="see-all">See all Skills <ArrowForwardIcon className="mt-1 ml-1"/></button>
+            </a>
         </div>
       )}
     </div>
