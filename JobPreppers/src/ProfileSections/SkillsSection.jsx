@@ -4,7 +4,7 @@ import "./ProfileSections.css";
 import SectionHeader from "../Components/SectionHeader";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-function SkillsSection({ skillsDict }) {
+function SkillsSection({ skillsDict, edit}) {
   const [isNarrow, setIsNarrow] = useState(false);
   const containerRef = useRef(null);
 
@@ -25,7 +25,7 @@ function SkillsSection({ skillsDict }) {
 
   return (
     <div ref={containerRef}>
-      <SectionHeader header={"Skills"} />
+      <SectionHeader header={"Skills"} edit={edit}/>
       <div className="section-content">
 
       <div className={`skills ${isNarrow ? "narrow" : ""}`}>

@@ -1,10 +1,10 @@
 import "./ProfileSections.css";
 import SectionHeader from "../Components/SectionHeader";
 
-function ExperienceSection() {
+function ExperienceSection({edit}) {
   return (
     <>
-      <SectionHeader header={"Experience"} />
+      <SectionHeader header={"Experience"} edit={edit}/>
 
       <div className="section-content">
         <div className="experience">

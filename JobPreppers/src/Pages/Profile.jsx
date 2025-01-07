@@ -6,7 +6,7 @@ import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 import { useAuth } from "../provider/authProvider";
 import React, { useEffect, useState } from 'react';
 
-function Profile() {
+function Profile({edit = false}) {
 
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const {initialUser, setIntialUser} = useState(null);
@@ -109,17 +109,17 @@ function Profile() {
           </div>
 
           <div className="main-professional">
-            <EducationSection />
-            <SkillsSection skillsDict={skillsTest} />
+            <EducationSection edit={edit}/>
+            <SkillsSection skillsDict={skillsTest} edit={edit}/>
           </div>
         </div>
 
         <div className="main-panel">
-          <ExperienceSection />
+          <ExperienceSection edit={edit}/>
         </div>
 
         <div className="main-panel">
-          <ProjectSection />
+          <ProjectSection edit={edit}/>
         </div>
 
       </div>

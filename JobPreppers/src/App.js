@@ -32,6 +32,7 @@ function App() {
           <Route path="/Interview" element={<Interview />} />
           <Route path="/Resume" element={<Resume />} />
 
+          <Route path="/EditProfile" element={<Profile edit={true}/>} />
           <Route path="/Skills" element={<Skills />} />
         </Routes>
       </AuthProvider>

@@ -1,10 +1,10 @@
 import "./ProfileSections.css";
 import SectionHeader from "../Components/SectionHeader";
 
-function ProjectSection() {
+function ProjectSection({edit}) {
   return (
     <>
-      <SectionHeader header={"Projects"} />
+      <SectionHeader header={"Projects"} edit={edit}/>
 
       <div className="section-content">
         <div className="experience">
