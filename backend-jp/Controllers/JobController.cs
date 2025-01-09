@@ -23,6 +23,13 @@ namespace JobPreppersDemo.Controllers
 
             public int Min_Salary { get; set; }
 
+            public double? Longitude { get; set; }
+
+            public double? Latitude { get; set; }
+
+            public int Distance { get; set; }
+
+
         }
 
         public JobController(ApplicationDbContext context)
@@ -51,6 +58,20 @@ namespace JobPreppersDemo.Controllers
 
             Console.WriteLine($"Received date: {request.Date}");
 
+
+            if (request.Latitude != null && request.Longitude != null && request.Distance != 0)
+            {
+                var distance = request.Distance * 1609.34;
+                query = _context.Jobs.FromSqlInterpolated(
+                    $@"Select * From Jobs where ST_Distance_Sphere(Point({request.Longitude},{request.Latitude}),
+                    Point(longitude, latitude))
+                    < {distance}
+                    "
+                );
+
+            }
+
+
             if (request.Date != null)
             {
                 var filterDate = request.Date.Value.Date;
@@ -72,6 +93,11 @@ namespace JobPreppersDemo.Controllers
             {
                 query = query.Where(job => job.min_salary >= request.Min_Salary);
             }
+
+
+
+
+
 
             var filteredJobs = await query.ToListAsync();
 

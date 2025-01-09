@@ -9,8 +9,22 @@ import ReadMore from "../JobBoard/ReadMoreComponent/ReadMoreDrawer";
 function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
+
+  const [filters, setFilters] = useState({
+    date: null,
+    type: [],
+    company: [],
+    min_salary: 0,
+    longitude: null,
+    latitude: null,
+    distance: 0,
+  });
+
   const [jobs, setJobs] = useState([]);
-  const [userCoordinate, setUserCoordinate] = useState(null);
+  const [userCoordinate, setUserCoordinate] = useState({
+    latitude: null,
+    longitude: null,
+  });
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -52,11 +66,15 @@ function Jobs() {
         >
           <div className="content">
             <div className="main-panel !bg-transparent !shadow-none !p-0 items-center">
-              <SearchColumn setUserCoordinate={setUserCoordinate} />
+              <SearchColumn
+                setUserCoordinate={setUserCoordinate}
+                setFilters={setFilters}
+              />
               <FilterColumn
                 setJobs={setJobs}
                 jobs={jobs}
-                userCoordinate={userCoordinate}
+                filters={filters}
+                setFilters={setFilters}
               />
             </div>
             <JobDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
@@ -66,8 +84,8 @@ function Jobs() {
         {/* Drawer Area */}
         <Box
           sx={{
-            display: drawerOpen ? "flex" : "none", 
-            flexBasis: drawerOpen ? "600px" : "0%", 
+            display: drawerOpen ? "flex" : "none",
+            flexBasis: drawerOpen ? "600px" : "0%",
             transition: "flex-basis 0.3s ease-in-out",
           }}
         >

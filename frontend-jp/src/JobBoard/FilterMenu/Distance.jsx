@@ -26,7 +26,7 @@ const marks = [
 function valuetext(value) {
   return `${value} miles`;
 }
-export default function Distance() {
+export default function Distance({ setFilters }) {
   const [sliderValue, setSliderValue] = useState(5);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [address, setAddress] = useState(""); // Store the address input
@@ -47,11 +47,27 @@ export default function Distance() {
   const handleCancel = () => {
     setSliderValue(5); // Reset to default value
     handleClose();
+    setFilters((prev) => {
+      const updatedFilters = {
+        ...prev,
+        distance: 0,
+      };
+      return updatedFilters;
+    });
   };
 
   const handleShowResult = () => {
     console.log(`Distance: ${sliderValue}miles`);
     handleClose();
+
+    setFilters((prev) => {
+      const updatedFilters = {
+        ...prev,
+        distance: sliderValue,
+      };
+      return updatedFilters;
+    });
+
     return sliderValue;
   };
   return (
