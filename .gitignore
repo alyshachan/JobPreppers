@@ -18,5 +18,5 @@ Thumbs.db
 appsettings*.json
 
 # Ignore Properties folder (auto-generated files)
-!Properties/
+Properties/
 node_modules/
