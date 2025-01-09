@@ -75,6 +75,7 @@ function Jobs() {
                 jobs={jobs}
                 filters={filters}
                 setFilters={setFilters}
+                userCoordinate={userCoordinate}
               />
             </div>
             <JobDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
