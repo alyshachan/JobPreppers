@@ -1,8 +1,9 @@
+"use strict";
+
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 //Disable the send button until connection is established.
 $('#btnSendMessage').prop('disabled', true);
-
 connection.start().then(function () {
 	$('#btnSendMessage').prop('disabled', false);
 	alert('Connected to ChatHub');
@@ -10,7 +11,7 @@ connection.start().then(function () {
 	return console.error(err.toString());
 });
 
-$('#btnSendMessage').click(function (e) {
+$('#btnSendMessage').on("click", function (e) {
 	var user = $("#txtUser").val();
 	var message = $("#txtMessage").val();
 	connection.invoke("SendMessageToAll", user, message).catch(function (err) {
