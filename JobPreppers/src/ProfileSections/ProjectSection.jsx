@@ -1,4 +1,5 @@
-import "./ProfileSections.css";
+import "../Components/JobPreppers.css";
+import styles from "../Components/Profile/ProfileSections.module.css";
 import SectionHeader from "../Components/Profile/SectionHeader";
 
 function ProjectSection({ edit }) {
@@ -6,14 +7,14 @@ function ProjectSection({ edit }) {
     <>
       <SectionHeader header={"Projects"} edit={edit} />
 
-      <div className="section-content">
-        <div className="experience">
-          <div className="experience-header">
-            <div className="experience-info-left">
-              <p className="section-element-title">H.E.R.M.E.S</p>
+      <div className={styles.sectionContent}>
+        <div className={styles.project}>
+          <div className={styles.projectHeader}>
+            <div className={styles.project}>
+              <p className="title">H.E.R.M.E.S</p>
             </div>
           </div>
-          <div className="experience-body ml-20 !mt-[0px]">
+          <div className={styles.projectContent}>
             <ul className="list-disc">
               <li>
                 Implemented RealSense camera and Lidar sensors for object
@@ -27,15 +28,15 @@ function ProjectSection({ edit }) {
           </div>
         </div>
 
-        <hr className="m-8" />
+        <hr className={styles.profileSection} />
 
-        <div className="experience">
-          <div className="experience-header">
-            <div className="experience-info-left">
-              <p className="section-element-title">Old Bailey Decision</p>
+        <div className={styles.project}>
+          <div className={styles.projectHeader}>
+            <div className={styles.project}>
+              <p className="title">Old Bailey Decision</p>
             </div>
           </div>
-          <div className="experience-body ml-20 !mt-[0px]">
+          <div className={styles.projectContent}>
             <ul className="list-disc">
               <li>
                 Analyzed digitized proceedings from a court database to predict
@@ -53,17 +54,15 @@ function ProjectSection({ edit }) {
           </div>
         </div>
 
-        <hr className="m-8" />
+        <hr className={styles.profileSection} />
 
-        <div className="experience">
-          <div className="experience-header">
-            <div className="experience-info-left">
-              <p className="section-element-title">
-                Raspberry pi Ring Doorbell
-              </p>
+        <div className={styles.project}>
+          <div className={styles.projectHeader}>
+            <div className={styles.project}>
+              <p className="title">Raspberry pi Ring Doorbell</p>
             </div>
           </div>
-          <div className="experience-body ml-20 !mt-[0px]">
+          <div className={styles.projectContent}>
             <ul className="list-disc">
               <li>Implemented Pi cameras for object detection</li>
               <li>Utilized machine learning libraries to detect faces</li>
@@ -72,6 +71,10 @@ function ProjectSection({ edit }) {
                 footage remotely
               </li>
             </ul>
+            <img
+              className={styles.projectPicture}
+              src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Logo_of_Github.jpg"
+            />
           </div>
         </div>
       </div>

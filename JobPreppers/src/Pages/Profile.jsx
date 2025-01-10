@@ -5,8 +5,8 @@ import ProjectSection from "../ProfileSections/ProjectSection";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 import { useAuth } from "../provider/authProvider";
 import React, { useEffect, useState } from 'react';
-import styles from "../Components/JobPreppers.module.css"
-import profileStyles from "../Components/Profile/Profile.module.css"
+import "../Components/JobPreppers.css"
+import styles from "../Components/Profile/Profile.module.css"
 
 
 function Profile({edit = false}) {
@@ -92,16 +92,16 @@ function Profile({edit = false}) {
 
   return (
     <>
-      <div className={`${styles.content} !mt-[175px]`}>
+      <div className="content !mt-[175px]">
 
-        <div className={`${styles.panel} !flex-row gap-[50px]`}>
-          <div className={profileStyles.personalInfo}>
-            <img className={styles.profilePicture} alt="Profile Picture" src={userPic}/>
-            <p className={profileStyles.name}>
+        <div className="panel !flex-row gap-[50px]">
+          <div className={styles.personalInfo}>
+            <img className="profilePicture" alt="Profile Picture" src={userPic}/>
+            <p className={styles.name}>
               {user.first_name} {user.last_name}
             </p>
             <p>Computer Science Student at the University of Utah</p>
-            <p className={styles.subtitle}>
+            <p className="subtitle">
               Salt Lake City, UT<br />
               United States
             </p>
@@ -113,16 +113,16 @@ function Profile({edit = false}) {
           </div>
         </div>
 
-        <div className={styles.panel}>
+        <div className="panel">
           <ExperienceSection edit={edit}/>
         </div>
 
-        <div className={styles.panel}>
+        <div className="panel">
           <ProjectSection edit={edit}/>
         </div>
 
         {edit && (
-        <a className={profileStyles.addNewSection}>
+        <a className={styles.addNewSection}>
           Add new section
         </a> 
         )}

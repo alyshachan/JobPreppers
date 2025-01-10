@@ -1,3 +1,15 @@
+hr.profileSection {
+  margin: 2rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: -10px;
+  white-space: nowrap;
+}
+
 .sectionContent {
   padding: 30px;
 }
@@ -11,10 +23,6 @@
 .education {
   display: flex;
   align-items: center;
-}
-
-hr.experience {
-  margin: 2rem;
 }
 
 .experience {
@@ -41,4 +49,78 @@ hr.experience {
   align-items: center;
   margin-top: 30px;
   margin-left: 5rem;
+}
+
+.skills {
+  display: grid;
+  grid-template-columns: repeat(2, 375px);
+  grid-gap: 5px;
+  grid-row-gap: 20px;
+}
+
+.skillsNarrow {
+  grid-template-columns: 1fr; /* Switch to 1 column */
+}
+
+.skillBox {
+  background-color: white;
+  border-radius: 15px;
+  width: 90%;
+  padding: 5px 20px;
+  box-sizing: border-box;
+  box-shadow: 2px 2px 25px -2px rgba(0, 0, 0, 0.25);
+  line-height: 30px;
+}
+
+.skillList {
+  padding: 10px 10px 10px 20px;
+}
+
+.skillDivider {
+  border-top: 1px solid #d9d9d9;
+  margin-left: -3px;
+}
+
+.skillMoreList {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+.seeAllDiv {
+  display: flex;
+  justify-content: flex-end;
+  margin: 30px 30px 0px 30px;
+}
+
+.seeAll {
+  display: flex;
+  justify-content: center;
+}
+
+.project {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.projectHeader {
+  display: flex;
+  align-items: center;
+  width: 95%;
+}
+
+.projectContent {
+  display: flex;
+  margin-top: 30px;
+  margin-left: 5rem;
+  margin-top: 0px;
+}
+
+.projectPicture{
+  display: flex;
+  width: 250px;
+  margin-left: auto;
+  border-radius: 15px;
 }

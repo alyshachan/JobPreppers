@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import ListBox from "./ListBox";
 import "./ProfileSections.css";
+import "../Components/JobPreppers.css"
+import styles from "../Components/Profile/ProfileSections.module.css"
 import SectionHeader from "../Components/Profile/SectionHeader";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
@@ -26,8 +28,8 @@ function SkillsSection({ skillsDict, edit }) {
   return (
     <div ref={containerRef}>
       <SectionHeader header={"Skills"} edit={edit} />
-      <div className="section-content">
-        <div className={`skills ${isNarrow ? "narrow" : ""}`}>
+      <div className={styles.sectionContent}>
+        <div className={`${styles.skills} ${isNarrow ? styles.skillsNarrow : ''}`}>
           {displayedItems.map(([title, list], index) => (
             <ListBox
               key={index}
@@ -40,9 +42,9 @@ function SkillsSection({ skillsDict, edit }) {
           ))}
         </div>
         {hasMoreItems && !edit && (
-          <div className="see-all-div">
+          <div className={styles.seeAllDiv}>
             <a href="./Skills">
-              <button className="see-all">
+              <button className={styles.seeAll}>
                 See all Skills <ArrowForwardIcon className="mt-1 ml-1" />
               </button>
             </a>

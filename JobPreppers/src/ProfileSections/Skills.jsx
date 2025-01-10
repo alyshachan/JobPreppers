@@ -2,6 +2,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React, { useState, useEffect, useRef } from "react";
 import ListBox from "./ListBox";
 import "./ProfileSections.css";
+import "../Components/JobPreppers.css"
+import styles from "../Components/Profile/ProfileSections.module.css"
 import { useAuth } from "../provider/authProvider";
 
 function Skills() {
@@ -106,13 +108,13 @@ function Skills() {
 
   return (
     <div className="content">
-      <div className="main-panel !bg-transparent !shadow-none">
+      <div className="panelTransparent">
         <a href="/Profile" className="text-[#0D7944] hover:underline mb-8">
           <ArrowBackIcon /> Go back to Profile Page
         </a>
         <h1>Skills</h1>
-        <div className="section-content">
-          <div className="skills narrow place-items-center">
+        <div className={styles.sectionContent}>
+          <div className={`${styles.skills} ${styles.skillsNarrow} place-items-center`}>
             {Object.entries(skillsTest).map(([title, list], index) => (
               <ListBox
                 key={index}

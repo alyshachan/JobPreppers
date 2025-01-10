@@ -1,8 +1,8 @@
 import "./ProfileSections.css";
 import SectionHeader from "../Components/Profile/SectionHeader";
 import EditIcon from "@mui/icons-material/Edit";
-import profileSectionStyles from "../Components/Profile/ProfileSections.module.css";
-import styles from "../Components/JobPreppers.module.css";
+import styles from "../Components/Profile/ProfileSections.module.css";
+import "../Components/JobPreppers.css";
 import { IconButton } from "@mui/material";
 
 function ExperienceSection({ edit }) {
@@ -10,26 +10,22 @@ function ExperienceSection({ edit }) {
     <>
       <SectionHeader header={"Experience"} edit={edit} />
 
-      <div className={profileSectionStyles.sectionContent}>
-        <div className={profileSectionStyles.sectionPictureContent}>
-          <div
-            className={`${profileSectionStyles.experience} ${
-              edit ? "!w-full" : ""
-            }`}
-          >
+      <div className={styles.sectionContent}>
+        <div className={styles.sectionPictureContent}>
+          <div className={`${styles.experience} ${edit ? "!w-full" : ""}`}>
             <img
-              className={styles.companyPicture}
+              className="companyPicture"
               src="https://yt3.googleusercontent.com/ytc/AIdro_lF19YDdjWace_2mr1mAjdfPpFKk_WENZimcl1MG4GUzw=s900-c-k-c0x00ffffff-no-rj"
             />
 
-            <div className={profileSectionStyles.experienceContentLeft}>
-              <p className={styles.title}>Software Engineering Intern</p>
-              <p className={styles.subtitle}>T.D Williamson</p>
+            <div className={styles.experienceContentLeft}>
+              <p className="title">Software Engineering Intern</p>
+              <p className="subtitle">T.D Williamson</p>
             </div>
 
-            <div className={profileSectionStyles.experienceContentRight}>
-              <p className={styles.title}>October 2024-Present</p>
-              <p className={styles.subtitle}>3 months</p>
+            <div className={styles.experienceContentRight}>
+              <p className="title">October 2024-Present</p>
+              <p className="subtitle">3 months</p>
             </div>
             {edit && (
               <div className="ml-5">
@@ -41,27 +37,23 @@ function ExperienceSection({ edit }) {
           </div>
         </div>
 
-        <hr className={profileSectionStyles.experience} />
+        <hr className={styles.profileSection} />
 
-        <div className={profileSectionStyles.sectionPictureContent}>
-          <div
-            className={`${profileSectionStyles.experience} ${
-              edit ? "!w-full" : ""
-            }`}
-          >
+        <div className={styles.sectionPictureContent}>
+          <div className={`${styles.experience} ${edit ? "!w-full" : ""}`}>
             <img
-              className={styles.companyPicture}
+              className="companyPicture"
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
             />
 
-            <div className={profileSectionStyles.experienceContentLeft}>
-              <p className={styles.title}>Web Development Intern</p>
-              <p className={styles.subtitle}>University of Utah</p>
+            <div className={styles.experienceContentLeft}>
+              <p className="title">Web Development Intern</p>
+              <p className="subtitle">University of Utah</p>
             </div>
 
-            <div className={profileSectionStyles.experienceContentRight}>
-              <p className={styles.title}>July 2024-October 2024</p>
-              <p className={styles.subtitle}>4 months</p>
+            <div className={styles.experienceContentRight}>
+              <p className="title">July 2024-October 2024</p>
+              <p className="subtitle">4 months</p>
             </div>
             {edit && (
               <div className="ml-5">
@@ -71,7 +63,7 @@ function ExperienceSection({ edit }) {
               </div>
             )}
           </div>
-          <div className={profileSectionStyles.experienceContent}>
+          <div className={styles.experienceContent}>
             <ul className="list-disc">
               <li>
                 Utilized best SEO practices to improve site traction by 25%
@@ -82,26 +74,33 @@ function ExperienceSection({ edit }) {
           </div>
         </div>
 
-        <hr className={profileSectionStyles.experience} />
+        <hr className={styles.profileSection} />
 
-        <div className="experience">
-          <div className="experience-header">
+        <div className={styles.sectionPictureContent}>
+          <div className={`${styles.experience} ${edit ? "!w-full" : ""}`}>
             <img
-              className="rect !bg-white"
+              className="companyPicture"
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQc7BLRD7_cjZzpJHhSedD9w5rBylmX_xoA6w&s"
             />
 
-            <div className="experience-info-left">
-              <p className="section-element-title">Research Intern</p>
-              <p className="section-element-subtitle">Fermilab</p>
+            <div className={styles.experienceContentLeft}>
+              <p className="title">Research Intern</p>
+              <p className="subtitle">Fermilab</p>
             </div>
 
-            <div className="experience-info-right">
-              <p className="section-element-title">May 2023-August 2024</p>
-              <p className="section-element-subtitle">1 year 4 months</p>
+            <div className={styles.experienceContentRight}>
+              <p className="title">May 2023-August 2024</p>
+              <p className="subtitle">1 year 4 months</p>
             </div>
+            {edit && (
+              <div className="ml-5">
+                <IconButton>
+                  <EditIcon />
+                </IconButton>
+              </div>
+            )}
           </div>
-          <div className="experience-body ml-20">
+          <div className={styles.experienceContent}>
             <ul className="list-disc">
               <li>
                 Researched and implemented various sensors to improve mobility
