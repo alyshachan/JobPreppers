@@ -1,0 +1,73 @@
+/* Jobs */
+.jobs {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+.mainContent {
+  display: flex;
+  flex-basis: 100%;
+  overflow-y: none;
+  transition: flex 0.3s ease-in-out;
+  flex-direction: column;
+  width: 100%;
+}
+
+.mainContent.drawerOpen {
+  flex-basis: 68%;
+  overflow-y: auto;
+}
+
+.drawer {
+  display: none;
+  flex-basis: 0%;
+  transition: flex-basis 0.3s ease-in-out;
+}
+
+.drawer.drawerOpen {
+  display: flex;
+  flex-basis: 600px;
+}
+
+/* Hide Main Content on small screens when Drawer is open */
+@media (min-width: 768px) {
+  .mainContent.drawerOpen {
+    display: block;
+    flex-direction: row;
+  }
+}
+
+/* Job Description */
+.card{
+  max-width: 500px;
+  width: 40%;
+  margin: 1rem;
+  border-radius: 15px !important;
+}
+
+.cardIconDetails{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.descriptionBox {
+  display: flex;
+  gap: 8px; /* Space between icon and text */
+  justify-content: flex-start; /* Horizontally center the icon and text */
+  width: 100%; /* Ensure the box takes up the full width */
+  align-items: center;
+}
+
+.descriptionText{
+  color: #00000099;
+}
+
+.descriptionFooter{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-basis: 100%;
+}
