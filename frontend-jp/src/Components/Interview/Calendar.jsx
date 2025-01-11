@@ -102,8 +102,8 @@ function Calendar({ onOpenEventDialog, selectedDate, setSelectedDate }) {
                 day + 1 === currentDate.getDate() &&
                 month === currentDate.getMonth() &&
                 year === currentDate.getFullYear()
-                  ? "currentDay"
-                  : ""
+                  ? styles.currentDay
+                  : ''
               }
               onClick={() => handleDayClick(day + 1, month, year)}
             >

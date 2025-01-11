@@ -75,5 +75,6 @@ hr.calendarHr{
     color: white;
     background-color: #4ba173;
     border-radius: 50%;
+    aspect-ratio: 1;
   }
   
