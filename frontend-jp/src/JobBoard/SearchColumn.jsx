@@ -8,7 +8,7 @@ import "../JobBoard/JobSection.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function SearchColumn({ setUserCoordinate }) {
+function SearchColumn({ setUserCoordinate, setFilters }) {
   const [jobName, setJobName] = useState("");
   // Still need to cache but that for later
   const [location, setLocation] = useState(null);
@@ -19,12 +19,21 @@ function SearchColumn({ setUserCoordinate }) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
-            setUserCoordinate({ latitude, longitude });
+
             const fetchedAddress = await getAddressFromCoordinates(
               latitude,
               longitude
             );
             setLocation(fetchedAddress);
+            setUserCoordinate({ latitude, longitude });
+            // setFilters((prev) => ({
+            //   ...prev,
+            //   longitude: longitude,
+            //   latitude: latitude,
+            // }));
+
+            console.log("Position coor: ", latitude, longitude);
+            console.log("fetechedPostion: ", fetchedAddress);
           },
           (error) => {
             console.log("Unable to retrieve user location");
@@ -65,7 +74,16 @@ function SearchColumn({ setUserCoordinate }) {
         if (response.data && response.data.length > 0) {
           const { lat, lon } = response.data[0];
           setUserCoordinate({ latitude: lat, longitude: lon });
-          console.log({ lat, lon });
+          setFilters((prev) => {
+            const updatedFilters = {
+              ...prev,
+              longitude: lon,
+              latitude: lat,
+            };
+            return updatedFilters;
+          });
+
+          console.log("Got search address:", { latitude: lat, longitude: lon });
         } else {
           console.log("No results found for the location");
         }

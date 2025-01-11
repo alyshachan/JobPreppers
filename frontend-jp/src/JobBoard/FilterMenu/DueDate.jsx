@@ -17,6 +17,11 @@ export default function DueDate({ setFilters }) {
   };
   const handleClose = () => {
     setAnchorEl(null);
+
+    setFilters((prev) => {
+      const updatedFilters = { ...prev, date: null };
+      return updatedFilters;
+    });
   };
 
   const handleSearch = () => {
@@ -28,7 +33,7 @@ export default function DueDate({ setFilters }) {
       console.log("Updated Filters: ", updatedFilters);
       return updatedFilters;
     });
-    handleClose();
+    setAnchorEl(null);
   };
 
   return (

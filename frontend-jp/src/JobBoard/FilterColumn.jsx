@@ -7,18 +7,17 @@ import DueDate from "./FilterMenu/DueDate";
 import Company from "./FilterMenu/Company";
 import { useEffect, useState, useRef } from "react";
 
-export default function FilterColumn({ setJobs, jobs, userCoordinate }) {
+export default function FilterColumn({
+  setJobs,
+  jobs,
+  filters,
+  setFilters,
+  userCoordinate,
+}) {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const containerRef = useRef(null);
   const [error, setError] = useState(null); // Define error state here
 
-  const [filters, setFilters] = useState({
-    date: null,
-    type: [],
-    company: [],
-    min_salary: 0,
-    // distance: null,
-  });
   useEffect(() => {
     const handleSearch = async () => {
       // e.preventDefault(); // Prevent default form submission
@@ -28,6 +27,7 @@ export default function FilterColumn({ setJobs, jobs, userCoordinate }) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(filters),
+          credentials: "include",
         });
 
         if (response.ok) {
@@ -74,7 +74,7 @@ export default function FilterColumn({ setJobs, jobs, userCoordinate }) {
           }}
         >
           <Salary setFilters={setFilters} />
-          <Distance />
+          <Distance setFilters={setFilters} userCoordinate={userCoordinate} />
           <Company setFilters={setFilters} jobs={jobs} />
           <JobType setFilters={setFilters} />
           <DueDate setFilters={setFilters} />

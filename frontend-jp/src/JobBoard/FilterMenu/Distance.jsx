@@ -26,11 +26,9 @@ const marks = [
 function valuetext(value) {
   return `${value} miles`;
 }
-export default function Distance() {
+export default function Distance({ setFilters, userCoordinate }) {
   const [sliderValue, setSliderValue] = useState(5);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [address, setAddress] = useState(""); // Store the address input
-  const [coordinates, setCoordinates] = useState(null); // Store the lat/lng
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -47,11 +45,28 @@ export default function Distance() {
   const handleCancel = () => {
     setSliderValue(5); // Reset to default value
     handleClose();
+    setFilters((prev) => {
+      const updatedFilters = {
+        ...prev,
+        distance: 0,
+      };
+      return updatedFilters;
+    });
   };
 
   const handleShowResult = () => {
     console.log(`Distance: ${sliderValue}miles`);
     handleClose();
+    setFilters((prev) => {
+      const updatedFilters = {
+        ...prev,
+        distance: sliderValue,
+        longitude: userCoordinate.longitude,
+        latitude: userCoordinate.latitude,
+      };
+      return updatedFilters;
+    });
+
     return sliderValue;
   };
   return (
