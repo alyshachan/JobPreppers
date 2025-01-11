@@ -1,7 +1,6 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React, { useState, useEffect, useRef } from "react";
 import ListBox from "./ListBox";
-import "./ProfileSections.css";
 import "../Components/JobPreppers.css"
 import styles from "../Components/Profile/ProfileSections.module.css"
 import { useAuth } from "../provider/authProvider";

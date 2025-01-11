@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import ListBox from "./ListBox";
-import "./ProfileSections.css";
 import "../Components/JobPreppers.css"
 import styles from "../Components/Profile/ProfileSections.module.css"
 import SectionHeader from "../Components/Profile/SectionHeader";

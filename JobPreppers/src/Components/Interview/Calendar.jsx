@@ -2,8 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { IconButton } from "@mui/material";
-
-import "./Calendar.css";
+import styles from "./Calendar.module.css";
 
 function Calendar({ onOpenEventDialog, selectedDate, setSelectedDate }) {
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -78,21 +77,21 @@ function Calendar({ onOpenEventDialog, selectedDate, setSelectedDate }) {
     const firstDay = firstDayOfMonth(month, year);
 
     return (
-      <div className="calendar" key={`${month}-${year}`}>
-        <div className="navigateDate">
-          <h2 className="month">
+      <div className={styles.calendar} key={`${month}-${year}`}>
+        <div className={styles.navigateDate}>
+          <h2 className={styles.month}>
             {monthsOfYear[month]} {year}
           </h2>
-          <hr className="m-[10px]" />
+          <hr className={styles.calendarHr}/>
         </div>
 
-        <div className="weekdays">
+        <div className={styles.weekdays}>
           {daysOfWeek.map((day) => (
             <span key={day}>{day}</span>
           ))}
         </div>
 
-        <div className="days">
+        <div className={styles.days}>
           {[...Array(firstDay).keys()].map((_, index) => (
             <span key={`empty-${index}`} />
           ))}
@@ -117,21 +116,22 @@ function Calendar({ onOpenEventDialog, selectedDate, setSelectedDate }) {
   };
 
   return (
-    <div ref={mainPanelRef} className="calendarNavigationWrapper">
-      <div className="navButton">
-        <IconButton onClick={prevMonth} className="navButton">
+    <div ref={mainPanelRef} className={styles.calendarNavigationWrapper}>
+      <div className={styles.navButton}>
+        <IconButton onClick={prevMonth} className={styles.navButton}>
           <ChevronLeftIcon />
         </IconButton>
       </div>
 
-      <div className={`calendarWrapper ${visibleMonths ? `month-${visibleMonths}` : ''}`}>
+      <div className={`${styles.calendarWrapper} ${styles[`month-${visibleMonths}`] || ''}`}
+>
         {[...Array(visibleMonths).keys()].map((offset) =>
           renderCalendar(offset)
         )}
       </div>
 
-      <div className="navButton">
-        <IconButton onClick={nextMonth} className="navButton">
+      <div className={styles.navButton}>
+        <IconButton onClick={nextMonth} className={styles.navButton}>
           <ChevronRightIcon />
         </IconButton>
       </div>

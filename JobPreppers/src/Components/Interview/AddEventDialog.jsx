@@ -15,9 +15,9 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import { styled } from "@mui/material/styles";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import moment from "moment";
+import styles from "./AddEventDialog.module.css";
 
 import SectionHeader from "../../Components/Profile/SectionHeader";
-import "./AddEventDialog.css";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .css-10d30g3-MuiPaper-root-MuiDialog-paper": {
@@ -29,13 +29,6 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     minWidth: "800px",
   },
 }));
-
-const iconStyles = {
-  width: "1.5em",
-  height: "1.5em",
-  aspectRatio: "1",
-  color: "#4BA173",
-};
 
 function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
   const [eventName, setEventName] = useState("");
@@ -66,39 +59,24 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
 
   return (
     <StyledDialog onClose={onClose} open={open}>
-      <DialogTitle
-        sx={{
-          m: 0,
-          p: 2,
-          borderTop: "50px solid #4BA173",
-          width: "calc(100% + 40px)",
-          left: "-20px",
-          position: "relative",
-          paddingLeft: "36px",
-        }}
-      >
+      <DialogTitle className={styles.addEventTitle}>
         <SectionHeader header="Add Event" />
       </DialogTitle>
 
       <IconButton
         aria-label="close"
         onClick={onClose}
-        sx={{
-          position: "absolute",
-          right: 8,
-          top: 8,
-          color: "#085630",
-        }}
+        className={styles.closeButton}
       >
         <CloseIcon />
       </IconButton>
 
       <DialogContent>
-        <div className="eventForm">
-          <div className="eventFormLeft">
-            <div className="input">
-              <TitleIcon sx={iconStyles} />
-              <div className="inputField">
+        <div className={styles.eventForm}>
+          <div className={styles.eventFormLeft}>
+            <div className={styles.input}>
+              <TitleIcon className={styles.icon} />
+              <div className={styles.inputField}>
                 Event Name
                 <TextField
                   required
@@ -110,9 +88,9 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
               </div>
             </div>
 
-            <div className="input">
-              <CalendarTodayIcon sx={iconStyles} />
-              <div className="inputField">
+            <div className={styles.input}>
+              <CalendarTodayIcon className={styles.icon} />
+              <div className={styles.inputField}>
                 Event Date
                 <TextField
                   required
@@ -123,9 +101,9 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
               </div>
             </div>
 
-            <div className="input">
-              <AccessTimeOutlinedIcon sx={iconStyles} />
-              <div className="inputField">
+            <div className={styles.input}>
+              <AccessTimeOutlinedIcon className={styles.icon} />
+              <div className={styles.inputField}>
                 Start Time
                 <TextField
                   type="time"
@@ -133,7 +111,7 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
                   onChange={(e) => setStartTime(e.target.value)}
                 />
               </div>
-              <div className="inputField">
+              <div className={styles.inputField}>
                 End Time
                 <TextField
                   type="time"
@@ -144,10 +122,11 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
             </div>
           </div>
 
-          <div className="eventFormRight">
-            <div className="input">
-              <PermIdentityOutlinedIcon sx={iconStyles} />
-              <div className="inputField">
+          <div className={styles.eventFormRight}>
+            {/* Right-side content */}
+            <div className={styles.input}>
+              <PermIdentityOutlinedIcon className={styles.icon} />
+              <div className={styles.inputField}>
                 Participants
                 <TextField
                   placeholder="Enter Participant Name(s)"
@@ -158,9 +137,9 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
               </div>
             </div>
 
-            <div className="input">
-              <EditNoteIcon sx={{ ...iconStyles, marginTop: "-100px" }} />
-              <div className="inputField">
+            <div className={styles.input}>
+              <EditNoteIcon className={`${styles.icon} mt-[-100px]`} />
+              <div className={styles.inputField}>
                 Event Details
                 <TextareaAutosize
                   placeholder="Enter Event Details"

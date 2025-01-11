@@ -17,14 +17,36 @@ textarea:focus {
   border: 2px solid #1976d2;
 }
 
+.addEventTitle {
+  margin: 0;
+  padding: 0;
+  border-top: 50px solid #4ba173;
+  left: -20px;
+  position: relative;
+  padding-left: 36px;
+  width: calc(100% + 40px);
+}
+
+.closeButton {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  color: #085630 !important;
+}
+
 .eventForm {
   display: flex;
   flex-direction: row;
   column-gap: 50px;
+  width:100%;
+}
+
+.eventFormLeft{
+  flex: 1;
 }
 
 .eventFormRight {
-  width: 100%;
+  flex: 1;
   height: 100%;
 }
 
@@ -37,8 +59,14 @@ textarea:focus {
   justify-content: space-between;
 }
 
+.icon{
+  font-size: 2.5rem !important;
+  aspect-ratio: 1;
+  color: #4BA173;
+}
+
 .inputField {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 100% !important;
 }

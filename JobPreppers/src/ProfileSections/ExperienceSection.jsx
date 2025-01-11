@@ -1,4 +1,3 @@
-import "./ProfileSections.css";
 import SectionHeader from "../Components/Profile/SectionHeader";
 import EditIcon from "@mui/icons-material/Edit";
 import styles from "../Components/Profile/ProfileSections.module.css";
