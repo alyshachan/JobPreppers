@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import SearchColumn from "../JobBoard/SearchColumn";
-import "../JobBoard/JobSection.css";
-import FilterColumn from "../JobBoard/FilterColumn";
-import JobDescription from "../JobBoard/JobDescription";
-import ReadMore from "../JobBoard/ReadMoreComponent/ReadMoreDrawer";
+import SearchColumn from "../Components/Jobs/SearchColumn";
+import "../Components/Jobs/JobSection.css";
+import FilterColumn from "../Components/Jobs/FilterColumn";
+import JobDescription from "../Components/Jobs/JobDescription";
+import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
 
 function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);

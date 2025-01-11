@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { SvgIcon, TextField } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import "../JobBoard/JobSection.css";
+import "./JobSection.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
