@@ -7,6 +7,8 @@ import { Box, Button, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import "./Menu.css";
+import styles from "../Jobs.module.css";
+
 export default function DueDate({ setFilters }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedDate, setSelectDate] = React.useState(dayjs());
@@ -55,16 +57,14 @@ export default function DueDate({ setFilters }) {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        className="location-menu"
         MenuListProps={{
           "aria-labelledby": "location-button",
         }}
       >
         <MenuItem>
-          <Box className="due-date-box">
+          <Box>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateCalendar
-                className="calendar"
                 value={selectedDate}
                 onChange={(newValue) => setSelectDate(newValue)}
               />
@@ -72,23 +72,13 @@ export default function DueDate({ setFilters }) {
           </Box>
         </MenuItem>
 
-        <div className="menu-button-section">
-          <Button
-            className="cancel-button"
-            variant="text"
-            onClick={handleClose}
-          >
-            {" "}
-            Cancel{" "}
-          </Button>
-          <Button
-            className="save-button"
-            variant="contained"
-            onClick={handleSearch}
-          >
-            {" "}
-            Show Result{" "}
-          </Button>
+        <div className={styles.dropDownMenuSelection}>
+          <button className="lightButton" variant="text" onClick={handleClose}>
+            Cancel
+          </button>
+          <button variant="contained" onClick={handleSearch}>
+            Show Result
+          </button>
         </div>
       </Menu>
     </>

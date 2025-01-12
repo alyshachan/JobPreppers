@@ -1,4 +1,4 @@
-import "./JobSection.css";
+import "./Jobs.css";
 import Stack from "@mui/material/Stack";
 import Salary from "./FilterMenu/Salary";
 import JobType from "./FilterMenu/JobType";
@@ -6,7 +6,7 @@ import Distance from "./FilterMenu/Distance";
 import DueDate from "./FilterMenu/DueDate";
 import Company from "./FilterMenu/Company";
 import { useEffect, useState, useRef } from "react";
-
+import styles from "./Jobs.module.css";
 export default function FilterColumn({
   setJobs,
   jobs,
@@ -68,10 +68,7 @@ export default function FilterColumn({
         <Stack
           direction="row"
           spacing={2}
-          sx={{
-            width: "100%",
-            justifyContent: isOverflowing ? "flex-start" : "center",
-          }}
+          className={`${styles.filterColumn} ${isOverflowing ? styles.filterColumnOverflow : ""}`}
         >
           <Salary setFilters={setFilters} />
           <Distance setFilters={setFilters} userCoordinate={userCoordinate} />

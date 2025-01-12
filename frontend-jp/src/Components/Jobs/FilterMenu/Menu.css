@@ -1,3 +1,12 @@
+.MuiButton-root {
+  text-transform: none !important;
+  font-weight: normal !important;
+}
+
+.MuiInputLabel-root {
+  color: #4ba173 !important; /* Input Color */
+}
+
 .drop-down {
   border: 2px solid #4ba173;
   color: #4ba173;
@@ -7,27 +16,30 @@
   height: 56px;
 }
 
-.drop-down .MuiAutocomplete-inputRoot {
-  display: flex;
-  /* flex-wrap: nowrap; Prevent wrapping of chips */
-  height: 56px; /* Fixed height to prevent resizing */
-}
-
+.drop-down .MuiAutocomplete-inputRoot,
 .drop-down .MuiTextField-root {
   display: flex;
-  /* flex-wrap: nowrap; Prevent wrapping of chips */
   height: 56px; /* Fixed height to prevent resizing */
-}
-
-.filter-column-container .MuiOutlinedInput-root fieldset {
-  border-color: transparent !important;
 }
 
 .drop-down .MuiInputLabel-root.Mui-focused, 
 .drop-down .MuiInputLabel-root.MuiFormLabel-filled,
 .drop-down .MuiInputLabel-root.MuiInputLabel-shrink
  {
-  background-color: #e7f2ec; /* Change background color */
+  background-color: #e7f2ec; /*Background for dropdown title when selected*/
+}
+
+.drop-down:hover {
+  text-color: black !important;
+  background-color: #f0fbf5;
+}
+
+.drop-down:hover .MuiInputLabel-root {
+  color: #085630 !important; /* Change label color to black on hover */
+}
+
+.drop-down .MuiAutocomplete-popupIndicator {
+  color: #4ba173; /* Down arrow color */
 }
 
 .filter-button.MuiButton-outlined {
@@ -40,87 +52,17 @@
   justify-content: space-between;
 }
 
-.MuiButton-root {
-  text-transform: none !important;
-  font-weight: normal !important;
-}
-
 .filter-button:hover {
   color: black;
   background-color: #f0fbf5;
   border: 2px solid #4ba173;
-  /* font:  */
-}
-
-.drop-down:hover {
-  text-color: black !important;
-  background-color: #f0fbf5;
-}
-
-.MuiInputLabel-root {
-  color: #4ba173 !important; /* Input Color */
-}
-
-/* Hover State for the Drop-down */
-.drop-down:hover .MuiInputLabel-root {
-  color: black !important; /* Change label color to black on hover */
-}
-.drop-down .MuiAutocomplete-popupIndicator {
-  color: #4ba173; /* Down arrow color */
-}
-
-.drop-down .MuiSelect-select {
-  color: #4ba173; /* Text color for the selected value */
-}
-
-.location-menu {
-  maxheight: 600px;
-}
-
-.slider-box {
-  height: 100px;
-  width: 250px;
 }
 
 .salary-menu .MuiMenu-paper {
   width: 30% !important;
 }
-.salary-menu {
-  width: 100%;
-}
 
-.salary-slider-box {
-  height: 100px;
-  width: 98%;
-}
-
-.salary-slider {
-  width: 100%;
-  translate: 0px 25px;
-}
-
-.slider {
-  width: 100%;
-  translate: 0px 25px;
-}
-
-.save-button.MuiButton-contained {
-  border: 2px solid #4ba173;
-  color: white;
-  background-color: #4ba173;
-}
-
-.cancel-button.MuiButton-text {
-  color: black;
-}
-
-.menu-button-section {
-  padding: 10px;
-  display: flex;
-  justify-content: flex-end; /* Align buttons to the right */
-  gap: 10px; /* Add spacing between buttons */
-}
-*/ .MuiPickersDay-root:hover {
+ .MuiPickersDay-root:hover {
   background-color: black; /* Light gray background on hover */
   color: #000; /* Black text color */
 }

@@ -7,6 +7,10 @@
     margin-top: -120px;
   }
 
+  .pinnedInfo{
+    width: calc(100% - 300px);
+  }
+
   .name {
     font-size: 60px;
     font-weight: bold;

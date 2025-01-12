@@ -3,19 +3,13 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CloseIcon from "@mui/icons-material/Close";
 import amazonIcon from "../Img/amazon-icon.png";
 import moment from "moment";
+import styles from "../Jobs.module.css";
 
 export default function Header({ job, onClose }) {
   return (
     <>
       {/* Header Section */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
+      <Box className={styles.drawerHeader}>
         <Avatar src={amazonIcon} aria-label="amazon">
           {job.company[0]}
         </Avatar>
@@ -38,17 +32,11 @@ export default function Header({ job, onClose }) {
           &nbsp; Apply by {new Date(job.fill_by_date).toLocaleDateString()}
           &nbsp; at {moment(job.postedAt).format("hh:mm A")}
         </Typography>
-        <Button
-          className="bookmark-button"
-          variant="contained"
-          startIcon={<BookmarkBorderIcon />}
-        >
-          {" "}
-          Bookmark{" "}
-        </Button>
-        <Button className="apply-button" variant="contained">
-          Apply
-        </Button>
+        <button className={`${styles.drawerButton} lightButton`}>
+          <BookmarkBorderIcon />
+          Bookmark
+        </button>
+        <button className={styles.drawerButton}>Apply</button>
       </Box>
     </>
   );

@@ -71,3 +71,100 @@
   align-items: center;
   flex-basis: 100%;
 }
+
+/* Filter Column */
+.filterColumn{
+  width: 100%;
+  justify-content: center;
+}
+
+.filterColumnOverflow{
+  justify-content: flex-start;
+}
+
+/* Search Column */
+.searchContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  width: 100%;
+  gap: 10px;
+}
+
+.searchTextField{
+  margin-top: 2rem;
+  background-color: white;
+  width: 40%;
+}
+
+.filterButton {
+  align-self: end;
+  margin-bottom: 5px;
+}
+
+.filterIcon{
+  width: 2rem !important;
+  height: 2rem !important;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+
+.sliderBox {
+  height: 100px;
+  width: 250px;
+}
+
+.slider {
+  width: 100%;
+  translate: 0px 25px;
+}
+
+.dropDownMenuSelection {
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.salarySliderBox {
+  height: 100px;
+  width: 98%;
+}
+
+.salarySlider {
+  width: 100%;
+  translate: 0px 25px;
+}
+
+.drawerHeader{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.drawerButton{
+  padding: 5px 15px;
+  margin-top: 10px;
+  margin-right: 5px;
+}
+
+.drawer{
+  width: 100%;
+  transition: width 0.3s ease-in-out
+}
+
+.drawerNarrow{
+  width: 600px;
+  transition: width 0.3s ease-in-out
+}
+
+.descriptionBox {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  width: 100%;
+  align-items: start;
+}

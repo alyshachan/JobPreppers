@@ -107,7 +107,7 @@ function Profile({edit = false}) {
             </p>
           </div>
 
-          <div>
+          <div className={styles.pinnedInfo}>
             <EducationSection edit={edit}/>
             <SkillsSection skillsDict={skillsTest} edit={edit}/>
           </div>

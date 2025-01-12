@@ -1,3 +1,36 @@
+body {
+  background-color: #e7f2ec;
+  justify-content: center;
+  color: black;
+}
+
+h1 {
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: x-large;
+  font-weight: bold;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #757575;
+  margin-left: 10px;
+  width: 100%;
+}
+
+button{
+  background-color: #4BA173;
+  border: 2px solid #4BA173;
+  border-radius: 30px;
+  padding: 0px 10px;
+  color: white;
+  font-weight: bold;
+  line-height: 30px;
+}
+
 .content{
     display: flex;
     flex-direction: column;
@@ -67,5 +100,9 @@
     background-color: #f0fbf5;
     border: 2px solid #63d297;
     color: #63d297;
+  }
+
+  .lightButton:hover {
+    background-color: #edf2f7;
   }
   

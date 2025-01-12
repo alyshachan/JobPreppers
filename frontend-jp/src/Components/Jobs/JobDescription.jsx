@@ -18,7 +18,7 @@ import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import PlaceIcon from "@mui/icons-material/Place";
 import amazonIcon from "./Img/amazon-icon.png";
 import ReadMoreDrawer from "./ReadMoreComponent/ReadMoreDrawer";
-import styles from "./Jobs.module.css"
+import styles from "./Jobs.module.css";
 import "../JobPreppers.css";
 
 function JobDescription({ setDrawerOpen, jobs }) {

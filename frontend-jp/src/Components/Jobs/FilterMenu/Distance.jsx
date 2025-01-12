@@ -3,6 +3,7 @@ import { Box, Slider, Button, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import "./Menu.css";
+import styles from "../Jobs.module.css";
 
 const marks = [
   {
@@ -88,13 +89,12 @@ export default function Distance({ setFilters, userCoordinate }) {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        className="location-menu"
         MenuListProps={{
           "aria-labelledby": "location-button",
-        }}
+        }} 
       >
         <MenuItem>
-          <Box className="slider-box">
+          <Box className={styles.sliderBox}>
             <Slider
               aria-label="Custom marks"
               defaultValue={5}
@@ -104,28 +104,18 @@ export default function Distance({ setFilters, userCoordinate }) {
               onChange={handleSliderChange}
               valueLabelDisplay="auto"
               marks={marks}
-              className="slider"
+              className={styles.slider}
             />
-            {/* Need to add cancel and submit at the bottom */}
           </Box>
         </MenuItem>
-        <div className="menu-button-section">
-          <Button
-            className="cancel-button"
-            variant="text"
-            onClick={handleCancel}
-          >
-            {" "}
-            Cancel{" "}
-          </Button>
-          <Button
-            className="save-button"
-            variant="contained"
-            onClick={handleShowResult}
-          >
-            {" "}
-            Show Result{" "}
-          </Button>
+
+        <div className={styles.dropDownMenuSelection}>
+          <button className="lightButton" variant="text" onClick={handleCancel}>
+            Cancel
+          </button>
+          <button variant="contained" onClick={handleShowResult}>
+            Show Result
+          </button>
         </div>
       </Menu>
     </>
