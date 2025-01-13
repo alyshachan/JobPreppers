@@ -26,14 +26,6 @@ function SearchColumn({ setUserCoordinate, setFilters }) {
             );
             setLocation(fetchedAddress);
             setUserCoordinate({ latitude, longitude });
-            // setFilters((prev) => ({
-            //   ...prev,
-            //   longitude: longitude,
-            //   latitude: latitude,
-            // }));
-
-            console.log("Position coor: ", latitude, longitude);
-            console.log("fetechedPostion: ", fetchedAddress);
           },
           (error) => {
             console.log("Unable to retrieve user location");
