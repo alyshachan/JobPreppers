@@ -4,9 +4,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { SvgIcon, TextField } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import "../JobBoard/JobSection.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import styles from "./Jobs.module.css";
 
 function SearchColumn({ setUserCoordinate, setFilters }) {
   const [jobName, setJobName] = useState("");
@@ -101,11 +101,11 @@ function SearchColumn({ setUserCoordinate, setFilters }) {
 
   return (
     <>
-      <div className="searchContent">
+      <div className={styles.searchContent}>
         <TextField
           label="Search"
           id="search-input"
-          className="mt-8 bg-white w-[40%]"
+          className={styles.searchTextField}
           type="text"
           value={jobName}
           onChange={(e) => setJobName(e.target.value)}
@@ -125,7 +125,7 @@ function SearchColumn({ setUserCoordinate, setFilters }) {
         <TextField
           label="Location"
           id="location-input"
-          className="mt-8 bg-white w-[40%]"
+          className={styles.searchTextField}
           value={location}
           onChange={(e) => {
             setLocation(e.target.value);
@@ -139,11 +139,7 @@ function SearchColumn({ setUserCoordinate, setFilters }) {
                   <IconButton aria-label="close" onClick={clearLocation}>
                     <CloseOutlinedIcon />
                   </IconButton>
-                  <button
-                    className="search-button"
-                    variant="contained"
-                    onClick={submitAddress}
-                  >
+                  <button variant="contained" onClick={submitAddress}>
                     {" "}
                     Search{" "}
                   </button>
@@ -153,19 +149,12 @@ function SearchColumn({ setUserCoordinate, setFilters }) {
           }}
         />
 
-        <IconButton
-          aria-label="filter-button"
-          style={{ alignSelf: "center", marginTop: "10px" }}
-        >
+        <IconButton aria-label="filter-button" className={styles.filterButton}>
           <SvgIcon>
             {/* credit: filter icon from https://heroicons.com */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-8"
+              className={styles.filterIcon}
             >
               <path
                 stroke-linecap="round"

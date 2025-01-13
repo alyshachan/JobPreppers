@@ -1,6 +1,6 @@
 import React from "react";
-
-import "./UpcomingEvents.css";
+import styles from "./UpcomingEvents.module.css";
+import "../JobPreppers.css"
 
 const monthsOfYear = [
   "JANUARY",
@@ -19,32 +19,34 @@ const monthsOfYear = [
 
 function UpcomingEvents({ events }) {
   return (
-    <div className="upcomingEvents">
+    <div className={styles.upcomingEvents}>
       {events.map((event, index) => (
-        <div className="event" key={index}>
-          <h2 className="eventDate">{`${monthsOfYear[event.date.getMonth()]} ${
-            event.date.getDate() + 1
-          }, ${event.date.getFullYear()}`}</h2>
+        <div className={styles.event} key={index}>
+          <h2 className={styles.eventDate}>
+            {`${monthsOfYear[event.date.getMonth()]} ${
+              event.date.getDate() + 1
+            }, ${event.date.getFullYear()}`}
+          </h2>
 
-          <div className="eventTimeText">
-            <div className="eventDateWrapper">
-              <div className="startTime">{event.start}</div>
-              <div className="endTime">{event.end}</div>
+          <div className={styles.eventTimeText}>
+            <div className={styles.eventDateWrapper}>
+              <div className={styles.startTime}>{event.start}</div>
+              <div className={styles.endTime}>{event.end}</div>
             </div>
 
-            <div className={`eventText ${index === 0 ? "firstEvent" : ""}`}>
+            <div className={`${styles.eventText} ${index === 0 ? styles.firstEvent : ''}`}>
               <h2>{event.name}</h2>
 
               <p
                 className={`${
-                  index === 0 ? "text-[#EEEEEE]" : "section-element-subtitle "
+                  index === 0 ? "text-[#EEEEEE]" : "subtitle"
                 }`}
               >
                 {event.details}
               </p>
 
-              <div className="joinCallButton">
-                <button className={`${index === 0 ? "firstJoinCall" : ""}`}>
+              <div className={styles.joinCallButton}>
+                <button className={`${index === 0 ? styles.firstJoinCall : ''}`}>
                   Join call
                 </button>
               </div>

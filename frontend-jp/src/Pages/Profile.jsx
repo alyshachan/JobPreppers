@@ -5,14 +5,14 @@ import ProjectSection from "../ProfileSections/ProjectSection";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 import { useAuth } from "../provider/authProvider";
 import React, { useEffect, useState } from 'react';
+import "../Components/JobPreppers.css"
+import styles from "../Components/Profile/Profile.module.css"
 
-function Profile() {
+
+function Profile({edit = false}) {
 
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
-  const {initialUser, setIntialUser} = useState(null);
-
-  // const skillsTest = {}
-
+  const {initialUser, setIntialUser} = useState(null); // !mt-[175px]
   const [skillsTest, setSkillsTest] = useState({});
 
   useEffect(() => {
@@ -61,8 +61,6 @@ function Profile() {
     }
   }, [user]);  // only populate when user exists
 
-
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -95,32 +93,39 @@ function Profile() {
   return (
     <>
       <div className="content !mt-[175px]">
-        <div className="main-panel !flex-row gap-[50px]">
-          <div className="main-personal">
-            <img className="circle !bg-transparent" alt="Profile Picture" src={userPic}/>
-            <p className="name">
+
+        <div className="panel !flex-row gap-[50px]">
+          <div className={styles.personalInfo}>
+            <img className="profilePicture" alt="Profile Picture" src={userPic}/>
+            <p className={styles.name}>
               {user.first_name} {user.last_name}
             </p>
             <p>Computer Science Student at the University of Utah</p>
-            <p className="section-element-subtitle">
-              Salt Lake City, UT
-              <br /> United States
+            <p className="subtitle">
+              Salt Lake City, UT<br />
+              United States
             </p>
           </div>
 
-          <div className="main-professional">
-            <EducationSection />
-            <SkillsSection skillsDict={skillsTest} />
+          <div className={styles.pinnedInfo}>
+            <EducationSection edit={edit}/>
+            <SkillsSection skillsDict={skillsTest} edit={edit}/>
           </div>
         </div>
 
-        <div className="main-panel">
-          <ExperienceSection />
+        <div className="panel">
+          <ExperienceSection edit={edit}/>
         </div>
 
-        <div className="main-panel">
-          <ProjectSection />
+        <div className="panel">
+          <ProjectSection edit={edit}/>
         </div>
+
+        {edit && (
+        <a className={styles.addNewSection}>
+          Add new section
+        </a> 
+        )}
 
       </div>
     </>

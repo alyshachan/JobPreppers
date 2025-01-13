@@ -1,28 +1,47 @@
 import React from "react";
-import "./ProfileSections.css";
+import "../Components/JobPreppers.css"
+import styles from "../Components/Profile/ProfileSections.module.css"
+import { IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 
-function ListBox({ key, title, list }) {
-  const displayedItems = list.slice(0, 4);
-  const hasMoreItems = list.length > 4;
+function ListBox({
+  key,
+  title,
+  list,
+  edit,
+  sliceItems = true,
+  showAllItems = false,
+}) {
+  const displayedItems = sliceItems ? list.slice(0, 4) : list;
+  const hasMoreItems = list.length > 4 && !showAllItems;
 
   return (
-    <div className="skill-box">
-      <p className="section-element-title">{title}</p>
+    <div className={styles.skillBox}>
+      {edit ? (
+        <div className="flex flex-row justify-between">
+          <p className="section-element-title">{title}</p>
+          <IconButton>
+            <EditIcon />
+          </IconButton>
+        </div>
+      ) : (
+        <p className="title">{title}</p>
+      )}
 
-      <div className="section-element-list">
+      <div className={styles.skillList}>
         {displayedItems.map((item, index) => (
           <React.Fragment key={index}>
             <p>{item}</p>
             {/* Only add <hr> if it's not the last item */}
-            {index < displayedItems.length - 1 && <hr className="divider" />}
+            {index < displayedItems.length - 1 && <hr className={styles.skillDivider} />}
           </React.Fragment>
         ))}
 
-        {/* Show 'See more' button if there are more than 4 items */}
-        {hasMoreItems && (
-          <div className="section-element-list-more">
+        {/* Show 'See more' button if there are more than 4 items and showAllItems is false */}
+        {hasMoreItems && !showAllItems && (
+          <div className={styles.skillMoreList}>
             ...
-            <button className="see-more">See more</button>
+            <button className="lightButton">See more</button>
           </div>
         )}
       </div>

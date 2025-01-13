@@ -3,6 +3,7 @@ import { Box, Slider, Button, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import "./Menu.css";
+import styles from "../Jobs.module.css";
 
 // const marks = [
 //     { value: 20, label: '20k+' },
@@ -84,7 +85,7 @@ export default function Salary({ setFilters }) {
         }}
       >
         <MenuItem>
-          <Box className="salary-slider-box">
+          <Box className={styles.salarySliderBox}>
             <Slider
               aria-label="Custom marks"
               getAriaValueText={valuetext}
@@ -96,28 +97,18 @@ export default function Salary({ setFilters }) {
               valueLabelFormat={valuetext}
               valueLabelDisplay="auto"
               marks={sparseMark}
-              className="salary-slider"
+              className={styles.salarySlider}
             />
-            {/* Need to add cancel and submit at the bottom */}
           </Box>
         </MenuItem>
-        <div className="menu-button-section">
-          <Button
-            className="cancel-button"
-            variant="text"
-            onClick={handleCancel}
-          >
-            {" "}
-            Cancel{" "}
-          </Button>
-          <Button
-            className="save-button"
-            variant="contained"
-            onClick={handleShowResult}
-          >
-            {" "}
-            Show Result{" "}
-          </Button>
+
+        <div className={styles.dropDownMenuSelection}>
+          <button className="lightButton" variant="text" onClick={handleCancel}>
+            Cancel
+          </button>
+          <button variant="contained" onClick={handleShowResult}>
+            Show Result
+          </button>
         </div>
       </Menu>
     </>

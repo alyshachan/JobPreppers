@@ -17,8 +17,9 @@ import PaidIcon from "@mui/icons-material/Paid";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import PlaceIcon from "@mui/icons-material/Place";
 import amazonIcon from "./Img/amazon-icon.png";
-import "./JobSection.css";
 import ReadMoreDrawer from "./ReadMoreComponent/ReadMoreDrawer";
+import styles from "./Jobs.module.css";
+import "../JobPreppers.css";
 
 function JobDescription({ setDrawerOpen, jobs }) {
   //   const [jobs, setJobs] = useState([]);
@@ -37,7 +38,7 @@ function JobDescription({ setDrawerOpen, jobs }) {
   return (
     <>
       {jobs.map((job) => (
-        <Card key={job.jobID} sx={{ maxWidth: "500px" , width:"40%", margin: 2 }}>
+        <Card key={job.jobID} className={styles.card}>
           <CardHeader
             avatar={
               <Avatar src={amazonIcon} aria-label="recipe">
@@ -57,69 +58,58 @@ function JobDescription({ setDrawerOpen, jobs }) {
               </>
             }
           />
-<CardContent>
-  <Box
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center", // Center the entire content in the CardContent
-      width: "100%",
-    }}
-  >
-    <Stack
-      direction="column"
-      spacing={2}
-    >
-      {job.max_salary == null ? (
-        <Box className="description-box">
-          <PaidIcon />
-          <Typography variant="body" sx={{ color: "text.secondary" }}>
-            ${job.min_salary}
-          </Typography>
-        </Box>
-      ) : (
-        <Box className="description-box">
-          <PaidIcon />
-          <Typography variant="body" sx={{ color: "text.secondary" }}>
-            ${job.min_salary} - ${job.max_salary}
-          </Typography>
-        </Box>
-      )}
-      <Box className="description-box">
-        <AccessTimeFilledIcon />
-        <Typography variant="body" sx={{ color: "text.secondary" }}>
-          {job.type}
-        </Typography>
-      </Box>
-      <Box className="description-box">
-        <PlaceIcon />
-        <Typography variant="body" sx={{ color: "text.secondary" }}>
-          {job.location}
-        </Typography>
-      </Box>
-    </Stack>
-  </Box>
-</CardContent>
+          <CardContent>
+            <Box className={styles.cardIconDetails}>
+              <Stack direction="column" spacing={2}>
+                {job.max_salary == null ? (
+                  <Box className={styles.descriptionBox}>
+                    <PaidIcon />
+                    <Typography
+                      variant="body"
+                      className={styles.descriptionText}
+                    >
+                      ${job.min_salary}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box className={styles.descriptionBox}>
+                    <PaidIcon />
+                    <Typography
+                      variant="body"
+                      className={styles.descriptionText}
+                    >
+                      ${job.min_salary} - ${job.max_salary}
+                    </Typography>
+                  </Box>
+                )}
+                <Box className={styles.descriptionBox}>
+                  <AccessTimeFilledIcon />
+                  <Typography variant="body" className={styles.descriptionText}>
+                    {job.type}
+                  </Typography>
+                </Box>
+                <Box className={styles.descriptionBox}>
+                  <PlaceIcon />
+                  <Typography variant="body" className={styles.descriptionText}>
+                    {job.location}
+                  </Typography>
+                </Box>
+              </Stack>
+            </Box>
+          </CardContent>
 
           <CardActions>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexBasis: "100%",
-              }}
-            >
-              <Typography variant="body" sx={{ color: "text.secondary" }}>
+            <Box className={styles.descriptionFooter}>
+              <Typography variant="body" className={styles.descriptionText}>
                 Apply by {new Date(job.fill_by_date).toLocaleDateString()}
               </Typography>
-              <Button
+              <button
                 onClick={() => handleOpenDrawer(job)}
                 variant="contained"
-                className="learn-more-button"
+                className="lightButton"
               >
                 Learn More
-              </Button>
+              </button>
             </Box>
           </CardActions>
         </Card>

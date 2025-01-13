@@ -5,6 +5,7 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import WorkIcon from "@mui/icons-material/Work";
 import PlaceIcon from "@mui/icons-material/Place";
 import "./ReadMoreStyle.css";
+import styles from "../Jobs.module.css"
 
 export default function ReadMoreDrawer({ open, job, onClose }) {
   const [isNarrow, setIsNarrow] = useState(window.innerWidth < 1200); // Initial state based on window width
@@ -30,12 +31,7 @@ export default function ReadMoreDrawer({ open, job, onClose }) {
       open={open}
       onClose={onClose}
       hideBackdrop
-      PaperProps={{
-        sx: {
-          width: drawerWidth,
-          transition: "width 0.3s ease-in-out", // Smooth transition for opening/closing
-        },
-      }}
+      PaperProps={isNarrow ? styles.drawer : styles.drawerNarrow}
     >
       <Box sx={{ width: drawerWidth, padding: 2 }}>
         <Header job={job} onClose={onClose} />
@@ -45,29 +41,29 @@ export default function ReadMoreDrawer({ open, job, onClose }) {
         <Box>
           <Typography className="start-text">Brief Overview </Typography>
           {job.max_salary == null ? (
-            <Box className="description-box">
+            <Box className={styles.descriptionBox}>
               <PaymentsIcon />
-              <Typography variant="body" sx={{ color: "text.secondary" }}>
+              <Typography variant="body" className={styles.descriptionText}>
                 ${job.min_salary}
               </Typography>
             </Box>
           ) : (
-            <Box className="description-box">
+            <Box className={styles.descriptionBox}>
               <PaymentsIcon />
-              <Typography variant="body" sx={{ color: "text.secondary" }}>
+              <Typography variant="body" className={styles.descriptionText}>
                 ${job.min_salary} - ${job.max_salary}
               </Typography>
             </Box>
           )}
-          <Box className="description-box">
+          <Box className={styles.descriptionBox}>
             <WorkIcon />
-            <Typography variant="body" sx={{ color: "text.secondary" }}>
+            <Typography variant="body" className={styles.descriptionText}>
               {job.type}
             </Typography>
           </Box>
-          <Box className="description-box">
+          <Box className={styles.descriptionBox}>
             <PlaceIcon />
-            <Typography variant="body" sx={{ color: "text.secondary" }}>
+            <Typography variant="body" className={styles.descriptionText}>
               {job.location}
             </Typography>
           </Box>
@@ -84,8 +80,7 @@ export default function ReadMoreDrawer({ open, job, onClose }) {
         <Box>
           <Typography className="start-text"> Job Description</Typography>
           <Typography sx={{ typography: "body1" }}>
-            {" "}
-            {job.description || "No description provided."}{" "}
+            {job.description || "No description provided."}
           </Typography>
         </Box>
       </Box>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import SearchColumn from "../JobBoard/SearchColumn";
-import "../JobBoard/JobSection.css";
-import FilterColumn from "../JobBoard/FilterColumn";
-import JobDescription from "../JobBoard/JobDescription";
-import ReadMore from "../JobBoard/ReadMoreComponent/ReadMoreDrawer";
+import SearchColumn from "../Components/Jobs/SearchColumn";
+import "../Components/JobPreppers.css";
+import styles from "../Components/Jobs/Jobs.module.css";
+import FilterColumn from "../Components/Jobs/FilterColumn";
+import JobDescription from "../Components/Jobs/JobDescription";
+import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
 
 function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -46,26 +47,15 @@ function Jobs() {
   }, []);
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          height: "100vh",
-        }}
-      >
+      <Box className={styles.jobs}>
         {/* Main Content Area */}
         <Box
-          sx={{
-            display: drawerOpen && { xs: "flex", md: "block" }, // Hide Main Content on small screens when Drawer is open
-            flexBasis: drawerOpen ? "68%" : "100%",
-            transition: "flex 0.3s ease-in-out",
-            overflowY: drawerOpen ? "auto" : "none",
-            flexDirection: { xs: "column", md: "row" },
-            width: "100%",
-          }}
+          className={`${styles.mainContent} ${
+            drawerOpen ? styles.drawerOpen : ""
+          }`}
         >
           <div className="content">
-            <div className="main-panel !bg-transparent !shadow-none !p-0 items-center">
+            <div className="panelTransparent !p-0 items-center">
               <SearchColumn
                 setUserCoordinate={setUserCoordinate}
                 setFilters={setFilters}
@@ -84,11 +74,7 @@ function Jobs() {
 
         {/* Drawer Area */}
         <Box
-          sx={{
-            display: drawerOpen ? "flex" : "none",
-            flexBasis: drawerOpen ? "600px" : "0%",
-            transition: "flex-basis 0.3s ease-in-out",
-          }}
+          className={`${styles.drawer} ${drawerOpen ? styles.drawerOpen : ""}`}
         >
           <ReadMore />
         </Box>

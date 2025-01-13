@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import ListBox from "./ListBox";
-import "./ProfileSections.css";
-import SectionHeader from "../Components/SectionHeader";
+import "../Components/JobPreppers.css"
+import styles from "../Components/Profile/ProfileSections.module.css"
+import SectionHeader from "../Components/Profile/SectionHeader";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-function SkillsSection({ skillsDict }) {
+function SkillsSection({ skillsDict, edit }) {
   const [isNarrow, setIsNarrow] = useState(false);
   const containerRef = useRef(null);
 
@@ -19,27 +21,36 @@ function SkillsSection({ skillsDict }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const displayedItems = Object.entries(skillsDict).slice(0, 4);
+  const displayedItems = edit == true ? Object.entries(skillsDict) : Object.entries(skillsDict).slice(0, 4);
   const hasMoreItems = Object.keys(skillsDict).length > 4;
 
   return (
     <div ref={containerRef}>
-      <SectionHeader header={"Skills"} />
-      <div className="section-content">
-
-      <div className={`skills ${isNarrow ? "narrow" : ""}`}>
-        {displayedItems.map(([title, list], index) => (
-          <ListBox key={index} title={title} list={list} />
-        ))}
-      </div>
-      {hasMoreItems && (
-        <div className="see-all-div">
-          <button className="see-all">See all Skills -&gt;</button>
+      <SectionHeader header={"Skills"} edit={edit} />
+      <div className={styles.sectionContent}>
+        <div className={`${styles.skills} ${isNarrow ? styles.skillsNarrow : ''}`}>
+          {displayedItems.map(([title, list], index) => (
+            <ListBox
+              key={index}
+              title={title}
+              list={list}
+              edit={edit}
+              sliceItems={!edit}
+              showAllItems={edit}
+            />
+          ))}
         </div>
-      )}
-    </div>
-
+        {hasMoreItems && !edit && (
+          <div className={styles.seeAllDiv}>
+            <a href="./Skills">
+              <button className={styles.seeAll}>
+                See all Skills <ArrowForwardIcon className="mt-1 ml-1" />
+              </button>
+            </a>
+          </div>
+        )}
       </div>
+    </div>
   );
 }
 

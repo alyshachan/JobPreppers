@@ -1,0 +1,85 @@
+.MuiButton-root {
+  text-transform: none !important;
+  font-weight: normal !important;
+}
+
+.MuiInputLabel-root {
+  color: #4ba173 !important; /* Input Color */
+}
+
+.drop-down {
+  border: 2px solid #4ba173;
+  color: #4ba173;
+  border-radius: 4px;
+  width: 200px;
+  min-width: 150px;
+  height: 56px;
+}
+
+.drop-down .MuiAutocomplete-inputRoot,
+.drop-down .MuiTextField-root {
+  display: flex;
+  height: 56px; /* Fixed height to prevent resizing */
+}
+
+.drop-down .MuiInputLabel-root.Mui-focused, 
+.drop-down .MuiInputLabel-root.MuiFormLabel-filled,
+.drop-down .MuiInputLabel-root.MuiInputLabel-shrink
+ {
+  background-color: #e7f2ec; /*Background for dropdown title when selected*/
+}
+
+.drop-down:hover {
+  text-color: black !important;
+  background-color: #f0fbf5;
+}
+
+.drop-down:hover .MuiInputLabel-root {
+  color: #085630 !important; /* Change label color to black on hover */
+}
+
+.drop-down .MuiAutocomplete-popupIndicator {
+  color: #4ba173; /* Down arrow color */
+}
+
+.filter-button.MuiButton-outlined {
+  color: #4ba173;
+  border: 2px solid #4ba173;
+  width: 200px;
+  min-width: 150px;
+  height: 56px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.filter-button:hover {
+  color: black;
+  background-color: #f0fbf5;
+  border: 2px solid #4ba173;
+}
+
+.salary-menu .MuiMenu-paper {
+  width: 30% !important;
+}
+
+ .MuiPickersDay-root:hover {
+  background-color: black; /* Light gray background on hover */
+  color: #000; /* Black text color */
+}
+
+/* Selected day styling */
+.MuiPickersDay-root.Mui-selected {
+  background-color: #4ba173 !important; /* Blue circle for selected day */
+  color: white; /* White text inside selected day */
+}
+
+/* Hover effect on the selected day */
+.MuiPickersDay-root.Mui-selected:hover {
+  background-color: #4ba173 !important; /* Darker blue on hover */
+}
+
+/* Styling for today (current day) */
+.MuiPickersDay-root.MuiPickersDay-today {
+  border: 1px solid #1976d2; /* Blue border for today's date */
+  color: #4ba173; /* Blue text color */
+}

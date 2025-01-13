@@ -1,0 +1,108 @@
+body {
+  background-color: #e7f2ec;
+  justify-content: center;
+  color: black;
+}
+
+h1 {
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: x-large;
+  font-weight: bold;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #757575;
+  margin-left: 10px;
+  width: 100%;
+}
+
+button{
+  background-color: #4BA173;
+  border: 2px solid #4BA173;
+  border-radius: 30px;
+  padding: 0px 10px;
+  color: white;
+  font-weight: bold;
+  line-height: 30px;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+
+  .panel {
+    background-color: white;
+    border-radius: 15px;
+    width: 70%;
+    display: flex;
+    box-sizing: border-box;
+    padding: 20px 50px;
+    margin: 20px;
+    box-shadow: 2px 2px 25px -2px rgba(0, 0, 0, 0.25);
+    flex-direction: column;
+  }
+
+  .panelTransparent {
+    border-radius: 15px;
+    width: 70%;
+    display: flex;
+    box-sizing: border-box;
+    padding: 20px 50px;
+    margin: 20px;
+    flex-direction: column;
+  }
+
+  .profilePicture {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+  }
+
+  .companyPicture{
+    width: 50px;
+    height: 50px;
+  }
+
+  .rect {
+    background-color: red;
+    width: 50px;
+    height: 50px;
+  }
+
+  .circle {
+    background-color: red;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+  }
+
+  .title {
+    font-size: large;
+    font-weight: bold;
+  }
+  
+  .subtitle {
+    color: #757575;
+    margin-top: 0px;
+  }
+
+  .lightButton {
+    background-color: #f0fbf5;
+    border: 2px solid #63d297;
+    color: #63d297;
+  }
+
+  .lightButton:hover {
+    background-color: #edf2f7;
+  }
+  
