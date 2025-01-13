@@ -57,15 +57,19 @@ export default function Distance({ setFilters, userCoordinate }) {
   const handleShowResult = () => {
     console.log(`Distance: ${sliderValue}miles`);
     handleClose();
-    setFilters((prev) => {
-      const updatedFilters = {
-        ...prev,
-        distance: sliderValue,
-        longitude: userCoordinate.longitude,
-        latitude: userCoordinate.latitude,
-      };
-      return updatedFilters;
-    });
+    const userLong = userCoordinate.longitude;
+    const userLat = userCoordinate.latitude;
+    if (userLong != null && userLat != null) {
+      setFilters((prev) => {
+        const updatedFilters = {
+          ...prev,
+          distance: sliderValue,
+          longitude: userCoordinate.longitude,
+          latitude: userCoordinate.latitude,
+        };
+        return updatedFilters;
+      });
+    }
 
     return sliderValue;
   };
