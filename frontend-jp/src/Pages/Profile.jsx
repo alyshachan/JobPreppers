@@ -4,7 +4,7 @@ import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 import { useAuth } from "../provider/authProvider";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 
 function Profile() {
@@ -15,6 +15,11 @@ function Profile() {
   // const skillsTest = {}
 
   const [skillsTest, setSkillsTest] = useState({});
+  // test message box handler
+  const handleMessageSubmit = (e) => {
+    e.preventDefault();
+    console.log(`You inputted ${document.getElementById('message').value}`);
+  }
 
   useEffect(() => {
     const requestSkills = async () => {
@@ -103,21 +108,6 @@ function Profile() {
       console.error('Connection closed:', error);
     });
 
-    // connection.on("ReceiveDirectMessage", (senderId, message) => {
-    //   console.log(`Message from ${senderId}: ${message}`);
-    // });
-    // console.log("Attempting to start connection");
-
-    // connection.start()
-    // .then(() => console.log('Connected to SignalR Hub'))
-    // .catch(error => console.error('Connection failed:', error));
-    
-
-    // // test message
-
-    // console.log("Attempting to send a test message");
-    // connection.invoke("SendMessageToAll", "testuser (4)", "Testing testing 123!")
-    // .catch(e => console.error(e));
 
     try {
       console.log("Attempting to start connection");
@@ -151,6 +141,11 @@ function Profile() {
       <div className="content !mt-[175px]">
         <div className="main-panel !flex-row gap-[50px]">
           <div className="main-personal">
+          <form id="myForm" onSubmit={handleMessageSubmit}>
+              <input type="text" id="message" placeholder="Send a message">
+              </input>
+          </form>
+
             <img className="circle !bg-transparent" alt="Profile Picture" src={userPic}/>
             <p className="name">
               {user.first_name} {user.last_name}
