@@ -11,14 +11,31 @@ function Profile() {
 
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const {initialUser, setIntialUser} = useState(null);
+  const [message, setMessage] = useState("");
+  const [signalRConnection, setSignalRConnection] = useState(null);
 
   // const skillsTest = {}
 
   const [skillsTest, setSkillsTest] = useState({});
   // test message box handler
-  const handleMessageSubmit = (e) => {
+  const handleMessageSubmit = async (e) => {
     e.preventDefault();
-    console.log(`You inputted ${document.getElementById('message').value}`);
+    console.log(`You inputted ${message}`);
+
+    try {
+      // console.log("Attempting to start connection");
+      // await signalRConnection.start();
+      // console.log('Connected to SignalR Hub');
+
+      console.log("Attempting to send a test message");
+      await signalRConnection.invoke("SendMessageToAll", user.username, message).then(
+        () => console.log("Sent a message")
+      );
+    } catch (error) {
+      console.error('Connection failed or invoke error:', error);
+    }
+
+    setMessage(""); // clear text box
   }
 
   useEffect(() => {
@@ -93,6 +110,7 @@ function Profile() {
   // }, [user]);
 
   // Testing chat server connection in this component - Will
+  // this useEffect establishes the connection and stores it in a state
   useEffect(() => {
     const connectToHub = async () => {
 
@@ -111,13 +129,17 @@ function Profile() {
 
     try {
       console.log("Attempting to start connection");
-      await connection.start();
-      console.log('Connected to SignalR Hub');
+      await connection.start()
+      .then(() => {
+        console.log('Connected to SignalR Hub');
+        setSignalRConnection(connection); // store the connection in a state
+      } );
 
-      console.log("Attempting to send a test message");
-      await connection.invoke("SendMessageToAll", "testuser (4)", "Testing testing 123!").then(
-        () => console.log("Sent a message")
-      );
+      // moving this code to the handleSubmitMessage
+      // console.log("Attempting to send a test message");
+      // await connection.invoke("SendMessageToAll", user.username, "Hello world!").then(
+      //   () => console.log("Sent a message")
+      // );
     } catch (error) {
       console.error('Connection failed or invoke error:', error);
     }
@@ -142,7 +164,12 @@ function Profile() {
         <div className="main-panel !flex-row gap-[50px]">
           <div className="main-personal">
           <form id="myForm" onSubmit={handleMessageSubmit}>
-              <input type="text" id="message" placeholder="Send a message">
+              <input 
+              type="text" 
+              id="message" 
+              placeholder="Send a message"
+              value = {message}
+              onChange = {(e) => setMessage(e.target.value)}>
               </input>
           </form>
 
