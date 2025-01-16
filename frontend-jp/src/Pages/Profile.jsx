@@ -5,6 +5,7 @@ import ProjectSection from "../ProfileSections/ProjectSection";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 import { useAuth } from "../provider/authProvider";
 import React, { useEffect, useState } from 'react';
+import * as signalR from '@microsoft/signalr';
 
 function Profile() {
 
@@ -63,32 +64,85 @@ function Profile() {
 
 
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch(`http://localhost:5000/api/GetUser/${user.userID}`, {
-          credentials: "include", // include cookies
-        });
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const res = await fetch(`http://localhost:5000/api/GetUser/${user.userID}`, {
+  //         credentials: "include", // include cookies
+  //       });
 
                
-        if (res.ok) {
-          const data = await res.json();
-          console.log("GetUser: ", data);
-          setIntialUser(data);
-        } else {
-          console.error("Failed to fetch User");
-        }
-      } catch (error) {
-        console.error("Error fetching User:", error);
-      }
-    };
+  //       if (res.ok) {
+  //         const data = await res.json();
+  //         console.log("GetUser: ", data);
+  //         setIntialUser(data);
+  //       } else {
+  //         console.error("Failed to fetch User");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching User:", error);
+  //     }
+  //   };
 
-    fetchUser();
-  }, [user]);
+  //   fetchUser();
+  // }, [user]);
+
+  // Testing chat server connection in this component - Will
+  useEffect(() => {
+    const connectToHub = async () => {
+
+    console.log("Attempting to connect to /DirectMessageHub");
+    const connection = new signalR.HubConnectionBuilder()
+    .withUrl("http://localhost:5070/directMessageHub", {
+      accessTokenFactory: () => document.cookie.split('authToken=')[1] || '', 
+    })
+    .withAutomaticReconnect()
+    .build();
+
+    connection.onclose((error) => {
+      console.error('Connection closed:', error);
+    });
+
+    // connection.on("ReceiveDirectMessage", (senderId, message) => {
+    //   console.log(`Message from ${senderId}: ${message}`);
+    // });
+    // console.log("Attempting to start connection");
+
+    // connection.start()
+    // .then(() => console.log('Connected to SignalR Hub'))
+    // .catch(error => console.error('Connection failed:', error));
+    
+
+    // // test message
+
+    // console.log("Attempting to send a test message");
+    // connection.invoke("SendMessageToAll", "testuser (4)", "Testing testing 123!")
+    // .catch(e => console.error(e));
+
+    try {
+      console.log("Attempting to start connection");
+      await connection.start();
+      console.log('Connected to SignalR Hub');
+
+      console.log("Attempting to send a test message");
+      await connection.invoke("SendMessageToAll", "testuser (4)", "Testing testing 123!").then(
+        () => console.log("Sent a message")
+      );
+    } catch (error) {
+      console.error('Connection failed or invoke error:', error);
+    }
+
+    return () => {
+      connection.stop();
+    };
+    };
+    connectToHub();
+  }, [])
 
   if (user == null) {
     return <div>Loading...</div>;
   }
+
 
   const userPic = (user.profile_pic == null) ? defaultProfilePicture : "data:image/png;base64," + user.profile_pic.toString().toString('base64');
 
