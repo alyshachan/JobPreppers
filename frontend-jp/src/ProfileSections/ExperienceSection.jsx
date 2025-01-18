@@ -3,8 +3,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import "../Components/JobPreppers.css";
 import { IconButton } from "@mui/material";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-function ExperienceSection({ edit }) {
+
+function ExperienceSection({ experienceDict, edit }) {
+  const displayedItems =
+    edit == true ? experienceDict : experienceDict.slice(0, 3);
+  const hasMoreItems = Object.keys(experienceDict).length > 3;
   return (
     <>
       <SectionHeader header={"Experience"} edit={edit} />
@@ -116,6 +121,69 @@ function ExperienceSection({ edit }) {
             </ul>
           </div>
         </div>
+      </div>
+    </>
+  );
+
+  return (
+    <>
+      <SectionHeader header={"Experience"} edit={edit} />
+
+      <div className={styles.sectionContent}>
+        {displayedItems.map((experience, index) => (
+          <div key={index}>
+            <div className={styles.sectionPictureContent}>
+              <div className={`${styles.experience} ${edit ? "!w-full" : ""}`}>
+                <img
+                  className="companyPicture"
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
+                />
+
+                <div className={styles.experienceContentLeft}>
+                  <p className="title">Web Development Intern</p>
+                  <p className="subtitle">University of Utah</p>
+                </div>
+
+                <div className={styles.experienceContentRight}>
+                  <p className="title">July 2024-October 2024</p>
+                  <p className="subtitle">4 months</p>
+                </div>
+                {edit && (
+                  <div className="ml-5">
+                    <IconButton>
+                      <EditIcon />
+                    </IconButton>
+                  </div>
+                )}
+              </div>
+              <div className={styles.experienceContent}>
+                <ul className="list-disc">
+                  <li>
+                    Utilized best SEO practices to improve site traction by 25%
+                  </li>
+                  <li>Created responsive landing pages via HTML & CSS</li>
+                  <li>
+                    Managed backend items and listing updates via Netsuite
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {index < displayedItems.length - 1 && (
+              <hr className={styles.divider} />
+            )}
+          </div>
+        ))}
+
+        {hasMoreItems && !edit && (
+          <div className={styles.seeAllDiv}>
+            <a href="./Experience">
+              <button className={styles.seeAll}>
+                See all Experience <ArrowForwardIcon className="mt-1 ml-1" />
+              </button>
+            </a>
+          </div>
+        )}
       </div>
     </>
   );
