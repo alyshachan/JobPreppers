@@ -13,7 +13,7 @@ function Profile({edit = false}) {
 
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const {initialUser, setIntialUser} = useState(null); // !mt-[175px]
-  const [skillsTest, setSkillsTest] = useState({});
+  const [skillsDict, setSkillsDict] = useState({});
 
   useEffect(() => {
     const requestSkills = async () => {
@@ -27,22 +27,22 @@ function Profile({edit = false}) {
           console.log("API Response: ", data);  // Log the response to verify the structure
 
           if (data) {
-            let newSkillsTest = {}
+            let newSkillsDict = {}
             for (var userSkillID in data) {
 
               var skills = data[userSkillID]
 
 
-              if (!newSkillsTest[skills.category]) {
-                newSkillsTest[skills.category] = [skills.name]
+              if (!newSkillsDict[skills.category]) {
+                newSkillsDict[skills.category] = [skills.name]
               }
               else {
-                newSkillsTest[skills.category].push(skills.name)
+                newSkillsDict[skills.category].push(skills.name)
               }
             }
-            setSkillsTest(prevState => {
-              if (JSON.stringify(prevState) !== JSON.stringify(newSkillsTest)) {
-                return newSkillsTest;
+            setSkillsDict(prevState => {
+              if (JSON.stringify(prevState) !== JSON.stringify(newSkillsDict)) {
+                return newSkillsDict;
               }
               return prevState;
             });
@@ -90,6 +90,10 @@ function Profile({edit = false}) {
 
   const userPic = (user.profile_pic == null) ? defaultProfilePicture : "data:image/png;base64," + user.profile_pic.toString().toString('base64');
 
+  const testEduDict = [{"school_name": "University of Swag", "degree_name": "Bachelor's of Arts", "study_name": "Swag Science", "start_date": new Date(2024,10,1), "end_date": new Date(2024,5,1)},
+  {"school_name": "University of Utah", "degree_name": "Bachelor's of Science", "study_name": "Computer Science", "start_date": new Date(2021,8,1), "end_date": new Date(2025,5,1)},
+  {"school_name": "Georgia Tech", "degree_name": "Master's of Science", "study_name": "Computer Science", "start_date": new Date(2023,9,1), "end_date": new Date(2025,4,1)}];
+
   return (
     <>
       <div className="content !mt-[175px]">
@@ -108,8 +112,9 @@ function Profile({edit = false}) {
           </div>
 
           <div className={styles.pinnedInfo}>
-            <EducationSection edit={edit}/>
-            <SkillsSection skillsDict={skillsTest} edit={edit}/>
+            {Object.keys(testEduDict).length > 0 && (<EducationSection educationDict={testEduDict} edit={edit}/>)}
+            {Object.keys(skillsDict).length > 0 && (<SkillsSection skillsDict={skillsDict} edit={edit}/>)}
+            
           </div>
         </div>
 

@@ -28,7 +28,7 @@ function ProjectSection({ edit }) {
           </div>
         </div>
 
-        <hr className={styles.profileSection} />
+        <hr className={styles.divider} />
 
         <div className={styles.project}>
           <div className={styles.projectHeader}>
@@ -54,7 +54,7 @@ function ProjectSection({ edit }) {
           </div>
         </div>
 
-        <hr className={styles.profileSection} />
+        <hr className={styles.divider} />
 
         <div className={styles.project}>
           <div className={styles.projectHeader}>

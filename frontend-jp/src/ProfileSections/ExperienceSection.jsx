@@ -36,7 +36,7 @@ function ExperienceSection({ edit }) {
           </div>
         </div>
 
-        <hr className={styles.profileSection} />
+        <hr className={styles.divider} />
 
         <div className={styles.sectionPictureContent}>
           <div className={`${styles.experience} ${edit ? "!w-full" : ""}`}>
@@ -73,7 +73,7 @@ function ExperienceSection({ edit }) {
           </div>
         </div>
 
-        <hr className={styles.profileSection} />
+        <hr className={styles.divider} />
 
         <div className={styles.sectionPictureContent}>
           <div className={`${styles.experience} ${edit ? "!w-full" : ""}`}>
