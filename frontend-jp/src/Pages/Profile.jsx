@@ -23,14 +23,18 @@ function Profile() {
     console.log(`You inputted ${message}`);
 
     try {
-      // console.log("Attempting to start connection");
-      // await signalRConnection.start();
-      // console.log('Connected to SignalR Hub');
 
+      // Test sending to connected user 2
       console.log("Attempting to send a test message");
-      await signalRConnection.invoke("SendMessageToAll", user.username, message).then(
+      await signalRConnection.invoke("SendDirectMessage", user.username, 2, message).then(
         () => console.log("Sent a message")
       );
+
+      // Old code to send a message to all clients
+      // console.log("Attempting to send a test message");
+      // await signalRConnection.invoke("SendMessageToAll", user.username, message).then(
+      //   () => console.log("Sent a message")
+      // );
     } catch (error) {
       console.error('Connection failed or invoke error:', error);
     }
@@ -124,6 +128,11 @@ function Profile() {
 
     connection.onclose((error) => {
       console.error('Connection closed:', error);
+    });
+
+    connection.on("ReceiveDirectMessage", function (user, message) {
+      console.log("New message:");
+      console.log(`${user}: ${message}`)
     });
 
 
