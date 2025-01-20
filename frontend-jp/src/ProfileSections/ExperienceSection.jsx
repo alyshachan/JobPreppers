@@ -10,120 +10,48 @@ function ExperienceSection({ experienceDict, edit }) {
   const displayedItems =
     edit == true ? experienceDict : experienceDict.slice(0, 3);
   const hasMoreItems = Object.keys(experienceDict).length > 3;
-  return (
-    <>
-      <SectionHeader header={"Experience"} edit={edit} />
+  const monthsOfYear = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
-      <div className={styles.sectionContent}>
-        <div className={styles.sectionPictureContent}>
-          <div className={`${styles.experience} ${edit ? "!w-full" : ""}`}>
-            <img
-              className="companyPicture"
-              src="https://yt3.googleusercontent.com/ytc/AIdro_lF19YDdjWace_2mr1mAjdfPpFKk_WENZimcl1MG4GUzw=s900-c-k-c0x00ffffff-no-rj"
-            />
+  function calculateDate(startDate,endDate) {
+    const startYear = startDate.getFullYear();
+    const endYear = endDate.getFullYear();
+    const startMonth = startDate.getMonth();
+    const endMonth = endDate.getMonth();
 
-            <div className={styles.experienceContentLeft}>
-              <p className="title">Software Engineering Intern</p>
-              <p className="subtitle">T.D Williamson</p>
-            </div>
+    let yearsDiff = endYear - startYear;
+    let monthsDiff = endMonth - startMonth;
 
-            <div className={styles.experienceContentRight}>
-              <p className="title">October 2024-Present</p>
-              <p className="subtitle">3 months</p>
-            </div>
-            {edit && (
-              <div className="ml-5">
-                <IconButton>
-                  <EditIcon />
-                </IconButton>
-              </div>
-            )}
-          </div>
-        </div>
+    if (monthsDiff < 0){
+      yearsDiff--;
+      monthsDiff += 12;
+    }
 
-        <hr className={styles.divider} />
+    let message = "";
+    if (yearsDiff > 1)
+      message += yearsDiff + " years "
+    else
+      message += yearsDiff + " year "
 
-        <div className={styles.sectionPictureContent}>
-          <div className={`${styles.experience} ${edit ? "!w-full" : ""}`}>
-            <img
-              className="companyPicture"
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
-            />
-
-            <div className={styles.experienceContentLeft}>
-              <p className="title">Web Development Intern</p>
-              <p className="subtitle">University of Utah</p>
-            </div>
-
-            <div className={styles.experienceContentRight}>
-              <p className="title">July 2024-October 2024</p>
-              <p className="subtitle">4 months</p>
-            </div>
-            {edit && (
-              <div className="ml-5">
-                <IconButton>
-                  <EditIcon />
-                </IconButton>
-              </div>
-            )}
-          </div>
-          <div className={styles.experienceContent}>
-            <ul className="list-disc">
-              <li>
-                Utilized best SEO practices to improve site traction by 25%
-              </li>
-              <li>Created responsive landing pages via HTML & CSS</li>
-              <li>Managed backend items and listing updates via Netsuite</li>
-            </ul>
-          </div>
-        </div>
-
-        <hr className={styles.divider} />
-
-        <div className={styles.sectionPictureContent}>
-          <div className={`${styles.experience} ${edit ? "!w-full" : ""}`}>
-            <img
-              className="companyPicture"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQc7BLRD7_cjZzpJHhSedD9w5rBylmX_xoA6w&s"
-            />
-
-            <div className={styles.experienceContentLeft}>
-              <p className="title">Research Intern</p>
-              <p className="subtitle">Fermilab</p>
-            </div>
-
-            <div className={styles.experienceContentRight}>
-              <p className="title">May 2023-August 2024</p>
-              <p className="subtitle">1 year 4 months</p>
-            </div>
-            {edit && (
-              <div className="ml-5">
-                <IconButton>
-                  <EditIcon />
-                </IconButton>
-              </div>
-            )}
-          </div>
-          <div className={styles.experienceContent}>
-            <ul className="list-disc">
-              <li>
-                Researched and implemented various sensors to improve mobility
-                for the robot H.E.R.M.E.S
-              </li>
-              <li>
-                Utilized computer vision libraries to achieve basic autonomous
-                movements
-              </li>
-              <li>
-                Presented contributions to a group of researchers and non
-                technical employees
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+    if (monthsDiff > 1)
+      message += monthsDiff + " months"
+    else
+      message += monthsDiff + " month"
+    
+    return message
+    }
 
   return (
     <>
@@ -140,13 +68,13 @@ function ExperienceSection({ experienceDict, edit }) {
                 />
 
                 <div className={styles.experienceContentLeft}>
-                  <p className="title">Web Development Intern</p>
-                  <p className="subtitle">University of Utah</p>
+                  <p className="title">{experience.job_title}</p>
+                  <p className="subtitle">{experience.work_name}</p>
                 </div>
 
                 <div className={styles.experienceContentRight}>
-                  <p className="title">July 2024-October 2024</p>
-                  <p className="subtitle">4 months</p>
+                <p className="title">{monthsOfYear[experience.start_date.getMonth() - 1]} {experience.start_date.getFullYear()} - {monthsOfYear[experience.end_date.getMonth()]} {experience.end_date.getFullYear()}</p>
+                  <p className="subtitle">{calculateDate(experience.start_date, experience.end_date)}</p>
                 </div>
                 {edit && (
                   <div className="ml-5">
@@ -157,15 +85,7 @@ function ExperienceSection({ experienceDict, edit }) {
                 )}
               </div>
               <div className={styles.experienceContent}>
-                <ul className="list-disc">
-                  <li>
-                    Utilized best SEO practices to improve site traction by 25%
-                  </li>
-                  <li>Created responsive landing pages via HTML & CSS</li>
-                  <li>
-                    Managed backend items and listing updates via Netsuite
-                  </li>
-                </ul>
+                  {experience.description}
               </div>
             </div>
 
