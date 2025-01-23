@@ -129,8 +129,8 @@ function Profile({ edit = false }) {
       work_name: "another work place",
       location: "usa",
       job_title: "software developer",
-      start_date: new Date(2002,1,22),
-      end_date: new Date(2025,1,19),
+      start_date: new Date(2002, 1, 22),
+      end_date: new Date(2025, 1, 19),
       description: "coder 4 lyfe <3 January 2002 to Jan 2025",
     },
     {
@@ -151,7 +151,24 @@ function Profile({ edit = false }) {
     },
   ];
 
-  const testProjDict = [{"project_title": "raspberry pi ring doorbell"}];
+  const testProjDict = [
+    {
+      project_title: "raspberry pi ring doorbell",
+      description: "blah blah blah",
+    },
+    {
+      project_title: "raspberry pi ring doorbell",
+      description: "blah blah blah",
+    },
+    {
+      project_title: "raspberry pi ring doorbell",
+      description: "blah blah blah",
+    },
+    {
+      project_title: "raspberry pi ring doorbell",
+      description: "blah blah blah",
+    },
+  ];
 
   return (
     <>
@@ -184,17 +201,17 @@ function Profile({ edit = false }) {
           </div>
         </div>
 
-        <div className="panel">
-          {Object.keys(testExpDict).length > 0 && (
-            <ExperienceSection experienceDict={testExpDict} edit={edit} />
-          )}
-        </div>
+        {Object.keys(testExpDict).length > 0 && (
+          <ExperienceSection experienceDict={testExpDict} edit={edit} />
+        )}
 
-        <div className="panel">
-          <ProjectSection edit={edit} />
-        </div>
+        {Object.keys(testProjDict).length > 0 && (
+          <ProjectSection projectDict={testProjDict} edit={edit} />
+        )}
 
-        {edit && <a className={styles.addNewSection}>Add new section</a>}
+        {edit && (
+          <button className={styles.addNewSection}>Add new section</button>
+        )}
       </div>
     </>
   );

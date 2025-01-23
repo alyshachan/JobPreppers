@@ -55,6 +55,7 @@ function ExperienceSection({ experienceDict, edit }) {
 
   return (
     <>
+    <div className="panel">
       <SectionHeader header={"Experience"} edit={edit} />
 
       <div className={styles.sectionContent}>
@@ -104,6 +105,7 @@ function ExperienceSection({ experienceDict, edit }) {
             </a>
           </div>
         )}
+      </div>
       </div>
     </>
   );
