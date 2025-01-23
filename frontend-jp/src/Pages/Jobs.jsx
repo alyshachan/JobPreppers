@@ -6,6 +6,7 @@ import styles from "../Components/Jobs/Jobs.module.css";
 import FilterColumn from "../Components/Jobs/FilterColumn";
 import JobDescription from "../Components/Jobs/JobDescription";
 import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
+import AddJob from "../Components/Jobs/Posting/AddJobForm";
 
 function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -69,6 +70,7 @@ function Jobs() {
               />
             </div>
             <JobDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
+            <AddJob />
           </div>
         </Box>
 
