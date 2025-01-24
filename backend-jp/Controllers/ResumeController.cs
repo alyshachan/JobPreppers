@@ -75,8 +75,11 @@ namespace JobPreppersDemo.Controllers
             }
         }
         [HttpPost("PostFile")]
-        public async Task<IActionResult> PostFile(IFormFile file, int userID)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> PostFile([FromForm] UploadResumeRequest request)
         {
+            var file = request.File;
+            var userID = request.UserID;
             if (file == null || file.Length == 0)
             {
                 return BadRequest("No file uploaded.");
@@ -213,6 +216,11 @@ Additionally, recommend projects or skills the user can work on to align with th
         public class JobDescriptionInput
         {
             public string JobDescription { get; set; }
+            public int UserID { get; set; }
+        }
+        public class UploadResumeRequest
+        {
+            public IFormFile File { get; set; }
             public int UserID { get; set; }
         }
         private string ExtractTextFromBlob(byte[] blobData)

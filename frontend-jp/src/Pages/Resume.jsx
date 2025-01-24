@@ -18,7 +18,7 @@ function Resume() {
 
     const uploadResume = async () => {
 
-        console.log("User:", user.userID);
+        console.log("User:", user);
         if (!file) {
             setMessage("Please select a file.");
             return;
@@ -29,10 +29,10 @@ function Resume() {
         setMessage("User authentication error. Please log in again.");
         return;
     }
-
+    console.log("UserID is :", user.userID);
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("userId", user.userID); // Use userID instead of id
+    formData.append("userID", user.userID); // Use userID instead of id
 
         try {
             const response = await fetch("http://localhost:5000/api/Resume/PostFile", {
@@ -57,26 +57,27 @@ function Resume() {
             return;
         }
     
-        // if (!user?.id) {
-        //     setMessage("User authentication error. Please log in again.");
-        //     return;
-        // }
+        if (!user.userID) {
+            setMessage("User authentication error. Please log in again.");
+            return;
+        }
     
         try {
-            const response = await fetch("/api/Resume/generate-suggestions", {
+            const response = await fetch("http://localhost:5000/api/Resume/generate-suggestions", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ jobDescription, userId: 1 }),
+                body: JSON.stringify({ jobDescription, userID: user.userID }),
             });
     
             if (!response.ok) {
                 const errorText = await response.text();
                 setMessage(`Error: ${errorText}`);
             } else {
-                const data = await response.text();
-                setSuggestions(data);
+                const jsonResponse = await response.json(); // Parse JSON response
+                const suggestionsText = jsonResponse.choices[0]?.message?.content || "No suggestions available."; // Extract text content
+                setMessage(suggestionsText); // Set just the text as the message
             }
         } catch (error) {
             setMessage(`Error: ${error.message}`);
