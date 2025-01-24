@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
 using Google.Protobuf.Collections;
+using Mysqlx.Crud;
 
 namespace JobPreppersDemo.Controllers
 {
@@ -27,6 +28,47 @@ namespace JobPreppersDemo.Controllers
         {
             _context = context;
         }
+
+        [HttpGet("{userID}")]
+        public async Task<IActionResult> GetUserProjects(int userID)
+        {
+            try
+            {
+                //check if user exists
+                var doesExist = await _context.Users.AnyAsync(u => u.userID == userID);
+                if (!doesExist)
+                {
+                    return NotFound("User not Found");
+                }
+                //if they do return all user projects
+                else
+                {
+                    var userProjects = await _context.UserProjects
+                           .Where(up => up.userID == userID)
+                           .Select(up => new
+                           {
+                               ProjectTitle = up.project_title,
+                               Description = up.description
+                           })
+                           .ToListAsync();
+
+                    if (userProjects.Count == 0)
+                    {
+                        return NotFound($"No projects found for user with ID {userID}.");
+                    }
+
+                    return Ok(userProjects);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
         [HttpPost("CreateProject")]
         public async Task<IActionResult> CreateProject([FromBody] UserProjectDto project)
         {

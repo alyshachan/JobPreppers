@@ -30,6 +30,54 @@ namespace JobPreppersDemo.Controllers
             public DateOnly? end_date { get; set; }
             public string? description { get; set; }
         }
+
+
+        [HttpGet("{userID}")]
+        public async Task<IActionResult> GetUserExperience(int userID)
+        {
+            try
+            {
+                //check if user exists
+                var doesExist = await _context.Users.AnyAsync(u => u.userID == userID);
+                if (!doesExist)
+                {
+                    return NotFound("User not Found");
+                }
+                //if they do return all user experience
+                else
+                {
+                    var userExperience = await _context.UserExperiences
+                           .Where(ue => ue.userID == userID)
+                           .Include(ue => ue.work)
+                           .OrderByDescending(ue => ue.end_date.HasValue)
+                           .ThenByDescending(ue => ue.end_date) 
+                           .Select(ue => new
+                           {
+                               WorkName = ue.work.work_name,
+                               WorkLocation = ue.work.location,
+                               JobTitle = ue.job_title,
+                               StartDate = ue.start_date,
+                               EndDate = ue.end_date,
+                               Description = ue.description
+                           })
+                           .ToListAsync();
+
+                    if (userExperience.Count == 0)
+                    {
+                        return NotFound($"No experience found for user with ID {userID}.");
+                    }
+
+                    return Ok(userExperience);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("CreateExperience")]
         public async Task<IActionResult> createExperience([FromBody] UserExperienceDto experience)
         {

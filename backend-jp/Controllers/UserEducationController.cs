@@ -11,8 +11,7 @@ using System.Diagnostics;
 
 namespace JobPreppersDemo.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+
     public class UserEducationDto
     {
         public int userID { get; set; }
@@ -24,6 +23,9 @@ namespace JobPreppersDemo.Controllers
         public string? description { get; set; }
 
     }
+
+    [Route("api/[controller]")]
+    [ApiController]
     public class UserEducationController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -31,6 +33,55 @@ namespace JobPreppersDemo.Controllers
         {
             _context = context;
         }
+
+        [HttpGet("{userID}")]
+        public async Task<IActionResult> GetUserEducation(int userID)
+        {
+            try
+            {
+                //check if user exists
+                var doesExist = await _context.Users.AnyAsync(u => u.userID == userID);
+                if (!doesExist)
+                {
+                    return NotFound("User not Found");
+                }
+                //if they do return all user education
+                else
+                {
+                    var userEducation = await _context.UserEducations
+                           .Where(ue => ue.userID == userID)
+                           .Include(ue => ue.school)
+                           .Include(ue => ue.degree)
+                           .Include(ue => ue.study)
+                           .OrderByDescending(ue => ue.end_date.HasValue)
+                           .ThenByDescending(ue => ue.end_date)
+                           .Select(ue => new
+                           {
+                               SchoolName = ue.school.school_name,
+                               DegreeName = ue.degree != null ? ue.degree.degree_name : null,
+                               StudyName = ue.study != null ? ue.study.study_name : null,
+                               StartDate = ue.start_date,
+                               EndDate = ue.end_date,
+                               Description = ue.description
+                           })
+                           .ToListAsync();
+
+                    if (userEducation.Count == 0)
+                    {
+                        return NotFound($"No education found for user with ID {userID}.");
+                    }
+
+                    return Ok(userEducation);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("CreateEducation")]
         public async Task<IActionResult> CreateEducation([FromBody] UserEducationDto userEducationDto)
         {
