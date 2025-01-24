@@ -94,10 +94,10 @@ export default function AddJobForm() {
               style={{ display: activeStep === 0 ? "none" : "block" }}
               onClick={handleBack}
             >
-              prev
+              Previous
             </button>
             <button disabled={lastStep} onClick={handleNext}>
-              {lastStep ? "Finish" : "Next"}
+              {lastStep ? "Submit" : "Next"}
             </button>
           </footer>
         </React.Fragment>

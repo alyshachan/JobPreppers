@@ -26,6 +26,10 @@ export default function Benefits() {
         </ButtonGroup>
 
         <h2>Perks</h2>
+        <ButtonGroup>
+          <Button>Career Development</Button>
+          <Button>Add More +</Button>
+        </ButtonGroup>
       </FormControl>
     </>
   );

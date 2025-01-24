@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import {
-  Select,
+  Autocomplete,
   InputLabel,
   MenuItem,
   TextField,
@@ -33,6 +33,14 @@ export default function DescribeJob() {
     setEmploymentType(event.target.value);
   };
 
+  const employementTypeOptions = [
+    "Full-Time",
+    "Part-Time",
+    "Internship",
+    "PRN",
+    "Apprentices",
+  ];
+
   // Step 1
 
   return (
@@ -45,23 +53,12 @@ export default function DescribeJob() {
         />
         <TextField {...register("location")} label="Location" />
         <TextField {...register("jobTitle")} label="Job Title" />
-        <InputLabel for="employmentTypeLabel">Employment Type</InputLabel>
-        <Select
-          labelId="employmentTypeLabel"
-          id="selectEmploymentType"
-          value={employmentType}
-          label="Employement Type"
-          onChange={handleChangeEmployment}
-        >
-          <MenuItem value="" disabled>
-            Employment Type
-          </MenuItem>
-          <MenuItem value="Full-Time">Full-Time</MenuItem>
-          <MenuItem value="Part-Time">Part-Time</MenuItem>
-          <MenuItem value="Internship">Internship</MenuItem>
-          <MenuItem value="PRN">PRN</MenuItem>
-          <MenuItem value="Apprentices">Apprentices</MenuItem>
-        </Select>
+        <Autocomplete
+          options={employementTypeOptions}
+          renderInput={(params) => (
+            <TextField {...params} label="Employment Type" />
+          )}
+        ></Autocomplete>
 
         {/* Seniority Level */}
         {/* <InputLabel for="seniorityLabel">Seniority Level</InputLabel> */}
@@ -81,7 +78,7 @@ export default function DescribeJob() {
 
         <TextField {...register("Job Desciption")} label="Job Description" />
 
-        <input type="submit"></input>
+        {/* <input type="submit"></input> */}
       </form>
     </>
   );
