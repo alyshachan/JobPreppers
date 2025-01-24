@@ -14,7 +14,7 @@ namespace JobPreppersDemo.Controllers
     public class UserSkillsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public class UserSkill
+        public class UserSkills
         {
             public int UserID { get; set; }
             public string SkillName { get; set; } = null!;
@@ -67,7 +67,7 @@ namespace JobPreppersDemo.Controllers
 
         }
         [HttpPost("AddSkillToUser")]
-        public async Task<IActionResult> AddSkillToUser([FromBody] UserSkill request)
+        public async Task<IActionResult> AddSkillToUser([FromBody] UserSkills request)
         {
 
             if (request == null || string.IsNullOrEmpty(request.SkillName) || string.IsNullOrEmpty(request.Category))
