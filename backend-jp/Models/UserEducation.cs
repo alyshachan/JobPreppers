@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JobPreppersDemo.Models;
 
@@ -21,11 +22,15 @@ public partial class UserEducation
 
     public string? description { get; set; }
 
+    [JsonIgnore] // Ignore to avoid circular references
     public virtual Degree? degree { get; set; }
 
+    [JsonIgnore] // Ignore to avoid circular references
     public virtual School school { get; set; } = null!;
 
+    [JsonIgnore] // Ignore to avoid circular references
     public virtual Study? study { get; set; }
 
+    [JsonIgnore] // Ignore to avoid circular references
     public virtual User user { get; set; } = null!;
 }

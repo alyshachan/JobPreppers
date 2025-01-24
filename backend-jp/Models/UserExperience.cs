@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JobPreppersDemo.Models;
 
@@ -18,8 +19,8 @@ public partial class UserExperience
     public DateOnly? end_date { get; set; }
 
     public string? description { get; set; }
-
+    [JsonIgnore]
     public virtual User user { get; set; } = null!;
-
+    [JsonIgnore]
     public virtual Work work { get; set; } = null!;
 }
