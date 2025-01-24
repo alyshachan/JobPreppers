@@ -14,7 +14,7 @@ namespace JobPreppersDemo.Controllers
     public class UserSkillsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public class UserSkill
+        public class UserSkills
         {
             public int UserID { get; set; }
             public string SkillName { get; set; } = null!;
@@ -39,7 +39,7 @@ namespace JobPreppersDemo.Controllers
                 //if they do return all skills
                 else
                 {
-                    var userSkills = await _context.userSkills
+                    var userSkills = await _context.UserSkills
                            .Where(us => us.userID == userID)
                            .Include(us => us.skill) // Include skill details
                            .Select(us => new
@@ -58,29 +58,29 @@ namespace JobPreppersDemo.Controllers
                     return Ok(userSkills);
 
                 }
-                
+
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
 
         }
         [HttpPost("AddSkillToUser")]
-        public async Task<IActionResult> AddSkillToUser([FromBody] UserSkill request)
+        public async Task<IActionResult> AddSkillToUser([FromBody] UserSkills request)
         {
-            
+
             if (request == null || string.IsNullOrEmpty(request.SkillName) || string.IsNullOrEmpty(request.Category))
             {
                 return BadRequest("SkillName and Category are required.");
             }
-            
+
             try
             {
                 //check if skill already exits
                 var skill = await _context.Skills.FirstOrDefaultAsync(s => s.Name == request.SkillName);
                 //if not create skill and add to skill table
-                if (skill == null) 
+                if (skill == null)
                 {
                     skill = new Skill
                     {
@@ -91,20 +91,21 @@ namespace JobPreppersDemo.Controllers
                     await _context.SaveChangesAsync();
                 }
                 //check if already in userskill table
-                var userSkillExits = await _context.userSkills.AnyAsync(s => s.userID == request.UserID && s.skillID == skill.skillID);
-                if (userSkillExits) 
+                var userSkillExits = await _context.UserSkills.AnyAsync(s => s.userID == request.UserID && s.skillID == skill.skillID);
+                if (userSkillExits)
                 {
                     return Conflict("User already has this skill");
                 }
                 //add to userSkill table
                 else
                 {
-                    var newSkill = new userSkill
+                    var newSkill = new UserSkill
                     {
                         userID = request.UserID,
                         skillID = skill.skillID,
                     };
-                     _context.userSkills.Add(newSkill);
+
+                    _context.UserSkills.Add(newSkill);
                     await _context.SaveChangesAsync();
 
                     return Ok(new
@@ -114,14 +115,14 @@ namespace JobPreppersDemo.Controllers
                         UserSkill = newSkill
                     });
                 }
-                
+
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
 
-            
+
 
 
         }

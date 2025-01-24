@@ -41,7 +41,7 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<test> tests { get; set; }
 
-    public virtual DbSet<userSkill> userSkills { get; set; }
+    public virtual DbSet<UserSkill> UserSkills { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseMySql("name=ConnectionStrings:DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
@@ -231,7 +231,7 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("test");
         });
 
-        modelBuilder.Entity<userSkill>(entity =>
+        modelBuilder.Entity<UserSkill>(entity =>
         {
             entity.HasKey(e => e.userSkillID).HasName("PRIMARY");
 
@@ -239,13 +239,13 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.userID, "userID");
 
-            entity.HasOne(d => d.skill).WithMany(p => p.userSkills)
+            entity.HasOne(d => d.skill).WithMany(p => p.UserSkills)
                 .HasForeignKey(d => d.skillID)
-                .HasConstraintName("userSkills_ibfk_2");
+                .HasConstraintName("UserSkills_ibfk_2");
 
-            entity.HasOne(d => d.user).WithMany(p => p.userSkills)
+            entity.HasOne(d => d.user).WithMany(p => p.UserSkills)
                 .HasForeignKey(d => d.userID)
-                .HasConstraintName("userSkills_ibfk_1");
+                .HasConstraintName("UserSkills_ibfk_1");
         });
 
         OnModelCreatingPartial(modelBuilder);
