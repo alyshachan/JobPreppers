@@ -12,6 +12,7 @@ function Profile() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const {initialUser, setIntialUser} = useState(null);
   const [message, setMessage] = useState("");
+  const [receiverID, setReceiverID] = useState("");
   const [signalRConnection, setSignalRConnection] = useState(null);
 
   // const skillsTest = {}
@@ -26,8 +27,8 @@ function Profile() {
 
       // Test sending to connected user 2
       console.log("Attempting to send a test message");
-      await signalRConnection.invoke("SendDirectMessage", user.username, 2, message).then(
-        () => console.log("Sent a message")
+      await signalRConnection.invoke("SendDirectMessage", user.username, parseInt(receiverID), message).then(
+        () => console.log(`You sent this message: ${message} \n to receiverID: ${receiverID}`)
       );
 
       // Old code to send a message to all clients
@@ -40,6 +41,12 @@ function Profile() {
     }
 
     setMessage(""); // clear text box
+  }
+
+  const handleReceiverIDSubmit = async (e) => {
+    e.preventDefault();
+    console.log(`You are now sending messages to receiverID: ${receiverID}`);
+    setMessage("");
   }
 
   useEffect(() => {
@@ -172,7 +179,17 @@ function Profile() {
       <div className="content !mt-[175px]">
         <div className="main-panel !flex-row gap-[50px]">
           <div className="main-personal">
-          <form id="myForm" onSubmit={handleMessageSubmit}>
+          <form id="userIDMessageForm" onSubmit={handleReceiverIDSubmit}>
+            <input
+              type="number"
+              id="receiverID"
+              placeholder="Input the receiverID"
+              value = {receiverID}
+              onChange = {(e) => setReceiverID(e.target.value)}>
+            </input>
+          </form>
+
+          <form id="messageBoxForm" onSubmit={handleMessageSubmit}>
               <input 
               type="text" 
               id="message" 

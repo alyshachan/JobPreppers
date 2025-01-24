@@ -87,7 +87,7 @@ namespace JobPreppersProto.Controllers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
-                Expires = DateTime.UtcNow.AddDays(100)
+                Expires = DateTime.UtcNow.AddDays(10)
             };
 
             Response.Cookies.Append("authToken", token, cookieOptions);
