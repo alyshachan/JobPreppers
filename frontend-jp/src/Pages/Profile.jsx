@@ -24,9 +24,7 @@ function Profile() {
     console.log(`You inputted ${message}`);
 
     try {
-
-      // Test sending to connected user 2
-      console.log("Attempting to send a test message");
+      console.log(`Attempting to send a test message to receiverID: ${receiverID}`);
       await signalRConnection.invoke("SendDirectMessage", user.username, parseInt(receiverID), message).then(
         () => console.log(`You sent this message: ${message} \n to receiverID: ${receiverID}`)
       );
