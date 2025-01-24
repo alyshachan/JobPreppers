@@ -19,7 +19,19 @@ public partial class User
 
     public byte[]? profile_pic { get; set; }
 
+    public int? account_type { get; set; }
+
+    public string? title { get; set; }
+
+    public string? location { get; set; }
+
     public virtual ICollection<Resume> Resumes { get; set; } = new List<Resume>();
+
+    public virtual ICollection<UserEducation> UserEducations { get; set; } = new List<UserEducation>();
+
+    public virtual ICollection<UserExperience> UserExperiences { get; set; } = new List<UserExperience>();
+
+    public virtual ICollection<UserProject> UserProjects { get; set; } = new List<UserProject>();
 
     public virtual ICollection<userSkill> userSkills { get; set; } = new List<userSkill>();
 }
