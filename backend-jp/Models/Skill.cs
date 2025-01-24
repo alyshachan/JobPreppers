@@ -11,5 +11,5 @@ public partial class Skill
 
     public string Category { get; set; } = null!;
 
-    public virtual ICollection<userSkill> userSkills { get; set; } = new List<userSkill>();
+    public virtual ICollection<UserSkill> UserSkills { get; set; } = new List<UserSkill>();
 }

@@ -1,0 +1,109 @@
+﻿using JobPreppersDemo.Contexts;
+using JobPreppersDemo.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
+using Google.Protobuf.Collections;
+using Mysqlx.Crud;
+
+namespace JobPreppersDemo.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UserProjectController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        public class UserProjectDto
+        {
+            public int userID { get; set; }
+            public string projectTitle{ get; set; }
+            public string description { get; set; }
+        }
+        public UserProjectController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet("{userID}")]
+        public async Task<IActionResult> GetUserProjects(int userID)
+        {
+            try
+            {
+                //check if user exists
+                var doesExist = await _context.Users.AnyAsync(u => u.userID == userID);
+                if (!doesExist)
+                {
+                    return NotFound("User not Found");
+                }
+                //if they do return all user projects
+                else
+                {
+                    var userProjects = await _context.UserProjects
+                           .Where(up => up.userID == userID)
+                           .Select(up => new
+                           {
+                               ProjectTitle = up.project_title,
+                               Description = up.description
+                           })
+                           .ToListAsync();
+
+                    if (userProjects.Count == 0)
+                    {
+                        return NotFound($"No projects found for user with ID {userID}.");
+                    }
+
+                    return Ok(userProjects);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        [HttpPost("CreateProject")]
+        public async Task<IActionResult> CreateProject([FromBody] UserProjectDto project)
+        {
+            if (project == null)
+            {
+                return BadRequest("Project Info not filled out");
+
+
+            }
+            try
+            {
+                // Check if the project already exists
+        var existingProject = await _context.UserProjects
+            .FirstOrDefaultAsync(p => p.userID == project.userID &&
+                                      p.project_title.ToLower() == project.projectTitle.ToLower());
+
+                if (existingProject != null)
+                {
+                    return Conflict("A project with the same title already exists for this user.");
+                }
+                var newProject = new UserProject
+                {
+                    userID = project.userID,
+                    project_title = project.projectTitle,
+                    description = project.description
+                };
+                await _context.UserProjects.AddAsync(newProject);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction(nameof(CreateProject), new { id = newProject.projectID }, newProject);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+            
+        }
+    }
+}
