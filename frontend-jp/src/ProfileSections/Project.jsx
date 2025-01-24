@@ -30,30 +30,27 @@ function Project() {
         <a href="/Profile" className="text-[#0D7944] hover:underline mb-8">
           <ArrowBackIcon /> Go back to Profile Page
         </a>
-        <h1>Education</h1>
+        <h1>Projects</h1>
 
           <div className="panel !w-full">
-            {testEduDict.map((education, index) => (
-              <div key={index}>
-                <div className={styles.education}>
-                  <img
-                    className="companyPicture"
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
-                  />
-
-                  <div className={styles.sectionPictureContent}>
-                    <p className="title">{education.school_name}</p>
-                    <p className="subtitle">
-                      {education.degree_name}, {education.study_name}
-                    </p>
-                    <p className="subtitle">{monthsOfYear[education.start_date.getMonth()]} {education.start_date.getFullYear()} - {monthsOfYear[education.end_date.getMonth()]} {education.end_date.getFullYear()}</p>
+          {testProjDict.map((project, index) => (
+            <div key={index}>
+              <div className={styles.project}>
+                <div className={styles.projectHeader}>
+                  <div className={styles.project}>
+                    <p className="title">{project.project_title}</p>
                   </div>
                 </div>
-                {index < testEduDict.length - 1 && (
-                  <hr className={styles.divider} />
-                )}
+                <div className={styles.projectContent}>
+                  {project.description}
                 </div>
-            ))}
+              </div>
+
+              {index < testProjDict.length - 1 && (
+                <hr className={styles.divider} />
+              )}
+            </div>
+          ))}
           </div>
 
       </div>

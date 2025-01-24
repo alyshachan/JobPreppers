@@ -54,6 +54,34 @@ const monthsOfYear = [
   "December",
 ];
 
+function calculateDate(startDate,endDate) {
+  const startYear = startDate.getFullYear();
+  const endYear = endDate.getFullYear();
+  const startMonth = startDate.getMonth();
+  const endMonth = endDate.getMonth();
+
+  let yearsDiff = endYear - startYear;
+  let monthsDiff = endMonth - startMonth;
+
+  if (monthsDiff < 0){
+    yearsDiff--;
+    monthsDiff += 12;
+  }
+
+  let message = "";
+  if (yearsDiff > 1)
+    message += yearsDiff + " years "
+  else
+    message += yearsDiff + " year "
+
+  if (monthsDiff > 1)
+    message += monthsDiff + " months"
+  else
+    message += monthsDiff + " month"
+  
+  return message
+  }
+
 function Experience() {
   return (
     <div className="content">
@@ -61,30 +89,38 @@ function Experience() {
         <a href="/Profile" className="text-[#0D7944] hover:underline mb-8">
           <ArrowBackIcon /> Go back to Profile Page
         </a>
-        <h1>Education</h1>
+        <h1>Experience</h1>
 
           <div className="panel !w-full">
-            {testExpDict.map((education, index) => (
-              <div key={index}>
-                <div className={styles.education}>
-                  <img
-                    className="companyPicture"
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
-                  />
+          {testExpDict.map((experience, index) => (
+          <div key={index}>
+            <div className={styles.sectionPictureContent}>
+              <div className={styles.experience}>
+                <img
+                  className="companyPicture"
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
+                />
 
-                  <div className={styles.sectionPictureContent}>
-                    <p className="title">{education.school_name}</p>
-                    <p className="subtitle">
-                      {education.degree_name}, {education.study_name}
-                    </p>
-                    <p className="subtitle">{monthsOfYear[education.start_date.getMonth()]} {education.start_date.getFullYear()} - {monthsOfYear[education.end_date.getMonth()]} {education.end_date.getFullYear()}</p>
-                  </div>
+                <div className={styles.experienceContentLeft}>
+                  <p className="title">{experience.job_title}</p>
+                  <p className="subtitle">{experience.work_name}</p>
                 </div>
-                {index < testExpDict.length - 1 && (
-                  <hr className={styles.divider} />
-                )}
+
+                <div className={styles.experienceContentRight}>
+                <p className="title">{monthsOfYear[experience.start_date.getMonth() - 1]} {experience.start_date.getFullYear()} - {monthsOfYear[experience.end_date.getMonth()]} {experience.end_date.getFullYear()}</p>
+                  <p className="subtitle">{calculateDate(experience.start_date, experience.end_date)}</p>
                 </div>
-            ))}
+              </div>
+              <div className={styles.experienceContent}>
+                  {experience.description}
+              </div>
+            </div>
+
+            {index < testExpDict.length - 1 && (
+              <hr className={styles.divider} />
+            )}
+          </div>
+        ))}
           </div>
 
       </div>
