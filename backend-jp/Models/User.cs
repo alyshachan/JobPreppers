@@ -33,5 +33,5 @@ public partial class User
 
     public virtual ICollection<UserProject> UserProjects { get; set; } = new List<UserProject>();
 
-    public virtual ICollection<userSkill> userSkills { get; set; } = new List<userSkill>();
+    public virtual ICollection<UserSkill> UserSkills { get; set; } = new List<UserSkill>();
 }
