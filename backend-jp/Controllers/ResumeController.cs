@@ -100,16 +100,15 @@ namespace JobPreppersDemo.Controllers
                 }
                 Console.WriteLine($"Uploaded file size: {resumePdf.Length} bytes");
                 // Check for an existing resume
+                // Check for an existing resume
                 var existingResume = await _context.Resumes.FirstOrDefaultAsync(r => r.userID == userID);
                 if (existingResume != null)
                 {
-                    // Update the existing resume
                     existingResume.resume_pdf = resumePdf;
                     existingResume.upload_date = DateTime.UtcNow;
                 }
                 else
                 {
-                    // Create a new resume record
                     var newResume = new Resume
                     {
                         userID = userID,
@@ -124,6 +123,7 @@ namespace JobPreppersDemo.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error: {ex.InnerException?.Message ?? ex.Message}");
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
