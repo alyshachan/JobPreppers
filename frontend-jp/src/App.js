@@ -13,6 +13,9 @@ import Resume from "./Pages/Resume";
 import Interview from "./Pages/Interview";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
+import Education from "./ProfileSections/Education";
+import Experience from "./ProfileSections/Experience";
+import Project from "./ProfileSections/Project";
 import Skills from "./ProfileSections/Skills";
 import { AuthProvider } from "./provider/authProvider";
 
@@ -33,6 +36,9 @@ function App() {
           <Route path="/Resume" element={<Resume />} />
 
           <Route path="/EditProfile" element={<Profile edit={true}/>} />
+          <Route path="/Education" element={<Education />} />
+          <Route path="/Experience" element={<Experience />} />
+          <Route path="/Project" element={<Project />} />
           <Route path="/Skills" element={<Skills />} />
         </Routes>
       </AuthProvider>
