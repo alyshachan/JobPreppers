@@ -1,9 +1,21 @@
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { FormGroup, FormControlLabel, Checkbox } from "@mui/material";
-
+import {
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  ToggleButtonGroup,
+  ToggleButton,
+} from "@mui/material";
+import { useState } from "react";
 export default function ApplicationProcess() {
+  const [applyMethod, setApplyMethod] = useState("");
+
+  const handleChange = (event, newApplyMethod) => {
+    setApplyMethod(newApplyMethod);
+  };
+
   return (
     <>
       <div>
@@ -16,11 +28,17 @@ export default function ApplicationProcess() {
           <DatePicker label="Close Post Day" />
         </LocalizationProvider>
       </div>
-      <h2>Number of Hires</h2>
-      <input type="number"></input>
+      <label for="hires">Number of Hires: </label>
+      <input id="hires" type="number"></input>
       <box>
-        <button>External Link to Apply</button>
-        <button>Easy Apply</button>
+        <ToggleButtonGroup
+          value={applyMethod}
+          exclusive
+          onChange={handleChange}
+        >
+          <ToggleButton value="External Apply">External Apply</ToggleButton>
+          <ToggleButton value="Easy Apply">Easy Apply</ToggleButton>
+        </ToggleButtonGroup>
       </box>
       <div>
         <h2>Required Documents</h2>

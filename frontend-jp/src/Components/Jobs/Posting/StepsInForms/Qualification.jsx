@@ -10,16 +10,25 @@ import {
 import { useState } from "react";
 
 export default function Qualification() {
-  const [value, setValue] = useState([20, 40]);
+  const [value, setValue] = useState([0, 2]);
 
   const [educationLevel, setEducationLevel] = useState("");
 
+  const [experienceLabel, setExperienceLevel] = useState("Entry Level");
+
+  const handleExperienceLabel = () => {};
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-
-  const handleEducationChange = (event) => {
-    setEducationLevel(event.target.value);
+    if (newValue[0] < 2) {
+      setExperienceLevel("Entry Level");
+    } else if (newValue[0] < 5) {
+      setExperienceLevel("Associate");
+    } else if (newValue[0] < 10) {
+      setExperienceLevel("Mid Level");
+    } else {
+      setExperienceLevel("Senior");
+    }
   };
 
   const educationOptions = [
@@ -43,11 +52,14 @@ export default function Qualification() {
       ></Autocomplete>
 
       <div>
-        <label>Number of Years of Experience You Are Looking For:</label>
+        <label>
+          Number of Years of Experience You Are Looking For: {experienceLabel}
+        </label>
         <Slider
           value={value}
           onChange={handleChange}
           valueLabelDisplay="auto"
+          max={10}
         />
       </div>
       <h2>Ask these Question to the Applicant</h2>
