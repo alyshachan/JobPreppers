@@ -43,7 +43,26 @@ function EducationSection({ educationDict, edit }) {
                 <p className="subtitle">
                   {education.degree_name}, {education.study_name}
                 </p>
-                <p className="subtitle">{monthsOfYear[education.start_date.getMonth()]} {education.start_date.getFullYear()} - {monthsOfYear[education.end_date.getMonth()]} {education.end_date.getFullYear()}</p>
+                <p className="subtitle">
+                  {education.start_date || education.end_date
+                    ? `${
+                        education.start_date
+                          ? `${
+                              monthsOfYear[education.start_date.getMonth()]
+                            } ${education.start_date.getFullYear()} - `
+                          : ""
+                      }${
+                        education.end_date
+                          ? `${
+                              monthsOfYear[education.end_date.getMonth()]
+                            } ${education.end_date.getFullYear()}`
+                          : "Present"
+                      }`
+                    : ""}
+                </p>
+                <p className={styles.educationContent}>
+                  {education.description}
+                </p>
               </div>
 
               {edit && (

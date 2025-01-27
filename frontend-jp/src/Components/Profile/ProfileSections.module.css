@@ -24,7 +24,15 @@
 
 .education {
   display: flex;
+  align-items: start;
+}
+
+.educationContent {
+  display: flex;
   align-items: center;
+  margin-top: 20px;
+  margin-left: 2rem;
+  white-space: pre-line;
 }
 
 .experience {
@@ -51,6 +59,7 @@
   align-items: center;
   margin-top: 20px;
   margin-left: 5rem;
+  white-space: pre-line;
 }
 
 .skills {
@@ -115,9 +124,10 @@
 
 .projectContent {
   display: flex;
-  margin-top: 30px;
+  align-items: center;
+  margin-top: 20px;
   margin-left: 5rem;
-  margin-top: 0px;
+  white-space: pre-line;
 }
 
 .projectPicture{
@@ -125,4 +135,5 @@
   width: 250px;
   margin-left: auto;
   border-radius: 15px;
+  white-space: pre-line;
 }

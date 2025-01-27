@@ -16,7 +16,6 @@ function Profile({ edit = false }) {
   const [experienceDict, setExperienceDict] = useState([]);
   const [projectDict, setProjectDict] = useState([]);
 
-
   useEffect(() => {
     const requestEducation = async () => {
       try {
@@ -36,13 +35,19 @@ function Profile({ edit = false }) {
               school_name: education.schoolName,
               degree_name: education.degreeName,
               study_name: education.studyName,
-              start_date: new Date(education.startDate),
-              end_date: new Date(education.endDate),
-              description: education.description, 
+              start_date:
+                education.startDate == null
+                  ? null
+                  : new Date(education.startDate),
+              end_date:
+                education.endDate == null ? null : new Date(education.endDate),
+              description: education.description,
             }));
 
             setEducationDict((prevState) => {
-              if (JSON.stringify(prevState) !== JSON.stringify(newEducationDict)) {
+              if (
+                JSON.stringify(prevState) !== JSON.stringify(newEducationDict)
+              ) {
                 return newEducationDict;
               }
               return prevState;
@@ -107,13 +112,21 @@ function Profile({ edit = false }) {
               work_name: experience.workName,
               location: experience.workLocation,
               job_title: experience.jobTitle,
-              start_date: new Date(experience.startDate),
-              end_date: new Date(experience.endDate),
+              start_date:
+                experience.startDate == null
+                  ? null
+                  : new Date(experience.startDate),
+              end_date:
+                experience.endDate == null
+                  ? null
+                  : new Date(experience.endDate),
               description: experience.description,
             }));
 
             setExperienceDict((prevState) => {
-              if (JSON.stringify(prevState) !== JSON.stringify(newExperienceDict)) {
+              if (
+                JSON.stringify(prevState) !== JSON.stringify(newExperienceDict)
+              ) {
                 return newExperienceDict;
               }
               return prevState;
@@ -140,11 +153,13 @@ function Profile({ edit = false }) {
           if (data) {
             const newProjectDict = data.map((project) => ({
               project_title: project.projectTitle,
-              description: project.description, 
+              description: project.description,
             }));
 
             setProjectDict((prevState) => {
-              if (JSON.stringify(prevState) !== JSON.stringify(newProjectDict)) {
+              if (
+                JSON.stringify(prevState) !== JSON.stringify(newProjectDict)
+              ) {
                 return newProjectDict;
               }
               return prevState;
