@@ -31,32 +31,54 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
-  const [eventName, setEventName] = useState("");
-  const [eventDate, setEventDate] = useState(
-    moment(selectedDate).format("YYYY-MM-DD")
-  );
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [eventParticipants, setEventParticipants] = useState("");
-  const [eventDetails, setEventDetails] = useState("");
+function AddEducationDialog({ open, onClose, onCreateEducation, selectedDate }) {
+    const [school, setSchool] = useState("");
+    const [degree, setDegree] = useState("");
+    const [study, setStudy] = useState("");
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [description, setDescription] = useState("");
 
-  const isFormValid = eventName && eventDate;
+    const isFormValid = school
 
-  const handleCreateEvent = () => {
-    if (isFormValid) {
-      const newEvent = {
-        name: eventName,
-        date: new Date(eventDate),
-        start: startTime,
-        end: endTime,
-        participants: eventParticipants,
-        details: eventDetails,
-      };
-      onCreateEvent(newEvent);
-      console.log(newEvent);
-    }
-  };
+    const handleCreateEducation = () => {
+      if (isFormValid) {
+        const newEducation = {
+          school_name: school,
+          degree_name: degree,
+          study_name: study,
+          start_date: new Date(startDate),
+          end_date: new Date(endDate),
+          description: description
+        };
+        onCreateEducation(newEducation);
+        console.log(newEducation);
+      }
+    };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault(); // Prevent default form submission
+  
+      try {
+        const response = await fetch("http://localhost:5000/api/UserEducation/CreateEducation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ school_name, degree_name, study_name, start_date, end_date, description}),
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+          open = false;
+          window.alert(data.message); // Displays "Login successful."
+          setError(""); // Clear any previous error message
+        } else {
+          const errorData = await response.json();
+          setError(errorData.message); // Show error message from the backend
+        }
+      } catch (err) {
+        setError("An error occurred. Please try again."); // Catch and display any request error
+      }
+    };
 
   return (
     <StyledDialog onClose={onClose} open={open}>
@@ -86,8 +108,8 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
                   placeholder="e.g. Harvard University"
                   className="w-full"
                   id="school"
-                  value={eventName}
-                  onChange={(e) => setEventName(e.target.value)}
+                  value={school}
+                  onChange={(e) => setSchool(e.target.value)}
                 />
               </div>
             </div>
@@ -97,11 +119,11 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
               <div className={styles.inputField}>
                 <label for="degree">Degree</label>
                 <TextField
-                  placeholder="e.g. Bachelor's of Arts"
+                  placeholder="e.g. Bachelors of Arts"
                   className="w-full"
                   id="date"
-                  value={eventDate}
-                  onChange={(e) => setEventDate(e.target.value)}
+                  value={degree}
+                  onChange={(e) => setDegree(e.target.value)}
                 />
               </div>
             </div>
@@ -114,8 +136,8 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
                   placeholder="e.g. Business"
                   className="w-full"
                   id="study"
-                  value={eventDate}
-                  onChange={(e) => setEventDate(e.target.value)}
+                  value={study}
+                  onChange={(e) => setStudy(e.target.value)}
                 />
               </div>
             </div>
@@ -129,16 +151,16 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
               <label for="start">Start Date</label>
                 <TextField
                   type="date"
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
                 />
               </div>
               <div className={styles.inputField}>
               <label for="end">End Date</label>
                 <TextField
                   type="date"
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>
             </div>
@@ -149,8 +171,8 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
               <label for="description">Description</label>
                 <TextareaAutosize
                   placeholder="Enter grades, activities, awards"
-                  value={eventDetails}
-                  onChange={(e) => setEventDetails(e.target.value)}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
             </div>
@@ -159,7 +181,7 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
       </DialogContent>
 
       <DialogActions>
-        <button autoFocus disabled={!isFormValid} onClick={handleCreateEvent}>
+        <button autoFocus disabled={!isFormValid} onClick={handleCreateEducation}>
           Add Education
         </button>
       </DialogActions>
@@ -167,4 +189,4 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
   );
 }
 
-export default AddEventDialog;
+export default AddEducationDialog;
