@@ -1,40 +1,52 @@
 import {
-  Button,
   ToggleButton,
   ToggleButtonGroup,
-  ButtonGroup,
   FormControl,
-  Chip,
-  Stack,
   Box,
   Autocomplete,
   TextField,
+  useFormControl,
 } from "@mui/material";
 import { useState, Fragment, useEffect } from "react";
-import { set } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
+import AutoCompleteForm from "../Helper/AutoCompleteForm";
+import ToggleButtonForm from "../Helper/ToggleButtonForm";
 
 export default function Benefits() {
   const rate = ["Hourly Rate", "Monthy Rate", "Annually"];
+  //   const [payType, setPayType] = useState("web");
+  const bonuses = ["Signing Bonus", "Tip", "Equity Package", "Commission"];
+  const benefits = [
+    "Medical",
+    "Vision",
+    "Dental",
+    "Paid Time Off",
+    "Paid Sick Leave",
+    "Paternal Leave",
+    "Student Loan Repayment",
+    "Tuition Reimbursement",
+    "Pet Insurance",
+    "Relocation Location",
+  ];
 
-  const [bonus, setBonus] = useState([]);
-  const [benfits, setBenefits] = useState([]);
-  const [perks, setPerks] = useState([]);
-  const [payType, setPayType] = useState("web");
+  const perks = [
+    "Career Development",
+    "Learning Stipend",
+    "Home Office Stipend",
+    "Gym Membership",
+  ];
 
-  const handleChange = (event, newPayType) => {
-    setPayType(newPayType);
-  };
-
-  const handleBonus = (event, newBonus) => {
-    setBonus(newBonus);
-  };
-
-  const handleBenefit = (event, newBenefits) => {
-    setBenefits(newBenefits);
-  };
-  const handlePerks = (event, newPerks) => {
-    setPerks(newPerks);
-  };
+  const jobForm = useFormContext();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    control,
+    resetField,
+    formState: { errors },
+  } = jobForm;
+  const payType = getValues("payType");
 
   const [currencies, setCurrencies] = useState([]);
 
@@ -50,98 +62,117 @@ export default function Benefits() {
         setCurrencies([]);
       });
   }, []);
+  useEffect(() => {
+    // Reset fields when payType changes
+    if (payType !== "Pay Range") {
+      resetField("endingAmount");
+    }
 
+    if (payType !== "Unpaid") {
+      resetField("amount");
+    }
+
+    if (payType === "Unpaid") {
+      setValue("amount", 0);
+      resetField("rate");
+      resetField("currencies");
+    }
+  }, [payType]);
+  const handleResetForm = (fieldName) => {
+    resetField(fieldName);
+  };
+  // Step 2
   return (
     <>
       <FormControl>
         <h2>Expected Pay</h2>
         <div className="ExpectedPayType">
-          <ToggleButtonGroup value={payType} exclusive onChange={handleChange}>
-            <ToggleButton value="Pay Range">Pay Range</ToggleButton>
-            <ToggleButton value="Exact Amount">Exact Amount</ToggleButton>
-            <ToggleButton value="Unpaid">Unpaid</ToggleButton>
-          </ToggleButtonGroup>
+          <Controller
+            name="payType"
+            control={control}
+            render={({ field }) => (
+              <ToggleButtonGroup
+                exclusive
+                value={field.value}
+                {...field}
+                onChange={(_, value) => field.onChange(value)}
+              >
+                <ToggleButton value="Pay Range">Pay Range</ToggleButton>
+                <ToggleButton value="Exact Amount">Exact Amount</ToggleButton>
+                <ToggleButton value="Unpaid">Unpaid</ToggleButton>
+              </ToggleButtonGroup>
+            )}
+          />
         </div>
         {payType === "Pay Range" ? (
           <Fragment>
             <Box>
-              <Autocomplete
+              <AutoCompleteForm
+                control={control}
+                name="rate"
                 options={rate}
-                renderInput={(params) => <TextField {...params} label="Rate" />}
-              ></Autocomplete>
-              <TextField type="number" label="Starting Range"></TextField>
-              <TextField type="number" label="Ending Range"></TextField>
+                label="Rate"
+              />
 
-              <Autocomplete
+              <TextField
+                {...register("amount")}
+                type="number"
+                label="Starting Range"
+              />
+              <TextField
+                {...register("endingAmount")}
+                type="number"
+                label="Ending Range"
+              />
+
+              <AutoCompleteForm
+                name="currencies"
                 options={currencies}
-                renderInput={(params) => (
-                  <TextField {...params} label="Currency" />
-                )}
-              ></Autocomplete>
+                label="Currency"
+                control={control}
+              />
             </Box>
           </Fragment>
         ) : payType === "Exact Amount" ? (
-          <Box>
-            <Autocomplete
-              options={rate}
-              renderInput={(params) => <TextField {...params} label="Rate" />}
-            ></Autocomplete>
-            <TextField type="number" label="Pay Amount"></TextField>
+          <Fragment>
+            <Box>
+              <AutoCompleteForm
+                control={control}
+                name="rate"
+                options={rate}
+                label="Rate"
+              />
+              <TextField
+                {...register("amount")}
+                type="number"
+                label="Pay Amount"
+              />
 
-            <Autocomplete
-              options={currencies}
-              renderInput={(params) => (
-                <TextField {...params} label="Currency" />
-              )}
-            ></Autocomplete>
-          </Box>
+              <AutoCompleteForm
+                name="currencies"
+                options={currencies}
+                label="Currency"
+                control={control}
+              />
+            </Box>
+          </Fragment>
         ) : payType === "Unpaid" ? (
           <Fragment>
             <Box></Box>
           </Fragment>
         ) : null}
         <h2>Bonus</h2>
-        <ToggleButtonGroup value={bonus} onChange={handleBonus}>
-          <ToggleButton value="Signing Bonus">Signing Bonus</ToggleButton>
-          <ToggleButton value="Tip">Tip</ToggleButton>
-          <ToggleButton value="Equity Package">Equity Package</ToggleButton>
-          <ToggleButton value="Commission">Commission</ToggleButton>
-        </ToggleButtonGroup>
+        <ToggleButtonForm name="Bonuses" control={control} options={bonuses} />
+
         <h2>Benfits</h2>
-        <ToggleButtonGroup value={benfits} onChange={handleBenefit}>
-          <ToggleButton value="Medical"> Medical</ToggleButton>
-          <ToggleButton value="Vision"> Vision</ToggleButton>
-          <ToggleButton value="Dental"> Dental</ToggleButton>
-          <ToggleButton value="Paid Time Off"> Paid Time Off</ToggleButton>
-          <ToggleButton value="Paid Sick Leave"> Paid Sick Leave</ToggleButton>
-          <ToggleButton value="Paternal Leave"> Paternal Leave</ToggleButton>
-          <ToggleButton value="Student Loan Repayment">
-            {" "}
-            Student Loan Repayment
-          </ToggleButton>
-          <ToggleButton value="Tuition Reimbursement">
-            {" "}
-            Tuition Reimbursement
-          </ToggleButton>
-          <ToggleButton value="Pet Insurance"> Pet Insurance</ToggleButton>
-          <ToggleButton value="Relocation Assistance">
-            {" "}
-            Relocation Assistance
-          </ToggleButton>
-        </ToggleButtonGroup>
+        <ToggleButtonForm
+          name="Benefits"
+          control={control}
+          options={benefits}
+        />
 
         <h2>Perks</h2>
-
-        <ToggleButtonGroup value={perks} onChange={handlePerks}>
-          <ToggleButton value="Career Development">
-            Career Development
-          </ToggleButton>
-          <ToggleButton value="Learning Stipend">Learning Stipend</ToggleButton>
-          <ToggleButton value="Home Office Stipend">
-            Home Office Stipend
-          </ToggleButton>
-          <ToggleButton value="Gym Membership">Gym Membership</ToggleButton>
-        </ToggleButtonGroup>
+        <ToggleButtonForm name="Perks" control={control} options={perks} />
       </FormControl>
     </>
   );

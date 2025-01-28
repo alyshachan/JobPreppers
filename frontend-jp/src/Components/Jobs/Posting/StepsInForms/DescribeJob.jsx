@@ -1,44 +1,38 @@
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import {
-  Autocomplete,
-  InputLabel,
-  MenuItem,
-  TextField,
-  FormControl,
-} from "@mui/material";
+import { useFormContext } from "react-hook-form";
+import * as yup from "yup";
+import { useState, useEffect } from "react";
+import { TextField } from "@mui/material";
+import AutoCompleteForm from "../Helper/AutoCompleteForm";
 
-export default function DescribeJob() {
+export default function DescribeJob({ formData, setFormData }) {
+  const jobForm = useFormContext();
   const onSubmit = (data) => {
     console.log(data);
+    setFormData({ ...formData, ...data });
   };
+  // const schema = yup.object().shape({
+  //   companyName: yup.string().required(),
+  //   jobTitle: yup.string().required(),
+  // });
 
-  const schema = yup.object().shape({
-    companyName: yup.string().required(),
-    jobTitle: yup.string().required(),
-  });
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = jobForm;
 
-  const [employmentType, setEmploymentType] = useState("");
-
-  const handleChangeEmployment = (event) => {
-    setEmploymentType(event.target.value);
-  };
+  // useEffect(() => {
+  //   jobForm.reset({}, { resolver: yupResolver(schema) });
+  // }, [jobForm]);
 
   const employementTypeOptions = [
-    "Full-Time",
-    "Part-Time",
-    "Internship",
-    "PRN",
-    "Apprentices",
+    { value: 1, label: "Full-Time" },
+    { value: 2, label: "Part-Time" },
+    { value: 3, label: "Internship" },
+    { value: 4, label: "PRN" },
+    { value: 5, label: "Apprentices" },
   ];
 
   // Step 1
@@ -53,32 +47,14 @@ export default function DescribeJob() {
         />
         <TextField {...register("location")} label="Location" />
         <TextField {...register("jobTitle")} label="Job Title" />
-        <Autocomplete
+        <AutoCompleteForm
+          control={control}
+          name="employmentTypeController"
           options={employementTypeOptions}
-          renderInput={(params) => (
-            <TextField {...params} label="Employment Type" />
-          )}
-        ></Autocomplete>
+          label="Employment Type"
+        />
 
-        {/* Seniority Level */}
-        {/* <InputLabel for="seniorityLabel">Seniority Level</InputLabel> */}
-
-        {/* <Select
-          labelId="seniorityLabel"
-          id="selectsenioriy"
-          label="Employement Type"
-          onChange={handleChangeEmployment}
-        >
-          <MenuItem value="Entry">Entry-Level</MenuItem>
-          <MenuItem value="Associate">Associate</MenuItem>
-          <MenuItem value="Senior">Senior</MenuItem>
-        </Select> */}
-
-        {/* Job Function */}
-
-        <TextField {...register("Job Desciption")} label="Job Description" />
-
-        {/* <input type="submit"></input> */}
+        <TextField {...register("jobDesciption")} label="Job Description" />
       </form>
     </>
   );

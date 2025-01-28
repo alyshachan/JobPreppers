@@ -1,13 +1,7 @@
-import {
-  Slider,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  Autocomplete,
-  TextField,
-} from "@mui/material";
+import { Slider, FormGroup, FormControlLabel, Checkbox } from "@mui/material";
 import { useState } from "react";
+import AutoCompleteForm from "../Helper/AutoCompleteForm";
+import { useFormContext } from "react-hook-form";
 
 export default function Qualification() {
   const [value, setValue] = useState([0, 2]);
@@ -39,17 +33,30 @@ export default function Qualification() {
     "PHD",
     "Doctorates",
   ];
-
+  const jobForm = useFormContext();
+  const {
+    register,
+    handleSubmit,
+    control,
+    resetField,
+    formState: { errors },
+  } = jobForm;
   /** Need to Implement  */
 
   return (
     <>
-      <Autocomplete
+      <AutoCompleteForm
+        name="educationOption"
+        label="Education Level"
+        options={educationOptions}
+        control={control}
+      />
+      {/* <Autocomplete
         options={educationOptions}
         renderInput={(params) => (
           <TextField {...params} label="Education Level" />
         )}
-      ></Autocomplete>
+      ></Autocomplete> */}
 
       <div>
         <label>
