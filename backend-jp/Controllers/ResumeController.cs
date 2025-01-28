@@ -52,7 +52,7 @@ namespace JobPreppersDemo.Controllers
                 new { role = "system", content = "You are a helpful assistant." },
                 new { role = "user", content = "Hello, GPT!" }
             },
-                    max_tokens = 10
+                    max_tokens = 800
                 };
 
                 var response = await httpClient.PostAsync(
@@ -177,7 +177,7 @@ Here is the user's resume:
 {resumeText}
 
 Provide suggestions on how to improve the resume to better match the job description. 
-Additionally, recommend projects or skills the user can work on to align with the job requirements.";
+Additionally, recommend projects or skills the user can work on to align with the job requirements. Provide 3 short and concise suggestions";
 
                 // Prepare the payload for the OpenAI API
                 using var httpClient = new HttpClient();
@@ -191,7 +191,7 @@ Additionally, recommend projects or skills the user can work on to align with th
                 new { role = "system", content = "You are a helpful assistant." },
                 new { role = "user", content = prompt }
             },
-                    max_tokens = 100 // Adjust token limit as needed
+                    max_tokens = 500 // Adjust token limit as needed
                 };
 
                 var response = await httpClient.PostAsync(
