@@ -6,6 +6,7 @@ import "@fontsource/roboto/700.css";
 import "./App.css";
 
 import NavBar from "./Components/NavBar";
+import Messaging from "./Components/Messaging"
 import { Route, Routes } from "react-router-dom";
 import Feed from "./Pages/Feed"
 import Jobs from "./Pages/Jobs";
@@ -32,6 +33,7 @@ function App() {
           <Route path="/Interview" element={<Interview />} />
           <Route path="/Resume" element={<Resume />} />
         </Routes>
+        <Messaging/>
       </AuthProvider>
     </>
   );
