@@ -13,7 +13,7 @@ function Messaging() {
     const { user, setAuthData } = useAuth();
     const [chatListOpened, setChatListOpened] = useState(false);
     const [convoOpened, setConvoOpened] = useState(false);
-    const [message, setMessage] = useState("");
+    const [messages, setMessages] = useState([]);
     const [receiverID, setReceiverID] = useState("");
     const [signalRConnection, setSignalRConnection] = useState(null);
 
@@ -31,26 +31,32 @@ function Messaging() {
 
     const handleMessageSubmit = async (e) => {
         e.preventDefault();
-        const msg = inputReference.current.value;
-        console.log(`You inputted ${msg}`);
+        const outMsg = inputReference.current.value;
+        console.log(`You inputted ${outMsg}`);
 
         try {
 
             console.log("Attempting a message");
-            await signalRConnection.invoke("SendDirectMessage", user.username, parseInt(receiverID), msg).then(
-                () => console.log(`You sent this message: ${msg} \n to receiverID: ${receiverID}`)
+            await signalRConnection.invoke("SendDirectMessage", user.username, parseInt(receiverID), outMsg).then(
+                // () => console.log(`You sent this message: ${msg} \n to receiverID: ${receiverID}`)
+                () => {
+                    setMessages([...messages, {                        
+                        position: 'right',
+                        type: 'text',
+                        text: outMsg,
+                        date: new Date(),
+                        
+                }])
+                console.log(`Messages updated from outgoing:`);
+                console.log(messages);
+
+            }
             );
         } catch (error) {
             console.error('Connection failed or invoke error:', error);
         }
 
         inputClear();
-    }
-
-    const handleReceiverIDSubmit = async (e) => {
-        e.preventDefault();
-        console.log(`You are now sending messages to receiverID: ${receiverID}`);
-        setMessage("");
     }
 
     const handleChatListClick = (chatListItem) => {
@@ -90,9 +96,18 @@ function Messaging() {
                 console.error('Connection closed:', error);
             });
 
-            connection.on("ReceiveDirectMessage", function (user, message) {
+            connection.on("ReceiveDirectMessage", function (user, inMsg) {
                 console.log("New message:");
-                console.log(`${user}: ${message}`)
+                console.log(`${user}: ${inMsg}`)
+                setMessages([...messages, {                        
+                    position: 'left',
+                    type: 'text',
+                    text: inMsg,
+                    date: new Date(),
+                }])
+                console.log(`Messages updated from receiving:`);
+                console.log(messages);
+
             });
 
 
@@ -113,8 +128,7 @@ function Messaging() {
             };
         };
         connectToHub();
-    }, [])
-
+    }, [messages])
 
     return (
         <div className="flex w-full">
@@ -182,23 +196,32 @@ function Messaging() {
 
 
             </div>
-            <div className="fixed bottom-4 right-4">
-                {convoOpened && <div>
+            <div className="fixed w-128 flex-none bottom-4 right-4">
+                {convoOpened && <div className="w-80">
 
-                    {/* <MessageList
+                    <MessageList
                         referance={messageListReference}
                         className='message-list'
                         lockable={true}
                         toBottomHeight={'100%'}
-                        dataSource={[
-                            {
-                                position: 'right',
-                                type: 'text',
-                                text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-                                date: new Date(),
-                            },
+                        dataSource={ // fill in data source with a json array
+                        //     {
+                        //         position: 'right',
+                        //         type: 'text',
+                        //         text: 'super super super super super super super long message',
+                        //         date: new Date(),
+                        //     },
+
+                        //     {
+                        //         position: 'left',
+                        //         type: 'text',
+                        //         text: 'bruh',
+                        //         date: new Date(),
+                        //     },
                             
-                        ]} /> */}
+                        // ]
+                        messages
+                        } />
 
                         <Input
                             className="input"
