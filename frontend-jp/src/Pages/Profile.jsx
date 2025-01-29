@@ -19,35 +19,7 @@ function Profile() {
 
   const [skillsTest, setSkillsTest] = useState({});
   // test message box handler
-  const handleMessageSubmit = async (e) => {
-    e.preventDefault();
-    console.log(`You inputted ${message}`);
 
-    try {
-
-      // Test sending to connected user 2
-      console.log("Attempting to send a test message");
-      await signalRConnection.invoke("SendDirectMessage", user.username, parseInt(receiverID), message).then(
-        () => console.log(`You sent this message: ${message} \n to receiverID: ${receiverID}`)
-      );
-
-      // Old code to send a message to all clients
-      // console.log("Attempting to send a test message");
-      // await signalRConnection.invoke("SendMessageToAll", user.username, message).then(
-      //   () => console.log("Sent a message")
-      // );
-    } catch (error) {
-      console.error('Connection failed or invoke error:', error);
-    }
-
-    setMessage(""); // clear text box
-  }
-
-  const handleReceiverIDSubmit = async (e) => {
-    e.preventDefault();
-    console.log(`You are now sending messages to receiverID: ${receiverID}`);
-    setMessage("");
-  }
 
   useEffect(() => {
     const requestSkills = async () => {
@@ -96,77 +68,6 @@ function Profile() {
   }, [user]);  // only populate when user exists
 
 
-
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const res = await fetch(`http://localhost:5000/api/GetUser/${user.userID}`, {
-  //         credentials: "include", // include cookies
-  //       });
-
-               
-  //       if (res.ok) {
-  //         const data = await res.json();
-  //         console.log("GetUser: ", data);
-  //         setIntialUser(data);
-  //       } else {
-  //         console.error("Failed to fetch User");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching User:", error);
-  //     }
-  //   };
-
-  //   fetchUser();
-  // }, [user]);
-
-  // Testing chat server connection in this component - Will
-  // this useEffect establishes the connection and stores it in a state
-  useEffect(() => {
-    const connectToHub = async () => {
-
-    console.log("Attempting to connect to /DirectMessageHub");
-    const connection = new signalR.HubConnectionBuilder()
-    .withUrl("http://localhost:5070/directMessageHub", {
-      accessTokenFactory: () => document.cookie.split('authToken=')[1] || '', 
-    })
-    .withAutomaticReconnect()
-    .build();
-
-    connection.onclose((error) => {
-      console.error('Connection closed:', error);
-    });
-
-    connection.on("ReceiveDirectMessage", function (user, message) {
-      console.log("New message:");
-      console.log(`${user}: ${message}`)
-    });
-
-
-    try {
-      console.log("Attempting to start connection");
-      await connection.start()
-      .then(() => {
-        console.log('Connected to SignalR Hub');
-        setSignalRConnection(connection); // store the connection in a state
-      } );
-
-      // moving this code to the handleSubmitMessage
-      // console.log("Attempting to send a test message");
-      // await connection.invoke("SendMessageToAll", user.username, "Hello world!").then(
-      //   () => console.log("Sent a message")
-      // );
-    } catch (error) {
-      console.error('Connection failed or invoke error:', error);
-    }
-
-    return () => {
-      connection.stop();
-    };
-    };
-    connectToHub();
-  }, [])
-
   if (user == null) {
     return <div>Loading...</div>;
   }
@@ -179,26 +80,6 @@ function Profile() {
       <div className="content !mt-[175px]">
         <div className="main-panel !flex-row gap-[50px]">
           <div className="main-personal">
-          <form id="userIDMessageForm" onSubmit={handleReceiverIDSubmit}>
-            <input
-              type="number"
-              id="receiverID"
-              placeholder="Input the receiverID"
-              value = {receiverID}
-              onChange = {(e) => setReceiverID(e.target.value)}>
-            </input>
-          </form>
-
-          <form id="messageBoxForm" onSubmit={handleMessageSubmit}>
-              <input 
-              type="text" 
-              id="message" 
-              placeholder="Send a message"
-              value = {message}
-              onChange = {(e) => setMessage(e.target.value)}>
-              </input>
-          </form>
-
             <img className="circle !bg-transparent" alt="Profile Picture" src={userPic}/>
             <p className="name">
               {user.first_name} {user.last_name}
