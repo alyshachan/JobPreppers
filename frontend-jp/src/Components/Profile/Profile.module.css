@@ -1,43 +1,69 @@
 .personalInfo {
-    text-align: center;
-    width: 40%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: -120px;
-  }
+  text-align: center;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -120px;
+}
 
-  .pinnedInfo{
-    width: calc(100% - 300px);
-  }
+.highlightedInfo {
+  width: calc(100% - 300px);
+}
 
-  .name {
-    font-size: 60px;
-    font-weight: bold;
-    line-height: 80px;
-    margin-bottom: 0px;
-  }
+.name {
+  font-size: 60px;
+  font-weight: bold;
+  line-height: 80px;
+  margin-bottom: 0px;
+}
 
-  .addNewSection{
-    background-color: white;
-    border-radius: 15px;
-    width: 70%;
-    display: flex;
-    box-sizing: border-box;
-    padding: 30px 50px;
-    margin: 20px;
-    flex-direction: column;
-    align-items: center;
-    
-    border-style: dashed;
-    border-width: 4px;
-    border-color: #4ba173;
-    font-weight: bold;
-    font-size:xx-large;
-    color: #4ba173;
-  }
+.actionButtons {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-  .addNewSection:hover{
-    background-color: #edf2f7;
-  }
-  
+.actionButtons button {
+  width:175px;
+  height: 50px;
+  font-size: large;
+}
+
+.editProfileButton {
+  background-color: #f0fbf5;
+  border: 2px solid #63d297;
+  color: #63d297;
+}
+
+.editProfileButton:hover {
+  background-color: #edf2f7;
+}
+
+.addNewSection {
+  background-color: white;
+  border-radius: 15px;
+  width: 70%;
+  display: flex;
+  box-sizing: border-box;
+  padding: 30px 50px;
+  margin: 20px;
+  flex-direction: column;
+  align-items: center;
+
+  border-style: dashed;
+  border-width: 4px;
+  border-color: #4ba173;
+  font-weight: bold;
+  font-size: xx-large;
+  color: #4ba173;
+}
+
+.highlightedInfo .addNewSection {
+  width: 100%;
+}
+
+.addNewSection:hover {
+  background-color: #edf2f7;
+}

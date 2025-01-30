@@ -31,6 +31,10 @@ button{
   line-height: 30px;
 }
 
+button:hover{
+  background-color: #3C805C;
+}
+
 .content{
     display: flex;
     flex-direction: column;

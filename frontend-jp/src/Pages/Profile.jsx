@@ -1,12 +1,20 @@
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../provider/authProvider";
+
 import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
+import AddEducationDialog from "../Components/Profile/AddEducationDialog";
+import AddSkillDialog from "../Components/Profile/AddSkillDialog";
+import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
+import AddProjectDialog from "../Components/Profile/AddProjectDialog";
+
 import defaultProfilePicture from "../Components/defaultProfilePicture.png";
-import { useAuth } from "../provider/authProvider";
-import React, { useEffect, useState } from "react";
-import "../Components/JobPreppers.css";
+import EditIcon from "@mui/icons-material/Edit";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import styles from "../Components/Profile/Profile.module.css";
+import "../Components/JobPreppers.css";
 
 function Profile({ edit = false }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
@@ -15,6 +23,42 @@ function Profile({ edit = false }) {
   const [skillsDict, setSkillsDict] = useState({});
   const [experienceDict, setExperienceDict] = useState([]);
   const [projectDict, setProjectDict] = useState([]);
+  const [openEducationDialog, setOpenEducationDialog] = useState(false);
+  const [openSkillDialog, setOpenSkillDialog] = useState(false);
+  const [openExperienceDialog, setOpenExperienceDialog] = useState(false);
+  const [openProjectDialog, setOpenProjectDialog] = useState(false);
+
+  const handleOpenEducationDialog = () => {
+    setOpenEducationDialog(true);
+  };
+
+  const handleCloseEducationDialog = () => {
+    setOpenEducationDialog(false);
+  };
+
+  const handleOpenSkillDialog = () => {
+    setOpenSkillDialog(true);
+  };
+
+  const handleCloseSkillDialog = () => {
+    setOpenSkillDialog(false);
+  };
+
+  const handleOpenExperienceDialog = () => {
+    setOpenExperienceDialog(true);
+  };
+
+  const handleCloseExperienceDialog = () => {
+    setOpenExperienceDialog(false);
+  };
+
+  const handleOpenProjectDialog = () => {
+    setOpenProjectDialog(true);
+  };
+
+  const handleCloseProjectDialog = () => {
+    setOpenProjectDialog(false);
+  };
 
   useEffect(() => {
     const requestEducation = async () => {
@@ -234,30 +278,89 @@ function Profile({ edit = false }) {
               <br />
               United States
             </p>
+
+            <div className={styles.actionButtons}>
+            <button>
+                <AddCircleOutlineIcon className="mr-4" />
+                Connect
+              </button>
+              <a href="/EditProfile">
+              <button className={styles.editProfileButton}>
+                <EditIcon className="mr-4" />
+                Edit Profile
+              </button>
+              </a>
+            </div>
           </div>
 
-          <div className={styles.pinnedInfo}>
-            {Object.keys(educationDict).length > 0 && (
+          <div className={styles.highlightedInfo}>
+            {Object.keys(educationDict).length > 0 ? (
               <EducationSection educationDict={educationDict} edit={edit} />
+            ) : (
+              edit && (
+                <button
+                  className={styles.addNewSection}
+                  onClick={handleOpenEducationDialog}
+                >
+                  Add Education section
+                </button>
+              )
             )}
-            {Object.keys(skillsDict).length > 0 && (
+
+            {Object.keys(skillsDict).length > 0 ? (
               <SkillsSection skillsDict={skillsDict} edit={edit} />
+            ) : (
+              edit && (
+                <button
+                  className={styles.addNewSection}
+                  onClick={handleOpenSkillDialog}
+                >
+                  Add Skills section
+                </button>
+              )
             )}
           </div>
         </div>
 
-        {Object.keys(experienceDict).length > 0 && (
+        {Object.keys(experienceDict).length > 0 ? (
           <ExperienceSection experienceDict={experienceDict} edit={edit} />
+        ) : (
+          edit && (
+            <button
+              className={styles.addNewSection}
+              onClick={handleOpenExperienceDialog}
+            >
+              Add Experience section
+            </button>
+          )
         )}
 
-        {Object.keys(projectDict).length > 0 && (
+        {Object.keys(projectDict).length > 0 ? (
           <ProjectSection projectDict={projectDict} edit={edit} />
-        )}
-
-        {edit && (
-          <button className={styles.addNewSection}>Add new section</button>
+        ) : (
+          edit && (
+            <button
+              className={styles.addNewSection}
+              onClick={handleOpenProjectDialog}
+            >
+              Add Project section
+            </button>
+          )
         )}
       </div>
+      <AddEducationDialog
+        open={openEducationDialog}
+        onClose={handleCloseEducationDialog}
+      />
+      <AddSkillDialog open={openSkillDialog} onClose={handleCloseSkillDialog} />
+      <AddExperienceDialog
+        open={openExperienceDialog}
+        onClose={handleCloseExperienceDialog}
+      />
+      <AddProjectDialog
+        open={openProjectDialog}
+        onClose={handleCloseProjectDialog}
+      />
     </>
   );
 }
