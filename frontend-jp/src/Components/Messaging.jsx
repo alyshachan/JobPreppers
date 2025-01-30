@@ -4,24 +4,33 @@ import { useAuth } from "../provider/authProvider";
 import * as signalR from '@microsoft/signalr';
 import 'react-chat-elements/dist/main.css';
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
-import { MessageList } from 'react-chat-elements';
-import { ChatList } from 'react-chat-elements';
-import { Input } from 'react-chat-elements';
-import { Button } from 'react-chat-elements';
+import { MessageList, SystemMessage, ChatList, Input, Button } from 'react-chat-elements';
+
 
 function Messaging() {
     const { user, setAuthData } = useAuth();
+    /* div render booleans */
     const [chatListOpened, setChatListOpened] = useState(false);
     const [convoOpened, setConvoOpened] = useState(false);
+    /* messaging react states */
     const [messages, setMessages] = useState([]);
     const [receiverID, setReceiverID] = useState("");
     const [signalRConnection, setSignalRConnection] = useState(null);
+    /* system message states */
+    const [showSystemMessage, setShowSystemMessage] = useState(false);
+    const [currentSystemMessage, setSystemMessage] = useState("");
 
     const messageListReference = React.createRef();
     const inputReference = React.createRef();
 
+    /*
+    HANDLERS
+    */
+
     const inputClear = () => {
-        inputReference.current.value = "";
+        if (inputReference.current.value) {
+            inputReference.current.value = "";
+        }
     };
 
     const handleMessagingClicked = (e) => {
@@ -60,6 +69,7 @@ function Messaging() {
     }
 
     const handleChatListClick = (chatListItem) => {
+        setMessages([]);
         console.log(chatListItem.title);
         setConvoOpened(!convoOpened);
 
@@ -81,6 +91,10 @@ function Messaging() {
 
     }
 
+    /* 
+    CHAT SERVER CONNECTION
+    */
+
     useEffect(() => {
         const connectToHub = async () => {
 
@@ -92,6 +106,7 @@ function Messaging() {
                 .withAutomaticReconnect()
                 .build();
 
+            // configure the connection
             connection.onclose((error) => {
                 console.error('Connection closed:', error);
             });
@@ -139,25 +154,6 @@ function Messaging() {
                 </button>
 
                 {chatListOpened && <div>
-                    {/* <form id="userIDMessageForm" onSubmit={handleReceiverIDSubmit}>
-                    <input
-                        type="number"
-                        id="receiverID"
-                        placeholder="Input the receiverID"
-                        value={receiverID}
-                        onChange={(e) => setReceiverID(e.target.value)}>
-                    </input>
-                </form>
-
-                <form id="messageBoxForm" onSubmit={handleMessageSubmit}>
-                    <input
-                        type="text"
-                        id="message"
-                        placeholder="Send a message"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}>
-                    </input>
-                </form> */}
 
                     <ChatList
                         className='chat-list'
@@ -167,24 +163,24 @@ function Messaging() {
                             {
                                 alt: 'Reactjs',
                                 title: 'Son Goku',
-                                subtitle: 'What are you doing?',
-                                date: new Date(),
+                                subtitle: '',
+                                date: null,
                                 unread: 0,
                             },
                             {
                                 avatar: 'https://facebook.github.io/react/img/logo.svg',
                                 alt: 'Reactjs',
                                 title: 'Ma Junior',
-                                subtitle: 'I am 30m from your current location',
-                                date: new Date(),
+                                subtitle: '',
+                                date: null,
                                 unread: 0,
                             },
                             {
                                 avatar: 'https://facebook.github.io/react/img/logo.svg',
                                 alt: 'Reactjs',
                                 title: 'Alysha Chan',
-                                subtitle: "lol",
-                                date: new Date(),
+                                subtitle: "",
+                                date: null,
                                 unread: 0,
                             },
 
@@ -196,52 +192,36 @@ function Messaging() {
 
 
             </div>
-            <div className="fixed w-128 flex-none bottom-4 right-4">
-                {convoOpened && <div className="w-80">
-
+            {convoOpened && chatListOpened && <div className="fixed w-128 flex-none bottom-4 right-4 outline outline-2 outline-green-500 p-4 bg-green-400">
+                <div className="w-80 flex-none bg-white">
+                    
                     <MessageList
                         referance={messageListReference}
                         className='message-list'
                         lockable={true}
                         toBottomHeight={'100%'}
-                        dataSource={ // fill in data source with a json array
-                        //     {
-                        //         position: 'right',
-                        //         type: 'text',
-                        //         text: 'super super super super super super super long message',
-                        //         date: new Date(),
-                        //     },
+                        dataSource={messages} 
+                    />
 
-                        //     {
-                        //         position: 'left',
-                        //         type: 'text',
-                        //         text: 'bruh',
-                        //         date: new Date(),
-                        //     },
-                            
-                        // ]
-                        messages
-                        } />
-
-                        <Input
-                            className="input"
-                            referance={inputReference}
-                            clear={inputClear}
-                            placeholder='Type here...'
-                            multiline={true}
-                            autoHeight={false}
-                            minHeight={2}
-                            maxHeight={10}
-                            style="message-input"
-                            rightButtons={
-                                <Button 
-                                    onClick={handleMessageSubmit}
-                                    color='white'
-                                    backgroundColor='black' 
-                                    text='Send' />}
-                        />
-                </div>}
-            </div>
+                    <Input
+                        className="input"
+                        referance={inputReference}
+                        clear={inputClear}
+                        placeholder='Type here...'
+                        multiline={true}
+                        autoHeight={false}
+                        minHeight={2}
+                        maxHeight={10}
+                        style="message-input"
+                        rightButtons={
+                            <Button 
+                                onClick={handleMessageSubmit}
+                                color='white'
+                                backgroundColor='black' 
+                                text='Send' />}
+                    />
+                </div>
+            </div>}
 
         </div>
 
