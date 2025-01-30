@@ -35,7 +35,6 @@ function App() {
           <Route path="/Interview" element={<Interview />} />
           <Route path="/Resume" element={<Resume />} />
 
-          <Route path="/EditProfile" element={<Profile edit={true}/>} />
           <Route path="/Education" element={<Education />} />
           <Route path="/Experience" element={<Experience />} />
           <Route path="/Project" element={<Project />} />

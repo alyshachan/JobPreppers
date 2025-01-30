@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
+import { Button } from "@mui/material";
 
 import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
@@ -12,217 +13,108 @@ import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 
 import defaultProfilePicture from "../Components/defaultProfilePicture.png";
 import EditIcon from "@mui/icons-material/Edit";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import styles from "../Components/Profile/Profile.module.css";
 import "../Components/JobPreppers.css";
 
-function Profile({ edit = false }) {
+function Profile() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const { initialUser, setIntialUser } = useState(null);
+  const [edit, setEdit] = useState(false);
   const [educationDict, setEducationDict] = useState([]);
   const [skillsDict, setSkillsDict] = useState({});
   const [experienceDict, setExperienceDict] = useState([]);
   const [projectDict, setProjectDict] = useState([]);
-  const [openEducationDialog, setOpenEducationDialog] = useState(false);
-  const [openSkillDialog, setOpenSkillDialog] = useState(false);
-  const [openExperienceDialog, setOpenExperienceDialog] = useState(false);
-  const [openProjectDialog, setOpenProjectDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState({
+    education: false,
+    skill: false,
+    experience: false,
+    project: false,
+  });
 
-  const handleOpenEducationDialog = () => {
-    setOpenEducationDialog(true);
-  };
-
-  const handleCloseEducationDialog = () => {
-    setOpenEducationDialog(false);
-  };
-
-  const handleOpenSkillDialog = () => {
-    setOpenSkillDialog(true);
-  };
-
-  const handleCloseSkillDialog = () => {
-    setOpenSkillDialog(false);
-  };
-
-  const handleOpenExperienceDialog = () => {
-    setOpenExperienceDialog(true);
-  };
-
-  const handleCloseExperienceDialog = () => {
-    setOpenExperienceDialog(false);
-  };
-
-  const handleOpenProjectDialog = () => {
-    setOpenProjectDialog(true);
-  };
-
-  const handleCloseProjectDialog = () => {
-    setOpenProjectDialog(false);
+  const toggleDialog = (type, state) => {
+    setOpenDialog((prev) => ({ ...prev, [type]: state }));
   };
 
   useEffect(() => {
-    const requestEducation = async () => {
+    if (!user) return;
+
+    const fetchData = async (endpoint, setter, transform) => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/UserEducation/${user.userID}`,
-          {
-            credentials: "include", // include cookies
-          }
+          `http://localhost:5000/api/${endpoint}/${user.userID}`,
+          { credentials: "include" }
         );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("API Response: ", data); // Log the response to verify the structure
-
-          if (data) {
-            const newEducationDict = data.map((education) => ({
-              school_name: education.schoolName,
-              degree_name: education.degreeName,
-              study_name: education.studyName,
-              start_date:
-                education.startDate == null
-                  ? null
-                  : new Date(education.startDate),
-              end_date:
-                education.endDate == null ? null : new Date(education.endDate),
-              description: education.description,
-            }));
-
-            setEducationDict((prevState) => {
-              if (
-                JSON.stringify(prevState) !== JSON.stringify(newEducationDict)
-              ) {
-                return newEducationDict;
-              }
-              return prevState;
-            });
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    const requestSkills = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/UserSkills/${user.userID}`,
-          {
-            credentials: "include", // include cookies
-          }
+        if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
+        const data = await response.json();
+        setter((prevState) =>
+          JSON.stringify(prevState) !== JSON.stringify(data)
+            ? transform(data)
+            : prevState
         );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("API Response: ", data); // Log the response to verify the structure
-
-          if (data) {
-            let newSkillsDict = {};
-            for (var userSkillID in data) {
-              var skills = data[userSkillID];
-
-              if (!newSkillsDict[skills.category]) {
-                newSkillsDict[skills.category] = [skills.name];
-              } else {
-                newSkillsDict[skills.category].push(skills.name);
-              }
-            }
-            setSkillsDict((prevState) => {
-              if (JSON.stringify(prevState) !== JSON.stringify(newSkillsDict)) {
-                return newSkillsDict;
-              }
-              return prevState;
-            });
-          }
-        }
       } catch (error) {
-        console.log(error);
-      }
-    };
-    const requestExperience = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/UserExperience/${user.userID}`,
-          {
-            credentials: "include", // include cookies
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("API Response: ", data); // Log the response to verify the structure
-
-          if (data) {
-            const newExperienceDict = data.map((experience) => ({
-              work_name: experience.workName,
-              location: experience.workLocation,
-              job_title: experience.jobTitle,
-              start_date:
-                experience.startDate == null
-                  ? null
-                  : new Date(experience.startDate),
-              end_date:
-                experience.endDate == null
-                  ? null
-                  : new Date(experience.endDate),
-              description: experience.description,
-            }));
-
-            setExperienceDict((prevState) => {
-              if (
-                JSON.stringify(prevState) !== JSON.stringify(newExperienceDict)
-              ) {
-                return newExperienceDict;
-              }
-              return prevState;
-            });
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    const requestProjects = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/UserProject/${user.userID}`,
-          {
-            credentials: "include", // include cookies
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("API Response: ", data); // Log the response to verify the structure
-
-          if (data) {
-            const newProjectDict = data.map((project) => ({
-              project_title: project.projectTitle,
-              description: project.description,
-            }));
-
-            setProjectDict((prevState) => {
-              if (
-                JSON.stringify(prevState) !== JSON.stringify(newProjectDict)
-              ) {
-                return newProjectDict;
-              }
-              return prevState;
-            });
-          }
-        }
-      } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
 
-    if (user) {
-      requestEducation(); // populate education
-      requestSkills(); // populate skills
-      requestExperience(); // populate experience
-      requestProjects(); // populate projects
-      console.log("User: ", user);
-    }
-  }, [user]); // only populate when user exists
+    fetchData("UserEducation", setEducationDict, (data) =>
+      data.map(
+        ({
+          schoolName,
+          degreeName,
+          studyName,
+          startDate,
+          endDate,
+          description,
+        }) => ({
+          school_name: schoolName,
+          degree_name: degreeName,
+          study_name: studyName,
+          start_date: startDate ? new Date(startDate) : null,
+          end_date: endDate ? new Date(endDate) : null,
+          description,
+        })
+      )
+    );
+
+    fetchData("UserSkills", setSkillsDict, (data) => {
+      const skills = {};
+      data.forEach(({ category, name }) => {
+        skills[category] = skills[category]
+          ? [...skills[category], name]
+          : [name];
+      });
+      return skills;
+    });
+
+    fetchData("UserExperience", setExperienceDict, (data) =>
+      data.map(
+        ({
+          workName,
+          workLocation,
+          jobTitle,
+          startDate,
+          endDate,
+          description,
+        }) => ({
+          work_name: workName,
+          location: workLocation,
+          job_title: jobTitle,
+          start_date: startDate ? new Date(startDate) : null,
+          end_date: endDate ? new Date(endDate) : null,
+          description,
+        })
+      )
+    );
+
+    fetchData("UserProject", setProjectDict, (data) =>
+      data.map(({ projectTitle, description }) => ({
+        project_title: projectTitle,
+        description,
+      }))
+    );
+  }, [user]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -280,86 +172,102 @@ function Profile({ edit = false }) {
             </p>
 
             <div className={styles.actionButtons}>
-            <button>
-                <AddCircleOutlineIcon className="mr-4" />
+              <Button variant="contained" startIcon={<AddCircleOutlineIcon />}>
                 Connect
-              </button>
-              <a href="/EditProfile">
-              <button className={styles.editProfileButton}>
-                <EditIcon className="mr-4" />
-                Edit Profile
-              </button>
-              </a>
+              </Button>
+              <Button
+                className={styles.editProfileButton}
+                variant="contained"
+                startIcon={edit ? <VisibilityIcon /> : <EditIcon />}
+                onClick={() => setEdit(!edit)}
+              >
+                {edit ? "View Profile" : "Edit Profile"}
+              </Button>
             </div>
           </div>
 
-          <div className={styles.highlightedInfo}>
-            {Object.keys(educationDict).length > 0 ? (
-              <EducationSection educationDict={educationDict} edit={edit} />
-            ) : (
-              edit && (
-                <button
-                  className={styles.addNewSection}
-                  onClick={handleOpenEducationDialog}
-                >
-                  Add Education section
-                </button>
-              )
-            )}
+          {!edit && (educationDict.length === 0 &&
+          skillsDict &&
+          Object.keys(skillsDict).length === 0 &&
+          experienceDict.length === 0 &&
+          projectDict.length === 0) ? (
+            <div className={styles.noProfileText}>
+              {user.first_name} {user.last_name} hasn't added to their profile
+              yet
+            </div>
+          ) : (
+            <div className={styles.highlightedInfo}>
+              {educationDict.length > 0 ? (
+                <EducationSection educationDict={educationDict} edit={edit} />
+              ) : (
+                edit && (
+                  <button
+                    className={styles.addNewSection}
+                    onClick={() => toggleDialog("education", true)}
+                  >
+                    Add Education section
+                  </button>
+                )
+              )}
 
-            {Object.keys(skillsDict).length > 0 ? (
-              <SkillsSection skillsDict={skillsDict} edit={edit} />
-            ) : (
-              edit && (
-                <button
-                  className={styles.addNewSection}
-                  onClick={handleOpenSkillDialog}
-                >
-                  Add Skills section
-                </button>
-              )
-            )}
-          </div>
+              {Object.keys(skillsDict).length > 0 ? (
+                <SkillsSection skillsDict={skillsDict} edit={edit} />
+              ) : (
+                edit && (
+                  <button
+                    className={styles.addNewSection}
+                    onClick={() => toggleDialog("skill", true)}
+                  >
+                    Add Skills section
+                  </button>
+                )
+              )}
+            </div>
+          )}
         </div>
 
-        {Object.keys(experienceDict).length > 0 ? (
+        {experienceDict.length > 0 ? (
           <ExperienceSection experienceDict={experienceDict} edit={edit} />
         ) : (
           edit && (
             <button
               className={styles.addNewSection}
-              onClick={handleOpenExperienceDialog}
+              onClick={() => toggleDialog("experience", true)}
             >
               Add Experience section
             </button>
           )
         )}
 
-        {Object.keys(projectDict).length > 0 ? (
+        {projectDict.length > 0 ? (
           <ProjectSection projectDict={projectDict} edit={edit} />
         ) : (
           edit && (
             <button
               className={styles.addNewSection}
-              onClick={handleOpenProjectDialog}
+              onClick={() => toggleDialog("project", true)}
             >
               Add Project section
             </button>
           )
         )}
       </div>
+
       <AddEducationDialog
-        open={openEducationDialog}
-        onClose={handleCloseEducationDialog}
+        open={openDialog.education}
+        onClose={() => toggleDialog("education", false)}
       />
-      <AddSkillDialog open={openSkillDialog} onClose={handleCloseSkillDialog} />
+      <AddSkillDialog
+        open={openDialog.skill}
+        onClose={() => toggleDialog("skill", false)}
+      />
       <AddExperienceDialog
-        open={openExperienceDialog}
-        onClose={handleCloseExperienceDialog}
+        open={openDialog.experience}
+        onClose={() => toggleDialog("experience", false)}
       />
       <AddProjectDialog
-        open={openProjectDialog}
-        onClose={handleCloseProjectDialog}
+        open={openDialog.project}
+        onClose={() => toggleDialog("project", false)}
       />
     </>
   );
