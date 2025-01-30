@@ -1,9 +1,10 @@
-import AddEducationDialog from "../Components/Profile/AddEducationDialog"
+import AddExperienceDialog from "../Components/Profile/AddExperienceDialog"
+
 function Feed(){
     return(
         <>
         <h1>Feed</h1>
-        <AddEducationDialog open={true}/>
+        <AddExperienceDialog open={true}/>
         </>
     )
 }

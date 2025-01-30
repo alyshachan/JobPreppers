@@ -15,10 +15,10 @@ import moment from "moment";
 import styles from "./AddSectionDialog.module.css";
 import "../JobPreppers.css";
 import { useAuth } from "../../provider/authProvider";
-import { useNavigate } from "react-router-dom";
-import SchoolIcon from "@mui/icons-material/School";
-import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
+import {useNavigate } from "react-router-dom";
+import WorkIcon from '@mui/icons-material/Work';
+import BusinessIcon from '@mui/icons-material/Business';
+import PlaceIcon from '@mui/icons-material/Place';
 
 import SectionHeader from "./SectionHeader";
 
@@ -33,11 +33,14 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddEducationDialog({ open, onClose }) {
+function AddExperienceDialog({
+  open,
+  onClose,
+}) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
-  const [school, setSchool] = useState("");
-  const [degree, setDegree] = useState("");
-  const [study, setStudy] = useState("");
+  const[work, setWork] = useState("")
+  const[location, setLocation] = useState("")
+  const[title, setTitle] = useState("")
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [description, setDescription] = useState("");
@@ -47,26 +50,21 @@ function AddEducationDialog({ open, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
-    const start =
-      startDate.toDateString === new Date().toDateString
-        ? null
-        : moment(startDate).format("YYYY-MM-DD");
-    const end =
-      endDate.toDateString === new Date().toDateString
-        ? null
-        : moment(endDate).format("YYYY-MM-DD");
+    const start = startDate.toDateString === new Date().toDateString ? null : moment(startDate).format('YYYY-MM-DD');
+    const end = endDate.toDateString === new Date().toDateString ? null : moment(endDate).format('YYYY-MM-DD');
+  
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/UserEducation/CreateEducation",
+        "http://localhost:5000/api/UserExperience/CreateExperience",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            userID: user.userID,
-            schoolName: school,
-            degreeName: degree,
-            studyName: study,
+            userID : user.userID,
+            workName: work,
+            location: location,
+            jobTitle : title,
             start_date: start,
             end_date: end,
             description: description,
@@ -92,7 +90,7 @@ function AddEducationDialog({ open, onClose }) {
   return (
     <StyledDialog onClose={onClose} open={open}>
       <DialogTitle className={styles.dialogTitle}>
-        <SectionHeader header="Add Education" />
+        <SectionHeader header="Add Experience" />
       </DialogTitle>
 
       <IconButton
@@ -107,47 +105,47 @@ function AddEducationDialog({ open, onClose }) {
         <form onSubmit={handleSubmit}>
           <div className={styles.dialogContent}>
             <div className={styles.dialogContentLeft}>
-              <div className={styles.input}>
-                <SchoolIcon className={styles.icon} />
+            <div className={styles.input}>
+                <WorkIcon className={styles.icon} />
                 <div className={styles.inputField}>
-                  <label for="school" className={styles.required}>
-                    School
+                  <label for="title">Job Title</label>
+                  <TextField
+                    placeholder="e.g. Software Engineer"
+                    className="w-full"
+                    id="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.input}>
+                <BusinessIcon className={styles.icon} />
+                <div className={styles.inputField}>
+                  <label for="work" className={styles.required}>
+                    Company
                   </label>
                   <TextField
                     required
-                    placeholder="e.g. Harvard University"
+                    placeholder="e.g. Google"
                     className="w-full"
-                    id="school"
-                    value={school}
-                    onChange={(e) => setSchool(e.target.value)}
+                    id="work"
+                    value={work}
+                    onChange={(e) => setWork(e.target.value)}
                   />
                 </div>
               </div>
 
               <div className={styles.input}>
-                <HistoryEduIcon className={styles.icon} />
+                <PlaceIcon className={styles.icon} />
                 <div className={styles.inputField}>
-                  <label for="degree">Degree</label>
+                  <label for="location">Location</label>
                   <TextField
-                    placeholder="e.g. Bachelors of Arts"
+                    placeholder="e.g. Los Angeles, California"
                     className="w-full"
-                    id="degree"
-                    value={degree}
-                    onChange={(e) => setDegree(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.input}>
-                <MenuBookIcon className={styles.icon} />
-                <div className={styles.inputField}>
-                  <label for="study">Field of Study</label>
-                  <TextField
-                    placeholder="e.g. Business"
-                    className="w-full"
-                    id="study"
-                    value={study}
-                    onChange={(e) => setStudy(e.target.value)}
+                    id="location"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
                   />
                 </div>
               </div>
@@ -161,7 +159,6 @@ function AddEducationDialog({ open, onClose }) {
                   <label for="start">Start Date</label>
                   <TextField
                     type="date"
-                    id="start"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value || null)}
                   />
@@ -170,7 +167,6 @@ function AddEducationDialog({ open, onClose }) {
                   <label for="end">End Date</label>
                   <TextField
                     type="date"
-                    id="end"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value || null)}
                   />
@@ -182,8 +178,7 @@ function AddEducationDialog({ open, onClose }) {
                 <div className={styles.inputField}>
                   <label for="description">Description</label>
                   <TextareaAutosize
-                    placeholder="Enter grades, activities, awards"
-                    id="description"
+                    placeholder="Enter skills, accomplishments, achievements"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
@@ -192,7 +187,7 @@ function AddEducationDialog({ open, onClose }) {
             </div>
           </div>
           <DialogActions>
-            <button type="submit">Add Education</button>
+            <button type="submit">Add Experience</button>
           </DialogActions>
         </form>
       </DialogContent>
@@ -200,4 +195,4 @@ function AddEducationDialog({ open, onClose }) {
   );
 }
 
-export default AddEducationDialog;
+export default AddExperienceDialog;

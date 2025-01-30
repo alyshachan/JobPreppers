@@ -8,6 +8,7 @@ import {useState } from "react";
 
 import { IconButton } from "@mui/material";
 import AddEducationDialog from "../Components/Profile/AddEducationDialog";
+
 function EducationSection({ educationDict, edit }) {
   const [openEducationDialog, setOpenEducationDialog] = useState(false);
 
@@ -66,13 +67,13 @@ function EducationSection({ educationDict, edit }) {
                     ? `${
                         education.start_date
                           ? `${
-                              monthsOfYear[education.start_date.getMonth()]
+                              monthsOfYear[education.start_date.getMonth() + 1]
                             } ${education.start_date.getFullYear()} - `
                           : ""
                       }${
                         education.end_date
                           ? `${
-                              monthsOfYear[education.end_date.getMonth()]
+                              monthsOfYear[education.end_date.getMonth() + 1]
                             } ${education.end_date.getFullYear()}`
                           : "Present"
                       }`

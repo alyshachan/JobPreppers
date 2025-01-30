@@ -4,8 +4,20 @@ import styles from "../Components/Profile/ProfileSections.module.css";
 import "../Components/JobPreppers.css";
 import { IconButton } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import {useState } from "react";
+import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
 
 function ExperienceSection({ experienceDict, edit }) {
+  const [openExperienceDialog, setOpenExperienceDialog] = useState(false);
+
+  const handleOpenExperienceDialog = () => {
+    setOpenExperienceDialog(true);
+  };
+
+  const handleCloseExperienceDialog = () => {
+    setOpenExperienceDialog(false);
+  };
+
   const displayedItems =
     edit == true ? experienceDict : experienceDict.slice(0, 3);
   const hasMoreItems = Object.keys(experienceDict).length > 3;
@@ -29,8 +41,8 @@ function ExperienceSection({ experienceDict, edit }) {
 
     const startYear = startDate.getFullYear();
     const endYear = endDate.getFullYear();
-    const startMonth = startDate.getMonth();
-    const endMonth = endDate.getMonth();
+    const startMonth = startDate.getMonth() + 1;
+    const endMonth = endDate.getMonth() + 1;
 
     let yearsDiff = endYear - startYear;
     let monthsDiff = endMonth - startMonth;
@@ -43,7 +55,7 @@ function ExperienceSection({ experienceDict, edit }) {
     let message = "";
     if (yearsDiff > 1) message += yearsDiff + " years ";
     else if (yearsDiff == 1) message += yearsDiff + " year ";
-  
+
     if (monthsDiff > 1) message += monthsDiff + " months";
     else if (monthsDiff == 1) message += monthsDiff + " month";
 
@@ -53,7 +65,15 @@ function ExperienceSection({ experienceDict, edit }) {
   return (
     <>
       <div className="panel">
-        <SectionHeader header={"Experience"} edit={edit} />
+        <SectionHeader
+          header={"Experience"}
+          edit={edit}
+          onAdd={handleOpenExperienceDialog}
+        />
+        <AddExperienceDialog
+          open={openExperienceDialog}
+          onClose={handleCloseExperienceDialog}
+        />
 
         <div className={styles.sectionContent}>
           {displayedItems.map((experience, index) => (
@@ -74,17 +94,17 @@ function ExperienceSection({ experienceDict, edit }) {
 
                   <div className={styles.experienceContentRight}>
                     <p className="title">
-                    {experience.start_date || experience.end_date
+                      {experience.start_date || experience.end_date
                         ? `${
                             experience.start_date
                               ? `${
-                                  monthsOfYear[experience.start_date.getMonth()]
+                                  monthsOfYear[experience.start_date.getMonth() + 1]
                                 } ${experience.start_date.getFullYear()} - `
                               : ""
                           }${
                             experience.end_date
                               ? `${
-                                  monthsOfYear[experience.end_date.getMonth()]
+                                  monthsOfYear[experience.end_date.getMonth() + 1]
                                 } ${experience.end_date.getFullYear()}`
                               : "Present"
                           }`
