@@ -5,6 +5,25 @@ import * as signalR from '@microsoft/signalr';
 import 'react-chat-elements/dist/main.css';
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 import { MessageList, SystemMessage, ChatList, Input, Button } from 'react-chat-elements';
+import { styled } from "@mui/material/styles";
+
+/* Style overrides */
+const StyledInput = styled(Input)(({ theme }) => ({
+    "& .input": {
+        marginbottom: "-20px !important"
+    },
+  }));
+
+const StyledChatList = styled(ChatList)(({ theme }) => ({
+"& .rce-citem": {
+    minHeight: "100px !important",
+    alignItems: "start"
+},
+"& .rce-citem-body": {
+    // justifyContent: "start"
+    alignSelf: "center"
+}
+}));
 
 
 function Messaging() {
@@ -28,10 +47,10 @@ function Messaging() {
     */
 
     const inputClear = () => {
-        if (inputReference.current.value) {
+        if (inputReference.current != null) {
             inputReference.current.value = "";
         }
-    };
+    }
 
     const handleMessagingClicked = (e) => {
         e.preventDefault();
@@ -40,7 +59,14 @@ function Messaging() {
 
     const handleMessageSubmit = async (e) => {
         e.preventDefault();
+
+        if (!inputReference.current) {
+            console.warn("Input ref is null, something went wrong!");
+            return;
+        }
+
         const outMsg = inputReference.current.value;
+        if (!outMsg.trim()) return;
         console.log(`You inputted ${outMsg}`);
 
         try {
@@ -49,22 +75,19 @@ function Messaging() {
             await signalRConnection.invoke("SendDirectMessage", user.username, parseInt(receiverID), outMsg).then(
                 // () => console.log(`You sent this message: ${msg} \n to receiverID: ${receiverID}`)
                 () => {
-                    setMessages([...messages, {                        
+                    setMessages(messages => [...messages, {                        
                         position: 'right',
                         type: 'text',
                         text: outMsg,
                         date: new Date(),
                         
                 }])
-                console.log(`Messages updated from outgoing:`);
-                console.log(messages);
-
+        
             }
             );
         } catch (error) {
             console.error('Connection failed or invoke error:', error);
         }
-
         inputClear();
     }
 
@@ -90,14 +113,14 @@ function Messaging() {
         }
 
     }
-
+    
     /* 
     CHAT SERVER CONNECTION
     */
 
     useEffect(() => {
         const connectToHub = async () => {
-
+            console.log("why does this code run?");
             console.log("Attempting to connect to /DirectMessageHub");
             const connection = new signalR.HubConnectionBuilder()
                 .withUrl("http://localhost:5070/directMessageHub", {
@@ -111,20 +134,19 @@ function Messaging() {
                 console.error('Connection closed:', error);
             });
 
-            connection.on("ReceiveDirectMessage", function (user, inMsg) {
-                console.log("New message:");
-                console.log(`${user}: ${inMsg}`)
-                setMessages([...messages, {                        
-                    position: 'left',
-                    type: 'text',
-                    text: inMsg,
-                    date: new Date(),
-                }])
-                console.log(`Messages updated from receiving:`);
-                console.log(messages);
+            // connection.on("ReceiveDirectMessage", function (user, inMsg) {
+            //     console.log("New message:");
+            //     console.log(`${user}: ${inMsg}`)
+            //     setMessages([...messages, {                        
+            //         position: 'left',
+            //         type: 'text',
+            //         text: inMsg,
+            //         date: new Date(),
+            //     }])
+            //     console.log(`Messages updated from receiving:`);
+            //     console.log(messages);
 
-            });
-
+            // });
 
             try {
                 console.log("Attempting to start connection");
@@ -143,7 +165,22 @@ function Messaging() {
             };
         };
         connectToHub();
-    }, [messages])
+    }, [])
+
+    useEffect(() => {
+        if (signalRConnection) {
+            signalRConnection.on("ReceiveDirectMessage", function (user, inMsg) {
+                // console.log("New message:");
+                // console.log(`${user}: ${inMsg}`)
+                setMessages([...messages, {                        
+                    position: 'left',
+                    type: 'text',
+                    text: `${user}: ${inMsg}`,
+                    date: new Date(),
+                }])
+            });
+        }
+    }, [messages]);
 
     return (
         <div className="flex w-full">
@@ -155,12 +192,13 @@ function Messaging() {
 
                 {chatListOpened && <div>
 
-                    <ChatList
-                        className='chat-list'
+                    <StyledChatList
+                        className='outline outline-2 outline-green-500 p-2 bg-[#4ba173]'
                         onClick={handleChatListClick}
                         dataSource={[ // TODO: hardcoded for now, query backend for users then fill in
                             // the json array items with user data - will jan 28
                             {
+                                avatar: 'https://github.com/github.png',
                                 alt: 'Reactjs',
                                 title: 'Son Goku',
                                 subtitle: '',
@@ -168,7 +206,7 @@ function Messaging() {
                                 unread: 0,
                             },
                             {
-                                avatar: 'https://facebook.github.io/react/img/logo.svg',
+                                avatar: 'https://github.com/github.png',
                                 alt: 'Reactjs',
                                 title: 'Ma Junior',
                                 subtitle: '',
@@ -176,7 +214,7 @@ function Messaging() {
                                 unread: 0,
                             },
                             {
-                                avatar: 'https://facebook.github.io/react/img/logo.svg',
+                                avatar: 'https://github.com/github.png',
                                 alt: 'Reactjs',
                                 title: 'Alysha Chan',
                                 subtitle: "",
@@ -192,19 +230,20 @@ function Messaging() {
 
 
             </div>
-            {convoOpened && chatListOpened && <div className="fixed w-128 flex-none bottom-4 right-4 outline outline-2 outline-green-500 p-4 bg-green-400">
+            {convoOpened && chatListOpened && <div className="fixed w-128 flex-none bottom-4 right-4 outline outline-2 outline-green-500 p-2 bg-[#4ba173] max-h-[500px] items-center">
+            <h2 className="text-lg font-bold">User placeholder</h2>
                 <div className="w-80 flex-none bg-white">
                     
                     <MessageList
                         referance={messageListReference}
-                        className='message-list'
-                        lockable={true}
-                        toBottomHeight={'100%'}
+                        className='outline outline-2 outline-green-500 items-end h-[500px] max-h-[300px] overflow-y-scroll '
+                        // lockable={true}
+                        // toBottomHeight={'100%'}
                         dataSource={messages} 
                     />
 
-                    <Input
-                        className="input"
+                    <StyledInput
+                        className=""
                         referance={inputReference}
                         clear={inputClear}
                         placeholder='Type here...'
@@ -212,12 +251,12 @@ function Messaging() {
                         autoHeight={false}
                         minHeight={2}
                         maxHeight={10}
-                        style="message-input"
+                        style="h-20"
                         rightButtons={
                             <Button 
                                 onClick={handleMessageSubmit}
                                 color='white'
-                                backgroundColor='black' 
+                                backgroundColor='#4ba173' 
                                 text='Send' />}
                     />
                 </div>
