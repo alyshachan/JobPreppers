@@ -197,6 +197,43 @@ namespace JobPreppersProto.Controllers
             }
         }
 
+        [HttpPost("AddUserDetails")]
+        public async Task<IActionResult> AddUserDetails([FromBody] DetailsRequest request)
+        {
+            if (request == null ||
+            request.userID == 0)
+            {
+                return BadRequest("UserID is invalid.");
+            }
+
+            try
+            {
+                //check if user already exits
+                var user = await _context.Users.FirstOrDefaultAsync(s => s.userID == request.userID);
+                //if not create user and add to user table
+                if (user == null)
+                {
+                    return NotFound("User not found");
+                }
+                else
+                {
+                    user.title = request.title;
+                    user.location = request.location;
+                    await _context.SaveChangesAsync();
+                }
+                return Ok(new
+                {
+                    Message = "User details updated",
+                    User = user
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
         // Define the request model
         public class LoginRequest
@@ -214,6 +251,11 @@ namespace JobPreppersProto.Controllers
             public string Password { get; set; }
         }
 
+        public class DetailsRequest{
+            public int userID {get; set;}
+            public string title {get; set;}
+            public string location {get; set;}
+        }
 
     }
 }

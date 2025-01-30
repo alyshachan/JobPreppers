@@ -164,11 +164,9 @@ function Profile() {
             <p className={styles.name}>
               {user.first_name} {user.last_name}
             </p>
-            <p>Computer Science Student at the University of Utah</p>
+            <p>{user.title}</p>
             <p className="subtitle">
-              Salt Lake City, UT
-              <br />
-              United States
+              {user.location}
             </p>
 
             <div className={styles.actionButtons}>
