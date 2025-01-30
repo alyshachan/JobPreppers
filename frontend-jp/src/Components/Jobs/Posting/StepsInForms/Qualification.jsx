@@ -1,16 +1,75 @@
-import { Slider, FormGroup, FormControlLabel, Checkbox } from "@mui/material";
-import { useState } from "react";
+import {
+  Slider,
+  FormGroup,
+  TextField,
+  FormControlLabel,
+  Autocomplete,
+  Checkbox,
+  Input,
+  InputLabel,
+} from "@mui/material";
+import { useState, useEffect } from "react";
 import AutoCompleteForm from "../Helper/AutoCompleteForm";
-import { useFormContext } from "react-hook-form";
-
+import { useFormContext, Controller } from "react-hook-form";
+import { Label } from "@headlessui/react";
+import ToggleButtonForm from "../Helper/ToggleButtonForm";
 export default function Qualification() {
-  const [value, setValue] = useState([0, 2]);
-
-  const [educationLevel, setEducationLevel] = useState("");
+  const [skills, setSkills] = useState([
+    "Communication",
+    "Leadership",
+    "Team-Management",
+  ]);
+  const [inputValue, setInputValue] = useState("");
+  const [value, setValue] = useState("");
+  let tokenTimeExpiration = null;
+  let accessToken = null;
+  const [data, setData] = useState("");
 
   const [experienceLabel, setExperienceLevel] = useState("Entry Level");
 
   const handleExperienceLabel = () => {};
+  useEffect(() => {
+    console.log("Skills updated:", skills); // Logs when skills are updated
+  }, [skills]);
+
+  const fetchToken = async () => {
+    try {
+      if (accessToken && tokenTimeExpiration > Date.now()) {
+        return accessToken;
+      } else {
+        const response = await fetch("http://localhost:8000/get-token");
+        const data = await response.json();
+        tokenTimeExpiration = Date.now() + 3600 * 1000;
+        accessToken = data.access_token;
+        return data.access_token;
+      }
+    } catch (error) {
+      console.error("Error fetching token:", error);
+      return null;
+    }
+  };
+
+  const fetchSkills = async (query) => {
+    try {
+      const token = await fetchToken();
+      if (token) {
+        const skillResponse = await fetch(
+          `https://emsiservices.com/skills/versions/latest/skills?q=${query}&typeIds=ST1%2CST2&fields=id%2Cname%2Ctype%2CinfoUrl&limit=5`,
+          {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const response = await skillResponse.json();
+        const skillList = response.data.map((option) => ({
+          label: option.name,
+        }));
+        setSkills(skillList);
+      }
+    } catch (error) {
+      console.log("GetSkills Error: ", error);
+    }
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -45,39 +104,95 @@ export default function Qualification() {
 
   return (
     <>
+      <h2>Number of Years of Education</h2>
       <AutoCompleteForm
         name="educationOption"
         label="Education Level"
         options={educationOptions}
         control={control}
       />
-      {/* <Autocomplete
-        options={educationOptions}
-        renderInput={(params) => (
-          <TextField {...params} label="Education Level" />
-        )}
-      ></Autocomplete> */}
 
       <div>
-        <label>
-          Number of Years of Experience You Are Looking For: {experienceLabel}
-        </label>
-        <Slider
-          value={value}
-          onChange={handleChange}
-          valueLabelDisplay="auto"
-          max={10}
+        <h2>What is the Number of Years of Experience Necessary:</h2>
+
+        {/* <Controller
+          control={control}
+          name="experienceLevel"
+          defaultValue={[0, 2]}
+          render={({ field }) => (
+            <Slider
+              {...field}
+              value={field.value || [0, 2]}
+              onChange={(_, value) => {
+                field.onChange(value);
+              }}
+              valueLabelDisplay="auto"
+              max={10}
+            />
+          )} 
+        /> */}
+        <InputLabel htmlFor="experienceStartingRange">
+          Starting Range *
+        </InputLabel>
+        <Input
+          id="experienceStartingRange"
+          type="number"
+          {...register("experienceStart")}
+        ></Input>
+        <InputLabel htmlFor="experienceEnding" {...register("experienceEnd")}>
+          Ending Range
+        </InputLabel>
+        <Input id="experienceEnding" type="number"></Input>
+      </div>
+
+      <div>
+        <h2>What skills are you looking for?</h2>
+        <Controller
+          control={control}
+          name="skills"
+          render={({ field }) => (
+            <Autocomplete
+              {...field}
+              multiple
+              options={skills}
+              value={field.value || []}
+              onChange={(_, value) => field.onChange(value)}
+              getOptionLabel={(option) => option.label || ""} // Adjust based on API response
+              onInputChange={(event, newInputValue) => {
+                if (newInputValue.length > 1) {
+                  fetchSkills(newInputValue);
+                }
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Search Skills" />
+              )}
+            />
+          )}
         />
       </div>
       <h2>Ask these Question to the Applicant</h2>
       <FormGroup>
-        <FormControlLabel
-          control={<Checkbox />}
-          label="Will you require a work visa or sponsorship now or later in the future?"
+        <Controller
+          name="workVisaRequired"
+          defaultValue={false}
+          control={control}
+          render={({ field }) => (
+            <FormControlLabel
+              control={<Checkbox {...field} checked={field.value} />}
+              label="Will you require a work visa or sponsorship now or later in the future?"
+            />
+          )}
         />
-        <FormControlLabel
-          control={<Checkbox />}
-          label="Are you legally Authorized to work in the USA"
+        <Controller
+          name="authorizedToWork"
+          defaultValue={false}
+          control={control}
+          render={({ field }) => (
+            <FormControlLabel
+              control={<Checkbox {...field} checked={field.value} />}
+              label="Are you legally Authorized to work in the USA"
+            />
+          )}
         />
       </FormGroup>
     </>

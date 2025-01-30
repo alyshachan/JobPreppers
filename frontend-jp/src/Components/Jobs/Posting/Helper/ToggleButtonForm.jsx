@@ -1,7 +1,7 @@
 import React from "react";
 import { Controller } from "react-hook-form";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-const toggleButtonForm = ({ name, control, options }) => {
+const toggleButtonForm = ({ name, control, options, exclusive }) => {
   return (
     <Controller
       name={name}
@@ -9,6 +9,7 @@ const toggleButtonForm = ({ name, control, options }) => {
       render={({ field }) => (
         <ToggleButtonGroup
           value={field.value}
+          exclusive={exclusive}
           {...field}
           onChange={(_, value) => field.onChange(value)}
         >

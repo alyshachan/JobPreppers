@@ -38,6 +38,10 @@ export default function AddJobForm() {
   const handleClose = () => {
     setOpen(false);
   };
+  const {
+    handleSubmit,
+    formState: { error, isSubmitting },
+  } = jobForm;
 
   const [activeStep, setActiveStep] = useState(0);
   const steps = [
@@ -46,6 +50,22 @@ export default function AddJobForm() {
     "Qualification for Position",
     "Application Process",
   ];
+
+  const lastStep = activeStep === steps.length - 1;
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const onSubmit = (data, e) => {
+    console.log("Form Data Submitted: ", data);
+
+    setActiveStep(0);
+    handleClose();
+  };
 
   const pageDisplay = () => {
     switch (activeStep) {
@@ -70,25 +90,19 @@ export default function AddJobForm() {
         );
       case 3:
         return (
-          <FormProvider {...jobForm}>
-            <ApplicationProcess formData={formData} setFormData={setFormData} />
-            ;
+          <FormProvider {...jobForm} onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              {" "}
+              {/* Wrap in form and use handleSubmit */}
+              <ApplicationProcess
+                formData={formData}
+                setFormData={setFormData}
+              />
+              <button type="submit">Submit</button>
+            </form>
           </FormProvider>
         );
     }
-  };
-  const lastStep = activeStep === steps.length - 1;
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleSubmit = () => {
-    setActiveStep(0);
-    handleClose();
   };
 
   return (
@@ -132,9 +146,9 @@ export default function AddJobForm() {
                 >
                   Back
                 </button>
-                <Button type="submit" onClick={handleSubmit}>
+                {/* <Button disabled={isSubmitting} type="submit">
                   Submit
-                </Button>
+                </Button> */}
               </footer>
             </Fragment>
           ) : (

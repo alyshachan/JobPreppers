@@ -28,7 +28,7 @@ export default function Benefits() {
     "Pet Insurance",
     "Relocation Location",
   ];
-
+  const payOption = ["Pay Range", "Exact Amount", "Unpaid"];
   const perks = [
     "Career Development",
     "Learning Stipend",
@@ -41,12 +41,12 @@ export default function Benefits() {
     register,
     handleSubmit,
     setValue,
-    getValues,
+    watch,
     control,
     resetField,
     formState: { errors },
   } = jobForm;
-  const payType = getValues("payType");
+  const payType = watch("payType");
 
   const [currencies, setCurrencies] = useState([]);
 
@@ -78,31 +78,19 @@ export default function Benefits() {
       resetField("currencies");
     }
   }, [payType]);
-  const handleResetForm = (fieldName) => {
-    resetField(fieldName);
-  };
+
   // Step 2
   return (
     <>
       <FormControl>
         <h2>Expected Pay</h2>
         <div className="ExpectedPayType">
-          <Controller
+          <ToggleButtonForm
             name="payType"
             control={control}
-            render={({ field }) => (
-              <ToggleButtonGroup
-                exclusive
-                value={field.value}
-                {...field}
-                onChange={(_, value) => field.onChange(value)}
-              >
-                <ToggleButton value="Pay Range">Pay Range</ToggleButton>
-                <ToggleButton value="Exact Amount">Exact Amount</ToggleButton>
-                <ToggleButton value="Unpaid">Unpaid</ToggleButton>
-              </ToggleButtonGroup>
-            )}
-          />
+            options={payOption}
+            exclusive={true}
+          ></ToggleButtonForm>
         </div>
         {payType === "Pay Range" ? (
           <Fragment>
@@ -162,17 +150,28 @@ export default function Benefits() {
           </Fragment>
         ) : null}
         <h2>Bonus</h2>
-        <ToggleButtonForm name="Bonuses" control={control} options={bonuses} />
+        <ToggleButtonForm
+          name="Bonuses"
+          control={control}
+          options={bonuses}
+          exclusive={false}
+        />
 
         <h2>Benfits</h2>
         <ToggleButtonForm
           name="Benefits"
           control={control}
           options={benefits}
+          exclusive={false}
         />
 
         <h2>Perks</h2>
-        <ToggleButtonForm name="Perks" control={control} options={perks} />
+        <ToggleButtonForm
+          name="Perks"
+          control={control}
+          options={perks}
+          exclusive={false}
+        />
       </FormControl>
     </>
   );

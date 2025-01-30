@@ -7,53 +7,92 @@ import {
   Checkbox,
   ToggleButtonGroup,
   ToggleButton,
+  Input,
+  InputLabel,
+  Button,
 } from "@mui/material";
-import { useState } from "react";
-export default function ApplicationProcess() {
-  const [applyMethod, setApplyMethod] = useState("");
+import { Fragment, useEffect, useState } from "react";
+import { Controller, useFormContext } from "react-hook-form";
+import ToggleButtonForm from "../Helper/ToggleButtonForm";
 
-  const handleChange = (event, newApplyMethod) => {
-    setApplyMethod(newApplyMethod);
-  };
+export default function ApplicationProcess() {
+  const jobForm = useFormContext();
+  const {
+    register,
+    handleSubmit,
+    control,
+    resetField,
+    watch,
+    getValues,
+    formState: { errors },
+  } = jobForm;
+  const applyList = ["External Apply", "Easy Apply"];
+  const applyMethod = watch("applyOptions");
+
+  useEffect(() => {
+    if (applyMethod == "Easy Apply") {
+      resetField("applicationLink");
+    }
+  }, [applyMethod]);
+  const requiredDocuments = [
+    "Resume",
+    "Cover-Letter",
+    "Transcipt",
+    "Job Prepper Profile",
+  ];
 
   return (
     <>
       <div>
         <h2>Posting Date</h2>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker label="Post Day" />
+          <Controller
+            name="postDay"
+            control={control}
+            render={({ field }) => <DatePicker {...field} label="Post Day" />}
+          />
         </LocalizationProvider>
-
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker label="Close Post Day" />
+          <Controller
+            name="closeDay"
+            control={control}
+            render={({ field }) => <DatePicker {...field} label="Close Day" />}
+          />
         </LocalizationProvider>
       </div>
-      <label for="hires">Number of Hires: </label>
-      <input id="hires" type="number"></input>
-      <box>
-        <ToggleButtonGroup
-          value={applyMethod}
-          exclusive
-          onChange={handleChange}
-        >
-          <ToggleButton value="External Apply">External Apply</ToggleButton>
-          <ToggleButton value="Easy Apply">Easy Apply</ToggleButton>
-        </ToggleButtonGroup>
-      </box>
+      <InputLabel htmlFor="hires">Number of Hires: </InputLabel>
+      <Input id="hires" type="number" {...register("numberOfHires")}></Input>
       <div>
-        <h2>Required Documents</h2>
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox defaultChecked />}
-            label="Resume"
-          />
-          <FormControlLabel control={<Checkbox />} label="Cover-Letter" />
-          <FormControlLabel control={<Checkbox />} label="Transcript" />
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Job Prepper Profile"
-          />
-        </FormGroup>
+        <ToggleButtonForm
+          name="applyOptions"
+          control={control}
+          options={applyList}
+          exclusive={true}
+        ></ToggleButtonForm>
+
+        {applyMethod == "External Apply" ? (
+          <Fragment>
+            <div>
+              <InputLabel htmlFor="applyLink"> Enter External Link</InputLabel>
+              <Input
+                idlabel="applyLink"
+                type="url"
+                {...register("applicationLink")}
+              ></Input>
+            </div>
+          </Fragment>
+        ) : applyMethod == "Easy Apply" ? (
+          <Fragment>
+            <h2>Required Documents</h2>
+
+            <ToggleButtonForm
+              name="requiredDocuments"
+              control={control}
+              options={requiredDocuments}
+              exclusive={true}
+            ></ToggleButtonForm>
+          </Fragment>
+        ) : null}
       </div>
     </>
   );
