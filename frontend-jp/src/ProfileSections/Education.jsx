@@ -94,7 +94,9 @@ function Education() {
                 <div className={styles.sectionPictureContent}>
                   <p className="title">{education.school_name}</p>
                   <p className="subtitle">
-                    {education.degree_name}, {education.study_name}
+                    {education.degree_name}
+                    {(!education.degreeName || !education.studyName) ? "" : ", "}
+                    {education.study_name}
                   </p>
                   <p className="subtitle">
                     {education.start_date || education.end_date
