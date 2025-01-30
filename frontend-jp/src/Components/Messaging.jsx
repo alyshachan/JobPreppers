@@ -113,6 +113,11 @@ function Messaging() {
         }
 
     }
+
+    const handleMessageListClose = (e) => {
+        e.preventDefault();
+        setConvoOpened(false);
+    }
     
     /* 
     CHAT SERVER CONNECTION
@@ -231,7 +236,17 @@ function Messaging() {
 
             </div>
             {convoOpened && chatListOpened && <div className="fixed w-128 flex-none bottom-4 right-4 outline outline-2 outline-green-500 p-2 bg-[#4ba173] max-h-[500px] items-center">
-            <h2 className="text-lg font-bold">User placeholder</h2>
+            {/* <h2 className="text-lg font-bold">User placeholder</h2> */}
+            {/* <div className="w-16 right-10 bg-red-400"> X </div>
+             */}
+             <Button 
+                className="ml-auto mt-[-3px] w-7 h-7"
+                text={'X'}
+                backgroundColor="#f55b5b"
+                onClick={handleMessageListClose}/>
+
+
+
                 <div className="w-80 flex-none bg-white">
                     
                     <MessageList
@@ -257,7 +272,8 @@ function Messaging() {
                                 onClick={handleMessageSubmit}
                                 color='white'
                                 backgroundColor='#4ba173' 
-                                text='Send' />}
+                                text='Send' />
+                            }
                     />
                 </div>
             </div>}
