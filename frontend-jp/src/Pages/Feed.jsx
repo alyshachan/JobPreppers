@@ -1,10 +1,10 @@
-import AddExperienceDialog from "../Components/Profile/AddExperienceDialog"
+import AddProjectDialog from "../Components/Profile/AddProjectDialog"
 
 function Feed(){
     return(
         <>
         <h1>Feed</h1>
-        <AddExperienceDialog open={true}/>
+        <AddProjectDialog open={true}/>
         </>
     )
 }

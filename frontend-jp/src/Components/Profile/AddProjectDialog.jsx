@@ -11,13 +11,10 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { styled } from "@mui/material/styles";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
-import moment from "moment";
 import styles from "./AddSectionDialog.module.css";
 import "../JobPreppers.css";
 import { useAuth } from "../../provider/authProvider";
-import WorkIcon from '@mui/icons-material/Work';
-import BusinessIcon from '@mui/icons-material/Business';
-import PlaceIcon from '@mui/icons-material/Place';
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
 
 import SectionHeader from "./SectionHeader";
 
@@ -32,39 +29,24 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddExperienceDialog({
-  open,
-  onClose,
-}) {
+function AddProjectDialog({ open, onClose }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
-  const[work, setWork] = useState("")
-  const[location, setLocation] = useState("")
-  const[title, setTitle] = useState("")
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
-    const start = startDate.toDateString === new Date().toDateString ? null : moment(startDate).format('YYYY-MM-DD');
-    const end = endDate.toDateString === new Date().toDateString ? null : moment(endDate).format('YYYY-MM-DD');
-  
-
     try {
       const response = await fetch(
-        "http://localhost:5000/api/UserExperience/CreateExperience",
+        "http://localhost:5000/api/UserProject/CreateProject",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            userID : user.userID,
-            workName: work,
-            location: location,
-            jobTitle : title,
-            start_date: start,
-            end_date: end,
+            userID: user.userID,
+            projectTitle: title,
             description: description,
           }),
         }
@@ -88,7 +70,7 @@ function AddExperienceDialog({
   return (
     <StyledDialog onClose={onClose} open={open}>
       <DialogTitle className={styles.dialogTitle}>
-        <SectionHeader header="Add Experience" />
+        <SectionHeader header="Add Project" />
       </DialogTitle>
 
       <IconButton
@@ -103,12 +85,12 @@ function AddExperienceDialog({
         <form onSubmit={handleSubmit}>
           <div className={styles.dialogContent}>
             <div className={styles.dialogContentLeft}>
-            <div className={styles.input}>
-                <WorkIcon className={styles.icon} />
+              <div className={styles.input}>
+                <LightbulbIcon className={styles.icon} />
                 <div className={styles.inputField}>
-                  <label for="title">Job Title</label>
+                  <label for="title">Project Title</label>
                   <TextField
-                    placeholder="e.g. Software Engineer"
+                    placeholder="e.g. Chatbot"
                     className="w-full"
                     id="title"
                     value={title}
@@ -118,65 +100,12 @@ function AddExperienceDialog({
               </div>
 
               <div className={styles.input}>
-                <BusinessIcon className={styles.icon} />
-                <div className={styles.inputField}>
-                  <label for="work" className={styles.required}>
-                    Company
-                  </label>
-                  <TextField
-                    required
-                    placeholder="e.g. Google"
-                    className="w-full"
-                    id="work"
-                    value={work}
-                    onChange={(e) => setWork(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.input}>
-                <PlaceIcon className={styles.icon} />
-                <div className={styles.inputField}>
-                  <label for="location">Location</label>
-                  <TextField
-                    placeholder="e.g. Los Angeles, California"
-                    className="w-full"
-                    id="location"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.dialogContentRight}>
-              {/* Right-side content */}
-              <div className={styles.input}>
-                <CalendarTodayIcon className={styles.icon} />
-                <div className={styles.inputField}>
-                  <label for="start">Start Date</label>
-                  <TextField
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value || null)}
-                  />
-                </div>
-                <div className={styles.inputField}>
-                  <label for="end">End Date</label>
-                  <TextField
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value || null)}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.input}>
                 <EditNoteIcon className={`${styles.icon} mt-[-100px]`} />
                 <div className={styles.inputField}>
                   <label for="description">Description</label>
                   <TextareaAutosize
-                    placeholder="Enter skills, accomplishments, achievements"
+                    placeholder="Enter details, skills, awards"
+                    id="description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
@@ -185,7 +114,7 @@ function AddExperienceDialog({
             </div>
           </div>
           <DialogActions>
-            <button type="submit">Add Experience</button>
+            <button type="submit">Add Project</button>
           </DialogActions>
         </form>
       </DialogContent>
@@ -193,4 +122,4 @@ function AddExperienceDialog({
   );
 }
 
-export default AddExperienceDialog;
+export default AddProjectDialog;

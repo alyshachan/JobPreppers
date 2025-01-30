@@ -15,7 +15,6 @@ import moment from "moment";
 import styles from "./AddSectionDialog.module.css";
 import "../JobPreppers.css";
 import { useAuth } from "../../provider/authProvider";
-import { useNavigate } from "react-router-dom";
 import SchoolIcon from "@mui/icons-material/School";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
@@ -42,7 +41,6 @@ function AddEducationDialog({ open, onClose }) {
   const [endDate, setEndDate] = useState(new Date());
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -77,7 +75,7 @@ function AddEducationDialog({ open, onClose }) {
       if (response.ok) {
         const data = await response.json();
         onClose();
-        navigate("/EditProfile");
+        window.location.reload();
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();
