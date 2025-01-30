@@ -4,9 +4,21 @@ import EditIcon from "@mui/icons-material/Edit";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import "../Components/JobPreppers.css";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import {useState } from "react";
 
 import { IconButton } from "@mui/material";
+import AddEducationDialog from "../Components/Profile/AddEducationDialog";
 function EducationSection({ educationDict, edit }) {
+  const [openEducationDialog, setOpenEducationDialog] = useState(false);
+
+  const handleOpenEducationDialog = () => {
+    setOpenEducationDialog(true);
+  };
+
+  const handleCloseEducationDialog = () => {
+    setOpenEducationDialog(false);
+  };
+
   const displayedItems =
     edit == true ? educationDict : educationDict.slice(0, 2);
   const hasMoreItems = Object.keys(educationDict).length > 2;
@@ -27,7 +39,11 @@ function EducationSection({ educationDict, edit }) {
 
   return (
     <>
-      <SectionHeader header={"Education"} edit={edit} />
+      <SectionHeader header={"Education"} edit={edit} onAdd={handleOpenEducationDialog}/>
+      <AddEducationDialog
+        open={openEducationDialog}
+        onClose={handleCloseEducationDialog}
+      />
 
       <div className={styles.sectionContent}>
         {displayedItems.map((education, index) => (
@@ -42,7 +58,7 @@ function EducationSection({ educationDict, edit }) {
                 <p className="title">{education.school_name}</p>
                 <p className="subtitle">
                   {education.degree_name}
-                  {(!education.degree_name || !education.study_name) ? "" : ", "}
+                  {!education.degree_name || !education.study_name ? "" : ", "}
                   {education.study_name}
                 </p>
                 <p className="subtitle">

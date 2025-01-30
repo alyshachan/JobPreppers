@@ -18,6 +18,10 @@ import moment from "moment";
 import styles from "./AddSectionDialog.module.css";
 import "../JobPreppers.css";
 import { useAuth } from "../../provider/authProvider";
+import {useNavigate } from "react-router-dom";
+import SchoolIcon from '@mui/icons-material/School';
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 import SectionHeader from "./SectionHeader";
 
@@ -35,8 +39,6 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 function AddEducationDialog({
   open,
   onClose,
-  onCreateEducation,
-  selectedDate,
 }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [school, setSchool] = useState("");
@@ -46,12 +48,13 @@ function AddEducationDialog({
   const [endDate, setEndDate] = useState(new Date());
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
-    const start = startDate.toDateString == new Date().toDateString ? null : moment(startDate).format('YYYY-MM-DD');
-    const end = endDate.toDateString == new Date().toDateString ? null : moment(endDate).format('YYYY-MM-DD');
+    const start = startDate.toDateString === new Date().toDateString ? null : moment(startDate).format('YYYY-MM-DD');
+    const end = endDate.toDateString === new Date().toDateString ? null : moment(endDate).format('YYYY-MM-DD');
   
 
     try {
@@ -74,14 +77,12 @@ function AddEducationDialog({
 
       if (response.ok) {
         const data = await response.json();
-        open = false;
-        window.alert("IT WORKED:" + data.message);
-        window.alert("user: " + user.userID + "school: " + school + " degree: " + degree + " study: " + study + " start: " + start + " end: " + end);
+        onClose();
+        navigate("/EditProfile");
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();
-        window.alert("IT FAILED WOMP WOMP:" + errorData.message);
-        window.alert("user: " + user.userID + "school: " + school + " degree: " + degree + " study: " + study + " start: " + start + " end: " + end);
+        window.alert("Your input has invalid characters, please try again.");
         setError(errorData.message); // Show error message from the backend
       }
     } catch (err) {
@@ -108,7 +109,7 @@ function AddEducationDialog({
           <div className={styles.dialogContent}>
             <div className={styles.dialogContentLeft}>
               <div className={styles.input}>
-                <TitleIcon className={styles.icon} />
+                <SchoolIcon className={styles.icon} />
                 <div className={styles.inputField}>
                   <label for="school" className={styles.required}>
                     School
@@ -125,7 +126,7 @@ function AddEducationDialog({
               </div>
 
               <div className={styles.input}>
-                <CalendarTodayIcon className={styles.icon} />
+                <HistoryEduIcon className={styles.icon} />
                 <div className={styles.inputField}>
                   <label for="degree">Degree</label>
                   <TextField
@@ -139,7 +140,7 @@ function AddEducationDialog({
               </div>
 
               <div className={styles.input}>
-                <CalendarTodayIcon className={styles.icon} />
+                <MenuBookIcon className={styles.icon} />
                 <div className={styles.inputField}>
                   <label for="study">Field of Study</label>
                   <TextField
@@ -156,7 +157,7 @@ function AddEducationDialog({
             <div className={styles.dialogContentRight}>
               {/* Right-side content */}
               <div className={styles.input}>
-                <AccessTimeOutlinedIcon className={styles.icon} />
+                <CalendarTodayIcon className={styles.icon} />
                 <div className={styles.inputField}>
                   <label for="start">Start Date</label>
                   <TextField
