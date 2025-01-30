@@ -95,7 +95,7 @@ function Education() {
                   <p className="title">{education.school_name}</p>
                   <p className="subtitle">
                     {education.degree_name}
-                    {(!education.degreeName || !education.studyName) ? "" : ", "}
+                    {(!education.degree_name || !education.study_name) ? "" : ", "}
                     {education.study_name}
                   </p>
                   <p className="subtitle">
