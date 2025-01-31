@@ -1,17 +1,8 @@
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import {
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  ToggleButtonGroup,
-  ToggleButton,
-  Input,
-  InputLabel,
-  Button,
-} from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
+import { Input, InputLabel } from "@mui/material";
+import { Fragment, useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import ToggleButtonForm from "../Helper/ToggleButtonForm";
 
@@ -19,11 +10,9 @@ export default function ApplicationProcess() {
   const jobForm = useFormContext();
   const {
     register,
-    handleSubmit,
     control,
     resetField,
     watch,
-    getValues,
     formState: { errors },
   } = jobForm;
   const applyList = ["External Apply", "Easy Apply"];
@@ -47,16 +36,18 @@ export default function ApplicationProcess() {
         <h2>Posting Date</h2>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Controller
-            name="postDay"
+            name="postDate"
             control={control}
             render={({ field }) => <DatePicker {...field} label="Post Day" />}
           />
         </LocalizationProvider>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Controller
-            name="closeDay"
+            name="applyByDate"
             control={control}
-            render={({ field }) => <DatePicker {...field} label="Close Day" />}
+            render={({ field }) => (
+              <DatePicker {...field} label="Apply By Day" />
+            )}
           />
         </LocalizationProvider>
       </div>

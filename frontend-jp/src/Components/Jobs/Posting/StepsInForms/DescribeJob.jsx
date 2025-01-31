@@ -49,7 +49,7 @@ export default function DescribeJob({ formData, setFormData }) {
         <TextField {...register("jobTitle")} label="Job Title" />
         <AutoCompleteForm
           control={control}
-          name="employmentTypeController"
+          name="employmentType"
           options={employementTypeOptions}
           label="Employment Type"
         />

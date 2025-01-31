@@ -1,14 +1,6 @@
-import {
-  ToggleButton,
-  ToggleButtonGroup,
-  FormControl,
-  Box,
-  Autocomplete,
-  TextField,
-  useFormControl,
-} from "@mui/material";
+import { FormControl, Box, TextField } from "@mui/material";
 import { useState, Fragment, useEffect } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import AutoCompleteForm from "../Helper/AutoCompleteForm";
 import ToggleButtonForm from "../Helper/ToggleButtonForm";
 
@@ -39,7 +31,6 @@ export default function Benefits() {
   const jobForm = useFormContext();
   const {
     register,
-    handleSubmit,
     setValue,
     watch,
     control,
@@ -65,15 +56,11 @@ export default function Benefits() {
   useEffect(() => {
     // Reset fields when payType changes
     if (payType !== "Pay Range") {
-      resetField("endingAmount");
-    }
-
-    if (payType !== "Unpaid") {
-      resetField("amount");
+      resetField("maximumSalary");
     }
 
     if (payType === "Unpaid") {
-      setValue("amount", 0);
+      setValue("minimumSalary", 0);
       resetField("rate");
       resetField("currencies");
     }
@@ -103,14 +90,14 @@ export default function Benefits() {
               />
 
               <TextField
-                {...register("amount")}
+                {...register("minimumSalary")}
                 type="number"
-                label="Starting Range"
+                label="Starting Pay"
               />
               <TextField
-                {...register("endingAmount")}
+                {...register("maximumSalary")}
                 type="number"
-                label="Ending Range"
+                label="Maximum Pay"
               />
 
               <AutoCompleteForm
@@ -131,9 +118,9 @@ export default function Benefits() {
                 label="Rate"
               />
               <TextField
-                {...register("amount")}
+                {...register("minimumSalary")}
                 type="number"
-                label="Pay Amount"
+                label="Starting Salary"
               />
 
               <AutoCompleteForm

@@ -1,5 +1,4 @@
 import {
-  Slider,
   FormGroup,
   TextField,
   FormControlLabel,
@@ -11,8 +10,7 @@ import {
 import { useState, useEffect } from "react";
 import AutoCompleteForm from "../Helper/AutoCompleteForm";
 import { useFormContext, Controller } from "react-hook-form";
-import { Label } from "@headlessui/react";
-import ToggleButtonForm from "../Helper/ToggleButtonForm";
+
 export default function Qualification() {
   const [skills, setSkills] = useState([
     "Communication",
@@ -23,7 +21,6 @@ export default function Qualification() {
   const [value, setValue] = useState("");
   let tokenTimeExpiration = null;
   let accessToken = null;
-  const [data, setData] = useState("");
 
   const [experienceLabel, setExperienceLevel] = useState("Entry Level");
 
@@ -106,7 +103,7 @@ export default function Qualification() {
     <>
       <h2>Number of Years of Education</h2>
       <AutoCompleteForm
-        name="educationOption"
+        name="education"
         label="Education Level"
         options={educationOptions}
         control={control}
@@ -137,9 +134,12 @@ export default function Qualification() {
         <Input
           id="experienceStartingRange"
           type="number"
-          {...register("experienceStart")}
+          {...register("minimumExperience")}
         ></Input>
-        <InputLabel htmlFor="experienceEnding" {...register("experienceEnd")}>
+        <InputLabel
+          htmlFor="experienceEnding"
+          {...register("maximumExperience")}
+        >
           Ending Range
         </InputLabel>
         <Input id="experienceEnding" type="number"></Input>

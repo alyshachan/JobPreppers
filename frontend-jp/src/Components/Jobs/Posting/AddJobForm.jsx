@@ -60,7 +60,29 @@ export default function AddJobForm() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const onSubmit = (data, e) => {
+  const onSubmit = async (data, e) => {
+    // try {
+    //   const response = fetch("http://localhost:5000/api/job/post", {
+    //     method: "POST",
+    //     header: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(data),
+    //     credentials: "include",
+    //   });
+
+    //   if (response.ok) {
+    //     const response = await response.json();
+    //     console.log("Data: ", { data });
+    //   } else {
+    //     const errorData = await response.json();
+    //     console.log("Error: ", { errorData });
+
+    //     // setError(errorData.message); // Show error message from the backend
+    //   }
+    // } catch (err) {
+    //   console.log("Catch Error");
+      // Maybe put an alert
+      // setError("An error occurred. Please try again."); // Catch and display any request error
+    }
     console.log("Form Data Submitted: ", data);
 
     setActiveStep(0);
