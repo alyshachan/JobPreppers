@@ -103,13 +103,13 @@ function Messaging() {
         // TODO: VERY stupid hard coded crap
         // change this to retrieve userID's some other way - will jan 28
 
-        if (chatListItem.title == "Son Goku") {
-            console.log("Now conversing with userID 1")
-            setReceiverID(1);
+        if (chatListItem.title == "Alexander Lex") {
+            console.log("Now conversing with userID 32")
+            setReceiverID(32);
         }
-        else if (chatListItem.title == "Ma Junior") {
-            console.log("Now conversing with userID 2")
-            setReceiverID(2);
+        else if (chatListItem.title == "Justin Ellis") {
+            console.log("Now conversing with userID 33")
+            setReceiverID(33);
         }
         else if (chatListItem.title == "Alysha Chan") {
             console.log("Now conversing with userID 5")
@@ -196,7 +196,7 @@ function Messaging() {
                             {
                                 avatar: 'https://github.com/github.png',
                                 alt: 'Reactjs',
-                                title: 'Son Goku',
+                                title: 'Alexander Lex',
                                 subtitle: '',
                                 date: null,
                                 unread: 0,
@@ -204,7 +204,7 @@ function Messaging() {
                             {
                                 avatar: 'https://github.com/github.png',
                                 alt: 'Reactjs',
-                                title: 'Ma Junior',
+                                title: 'Justin Ellis',
                                 subtitle: '',
                                 date: null,
                                 unread: 0,

@@ -48,7 +48,7 @@ export const ConnectionProvider = ({ children }) => {
         console.log("Attempting to connect to /DirectMessageHub");
         if (!signalRConnection) {
             const connection = new signalR.HubConnectionBuilder()
-                .withUrl("https://localhost:5691/directMessageHub", {
+                .withUrl("http://localhost:5690/directMessageHub", {
                     accessTokenFactory: () => document.cookie.split('authToken=')[1] || '',
                 })
                 .withAutomaticReconnect()
