@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace JobPreppersDemo.Models;
 
-public partial class userSkill
+public partial class UserSkill
 {
     public int userSkillID { get; set; }
 

@@ -106,3 +106,60 @@ button{
     background-color: #edf2f7;
   }
   
+  .suggestionsBox {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+.suggestionsBox h2 {
+    margin-bottom: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.suggestionsBox ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+.suggestionsBox ul li {
+    margin: 4px 0;
+}
+
+
+.hidden-file-input {
+  display: none;
+}
+
+
+.custom-file-button {
+  display: inline-block;
+  background-color: #4BA173;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 8px 20px; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  font-family: inherit;
+}
+
+.custom-file-button {
+  height: 38px; 
+  line-height: 20px;
+}
+
+/* Hover and active states */
+.custom-file-button:hover {
+  background-color: #4BA173;
+}
+
+.custom-file-button:active {
+  background-color: #4BA173;
+}
+

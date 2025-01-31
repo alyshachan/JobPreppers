@@ -17,27 +17,51 @@ public partial class ApplicationDbContext : DbContext
     {
     }
 
+    public virtual DbSet<Degree> Degrees { get; set; }
+
     public virtual DbSet<Job> Jobs { get; set; }
 
     public virtual DbSet<Resume> Resumes { get; set; }
 
+    public virtual DbSet<School> Schools { get; set; }
+
     public virtual DbSet<Skill> Skills { get; set; }
+
+    public virtual DbSet<Study> Studies { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<UserEducation> UserEducations { get; set; }
+
+    public virtual DbSet<UserExperience> UserExperiences { get; set; }
+
+    public virtual DbSet<UserProject> UserProjects { get; set; }
+
+    public virtual DbSet<Work> Works { get; set; }
+
     public virtual DbSet<test> tests { get; set; }
 
-    public virtual DbSet<userSkill> userSkills { get; set; }
+    public virtual DbSet<UserSkill> UserSkills { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=jobprepperscapstone.cbgwos8q0ls4.us-east-2.rds.amazonaws.com;database=JobPreppersDB;port=3307;user id=JobPrepper;password=ILoveCanes2025!;sslmode=None", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
+        => optionsBuilder.UseMySql("name=ConnectionStrings:DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
+
+        modelBuilder.Entity<Degree>(entity =>
+        {
+            entity.HasKey(e => e.degreeID).HasName("PRIMARY");
+
+            entity.ToTable("Degree");
+
+            entity.Property(e => e.degree_name).HasMaxLength(255);
+        });
 
         modelBuilder.Entity<Job>(entity =>
         {
@@ -63,7 +87,6 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.userID, "userID");
 
-            entity.Property(e => e.resume_pdf).HasColumnType("blob");
             entity.Property(e => e.upload_date)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp");
@@ -72,6 +95,15 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.userID)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("Resume_ibfk_1");
+        });
+
+        modelBuilder.Entity<School>(entity =>
+        {
+            entity.HasKey(e => e.schoolID).HasName("PRIMARY");
+
+            entity.ToTable("School");
+
+            entity.Property(e => e.school_name).HasMaxLength(255);
         });
 
         modelBuilder.Entity<Skill>(entity =>
@@ -83,6 +115,15 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Category).HasMaxLength(255);
         });
 
+        modelBuilder.Entity<Study>(entity =>
+        {
+            entity.HasKey(e => e.studyID).HasName("PRIMARY");
+
+            entity.ToTable("Study");
+
+            entity.Property(e => e.study_name).HasMaxLength(255);
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.userID).HasName("PRIMARY");
@@ -91,12 +132,98 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.username, "username").IsUnique();
 
+            entity.Property(e => e.account_type).HasDefaultValueSql("'1'");
             entity.Property(e => e.email).HasMaxLength(100);
             entity.Property(e => e.first_name).HasMaxLength(50);
             entity.Property(e => e.last_name).HasMaxLength(50);
+            entity.Property(e => e.location).HasMaxLength(255);
             entity.Property(e => e.password).HasMaxLength(255);
+            entity.Property(e => e.title).HasMaxLength(100);
             entity.Property(e => e.username).HasMaxLength(50);
-            entity.Property(e=>e.profile_pic).HasMaxLength(200000);
+        });
+
+        modelBuilder.Entity<UserEducation>(entity =>
+        {
+            entity.HasKey(e => e.userEducationID).HasName("PRIMARY");
+
+            entity.ToTable("UserEducation");
+
+            entity.HasIndex(e => e.degreeID, "degreeID");
+
+            entity.HasIndex(e => e.schoolID, "schoolID");
+
+            entity.HasIndex(e => e.studyID, "studyID");
+
+            entity.HasIndex(e => e.userID, "userID");
+
+            entity.Property(e => e.description).HasColumnType("text");
+
+            entity.HasOne(d => d.degree).WithMany(p => p.UserEducations)
+                .HasForeignKey(d => d.degreeID)
+                .HasConstraintName("UserEducation_ibfk_3");
+
+            entity.HasOne(d => d.school).WithMany(p => p.UserEducations)
+                .HasForeignKey(d => d.schoolID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("UserEducation_ibfk_2");
+
+            entity.HasOne(d => d.study).WithMany(p => p.UserEducations)
+                .HasForeignKey(d => d.studyID)
+                .HasConstraintName("UserEducation_ibfk_4");
+
+            entity.HasOne(d => d.user).WithMany(p => p.UserEducations)
+                .HasForeignKey(d => d.userID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("UserEducation_ibfk_1");
+        });
+
+        modelBuilder.Entity<UserExperience>(entity =>
+        {
+            entity.HasKey(e => e.userExperienceID).HasName("PRIMARY");
+
+            entity.ToTable("UserExperience");
+
+            entity.HasIndex(e => e.userID, "userID");
+
+            entity.HasIndex(e => e.workID, "workID");
+
+            entity.Property(e => e.description).HasColumnType("text");
+            entity.Property(e => e.job_title).HasMaxLength(100);
+
+            entity.HasOne(d => d.user).WithMany(p => p.UserExperiences)
+                .HasForeignKey(d => d.userID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("UserExperience_ibfk_1");
+
+            entity.HasOne(d => d.work).WithMany(p => p.UserExperiences)
+                .HasForeignKey(d => d.workID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("UserExperience_ibfk_2");
+        });
+
+        modelBuilder.Entity<UserProject>(entity =>
+        {
+            entity.HasKey(e => e.projectID).HasName("PRIMARY");
+
+            entity.HasIndex(e => e.userID, "userID");
+
+            entity.Property(e => e.description).HasColumnType("text");
+            entity.Property(e => e.project_title).HasMaxLength(255);
+
+            entity.HasOne(d => d.user).WithMany(p => p.UserProjects)
+                .HasForeignKey(d => d.userID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("UserProjects_ibfk_1");
+        });
+
+        modelBuilder.Entity<Work>(entity =>
+        {
+            entity.HasKey(e => e.workID).HasName("PRIMARY");
+
+            entity.ToTable("Work");
+
+            entity.Property(e => e.location).HasMaxLength(255);
+            entity.Property(e => e.work_name).HasMaxLength(255);
         });
 
         modelBuilder.Entity<test>(entity =>
@@ -106,7 +233,7 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("test");
         });
 
-        modelBuilder.Entity<userSkill>(entity =>
+        modelBuilder.Entity<UserSkill>(entity =>
         {
             entity.HasKey(e => e.userSkillID).HasName("PRIMARY");
 
@@ -114,13 +241,13 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.userID, "userID");
 
-            entity.HasOne(d => d.skill).WithMany(p => p.userSkills)
+            entity.HasOne(d => d.skill).WithMany(p => p.UserSkills)
                 .HasForeignKey(d => d.skillID)
-                .HasConstraintName("userSkills_ibfk_2");
+                .HasConstraintName("UserSkills_ibfk_2");
 
-            entity.HasOne(d => d.user).WithMany(p => p.userSkills)
+            entity.HasOne(d => d.user).WithMany(p => p.UserSkills)
                 .HasForeignKey(d => d.userID)
-                .HasConstraintName("userSkills_ibfk_1");
+                .HasConstraintName("UserSkills_ibfk_1");
         });
 
         OnModelCreatingPartial(modelBuilder);

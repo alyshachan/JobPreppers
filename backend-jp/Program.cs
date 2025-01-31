@@ -89,6 +89,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthorization();
 
+
 var app = builder.Build();
 
 
@@ -98,6 +99,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "JobPreppersDemo API");
+
         c.RoutePrefix = string.Empty; // Set Swagger UI as the root (e.g., localhost:5000)
     });
 }
