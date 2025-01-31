@@ -2,16 +2,32 @@ import "../Components/JobPreppers.css";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import SectionHeader from "../Components/Profile/SectionHeader";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import {useState } from "react";
+
+import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 
 function ProjectSection({ projectDict, edit }) {
+  const [openProjectDialog, setOpenProjectDialog] = useState(false);
+
+  const handleOpenProjectDialog = () => {
+    setOpenProjectDialog(true);
+  };
+
+  const handleCloseProjectDialog = () => {
+    setOpenProjectDialog(false);
+  };
+
   const displayedItems = edit == true ? projectDict : projectDict.slice(0, 3);
   const hasMoreItems = Object.keys(projectDict).length > 3;
 
   return (
     <>
       <div className="panel">
-        <SectionHeader header={"Projects"} edit={edit} />
-
+        <SectionHeader header={"Projects"} edit={edit} onAdd={handleOpenProjectDialog}/>
+      <AddProjectDialog
+        open={openProjectDialog}
+        onClose={handleCloseProjectDialog}
+      />
         <div className={styles.sectionContent}>
           {displayedItems.map((project, index) => (
             <div key={index}>

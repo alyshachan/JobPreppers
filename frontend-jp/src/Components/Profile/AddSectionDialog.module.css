@@ -1,0 +1,77 @@
+textarea {
+  resize: none;
+  border: 1px solid #c4c4c4;
+  height: 156px !important;
+  overflow-y: scroll !important;
+  border-radius: 4px;
+  padding: 16.5px 14px;
+}
+
+textarea:hover {
+  outline: none !important;
+  border: 1px solid black;
+}
+
+textarea:focus {
+  outline: none !important;
+  border: 2px solid #1976d2;
+}
+
+.required::after {
+  content: " *";
+  color: red;
+}
+
+.dialogTitle {
+  margin: 0;
+  padding: 0;
+  border-top: 50px solid #4ba173;
+  left: -20px;
+  position: relative;
+  padding-left: 36px;
+  width: calc(100% + 40px);
+}
+
+.closeButton {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  color: #085630 !important;
+}
+
+.dialogContent {
+  display: flex;
+  flex-direction: row;
+  column-gap: 50px;
+  width:100%;
+}
+
+.dialogContentLeft{
+  flex: 1;
+}
+
+.dialogContentRight {
+  flex: 1;
+  height: 100%;
+}
+
+.input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 10px;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+.icon{
+  font-size: 2.5rem !important;
+  aspect-ratio: 1;
+  color: #4BA173;
+}
+
+.inputField {
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+}

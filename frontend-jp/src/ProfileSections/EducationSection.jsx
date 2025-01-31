@@ -4,9 +4,22 @@ import EditIcon from "@mui/icons-material/Edit";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import "../Components/JobPreppers.css";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import {useState } from "react";
 
 import { IconButton } from "@mui/material";
+import AddEducationDialog from "../Components/Profile/AddEducationDialog";
+
 function EducationSection({ educationDict, edit }) {
+  const [openEducationDialog, setOpenEducationDialog] = useState(false);
+
+  const handleOpenEducationDialog = () => {
+    setOpenEducationDialog(true);
+  };
+
+  const handleCloseEducationDialog = () => {
+    setOpenEducationDialog(false);
+  };
+
   const displayedItems =
     edit == true ? educationDict : educationDict.slice(0, 2);
   const hasMoreItems = Object.keys(educationDict).length > 2;
@@ -27,7 +40,11 @@ function EducationSection({ educationDict, edit }) {
 
   return (
     <>
-      <SectionHeader header={"Education"} edit={edit} />
+      <SectionHeader header={"Education"} edit={edit} onAdd={handleOpenEducationDialog}/>
+      <AddEducationDialog
+        open={openEducationDialog}
+        onClose={handleCloseEducationDialog}
+      />
 
       <div className={styles.sectionContent}>
         {displayedItems.map((education, index) => (
@@ -41,9 +58,30 @@ function EducationSection({ educationDict, edit }) {
               <div className={styles.sectionPictureContent}>
                 <p className="title">{education.school_name}</p>
                 <p className="subtitle">
-                  {education.degree_name}, {education.study_name}
+                  {education.degree_name}
+                  {!education.degree_name || !education.study_name ? "" : ", "}
+                  {education.study_name}
                 </p>
-                <p className="subtitle">{monthsOfYear[education.start_date.getMonth()]} {education.start_date.getFullYear()} - {monthsOfYear[education.end_date.getMonth()]} {education.end_date.getFullYear()}</p>
+                <p className="subtitle">
+                  {education.start_date || education.end_date
+                    ? `${
+                        education.start_date
+                          ? `${
+                              monthsOfYear[education.start_date.getMonth() + 1]
+                            } ${education.start_date.getFullYear()} - `
+                          : ""
+                      }${
+                        education.end_date
+                          ? `${
+                              monthsOfYear[education.end_date.getMonth() + 1]
+                            } ${education.end_date.getFullYear()}`
+                          : "Present"
+                      }`
+                    : ""}
+                </p>
+                <p className={styles.educationContent}>
+                  {education.description}
+                </p>
               </div>
 
               {edit && (

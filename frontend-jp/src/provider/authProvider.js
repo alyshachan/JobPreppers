@@ -23,7 +23,9 @@ export const AuthProvider = ({ children }) => {
                 first_name: data.first_name,
                 last_name: data.last_name,
                 email: data.email,
-                profile_pic: data.profile_pic
+                profile_pic: data.profile_pic,
+                title: data.title,
+                location: data.location
               };
               setUser(newUser);
             }
