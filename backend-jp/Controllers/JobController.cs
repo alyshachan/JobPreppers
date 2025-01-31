@@ -111,6 +111,15 @@ namespace JobPreppersDemo.Controllers
 
             return Ok(filteredJobs);
         }
+
+        // [HttpPost("post")]
+        // public async Task<IActionResult> PostJob([FromBody] FilterRequest request)
+        // {
+        //     var query = _context.Jobs.AsQueryable();
+        //     return Ok();
+        // }
+
+
     }
 
 
