@@ -165,6 +165,7 @@ function Profile() {
               {user.first_name} {user.last_name}
             </p>
             <p>{user.title}</p>
+            {console.log("THE STUPID TITLE" + user.title)}
             <p className="subtitle">
               {user.location}
             </p>
