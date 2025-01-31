@@ -5,6 +5,13 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5690); // Listen on port 5690 for HTTP
+    options.ListenAnyIP(5691, listenOptions => listenOptions.UseHttps()); // Listen on port 5691 for HTTPS
+});
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR(e => {e.EnableDetailedErrors = true;});
