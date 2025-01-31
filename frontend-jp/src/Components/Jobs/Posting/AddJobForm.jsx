@@ -12,8 +12,11 @@ import DescribeJob from "./StepsInForms/DescribeJob";
 import Benefits from "./StepsInForms/Benefits";
 import Qualification from "./StepsInForms/Qualification";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { IconButton } from "@mui/material";
+import { DialogActions, IconButton } from "@mui/material";
 import { PostAdd } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
+import SectionHeader from "../../Profile/SectionHeader";
+import styles from "./Posting.module.css";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .css-10d30g3-MuiPaper-root-MuiDialog-paper": {
@@ -23,6 +26,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     overflow: "auto",
     maxWidth: "1000px",
     minWidth: "1000px",
+    overflowX: "hidden"
   },
 }));
 
@@ -138,7 +142,7 @@ export default function AddJobForm({ setJobs }) {
       case 2:
         return (
           <FormProvider {...jobForm}>
-            <Qualification formData={formData} setFormData={setFormData} />;
+            <Qualification formData={formData} setFormData={setFormData} />
           </FormProvider>
         );
       case 3:
@@ -161,10 +165,6 @@ export default function AddJobForm({ setJobs }) {
   return (
     <>
       <Fragment>
-        {/* <IconButton onClick={handleClickOpen}>
-          <PostAdd />
-        </IconButton> */}
-
         <Button
           variant="filled"
           onClick={handleClickOpen}
@@ -173,8 +173,21 @@ export default function AddJobForm({ setJobs }) {
           Post
         </Button>
       </Fragment>
+
       <form>
         <StyledDialog onClose={handleClose} open={open}>
+          <DialogTitle className={styles.addJobTitle}>
+            <SectionHeader header="Add Job Posting" />
+          </DialogTitle>
+
+          <IconButton
+        aria-label="close"
+        onClick={handleClose}
+        className={styles.closeButton}
+      >
+        <CloseIcon />
+      </IconButton>
+
           <header>
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => {
@@ -188,6 +201,7 @@ export default function AddJobForm({ setJobs }) {
                 );
               })}
             </Stepper>
+
             <DialogTitle>
               <h1 sx={{ mt: 2, mb: 1 }}>
                 Step {activeStep + 1}: {steps[activeStep]}
@@ -195,10 +209,10 @@ export default function AddJobForm({ setJobs }) {
             </DialogTitle>
           </header>
 
-          <body>{pageDisplay()}</body>
+          <body className="bg-white">{pageDisplay()}</body>
 
           {activeStep === steps.length - 1 ? (
-            <Fragment>
+            <DialogActions>
               <footer>
                 <button
                   disabled={activeStep == 0}
@@ -208,10 +222,10 @@ export default function AddJobForm({ setJobs }) {
                   Back
                 </button>
               </footer>
-            </Fragment>
+            </DialogActions>
           ) : (
-            <Fragment>
-              <footer>
+            <DialogActions>
+              <footer className="flex flex-row gap-2">
                 <button
                   disabled={activeStep == 0}
                   style={{ display: activeStep === 0 ? "none" : "block" }}
@@ -224,7 +238,7 @@ export default function AddJobForm({ setJobs }) {
                   Next
                 </button>
               </footer>
-            </Fragment>
+            </DialogActions>
           )}
         </StyledDialog>
         {/* <pre>{JSON.stringify(jobForm.watch(), null, 2)}</pre> */}
