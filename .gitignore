@@ -6,6 +6,7 @@ obj/
 .vs/
 *.user
 *.suo
+.env
 
 # Ignore logs
 *.log

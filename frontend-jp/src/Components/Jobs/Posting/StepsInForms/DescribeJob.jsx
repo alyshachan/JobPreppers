@@ -2,8 +2,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useFormContext } from "react-hook-form";
 import * as yup from "yup";
 import { useState, useEffect } from "react";
-import { TextField } from "@mui/material";
+import { DialogContent, TextField } from "@mui/material";
 import AutoCompleteForm from "../Helper/AutoCompleteForm";
+import styles from "../Posting.module.css";
+import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 
 export default function DescribeJob({ formData, setFormData }) {
   const jobForm = useFormContext();
@@ -39,19 +41,62 @@ export default function DescribeJob({ formData, setFormData }) {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <TextField {...register("company")} type="text" label="Company Name" />
-        <TextField {...register("location")} label="Location" />
-        <TextField {...register("title")} label="Job Title" />
-        <AutoCompleteForm
-          control={control}
-          name="type"
-          options={employementTypeOptions}
-          label="Employment Type"
-        />
+      <DialogContent>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex flex-col">
+            <div className={styles.dialogContent}>
+              <div className={styles.dialogContentLeft}>
+                <div className={styles.input}>
+                  <TextField
+                    {...register("company")}
+                    required
+                    type="text"
+                    label="Company Name"
+                    className={styles.inputField}
+                  />
+                </div>
 
-        <TextField {...register("description")} label="Job Description" />
-      </form>
+                <div className={styles.input}>
+                  <TextField
+                    {...register("title")}
+                    required
+                    label="Job Title"
+                    className={styles.inputField}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.dialogContentRight}>
+                <div className={styles.input}>
+                  <TextField
+                    {...register("location")}
+                    label="Location"
+                    className={styles.inputField}
+                  />
+                </div>
+
+                <AutoCompleteForm
+                  control={control}
+                  name="type"
+                  options={employementTypeOptions}
+                  label="Employment Type"
+                  className={styles.inputField}
+                />
+              </div>
+            </div>
+
+            <label for="description" className={styles.label}>
+              Job Description *
+            </label>
+            <TextareaAutosize
+              {...register("description")}
+              required
+              label="Job Description"
+              placeholder="Enter Job Description"
+            />
+          </div>
+        </form>
+      </DialogContent>
     </>
   );
 }

@@ -59,7 +59,7 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
 
   return (
     <StyledDialog onClose={onClose} open={open}>
-      <DialogTitle className={styles.addEventTitle}>
+      <DialogTitle className={styles.addJobTitle}>
         <SectionHeader header="Add Event" />
       </DialogTitle>
 
