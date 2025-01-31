@@ -4,6 +4,7 @@ import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 import { useAuth } from "../provider/authProvider";
+import { useConnection } from "../provider/connectionProvider";
 import React, { useEffect, useState, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 
@@ -13,7 +14,8 @@ function Profile() {
   const {initialUser, setIntialUser} = useState(null);
   const [message, setMessage] = useState("");
   const [receiverID, setReceiverID] = useState("");
-  const [signalRConnection, setSignalRConnection] = useState(null);
+  const {signalRConnection, setSignalRConnection, connectToHub, disconnectFromHub} = useConnection();
+
 
   // const skillsTest = {}
 
@@ -66,6 +68,11 @@ function Profile() {
       console.log("User: ", user)
     }
   }, [user]);  // only populate when user exists
+
+  useEffect(() => {
+    console.log("connecting to hub from profile.jsx");
+    connectToHub();
+}, []);
 
 
   if (user == null) {

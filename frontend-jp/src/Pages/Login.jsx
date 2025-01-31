@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
+import {useConnection} from "../provider/connectionProvider";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -8,6 +9,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const {user, setAuthData } = useAuth(); // custom hook for authprovider
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -45,6 +47,7 @@ export default function Login() {
       setError("An error occurred. Please try again."); // Catch and display any request error
     }
   };
+
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

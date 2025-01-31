@@ -16,12 +16,14 @@ import Interview from "./Pages/Interview";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import { AuthProvider } from "./provider/authProvider";
+import { ConnectionProvider } from "./provider/connectionProvider";
 
 
 function App() {
   return (
     <>
       <AuthProvider>
+        <ConnectionProvider>
         <NavBar/>
         <Routes>
           <Route path="/" element={<Login/>} />
@@ -34,6 +36,7 @@ function App() {
           <Route path="/Resume" element={<Resume />} />
         </Routes>
         <Messaging/>
+        </ConnectionProvider>
       </AuthProvider>
     </>
   );

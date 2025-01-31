@@ -1,6 +1,7 @@
 import "../App.css"
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../provider/authProvider";
+import { useConnection } from "../provider/connectionProvider";
 import * as signalR from '@microsoft/signalr';
 import 'react-chat-elements/dist/main.css';
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
@@ -28,13 +29,14 @@ const StyledChatList = styled(ChatList)(({ theme }) => ({
 
 function Messaging() {
     const { user, setAuthData } = useAuth();
+    const {signalRConnection, setSignalRConnection, connectToHub, disconnectFromHub} = useConnection();
     /* div render booleans */
     const [chatListOpened, setChatListOpened] = useState(false);
     const [convoOpened, setConvoOpened] = useState(false);
     /* messaging react states */
     const [messages, setMessages] = useState([]);
     const [receiverID, setReceiverID] = useState("");
-    const [signalRConnection, setSignalRConnection] = useState(null);
+    // const [signalRConnection, setSignalRConnection] = useState(null);
     /* system message states */
     const [showSystemMessage, setShowSystemMessage] = useState(false);
     const [currentSystemMessage, setSystemMessage] = useState("");
@@ -121,56 +123,43 @@ function Messaging() {
     
     /* 
     CHAT SERVER CONNECTION
+    TODO: move this into a provider like authProvider then make it accessible to Messaging.jsx by wrapping it with the connection provider
     */
 
-    useEffect(() => {
-        const connectToHub = async () => {
-            console.log("why does this code run?");
-            console.log("Attempting to connect to /DirectMessageHub");
-            const connection = new signalR.HubConnectionBuilder()
-                .withUrl("http://localhost:5070/directMessageHub", {
-                    accessTokenFactory: () => document.cookie.split('authToken=')[1] || '',
-                })
-                .withAutomaticReconnect()
-                .build();
+    // useEffect(() => {
+    //     const connectToHub = async () => {
+    //         console.log("why does this code run?");
+    //         console.log("Attempting to connect to /DirectMessageHub");
+    //         const connection = new signalR.HubConnectionBuilder()
+    //             .withUrl("http://localhost:5070/directMessageHub", {
+    //                 accessTokenFactory: () => document.cookie.split('authToken=')[1] || '',
+    //             })
+    //             .withAutomaticReconnect()
+    //             .build();
 
-            // configure the connection
-            connection.onclose((error) => {
-                console.error('Connection closed:', error);
-            });
+    //         // configure the connection
+    //         connection.onclose((error) => {
+    //             console.error('Connection closed:', error);
+    //         });
 
-            // connection.on("ReceiveDirectMessage", function (user, inMsg) {
-            //     console.log("New message:");
-            //     console.log(`${user}: ${inMsg}`)
-            //     setMessages([...messages, {                        
-            //         position: 'left',
-            //         type: 'text',
-            //         text: inMsg,
-            //         date: new Date(),
-            //     }])
-            //     console.log(`Messages updated from receiving:`);
-            //     console.log(messages);
+    //         try {
+    //             console.log("Attempting to start connection");
+    //             await connection.start()
+    //                 .then(() => {
+    //                     console.log('Connected to SignalR Hub');
+    //                     setSignalRConnection(connection); // store the connection in a state
+    //                 });
 
-            // });
+    //         } catch (error) {
+    //             console.error('Connection failed or invoke error:', error);
+    //         }
 
-            try {
-                console.log("Attempting to start connection");
-                await connection.start()
-                    .then(() => {
-                        console.log('Connected to SignalR Hub');
-                        setSignalRConnection(connection); // store the connection in a state
-                    });
-
-            } catch (error) {
-                console.error('Connection failed or invoke error:', error);
-            }
-
-            return () => {
-                connection.stop();
-            };
-        };
-        connectToHub();
-    }, [])
+    //         return () => {
+    //             connection.stop();
+    //         };
+    //     };
+    //     connectToHub();
+    // }, [])
 
     useEffect(() => {
         if (signalRConnection) {
@@ -191,9 +180,9 @@ function Messaging() {
         <div className="flex w-full">
             <div
                 className="fixed bottom-4 left-4">
-                <button onClick={handleMessagingClicked}>
+                {user && signalRConnection && <button onClick={handleMessagingClicked}>
                     {chatListOpened ? "Close messaging" : "Open Messaging"}
-                </button>
+                </button>}
 
                 {chatListOpened && <div>
 
@@ -244,8 +233,6 @@ function Messaging() {
                 text={'X'}
                 backgroundColor="#f55b5b"
                 onClick={handleMessageListClose}/>
-
-
 
                 <div className="w-80 flex-none bg-white">
                     
