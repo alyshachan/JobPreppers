@@ -21,7 +21,13 @@ public partial class Job
 
     public string? bonus { get; set; }
 
-    public virtual ICollection<JobQualification> JobQualifications { get; set; } = new List<JobQualification>();
+    public DateTime? postDate { get; set; }
 
-    public virtual ICollection<Posting> Postings { get; set; } = new List<Posting>();
+    public int? minimumSalary { get; set; }
+
+    public int? maximumSalary { get; set; }
+
+    public string? location { get; set; }
+
+    public DateTime? endDate { get; set; }
 }

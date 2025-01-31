@@ -28,15 +28,24 @@ export default function Header({ job, onClose }) {
           {job.title}
         </Typography>
         <Typography sx={{ typography: "body1" }}>
-          Posted on {new Date(job.postedAt).toLocaleDateString()} &nbsp; |
-          &nbsp; Apply by {new Date(job.fill_by_date).toLocaleDateString()}
-          &nbsp; at {moment(job.postedAt).format("hh:mm A")}
+          Posted on {new Date(job.postDate).toLocaleDateString()} &nbsp; |
+          &nbsp; Apply by {new Date(job.endDate).toLocaleDateString()}
+          &nbsp; at {new Date(job.postDate).toLocaleTimeString()}
         </Typography>
         <button className={`${styles.drawerButton} lightButton`}>
           <BookmarkBorderIcon />
           Bookmark
         </button>
-        <button className={styles.drawerButton}>Apply</button>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            // job.link ?  window.open(job.link)  : window.open("http://google.com") ;
+            window.open("http://google.com");
+          }}
+          className={styles.drawerButton}
+        >
+          Apply
+        </button>
       </Box>
     </>
   );

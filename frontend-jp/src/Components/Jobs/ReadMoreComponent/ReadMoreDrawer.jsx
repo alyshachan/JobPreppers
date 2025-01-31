@@ -1,11 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { Drawer, Box, Typography, Divider } from "@mui/material";
+import React, { useState, useEffect, Fragment } from "react";
+import {
+  Drawer,
+  Box,
+  Typography,
+  Divider,
+  Chip,
+  Stack,
+  Card,
+  CardContent,
+} from "@mui/material";
 import Header from "./Header";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import WorkIcon from "@mui/icons-material/Work";
 import PlaceIcon from "@mui/icons-material/Place";
 import "./ReadMoreStyle.css";
-import styles from "../Jobs.module.css"
+import styles from "../Jobs.module.css";
 
 export default function ReadMoreDrawer({ open, job, onClose }) {
   const [isNarrow, setIsNarrow] = useState(window.innerWidth < 1200); // Initial state based on window width
@@ -40,18 +49,18 @@ export default function ReadMoreDrawer({ open, job, onClose }) {
         <Divider className="custom-divider" />
         <Box>
           <Typography className="start-text">Brief Overview </Typography>
-          {job.max_salary == null ? (
+          {job.maximumSalary == null ? (
             <Box className={styles.descriptionBox}>
               <PaymentsIcon />
               <Typography variant="body" className={styles.descriptionText}>
-                ${job.min_salary}
+                ${job.minimumSalary}
               </Typography>
             </Box>
           ) : (
             <Box className={styles.descriptionBox}>
               <PaymentsIcon />
               <Typography variant="body" className={styles.descriptionText}>
-                ${job.min_salary} - ${job.max_salary}
+                ${job.minimumSalary} - ${job.maximumSalary}
               </Typography>
             </Box>
           )}
@@ -70,13 +79,61 @@ export default function ReadMoreDrawer({ open, job, onClose }) {
 
           <Divider className="custom-divider" />
         </Box>
+        {job.bonus !== undefined && job.bonus !== null ? (
+          <Fragment>
+            <Box>
+              <Typography className="start-text"> Bonuses</Typography>
+              <Stack direction="row" spacing={1}>
+                {JSON.parse(job.bonus).map((bonuses, index) => (
+                  // <Chip key={index} label={benefit} variant="outlined" />
+                  <Card className="cardCompensation">
+                    <CardContent>
+                      <Typography variant="p">{bonuses}</Typography>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Stack>
+              <Divider className="custom-divider" />
+            </Box>
+          </Fragment>
+        ) : null}
 
-        <Box>
-          <Typography className="start-text"> Benefits</Typography>
-          <Typography sx={{ typography: "body1" }}>{job.benefit}</Typography>
-        </Box>
-        <Divider className="custom-divider" />
-
+        {job.benefits !== undefined && job.benefits !== null ? (
+          <Fragment>
+            <Box>
+              <Typography className="start-text"> Benefits</Typography>
+              <Stack direction="row" spacing={1}>
+                {JSON.parse(job.benefits).map((benefit, index) => (
+                  // <Chip key={index} label={benefit} variant="outlined" />
+                  <Card className="cardCompensation">
+                    <CardContent>
+                      <Typography variant="p">{benefit}</Typography>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Stack>
+              <Divider className="custom-divider" />
+            </Box>
+          </Fragment>
+        ) : null}
+        {job.perks !== undefined && job.perks !== null ? (
+          <Fragment>
+            <Box>
+              <Typography className="start-text"> Perks</Typography>
+              <Stack direction="row" spacing={1}>
+                {JSON.parse(job.perks).map((perks, index) => (
+                  // <Chip key={index} label={benefit} variant="outlined" />
+                  <Card className="cardCompensation">
+                    <CardContent>
+                      <Typography variant="p">{perks}</Typography>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Stack>
+            </Box>
+            <Divider className="custom-divider" />
+          </Fragment>
+        ) : null}
         <Box>
           <Typography className="start-text"> Job Description</Typography>
           <Typography sx={{ typography: "body1" }}>

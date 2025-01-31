@@ -5,6 +5,7 @@ import { Input, InputLabel } from "@mui/material";
 import { Fragment, useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import ToggleButtonForm from "../Helper/ToggleButtonForm";
+import dayjs from "dayjs";
 
 export default function ApplicationProcess() {
   const jobForm = useFormContext();
@@ -38,21 +39,35 @@ export default function ApplicationProcess() {
           <Controller
             name="postDate"
             control={control}
-            render={({ field }) => <DatePicker {...field} label="Post Day" />}
+            render={({ field }) => (
+              <DatePicker
+                {...field}
+                label="Post Day"
+                value={field.value ? dayjs(field.value) : null} // Ensure it's in Dayjs format
+              />
+            )}
           />
         </LocalizationProvider>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Controller
-            name="applyByDate"
+            name="endDate"
             control={control}
             render={({ field }) => (
-              <DatePicker {...field} label="Apply By Day" />
+              <DatePicker
+                {...field}
+                label="Apply By Day"
+                value={field.value ? dayjs(field.value) : null} // Ensure it's in Dayjs format
+              />
             )}
           />
         </LocalizationProvider>
       </div>
       <InputLabel htmlFor="hires">Number of Hires: </InputLabel>
-      <Input id="hires" type="number" {...register("numberOfHires")}></Input>
+      <Input
+        id="hires"
+        type="number"
+        {...register("numberOfHires", { valueAsNumber: true })}
+      ></Input>
       <div>
         <ToggleButtonForm
           name="applyOptions"

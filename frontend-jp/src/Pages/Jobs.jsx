@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import SearchColumn from "../Components/Jobs/SearchColumn";
 import "../Components/JobPreppers.css";
 import styles from "../Components/Jobs/Jobs.module.css";
 import FilterColumn from "../Components/Jobs/FilterColumn";
 import JobDescription from "../Components/Jobs/JobDescription";
 import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
-import AddJob from "../Components/Jobs/Posting/AddJobForm";
 
 function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -60,6 +59,7 @@ function Jobs() {
               <SearchColumn
                 setUserCoordinate={setUserCoordinate}
                 setFilters={setFilters}
+                setJobs={setJobs}
               />
               <FilterColumn
                 setJobs={setJobs}
@@ -70,7 +70,6 @@ function Jobs() {
               />
             </div>
             <JobDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
-            <AddJob />
           </div>
         </Box>
 

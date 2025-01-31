@@ -47,6 +47,9 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<test> tests { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySql("server=jobprepperscapstone.cbgwos8q0ls4.us-east-2.rds.amazonaws.com;database=JobPreppersDB;port=3307;user id=JobPrepper;password=ILoveCanes2025!;sslmode=None", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -71,33 +74,17 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.bonus).HasColumnType("json");
             entity.Property(e => e.company).HasMaxLength(100);
             entity.Property(e => e.description).HasColumnType("text");
+            entity.Property(e => e.endDate).HasColumnType("datetime");
+            entity.Property(e => e.location).HasMaxLength(100);
             entity.Property(e => e.perks).HasColumnType("json");
+            entity.Property(e => e.postDate).HasColumnType("datetime");
             entity.Property(e => e.title).HasMaxLength(100);
             entity.Property(e => e.type).HasMaxLength(50);
         });
 
         modelBuilder.Entity<JobQualification>(entity =>
         {
-            entity.HasKey(e => new { e.postID, e.jobID })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-
-            entity.ToTable("JobQualification");
-
-            entity.HasIndex(e => e.jobID, "jobID_fk");
-
-            entity.Property(e => e.education).HasMaxLength(100);
-            entity.Property(e => e.skills).HasColumnType("json");
-
-            entity.HasOne(d => d.job).WithMany(p => p.JobQualifications)
-                .HasForeignKey(d => d.jobID)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("jobID_fk");
-
-            entity.HasOne(d => d.post).WithMany(p => p.JobQualifications)
-                .HasForeignKey(d => d.postID)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("postID_fk");
+            entity.HasKey(e => e.qualID).HasName("PRIMARY");
         });
 
         modelBuilder.Entity<Posting>(entity =>
@@ -106,17 +93,11 @@ public partial class ApplicationDbContext : DbContext
 
             entity.ToTable("Posting");
 
-            entity.HasIndex(e => e.jobID, "Jobs__fk");
-
             entity.Property(e => e.closing_date).HasColumnType("datetime");
             entity.Property(e => e.currency).HasMaxLength(5);
             entity.Property(e => e.location).HasMaxLength(100);
             entity.Property(e => e.post_date).HasColumnType("datetime");
             entity.Property(e => e.rate).HasMaxLength(40);
-
-            entity.HasOne(d => d.job).WithMany(p => p.Postings)
-                .HasForeignKey(d => d.jobID)
-                .HasConstraintName("Jobs__fk");
         });
 
         modelBuilder.Entity<Resume>(entity =>

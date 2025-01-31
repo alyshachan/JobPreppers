@@ -12,6 +12,8 @@ import DescribeJob from "./StepsInForms/DescribeJob";
 import Benefits from "./StepsInForms/Benefits";
 import Qualification from "./StepsInForms/Qualification";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { IconButton } from "@mui/material";
+import { PostAdd } from "@mui/icons-material";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .css-10d30g3-MuiPaper-root-MuiDialog-paper": {
@@ -24,7 +26,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function AddJobForm() {
+export default function AddJobForm({ setJobs }) {
   // State
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({});
@@ -59,30 +61,59 @@ export default function AddJobForm() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+  const fetchJobs = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/job");
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+        setJobs(data);
+      } else {
+        console.error("Failed to fetch jobs");
+      }
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+    }
+  };
 
   const onSubmit = async (data, e) => {
-    // try {
-    //   const response = fetch("http://localhost:5000/api/job/post", {
-    //     method: "POST",
-    //     header: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(data),
-    //     credentials: "include",
-    //   });
+    try {
+      const transformedData = {
+        title: data.title,
+        description: data.description,
+        company: data.company,
+        type: data.type.label,
+        minimumSalary: data.minimumSalary,
+        maximumSalary: data.maximumSalary ? data.maximumSalary : null,
+        location: data.location,
+        postDate: data.postDate,
+        endDate: data.endDate,
+        perks: JSON.stringify(data.perks),
+        benefits: JSON.stringify(data.benefits),
+        bonus: JSON.stringify(data.bonuses),
+      };
+      const response = await fetch("http://localhost:5000/api/job/post", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(transformedData),
+        credentials: "include",
+      });
 
-    //   if (response.ok) {
-    //     const response = await response.json();
-    //     console.log("Data: ", { data });
-    //   } else {
-    //     const errorData = await response.json();
-    //     console.log("Error: ", { errorData });
+      if (response.ok) {
+        fetchJobs();
+      } else {
+        const errorData = await response.json();
+        console.log("Hello: ", transformedData);
+        console.log("Error: ", { errorData });
 
-    //     // setError(errorData.message); // Show error message from the backend
-    //   }
-    // } catch (err) {
-    //   console.log("Catch Error");
-    // Maybe put an alert
-    // setError("An error occurred. Please try again."); // Catch and display any request error
-    // }
+        // setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      console.log("Catch Error: ", err);
+      console.log("Type of perks:", typeof data.perks);
+      console.log("Value of perks:", data.perks);
+      // Maybe put an alert
+    }
     console.log("Form Data Submitted: ", data);
 
     setActiveStep(0);
@@ -130,8 +161,16 @@ export default function AddJobForm() {
   return (
     <>
       <Fragment>
-        <Button variant="outlined" onClick={handleClickOpen}>
-          Open form dialog
+        {/* <IconButton onClick={handleClickOpen}>
+          <PostAdd />
+        </IconButton> */}
+
+        <Button
+          variant="filled"
+          onClick={handleClickOpen}
+          startIcon={<PostAdd />}
+        >
+          Post
         </Button>
       </Fragment>
       <form>
@@ -168,9 +207,6 @@ export default function AddJobForm() {
                 >
                   Back
                 </button>
-                {/* <Button disabled={isSubmitting} type="submit">
-                  Submit
-                </Button> */}
               </footer>
             </Fragment>
           ) : (
@@ -191,7 +227,7 @@ export default function AddJobForm() {
             </Fragment>
           )}
         </StyledDialog>
-        <pre>{JSON.stringify(jobForm.watch(), null, 2)}</pre>
+        {/* <pre>{JSON.stringify(jobForm.watch(), null, 2)}</pre> */}
       </form>
     </>
   );

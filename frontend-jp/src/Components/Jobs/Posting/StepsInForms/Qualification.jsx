@@ -134,11 +134,11 @@ export default function Qualification() {
         <Input
           id="experienceStartingRange"
           type="number"
-          {...register("minimumExperience")}
+          {...register("minimumExperience", { valueAsNumber: true })}
         ></Input>
         <InputLabel
           htmlFor="experienceEnding"
-          {...register("maximumExperience")}
+          {...register("maximumExperience", { valueAsNumber: true })}
         >
           Ending Range
         </InputLabel>

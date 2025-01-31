@@ -5,6 +5,8 @@ namespace JobPreppersDemo.Models;
 
 public partial class Posting
 {
+    public int postID { get; set; }
+
     public DateTime post_date { get; set; }
 
     public DateTime? closing_date { get; set; }
@@ -24,12 +26,4 @@ public partial class Posting
     public double? longitude { get; set; }
 
     public double? latitude { get; set; }
-
-    public int postID { get; set; }
-
-    public int? jobID { get; set; }
-
-    public virtual ICollection<JobQualification> JobQualifications { get; set; } = new List<JobQualification>();
-
-    public virtual Job? job { get; set; }
 }

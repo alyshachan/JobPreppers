@@ -90,12 +90,12 @@ export default function Benefits() {
               />
 
               <TextField
-                {...register("minimumSalary")}
+                {...register("minimumSalary", { valueAsNumber: true })}
                 type="number"
                 label="Starting Pay"
               />
               <TextField
-                {...register("maximumSalary")}
+                {...register("maximumSalary", { valueAsNumber: true })}
                 type="number"
                 label="Maximum Pay"
               />
@@ -118,7 +118,7 @@ export default function Benefits() {
                 label="Rate"
               />
               <TextField
-                {...register("minimumSalary")}
+                {...register("minimumSalary", { valueAsNumber: true })}
                 type="number"
                 label="Starting Salary"
               />
@@ -136,25 +136,25 @@ export default function Benefits() {
             <Box></Box>
           </Fragment>
         ) : null}
+
         <h2>Bonus</h2>
         <ToggleButtonForm
-          name="Bonuses"
+          name="bonuses"
           control={control}
           options={bonuses}
           exclusive={false}
         />
 
-        <h2>Benfits</h2>
+        <h2>Benefits</h2>
         <ToggleButtonForm
-          name="Benefits"
+          name="benefits"
           control={control}
           options={benefits}
           exclusive={false}
         />
-
         <h2>Perks</h2>
         <ToggleButtonForm
-          name="Perks"
+          name="perks"
           control={control}
           options={perks}
           exclusive={false}

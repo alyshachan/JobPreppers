@@ -40,21 +40,17 @@ export default function DescribeJob({ formData, setFormData }) {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <TextField
-          {...register("companyName")}
-          type="text"
-          label="Company Name"
-        />
+        <TextField {...register("company")} type="text" label="Company Name" />
         <TextField {...register("location")} label="Location" />
-        <TextField {...register("jobTitle")} label="Job Title" />
+        <TextField {...register("title")} label="Job Title" />
         <AutoCompleteForm
           control={control}
-          name="employmentType"
+          name="type"
           options={employementTypeOptions}
           label="Employment Type"
         />
 
-        <TextField {...register("jobDesciption")} label="Job Description" />
+        <TextField {...register("description")} label="Job Description" />
       </form>
     </>
   );

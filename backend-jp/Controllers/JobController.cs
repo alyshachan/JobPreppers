@@ -32,12 +32,18 @@ namespace JobPreppersDemo.Controllers
 
         }
 
+        // public class PostRequest
+        // {
+
+        // }
+
+
         public JobController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/jobs
+        // // GET: api/jobs
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Job>>> GetAllJobs()
         {
@@ -49,6 +55,37 @@ namespace JobPreppersDemo.Controllers
             }
             return Ok(jobs);
         }
+
+        public class simpleRequest
+        {
+            public string title { get; set; } = null!;
+
+            public string? description { get; set; }
+
+            public string company { get; set; } = null!;
+            public string type { get; set; } = null!;
+
+        }
+        // // GET: api/jobs
+        [HttpPost("post")]
+        public async Task<ActionResult> PostJob([FromBody] Job request)
+        {
+
+            try
+            {
+                _context.Jobs.Add(request);
+                await _context.SaveChangesAsync();
+                return Ok("Good"); // Assuming the Job model has an Id property
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+
+            }
+
+        }
+
 
         [HttpPost("filter")]
         public async Task<IActionResult> FilterJobs([FromBody] FilterRequest request)
@@ -72,6 +109,8 @@ namespace JobPreppersDemo.Controllers
             }
 
 
+
+
             // if (request.Date != null)
             // {
             //     var filterDate = request.Date.Value.Date;
@@ -89,9 +128,9 @@ namespace JobPreppersDemo.Controllers
                 query = query.Where(job => request.Company.Contains(job.company));
             }
 
-            // if (request.Min_Salary != 0)
+            // if (request.minimumSalary != 0)
             // {
-            //     query = query.Where(job => job.min_salary >= request.Min_Salary);
+            //     query = query.Where(job => job.minimumSalary >= request.minimumSalary);
             // }
 
 

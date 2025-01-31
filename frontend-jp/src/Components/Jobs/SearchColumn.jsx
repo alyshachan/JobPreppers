@@ -7,8 +7,8 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./Jobs.module.css";
-
-function SearchColumn({ setUserCoordinate, setFilters }) {
+import AddJobForm from "./Posting/AddJobForm";
+function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
   const [jobName, setJobName] = useState("");
   // Still need to cache but that for later
   const [location, setLocation] = useState(null);
@@ -164,6 +164,7 @@ function SearchColumn({ setUserCoordinate, setFilters }) {
             </svg>
           </SvgIcon>
         </IconButton>
+        <AddJobForm setJobs={setJobs} />
       </div>
     </>
   );
