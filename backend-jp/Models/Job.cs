@@ -9,13 +9,7 @@ public partial class Job
 
     public string title { get; set; } = null!;
 
-    public string location { get; set; } = null!;
-
     public string? description { get; set; }
-
-    public DateTime? postedAt { get; set; }
-
-    public DateTime fill_by_date { get; set; }
 
     public string company { get; set; } = null!;
 
@@ -23,11 +17,11 @@ public partial class Job
 
     public string? benefits { get; set; }
 
-    public int min_salary { get; set; }
+    public string? perks { get; set; }
 
-    public int? max_salary { get; set; }
+    public string? bonus { get; set; }
 
-    public double latitude { get; set; }
+    public virtual ICollection<JobQualification> JobQualifications { get; set; } = new List<JobQualification>();
 
-    public double longitude { get; set; }
+    public virtual ICollection<Posting> Postings { get; set; } = new List<Posting>();
 }

@@ -72,11 +72,11 @@ namespace JobPreppersDemo.Controllers
             }
 
 
-            if (request.Date != null)
-            {
-                var filterDate = request.Date.Value.Date;
-                query = query.Where(job => job.fill_by_date >= filterDate);
-            }
+            // if (request.Date != null)
+            // {
+            //     var filterDate = request.Date.Value.Date;
+            //     query = query.Where(job => job.fill_by_date >= filterDate);
+            // }
 
             if (request.Type != null && request.Type.Any())
             {
@@ -89,14 +89,10 @@ namespace JobPreppersDemo.Controllers
                 query = query.Where(job => request.Company.Contains(job.company));
             }
 
-            if (request.Min_Salary != 0)
-            {
-                query = query.Where(job => job.min_salary >= request.Min_Salary);
-            }
-
-
-
-
+            // if (request.Min_Salary != 0)
+            // {
+            //     query = query.Where(job => job.min_salary >= request.Min_Salary);
+            // }
 
 
             var filteredJobs = await query.ToListAsync();

@@ -21,6 +21,10 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Job> Jobs { get; set; }
 
+    public virtual DbSet<JobQualification> JobQualifications { get; set; }
+
+    public virtual DbSet<Posting> Postings { get; set; }
+
     public virtual DbSet<Resume> Resumes { get; set; }
 
     public virtual DbSet<School> Schools { get; set; }
@@ -37,15 +41,11 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<UserProject> UserProjects { get; set; }
 
+    public virtual DbSet<UserSkill> UserSkills { get; set; }
+
     public virtual DbSet<Work> Works { get; set; }
 
     public virtual DbSet<test> tests { get; set; }
-
-    public virtual DbSet<UserSkill> UserSkills { get; set; }
-
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("name=ConnectionStrings:DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -68,15 +68,55 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.jobID).HasName("PRIMARY");
 
             entity.Property(e => e.benefits).HasColumnType("text");
+            entity.Property(e => e.bonus).HasColumnType("json");
             entity.Property(e => e.company).HasMaxLength(100);
             entity.Property(e => e.description).HasColumnType("text");
-            entity.Property(e => e.fill_by_date).HasColumnType("datetime");
-            entity.Property(e => e.location).HasMaxLength(100);
-            entity.Property(e => e.postedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp");
+            entity.Property(e => e.perks).HasColumnType("json");
             entity.Property(e => e.title).HasMaxLength(100);
             entity.Property(e => e.type).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<JobQualification>(entity =>
+        {
+            entity.HasKey(e => new { e.postID, e.jobID })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity.ToTable("JobQualification");
+
+            entity.HasIndex(e => e.jobID, "jobID_fk");
+
+            entity.Property(e => e.education).HasMaxLength(100);
+            entity.Property(e => e.skills).HasColumnType("json");
+
+            entity.HasOne(d => d.job).WithMany(p => p.JobQualifications)
+                .HasForeignKey(d => d.jobID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("jobID_fk");
+
+            entity.HasOne(d => d.post).WithMany(p => p.JobQualifications)
+                .HasForeignKey(d => d.postID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("postID_fk");
+        });
+
+        modelBuilder.Entity<Posting>(entity =>
+        {
+            entity.HasKey(e => e.postID).HasName("PRIMARY");
+
+            entity.ToTable("Posting");
+
+            entity.HasIndex(e => e.jobID, "Jobs__fk");
+
+            entity.Property(e => e.closing_date).HasColumnType("datetime");
+            entity.Property(e => e.currency).HasMaxLength(5);
+            entity.Property(e => e.location).HasMaxLength(100);
+            entity.Property(e => e.post_date).HasColumnType("datetime");
+            entity.Property(e => e.rate).HasMaxLength(40);
+
+            entity.HasOne(d => d.job).WithMany(p => p.Postings)
+                .HasForeignKey(d => d.jobID)
+                .HasConstraintName("Jobs__fk");
         });
 
         modelBuilder.Entity<Resume>(entity =>
@@ -216,23 +256,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasConstraintName("UserProjects_ibfk_1");
         });
 
-        modelBuilder.Entity<Work>(entity =>
-        {
-            entity.HasKey(e => e.workID).HasName("PRIMARY");
-
-            entity.ToTable("Work");
-
-            entity.Property(e => e.location).HasMaxLength(255);
-            entity.Property(e => e.work_name).HasMaxLength(255);
-        });
-
-        modelBuilder.Entity<test>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("test");
-        });
-
         modelBuilder.Entity<UserSkill>(entity =>
         {
             entity.HasKey(e => e.userSkillID).HasName("PRIMARY");
@@ -248,6 +271,23 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.user).WithMany(p => p.UserSkills)
                 .HasForeignKey(d => d.userID)
                 .HasConstraintName("UserSkills_ibfk_1");
+        });
+
+        modelBuilder.Entity<Work>(entity =>
+        {
+            entity.HasKey(e => e.workID).HasName("PRIMARY");
+
+            entity.ToTable("Work");
+
+            entity.Property(e => e.location).HasMaxLength(255);
+            entity.Property(e => e.work_name).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<test>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("test");
         });
 
         OnModelCreatingPartial(modelBuilder);

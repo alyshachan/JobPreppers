@@ -80,9 +80,9 @@ export default function AddJobForm() {
     //   }
     // } catch (err) {
     //   console.log("Catch Error");
-      // Maybe put an alert
-      // setError("An error occurred. Please try again."); // Catch and display any request error
-    }
+    // Maybe put an alert
+    // setError("An error occurred. Please try again."); // Catch and display any request error
+    // }
     console.log("Form Data Submitted: ", data);
 
     setActiveStep(0);

@@ -61,7 +61,7 @@ function JobDescription({ setDrawerOpen, jobs }) {
           <CardContent>
             <Box className={styles.cardIconDetails}>
               <Stack direction="column" spacing={2}>
-                {job.max_salary == null ? (
+                {/* {job.max_salary == null ? (
                   <Box className={styles.descriptionBox}>
                     <PaidIcon />
                     <Typography
@@ -81,7 +81,7 @@ function JobDescription({ setDrawerOpen, jobs }) {
                       ${job.min_salary} - ${job.max_salary}
                     </Typography>
                   </Box>
-                )}
+                )} */}
                 <Box className={styles.descriptionBox}>
                   <AccessTimeFilledIcon />
                   <Typography variant="body" className={styles.descriptionText}>
@@ -100,9 +100,9 @@ function JobDescription({ setDrawerOpen, jobs }) {
 
           <CardActions>
             <Box className={styles.descriptionFooter}>
-              <Typography variant="body" className={styles.descriptionText}>
+              {/* <Typography variant="body" className={styles.descriptionText}>
                 Apply by {new Date(job.fill_by_date).toLocaleDateString()}
-              </Typography>
+              </Typography> */}
               <button
                 onClick={() => handleOpenDrawer(job)}
                 variant="contained"
