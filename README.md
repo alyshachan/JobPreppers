@@ -14,7 +14,7 @@ job-preppers/backend-jp
 dotnet run
 ```
 
-### Backend:
+### Chat Server:
 job-preppers/chatServer_jp
 ```
 dotnet run
