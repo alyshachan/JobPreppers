@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
+import {useConnection} from "../provider/connectionProvider";
 import styles from '../Components/Login/Login.module.css';
 
 export default function Login() {
@@ -9,6 +10,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const {user, setAuthData } = useAuth(); // custom hook for authprovider
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -48,6 +50,7 @@ export default function Login() {
       setError("An error occurred. Please try again."); // Catch and display any request error
     }
   };
+
 
   return (
 <div className={styles.loginContainer}>

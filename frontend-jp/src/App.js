@@ -5,6 +5,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 import NavBar from "./Components/NavBar";
+import Messaging from "./Components/Messaging"
 import { Route, Routes } from "react-router-dom";
 import Feed from "./Pages/Feed";
 import Jobs from "./Pages/Jobs";
@@ -18,12 +19,15 @@ import Experience from "./ProfileSections/Experience";
 import Project from "./ProfileSections/Project";
 import Skills from "./ProfileSections/Skills";
 import { AuthProvider } from "./provider/authProvider";
+import { ConnectionProvider } from "./provider/connectionProvider";
+
 
 function App() {
   return (
     <>
       <AuthProvider>
-        <NavBar />
+        <ConnectionProvider>
+        <NavBar/>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/Login" element={<Login />} />
@@ -40,6 +44,8 @@ function App() {
           <Route path="/Project" element={<Project />} />
           <Route path="/Skills" element={<Skills />} />
         </Routes>
+        <Messaging/>
+        </ConnectionProvider>
       </AuthProvider>
     </>
   );

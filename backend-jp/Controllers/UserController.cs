@@ -54,7 +54,7 @@ namespace JobPreppersProto.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(1), //token expire time
+                Expires = DateTime.UtcNow.AddHours(100), //token expire time
                 SigningCredentials = credentials,
                 Issuer = "yourdomain.com",
                 Audience = "yourdomain.com",
@@ -62,6 +62,7 @@ namespace JobPreppersProto.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
+            Console.WriteLine($"New Token generated: {token}");
             return tokenHandler.WriteToken(token); // return jwt token
         }
 
@@ -85,8 +86,8 @@ namespace JobPreppersProto.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddDays(7)
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(10)
             };
 
             Response.Cookies.Append("authToken", token, cookieOptions);
