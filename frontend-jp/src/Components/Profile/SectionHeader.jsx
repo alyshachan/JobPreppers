@@ -2,7 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import styles from "./ProfileSections.module.css"
 import { IconButton } from '@mui/material';
 
-function SectionHeader({ header, edit }) {
+function SectionHeader({ header, edit, onAdd }) {
   return (
     <>
       <div className={styles.sectionHeader}>
@@ -11,7 +11,7 @@ function SectionHeader({ header, edit }) {
         
         {edit && (
         <IconButton>
-          <AddIcon />
+          <AddIcon onClick={onAdd} />
         </IconButton>
         )}
       </div>

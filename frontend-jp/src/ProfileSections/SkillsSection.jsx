@@ -4,10 +4,20 @@ import "../Components/JobPreppers.css"
 import styles from "../Components/Profile/ProfileSections.module.css"
 import SectionHeader from "../Components/Profile/SectionHeader";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import AddSkillDialog from "../Components/Profile/AddSkillDialog";
 
 function SkillsSection({ skillsDict, edit }) {
+  const [openSkillDialog, setOpenSkillDialog] = useState(false);
   const [isNarrow, setIsNarrow] = useState(false);
   const containerRef = useRef(null);
+
+  const handleOpenSkillDialog = () => {
+    setOpenSkillDialog(true);
+  };
+
+  const handleCloseSkillDialog = () => {
+    setOpenSkillDialog(false);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -26,7 +36,12 @@ function SkillsSection({ skillsDict, edit }) {
 
   return (
     <div ref={containerRef}>
-      <SectionHeader header={"Skills"} edit={edit} />
+      <SectionHeader header={"Skills"} edit={edit} onAdd={handleOpenSkillDialog}/>
+      <AddSkillDialog
+        open={openSkillDialog}
+        onClose={handleCloseSkillDialog}
+      />
+
       <div className={styles.sectionContent}>
         <div className={`${styles.skills} ${isNarrow ? styles.skillsNarrow : ''}`}>
           {displayedItems.map(([title, list], index) => (

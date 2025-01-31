@@ -72,34 +72,6 @@ function Skills() {
     requestSkills(); // fetch skills when user changes
   }, [user]); // Only re-run when user changes
 
-  // Fetch user data on user change (only runs if user is not null)
-  useEffect(() => {
-    if (!user) return; // Return early if no user exists
-
-    const fetchUser = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:5000/api/GetUser/${user.userID}`,
-          {
-            credentials: "include", // include cookies
-          }
-        );
-
-        if (res.ok) {
-          const data = await res.json();
-          console.log("GetUser: ", data);
-          setInitialUser(data);
-        } else {
-          console.error("Failed to fetch User");
-        }
-      } catch (error) {
-        console.error("Error fetching User:", error);
-      }
-    };
-
-    fetchUser(); // fetch user data when user changes
-  }, [user]); // Only re-run when user changes
-
   // Display loading state until user is available
   if (user == null) {
     return <div>Loading...</div>;

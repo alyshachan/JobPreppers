@@ -41,7 +41,7 @@ function ListBox({
         {hasMoreItems && !showAllItems && (
           <div className={styles.skillMoreList}>
             ...
-            <button className="lightButton">See more</button>
+            <a href="./Skills"><button className="lightButton">See more</button></a>
           </div>
         )}
       </div>

@@ -1,61 +1,131 @@
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../provider/authProvider";
+import { Button } from "@mui/material";
+
 import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png";
-import { useAuth } from "../provider/authProvider";
-import React, { useEffect, useState } from "react";
-import "../Components/JobPreppers.css";
-import styles from "../Components/Profile/Profile.module.css";
+import defaultProfilePicture from "../Components/defaultProfilePicture.png"
+import { useConnection } from "../provider/connectionProvider";
+import AddEducationDialog from "../Components/Profile/AddEducationDialog";
+import AddSkillDialog from "../Components/Profile/AddSkillDialog";
+import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
+import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 
-function Profile({ edit = false }) {
+import EditIcon from "@mui/icons-material/Edit";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import styles from "../Components/Profile/Profile.module.css";
+import "../Components/JobPreppers.css";
+
+function Profile() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
-  const { initialUser, setIntialUser } = useState(null); // !mt-[175px]
+  const { initialUser, setIntialUser } = useState(null);
+  const [edit, setEdit] = useState(false);
+  const [educationDict, setEducationDict] = useState([]);
   const [skillsDict, setSkillsDict] = useState({});
+  const [experienceDict, setExperienceDict] = useState([]);
+  const [projectDict, setProjectDict] = useState([]);
+  const [openDialog, setOpenDialog] = useState({
+    education: false,
+    skill: false,
+    experience: false,
+    project: false,
+  });
+  const [message, setMessage] = useState("");
+  const [receiverID, setReceiverID] = useState("");
+  const {signalRConnection, setSignalRConnection, connectToHub, disconnectFromHub} = useConnection();
+
+  const toggleDialog = (type, state) => {
+    setOpenDialog((prev) => ({ ...prev, [type]: state }));
+  };
+
+
+  // const skillsTest = {}
+
+  const [skillsTest, setSkillsTest] = useState({});
+  // test message box handler
+
 
   useEffect(() => {
-    const requestSkills = async () => {
+    if (!user) return;
+
+    const fetchData = async (endpoint, setter, transform) => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/UserSkills/${user.userID}`,
-          {
-            credentials: "include", // include cookies
-          }
+          `http://localhost:5000/api/${endpoint}/${user.userID}`,
+          { credentials: "include" }
         );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("API Response: ", data); // Log the response to verify the structure
-
-          if (data) {
-            let newSkillsDict = {};
-            for (var userSkillID in data) {
-              var skills = data[userSkillID];
-
-              if (!newSkillsDict[skills.category]) {
-                newSkillsDict[skills.category] = [skills.name];
-              } else {
-                newSkillsDict[skills.category].push(skills.name);
-              }
-            }
-            setSkillsDict((prevState) => {
-              if (JSON.stringify(prevState) !== JSON.stringify(newSkillsDict)) {
-                return newSkillsDict;
-              }
-              return prevState;
-            });
-          }
-        }
+        if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
+        const data = await response.json();
+        setter((prevState) =>
+          JSON.stringify(prevState) !== JSON.stringify(data)
+            ? transform(data)
+            : prevState
+        );
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
 
-    if (user) {
-      requestSkills(); // populate skills
-      console.log("User: ", user);
-    }
-  }, [user]); // only populate when user exists
+    fetchData("UserEducation", setEducationDict, (data) =>
+      data.map(
+        ({
+          schoolName,
+          degreeName,
+          studyName,
+          startDate,
+          endDate,
+          description,
+        }) => ({
+          school_name: schoolName,
+          degree_name: degreeName,
+          study_name: studyName,
+          start_date: startDate ? new Date(startDate) : null,
+          end_date: endDate ? new Date(endDate) : null,
+          description,
+        })
+      )
+    );
+
+    fetchData("UserSkills", setSkillsDict, (data) => {
+      const skills = {};
+      data.forEach(({ category, name }) => {
+        skills[category] = skills[category]
+          ? [...skills[category], name]
+          : [name];
+      });
+      return skills;
+    });
+
+    fetchData("UserExperience", setExperienceDict, (data) =>
+      data.map(
+        ({
+          workName,
+          workLocation,
+          jobTitle,
+          startDate,
+          endDate,
+          description,
+        }) => ({
+          work_name: workName,
+          location: workLocation,
+          job_title: jobTitle,
+          start_date: startDate ? new Date(startDate) : null,
+          end_date: endDate ? new Date(endDate) : null,
+          description,
+        })
+      )
+    );
+
+    fetchData("UserProject", setProjectDict, (data) =>
+      data.map(({ projectTitle, description }) => ({
+        project_title: projectTitle,
+        description,
+      }))
+    );
+  }, [user]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -81,94 +151,22 @@ function Profile({ edit = false }) {
 
     fetchUser();
   }, [user]);
+    
+    useEffect(() => {
+      console.log("connecting to hub from profile.jsx");
+      connectToHub();
+  }, []);
 
   if (user == null) {
     return <div>Loading...</div>;
   }
+
 
   const userPic =
     user.profile_pic == null
       ? defaultProfilePicture
       : "data:image/png;base64," +
         user.profile_pic.toString().toString("base64");
-
-  const testEduDict = [
-    {
-      school_name: "University of Swag",
-      degree_name: "Bachelor's of Arts",
-      study_name: "Swag Science",
-      start_date: new Date(2024, 10, 1),
-      end_date: new Date(2024, 5, 1),
-    },
-    {
-      school_name: "University of Utah",
-      degree_name: "Bachelor's of Science",
-      study_name: "Computer Science",
-      start_date: new Date(2021, 8, 1),
-      end_date: new Date(2025, 5, 1),
-    },
-    {
-      school_name: "Georgia Tech",
-      degree_name: "Master's of Science",
-      study_name: "Computer Science",
-      start_date: new Date(2023, 9, 1),
-      end_date: new Date(2025, 4, 1),
-    },
-  ];
-
-  const testExpDict = [
-    {
-      work_name: "test work place",
-      location: "Antarctica",
-      job_title: "CEO",
-      start_date: new Date(2020, 2, 14),
-      end_date: new Date(),
-      description: "i love working. Feb 2020",
-    },
-    {
-      work_name: "another work place",
-      location: "usa",
-      job_title: "software developer",
-      start_date: new Date(2002, 1, 22),
-      end_date: new Date(2025, 1, 19),
-      description: "coder 4 lyfe <3 January 2002 to Jan 2025",
-    },
-    {
-      work_name: "another work place",
-      location: "usa",
-      job_title: "software developer",
-      start_date: new Date(2023, 1, 19),
-      end_date: new Date(),
-      description: "coder 4 lyfe <3 Nov 2023 jan 2025",
-    },
-    {
-      work_name: "another work place",
-      location: "usa",
-      job_title: "software developer",
-      start_date: new Date(2002, 0, 22),
-      end_date: new Date(),
-      description: "coder 4 lyfe <3",
-    },
-  ];
-
-  const testProjDict = [
-    {
-      project_title: "raspberry pi ring doorbell",
-      description: "blah blah blah",
-    },
-    {
-      project_title: "raspberry pi ring doorbell",
-      description: "blah blah blah",
-    },
-    {
-      project_title: "raspberry pi ring doorbell",
-      description: "blah blah blah",
-    },
-    {
-      project_title: "raspberry pi ring doorbell",
-      description: "blah blah blah",
-    },
-  ];
 
   return (
     <>
@@ -183,36 +181,109 @@ function Profile({ edit = false }) {
             <p className={styles.name}>
               {user.first_name} {user.last_name}
             </p>
-            <p>Computer Science Student at the University of Utah</p>
+            <p>{user.title}</p>
             <p className="subtitle">
-              Salt Lake City, UT
-              <br />
-              United States
+              {user.location}
             </p>
+
+            <div className={styles.actionButtons}>
+              <Button variant="contained" startIcon={<AddCircleOutlineIcon />}>
+                Connect
+              </Button>
+              <Button
+                className={styles.editProfileButton}
+                variant="contained"
+                startIcon={edit ? <VisibilityIcon /> : <EditIcon />}
+                onClick={() => setEdit(!edit)}
+              >
+                {edit ? "View Profile" : "Edit Profile"}
+              </Button>
+            </div>
           </div>
 
-          <div className={styles.pinnedInfo}>
-            {Object.keys(testEduDict).length > 0 && (
-              <EducationSection educationDict={testEduDict} edit={edit} />
-            )}
-            {Object.keys(skillsDict).length > 0 && (
-              <SkillsSection skillsDict={skillsDict} edit={edit} />
-            )}
-          </div>
+          {!edit && (educationDict.length === 0 &&
+          skillsDict &&
+          Object.keys(skillsDict).length === 0 &&
+          experienceDict.length === 0 &&
+          projectDict.length === 0) ? (
+            <div className={styles.noProfileText}>
+              {user.first_name} {user.last_name} hasn't added to their profile
+              yet
+            </div>
+          ) : (
+            <div className={styles.highlightedInfo}>
+              {educationDict.length > 0 ? (
+                <EducationSection educationDict={educationDict} edit={edit} />
+              ) : (
+                edit && (
+                  <button
+                    className={styles.addNewSection}
+                    onClick={() => toggleDialog("education", true)}
+                  >
+                    Add Education section
+                  </button>
+                )
+              )}
+
+              {Object.keys(skillsDict).length > 0 ? (
+                <SkillsSection skillsDict={skillsDict} edit={edit} />
+              ) : (
+                edit && (
+                  <button
+                    className={styles.addNewSection}
+                    onClick={() => toggleDialog("skill", true)}
+                  >
+                    Add Skills section
+                  </button>
+                )
+              )}
+            </div>
+          )}
         </div>
 
-        {Object.keys(testExpDict).length > 0 && (
-          <ExperienceSection experienceDict={testExpDict} edit={edit} />
+        {experienceDict.length > 0 ? (
+          <ExperienceSection experienceDict={experienceDict} edit={edit} />
+        ) : (
+          edit && (
+            <button
+              className={styles.addNewSection}
+              onClick={() => toggleDialog("experience", true)}
+            >
+              Add Experience section
+            </button>
+          )
         )}
 
-        {Object.keys(testProjDict).length > 0 && (
-          <ProjectSection projectDict={testProjDict} edit={edit} />
-        )}
-
-        {edit && (
-          <button className={styles.addNewSection}>Add new section</button>
+        {projectDict.length > 0 ? (
+          <ProjectSection projectDict={projectDict} edit={edit} />
+        ) : (
+          edit && (
+            <button
+              className={styles.addNewSection}
+              onClick={() => toggleDialog("project", true)}
+            >
+              Add Project section
+            </button>
+          )
         )}
       </div>
+
+      <AddEducationDialog
+        open={openDialog.education}
+        onClose={() => toggleDialog("education", false)}
+      />
+      <AddSkillDialog
+        open={openDialog.skill}
+        onClose={() => toggleDialog("skill", false)}
+      />
+      <AddExperienceDialog
+        open={openDialog.experience}
+        onClose={() => toggleDialog("experience", false)}
+      />
+      <AddProjectDialog
+        open={openDialog.project}
+        onClose={() => toggleDialog("project", false)}
+      />
     </>
   );
 }

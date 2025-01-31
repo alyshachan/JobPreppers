@@ -53,8 +53,9 @@ namespace JobPreppersDemo.Controllers
                            .Include(ue => ue.school)
                            .Include(ue => ue.degree)
                            .Include(ue => ue.study)
-                           .OrderByDescending(ue => ue.end_date.HasValue)
+                           .OrderByDescending(ue => ue.end_date == null)
                            .ThenByDescending(ue => ue.end_date)
+                           .ThenByDescending(ue => ue.start_date)
                            .Select(ue => new
                            {
                                SchoolName = ue.school.school_name,

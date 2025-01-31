@@ -54,7 +54,7 @@ namespace JobPreppersProto.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(1), //token expire time
+                Expires = DateTime.UtcNow.AddHours(100), //token expire time
                 SigningCredentials = credentials,
                 Issuer = "yourdomain.com",
                 Audience = "yourdomain.com",
@@ -62,6 +62,7 @@ namespace JobPreppersProto.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
+            Console.WriteLine($"New Token generated: {token}");
             return tokenHandler.WriteToken(token); // return jwt token
         }
 
@@ -85,8 +86,8 @@ namespace JobPreppersProto.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddDays(7)
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(10)
             };
 
             Response.Cookies.Append("authToken", token, cookieOptions);
@@ -197,6 +198,43 @@ namespace JobPreppersProto.Controllers
             }
         }
 
+        [HttpPost("AddUserDetails")]
+        public async Task<IActionResult> AddUserDetails([FromBody] DetailsRequest request)
+        {
+            if (request == null ||
+            request.userID == 0)
+            {
+                return BadRequest("UserID is invalid.");
+            }
+
+            try
+            {
+                //check if user already exits
+                var user = await _context.Users.FirstOrDefaultAsync(s => s.userID == request.userID);
+                //if not create user and add to user table
+                if (user == null)
+                {
+                    return NotFound("User not found");
+                }
+                else
+                {
+                    user.title = request.title;
+                    user.location = request.location;
+                    await _context.SaveChangesAsync();
+                }
+                return Ok(new
+                {
+                    Message = "User details updated",
+                    User = user
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
         // Define the request model
         public class LoginRequest
@@ -214,6 +252,11 @@ namespace JobPreppersProto.Controllers
             public string Password { get; set; }
         }
 
+        public class DetailsRequest{
+            public int userID {get; set;}
+            public string title {get; set;}
+            public string location {get; set;}
+        }
 
     }
 }

@@ -49,8 +49,9 @@ namespace JobPreppersDemo.Controllers
                     var userExperience = await _context.UserExperiences
                            .Where(ue => ue.userID == userID)
                            .Include(ue => ue.work)
-                           .OrderByDescending(ue => ue.end_date.HasValue)
-                           .ThenByDescending(ue => ue.end_date) 
+                           .OrderByDescending(ue => ue.end_date == null)
+                           .ThenByDescending(ue => ue.end_date)
+                           .ThenByDescending(ue => ue.start_date)
                            .Select(ue => new
                            {
                                WorkName = ue.work.work_name,
