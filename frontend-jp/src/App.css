@@ -42,12 +42,6 @@
   }
 }
 
-.message-input {
-  height: 40px !important; /* Force height */
-  font-size: 14px !important; /* Adjust text size */
-  padding: 5px 10px !important; /* Adjust padding */
-}
-
 body {
   background-color: #e7f2ec;
   justify-content: center;

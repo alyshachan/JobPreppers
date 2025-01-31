@@ -7,16 +7,12 @@ import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
-import { useAuth } from "../provider/authProvider";
 import { useConnection } from "../provider/connectionProvider";
-import React, { useEffect, useState, useRef } from 'react';
-import * as signalR from '@microsoft/signalr';
 import AddEducationDialog from "../Components/Profile/AddEducationDialog";
 import AddSkillDialog from "../Components/Profile/AddSkillDialog";
 import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
 import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 
-import defaultProfilePicture from "../Components/defaultProfilePicture.png";
 import EditIcon from "@mui/icons-material/Edit";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -37,14 +33,13 @@ function Profile() {
     experience: false,
     project: false,
   });
+  const [message, setMessage] = useState("");
+  const [receiverID, setReceiverID] = useState("");
+  const {signalRConnection, setSignalRConnection, connectToHub, disconnectFromHub} = useConnection();
 
   const toggleDialog = (type, state) => {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
   };
-  const {initialUser, setIntialUser} = useState(null);
-  const [message, setMessage] = useState("");
-  const [receiverID, setReceiverID] = useState("");
-  const {signalRConnection, setSignalRConnection, connectToHub, disconnectFromHub} = useConnection();
 
 
   // const skillsTest = {}
@@ -58,48 +53,6 @@ function Profile() {
 
     const fetchData = async (endpoint, setter, transform) => {
       try {
-        const response = await fetch(`http://localhost:5000/api/UserSkills/${user.userID}`, {
-          credentials: "include", // include cookies
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("API Response: ", data);  // Log the response to verify the structure
-
-          if (data) {
-            let newSkillsTest = {}
-            for (var userSkillID in data) {
-
-              var skills = data[userSkillID]
-
-
-              if (!newSkillsTest[skills.category]) {
-                newSkillsTest[skills.category] = [skills.name]
-              }
-              else {
-                newSkillsTest[skills.category].push(skills.name)
-              }
-            }
-            setSkillsTest(prevState => {
-              if (JSON.stringify(prevState) !== JSON.stringify(newSkillsTest)) {
-                return newSkillsTest;
-              }
-              return prevState;
-            });
-          }
-        };
-
-      }
-      catch (error) {
-        console.log(error)
-      }
-    };
-
-    if (user) {
-      requestSkills(); // populate skills
-      console.log("User: ", user)
-    }
-  }, [user]);  // only populate when user exists
         const response = await fetch(
           `http://localhost:5000/api/${endpoint}/${user.userID}`,
           { credentials: "include" }
@@ -175,10 +128,6 @@ function Profile() {
   }, [user]);
 
   useEffect(() => {
-    console.log("connecting to hub from profile.jsx");
-    connectToHub();
-}, []);
-
     const fetchUser = async () => {
       try {
         const res = await fetch(
@@ -202,6 +151,11 @@ function Profile() {
 
     fetchUser();
   }, [user]);
+    
+    useEffect(() => {
+      console.log("connecting to hub from profile.jsx");
+      connectToHub();
+  }, []);
 
   if (user == null) {
     return <div>Loading...</div>;
@@ -228,7 +182,6 @@ function Profile() {
               {user.first_name} {user.last_name}
             </p>
             <p>{user.title}</p>
-            {console.log("THE STUPID TITLE" + user.title)}
             <p className="subtitle">
               {user.location}
             </p>

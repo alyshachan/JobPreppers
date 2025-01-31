@@ -21,7 +21,9 @@ const StyledChatList = styled(ChatList)(({ theme }) => ({
     alignItems: "start"
 },
 "& .rce-citem-body": {
-    // justifyContent: "start"
+    alignSelf: "center"
+},
+"& .rce-citem-avatar": {
     alignSelf: "center"
 }
 }));
