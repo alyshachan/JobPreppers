@@ -10,7 +10,7 @@ function Skills() {
 
   // Declare hooks unconditionally at the top level
   const [initialUser, setInitialUser] = useState(null);
-  const [skillsTest, setSkillsTest] = useState({});
+  const [skillsDict, setSkillsDict] = useState({});
   const [isNarrow, setIsNarrow] = useState(false);
   const containerRef = useRef(null);
 
@@ -46,19 +46,19 @@ function Skills() {
           console.log("API Response: ", data);
 
           if (data) {
-            let newSkillsTest = {};
+            let newSkillsDict = {};
             for (var userSkillID in data) {
               var skills = data[userSkillID];
 
-              if (!newSkillsTest[skills.category]) {
-                newSkillsTest[skills.category] = [skills.name];
+              if (!newSkillsDict[skills.category]) {
+                newSkillsDict[skills.category] = [skills.name];
               } else {
-                newSkillsTest[skills.category].push(skills.name);
+                newSkillsDict[skills.category].push(skills.name);
               }
             }
-            setSkillsTest((prevState) => {
-              if (JSON.stringify(prevState) !== JSON.stringify(newSkillsTest)) {
-                return newSkillsTest;
+            setSkillsDict((prevState) => {
+              if (JSON.stringify(prevState) !== JSON.stringify(newSkillsDict)) {
+                return newSkillsDict;
               }
               return prevState;
             });
@@ -114,7 +114,7 @@ function Skills() {
         <h1>Skills</h1>
         <div className={styles.sectionContent}>
           <div className={`${styles.skills} ${styles.skillsNarrow} place-items-center`}>
-            {Object.entries(skillsTest).map(([title, list], index) => (
+            {Object.entries(skillsDict).map(([title, list], index) => (
               <ListBox
                 key={index}
                 title={title}
