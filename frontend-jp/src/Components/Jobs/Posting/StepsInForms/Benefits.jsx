@@ -85,6 +85,7 @@ export default function Benefits() {
                 />
               </div>
             </div>
+
             <div className={styles.inputField}>
               {payType === "Pay Range" ? (
                 <Fragment>
@@ -174,7 +175,7 @@ export default function Benefits() {
                 exclusive={false}
               />
             </div>
-          </div>
+            </div>
         </FormControl>
       </div>
     </>

@@ -47,45 +47,48 @@ export default function DescribeJob({ formData, setFormData }) {
             <div className={styles.dialogContent}>
               <div className={styles.dialogContentLeft}>
                 <div className={styles.input}>
-                  <TextField
-                    {...register("company")}
-                    required
-                    type="text"
-                    label="Company Name"
-                    className={styles.inputField}
-                  />
-                </div>
+                  <div className={styles.inputField}>
+                    <TextField
+                      {...register("company")}
+                      required
+                      type="text"
+                      label="Company Name"
+                    />
+                  </div>
 
-                <div className={styles.input}>
-                  <TextField
-                    {...register("title")}
-                    required
-                    label="Job Title"
-                    className={styles.inputField}
-                  />
+                  <div className={styles.inputField}>
+                    <TextField
+                      {...register("title")}
+                      required
+                      label="Job Title"
+                    />
+                  </div>
                 </div>
               </div>
 
               <div className={styles.dialogContentRight}>
                 <div className={styles.input}>
-                  <TextField
-                    {...register("location")}
-                    label="Location"
-                    className={styles.inputField}
-                  />
+                  <div className={styles.inputField}>
+                    <TextField
+                      {...register("location")}
+                      label="Location"
+                      className={styles.inputField}
+                    />
+                  </div>
+                  <div className={styles.inputField}>
+                    <AutoCompleteForm
+                      control={control}
+                      name="type"
+                      options={employementTypeOptions}
+                      label="Employment Type"
+                      className={styles.inputField}
+                    />
+                  </div>
                 </div>
-
-                <AutoCompleteForm
-                  control={control}
-                  name="type"
-                  options={employementTypeOptions}
-                  label="Employment Type"
-                  className={styles.inputField}
-                />
               </div>
             </div>
 
-            <label for="description" className={styles.label}>
+            <label for="description" className={`${styles.label} mt-[10px]`}>
               Job Description *
             </label>
             <TextareaAutosize
