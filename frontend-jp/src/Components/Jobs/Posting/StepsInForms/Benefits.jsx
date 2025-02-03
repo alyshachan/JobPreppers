@@ -72,10 +72,10 @@ export default function Benefits() {
     <>
       <div className={styles.dialogContent}>
         <FormControl>
-          <div className={styles.input}>
-            <div className={styles.inputField}>
-              <h2>Expected Pay</h2>
-              <div className="ExpectedPayType">
+          <div className={styles.expectedPay}>
+            <div className={styles.input}>
+              <div className={`${styles.inputField} justify-center`}>
+                <h2>Expected Pay</h2>
                 <ToggleButtonForm
                   name="payType"
                   control={control}
@@ -84,12 +84,10 @@ export default function Benefits() {
                   className="w-full"
                 />
               </div>
-            </div>
 
-            <div className={styles.inputField}>
-              {payType === "Pay Range" ? (
-                <Fragment>
-                  <Box>
+              <div className={styles.inputField}>
+                {payType === "Pay Range" ? (
+                  <Box className={styles.payRangeDetails}>
                     <AutoCompleteForm
                       control={control}
                       name="rate"
@@ -98,12 +96,16 @@ export default function Benefits() {
                     />
 
                     <TextField
-                      {...register("minimumSalary", { valueAsNumber: true })}
+                      {...register("minimumSalary", {
+                        valueAsNumber: true,
+                      })}
                       type="number"
                       label="Starting Pay"
                     />
                     <TextField
-                      {...register("maximumSalary", { valueAsNumber: true })}
+                      {...register("maximumSalary", {
+                        valueAsNumber: true,
+                      })}
                       type="number"
                       label="Maximum Pay"
                     />
@@ -115,10 +117,8 @@ export default function Benefits() {
                       control={control}
                     />
                   </Box>
-                </Fragment>
-              ) : payType === "Exact Amount" ? (
-                <Fragment>
-                  <Box>
+                ) : payType === "Exact Amount" ? (
+                  <Box className={styles.payExactDetails}>
                     <AutoCompleteForm
                       control={control}
                       name="rate"
@@ -126,7 +126,9 @@ export default function Benefits() {
                       label="Rate"
                     />
                     <TextField
-                      {...register("minimumSalary", { valueAsNumber: true })}
+                      {...register("minimumSalary", {
+                        valueAsNumber: true,
+                      })}
                       type="number"
                       label="Starting Salary"
                     />
@@ -138,14 +140,16 @@ export default function Benefits() {
                       control={control}
                     />
                   </Box>
-                </Fragment>
-              ) : payType === "Unpaid" ? (
-                <Fragment>
-                  <Box></Box>
-                </Fragment>
-              ) : null}
+                ) : payType === "Unpaid" ? (
+                  <Fragment>
+                    <Box></Box>
+                  </Fragment>
+                ) : null}
+              </div>
             </div>
+          </div>
 
+          <div className={styles.input}>
             <div className={styles.inputField}>
               <h2>Bonus</h2>
               <ToggleButtonForm
@@ -175,7 +179,7 @@ export default function Benefits() {
                 exclusive={false}
               />
             </div>
-            </div>
+          </div>
         </FormControl>
       </div>
     </>

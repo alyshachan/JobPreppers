@@ -1,3 +1,7 @@
+[type="number"]:focus {
+  box-shadow: none !important;
+}
+
 .addJobTitle {
     margin: 0;
     padding: 0;
@@ -19,7 +23,7 @@
     display: flex;
     flex-direction: row;
     column-gap: 50px;
-    width: 900px;
+    width: 100%;
   }
   
   .dialogContentLeft{
@@ -54,4 +58,24 @@
     color: #4ba173;
     font-family: 'Roboto', sans-serif;
     font-size: rem;
+  }
+
+  .expectedPay{
+    border: solid 2px #e5e7eb;
+    padding: 20px;
+    width: 100%;
+  }
+
+  .payRangeDetails{
+    display: grid;
+    grid-auto-flow: column;
+    gap: 10px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .payExactDetails{
+    display: grid;
+    grid-auto-flow: column;
+    gap: 10px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
