@@ -44,7 +44,7 @@ export default function DescribeJob({ formData, setFormData }) {
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col">
-            <div className={styles.dialogContent}>
+            <div className={`${styles.dialogContent} pt-2`}>
               <div className={styles.dialogContentLeft}>
                 <div className={styles.input}>
                   <div className={styles.inputField}>

@@ -23,10 +23,10 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     borderRadius: "30px",
     margin: "-20px",
     padding: "0px 20px 20px",
-    overflow: "auto",
+    overflow: "hidden",
     maxWidth: "1000px",
     minWidth: "1000px",
-    overflowX: "hidden",
+    // overflowX: "hidden",
   },
 }));
 
@@ -147,8 +147,8 @@ export default function AddJobForm({ setJobs }) {
         );
       case 3:
         return (
-          <FormProvider {...jobForm} onSubmit={handleSubmit(onSubmit)}>
-            <form id="addJobForm" onSubmit={handleSubmit(onSubmit)}>
+          <FormProvider {...jobForm} >
+            <form id="jobForm" onSubmit={handleSubmit(onSubmit)}>
               {/* Wrap in form and use handleSubmit */}
               <ApplicationProcess
                 formData={formData}
@@ -207,7 +207,7 @@ export default function AddJobForm({ setJobs }) {
             </DialogTitle>
           </header>
 
-          <body className="bg-white">{pageDisplay()}</body>
+          <body className="bg-white overflow-y-auto">{pageDisplay()}</body>
 
           {activeStep === steps.length - 1 ? (
             <DialogActions>
@@ -219,7 +219,7 @@ export default function AddJobForm({ setJobs }) {
                 >
                   Back
                 </button>
-                <button type="submit" form="addJobForm">Submit</button>
+                <button form="jobForm">Submit</button>
               </footer>
             </DialogActions>
           ) : (

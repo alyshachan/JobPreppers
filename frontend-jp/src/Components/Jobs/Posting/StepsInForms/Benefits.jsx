@@ -1,4 +1,4 @@
-import { FormControl, Box, TextField } from "@mui/material";
+import { FormControl, Box, TextField, DialogContent } from "@mui/material";
 import { useState, Fragment, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import AutoCompleteForm from "../Helper/AutoCompleteForm";
@@ -70,6 +70,7 @@ export default function Benefits() {
   // Step 2
   return (
     <>
+    <DialogContent>
       <div className={styles.dialogContent}>
         <FormControl>
           <div className={styles.expectedPay}>
@@ -182,6 +183,7 @@ export default function Benefits() {
           </div>
         </FormControl>
       </div>
+      </DialogContent>
     </>
   );
 }

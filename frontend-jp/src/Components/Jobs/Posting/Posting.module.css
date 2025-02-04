@@ -28,6 +28,7 @@
     flex-direction: row;
     column-gap: 50px;
     width: 100%;
+    overflow-x: hidden;
   }
   
   .dialogContentLeft{

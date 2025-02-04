@@ -1,7 +1,7 @@
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { Input, InputLabel, TextField } from "@mui/material";
+import { DialogContent, Input, InputLabel, TextField } from "@mui/material";
 import { Fragment, useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import ToggleButtonForm from "../Helper/ToggleButtonForm";
@@ -34,6 +34,7 @@ export default function ApplicationProcess() {
 
   return (
     <>
+    <DialogContent>
       <div className={styles.input}>
         <div className={styles.inputField}>
           <h2>Posting Date</h2>
@@ -73,10 +74,7 @@ export default function ApplicationProcess() {
             id="hires"
             type="number"
             label="Number of Hires"
-            {...register("numberOfHires", {
-              valueAsNumber: true,
-            })}
-            value={watch("numberOfHires") === null || watch("numberOfHires") === undefined ? 0 : watch("numberOfHires")}
+            {...register("numberOfHires", { valueAsNumber: true, })}
           />
         </div>
 
@@ -113,6 +111,7 @@ export default function ApplicationProcess() {
           ) : null}
         </div>
       </div>
+      </DialogContent>
     </>
   );
 }
