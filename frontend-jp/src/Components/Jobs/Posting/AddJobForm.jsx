@@ -26,7 +26,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     overflow: "auto",
     maxWidth: "1000px",
     minWidth: "1000px",
-    overflowX: "hidden"
+    overflowX: "hidden",
   },
 }));
 
@@ -148,14 +148,12 @@ export default function AddJobForm({ setJobs }) {
       case 3:
         return (
           <FormProvider {...jobForm} onSubmit={handleSubmit(onSubmit)}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              {" "}
+            <form id="addJobForm" onSubmit={handleSubmit(onSubmit)}>
               {/* Wrap in form and use handleSubmit */}
               <ApplicationProcess
                 formData={formData}
                 setFormData={setFormData}
               />
-              <button type="submit">Submit</button>
             </form>
           </FormProvider>
         );
@@ -181,12 +179,12 @@ export default function AddJobForm({ setJobs }) {
           </DialogTitle>
 
           <IconButton
-        aria-label="close"
-        onClick={handleClose}
-        className={styles.closeButton}
-      >
-        <CloseIcon />
-      </IconButton>
+            aria-label="close"
+            onClick={handleClose}
+            className={styles.closeButton}
+          >
+            <CloseIcon />
+          </IconButton>
 
           <header>
             <Stepper activeStep={activeStep}>
@@ -213,7 +211,7 @@ export default function AddJobForm({ setJobs }) {
 
           {activeStep === steps.length - 1 ? (
             <DialogActions>
-              <footer>
+              <footer className="flex flex-row gap-2">
                 <button
                   disabled={activeStep == 0}
                   style={{ display: activeStep === 0 ? "none" : "block" }}
@@ -221,6 +219,7 @@ export default function AddJobForm({ setJobs }) {
                 >
                   Back
                 </button>
+                <button type="submit" form="addJobForm">Submit</button>
               </footer>
             </DialogActions>
           ) : (
