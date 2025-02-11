@@ -51,13 +51,6 @@ export default function Login() {
       setError("An error occurred while logging in. Please try again."); // Catch and display any request error
     }
 
-    // try {
-    //   const response = await fetch("http://localhost:5000/api")
-    // }
-    // catch{
-
-    // }
-
   };
 
 

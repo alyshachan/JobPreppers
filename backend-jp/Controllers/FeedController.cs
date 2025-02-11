@@ -25,5 +25,12 @@ namespace JobPreppersDemo.Controllers {
             var activities = await userFeed.GetActivitiesAsync();
             return Ok(new {activities});
         }
+
+        [HttpGet("token/{userID}")]
+        public async Task<IActionResult> GetStreamAuthToken(string userID) {
+            var client = _streamService.Client;
+            var token = client.CreateUserToken(userID);
+            return Ok(new {token});
+        }
     }
 }
