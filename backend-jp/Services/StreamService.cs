@@ -8,8 +8,8 @@ namespace JobPreppersDemo.Services {
         public StreamService()
         {
             Client = new StreamClient(
-                Environment.GetEnvironmentVariable("eyr4ru8mttcv"), // jobpreppers-app
-                Environment.GetEnvironmentVariable("tykf9qaxt9jwdpqqzvuk5suf6u7sryhqt7em47rtfja3gahf44h3rurhrw3kth7j"),
+                Environment.GetEnvironmentVariable("STREAM_API_KEY"), // jobpreppers-app
+                Environment.GetEnvironmentVariable("STREAM_API_SECRET"),
                 new StreamClientOptions
                 {
                     Location = StreamApiLocation.USEast,

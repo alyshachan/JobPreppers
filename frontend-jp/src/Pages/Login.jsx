@@ -15,6 +15,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
   
+    // reach login endpoint
     try {
       const response = await fetch("http://localhost:5000/api/Users/login", {
         method: "POST",
@@ -47,8 +48,16 @@ export default function Login() {
         setError(errorData.message); // Show error message from the backend
       }
     } catch (err) {
-      setError("An error occurred. Please try again."); // Catch and display any request error
+      setError("An error occurred while logging in. Please try again."); // Catch and display any request error
     }
+
+    // try {
+    //   const response = await fetch("http://localhost:5000/api")
+    // }
+    // catch{
+
+    // }
+
   };
 
 

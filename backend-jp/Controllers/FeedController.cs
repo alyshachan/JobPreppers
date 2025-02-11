@@ -1,5 +1,7 @@
 using JobPreppersDemo.Services;
 using Microsoft.AspNetCore.Mvc;
+using Stream;
+using Stream.Models;
 
 namespace JobPreppersDemo.Controllers {
     [Route("api/[controller]")]
@@ -16,14 +18,10 @@ namespace JobPreppersDemo.Controllers {
         public async Task<IActionResult> GetFeed(string userID) {
             // api calls go here
             var client = _streamService.Client;
-            var userFeed = client.GetFeed("user", userID);
+            var userFeed = client.Feed("user", userID);
             // add a test activity
-            await userFeed.AddActivityAsync(new Activity{
-                Actor = userID,
-                Verb = "posted",
-                Object = "content",
-                Time = DateTime.UtcNow
-            })
+            // var activity = new Activity(userID, "posted", "content");
+            // await userFeed.AddActivityAsync(activity);
             var activities = await userFeed.GetActivitiesAsync();
             return Ok(new {activities});
         }
