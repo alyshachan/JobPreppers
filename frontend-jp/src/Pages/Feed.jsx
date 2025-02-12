@@ -1,13 +1,14 @@
 import AddProjectDialog from "../Components/Profile/AddProjectDialog"
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
+import 'react-activity-feed/dist/index.css';
 import { StreamApp, FlatFeed, Activity, StatusUpdateForm } from 'react-activity-feed';
 
 
 
 function Feed(){
     const { user, setAuthData } = useAuth();
-    const {streamToken, setStreamToken} = useState('');
+    const [streamToken, setStreamToken] = useState('');
     useEffect(() => {
         const fetchFeedData = async () => {
         try{
@@ -21,8 +22,8 @@ function Feed(){
                 setStreamToken(token); //set stream broken, fix tmrw
             }
         }
-        catch{
-            console.error("Error fetching Stream API token");
+        catch(e) {
+            console.error(e);
         }
 
 
@@ -51,16 +52,20 @@ function Feed(){
         appId={process.env.REACT_APP_STREAM_APP_ID}
         token={streamToken}
       >
-        <div>
-          <h1>Feed</h1>
+        <div className="flex w-full p-4 space-x-4">
+
+            <div className="w-2/3">
           <StatusUpdateForm feedGroup="user" />
-          {/* FlatFeed displays a list of activities from the "user" feed */}
-          <FlatFeed
-            feedGroup="user"
-            options={{ limit: 10 }}
-            Activity={(props) => <Activity {...props} />}
-          />
+
+            <FlatFeed
+                classname="flat-feed"
+                feedGroup="user"
+                options={{ limit: 10 }}
+                Activity={(props) => <Activity {...props} />}
+                />
+            </div>
         </div>
+
       </StreamApp>)
     )
 }
