@@ -16,7 +16,7 @@ import {
 } from "@stream-io/video-react-sdk";
 import LocalParticipantView from "./LocalParticipantView";
 import RemoteParticipantView from "./RemoteParticipantView";
-import "../JobPreppers.css"
+import "@stream-io/video-react-sdk/dist/css/styles.css";
 
 function VideoCall() {
   const { user, setAuthData } = useAuth();
@@ -55,11 +55,12 @@ function VideoCall() {
       apiKey: process.env.REACT_APP_STREAM_API_KEY,
       user: {
         id: String(user.userID),
-        name: `${user.firstName} ${user.lastName}`,
+        name: String(`${user.firstName} ${user.lastName}`),
         image: user.profilePicture,
       },
       token: streamToken,
     });
+console.log("name of user string: ", `${user.firstName} ${user.lastName}`);
 
     setClient(newClient);
   }, [user, streamToken]);
