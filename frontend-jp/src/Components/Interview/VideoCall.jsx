@@ -1,16 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../provider/authProvider";
-import { CallingState, StreamCall, StreamVideo,  StreamVideoClient , useCall, useCallStateHooks, User } from "@stream-io/video-react-sdk"
+import {
+  CallingState,
+  StreamCall,
+  StreamVideo,
+  StreamVideoClient,
+  useCall,
+  useCallStateHooks,
+  User,
+} from "@stream-io/video-react-sdk";
 
 function VideoCall() {
   const { user, setAuthData } = useAuth();
   const [streamToken, setStreamToken] = useState("");
+  const [client, setClient] = useState(null);
+  const [call, setCall] = useState(null);
+
+
   useEffect(() => {
+    if (!user) return;
+
     const fetchVideoCallData = async () => {
       try {
         console.log("requesting user token");
         const response = await fetch(
-          `http://localhost:5000/api/VideoCall/token/${user.userID}`
+          `http://localhost:5000/api/VideoCall/token/${user.userID}`,
+          {
+            credentials: "include", // include cookies
+          }
         );
         if (response.ok) {
           const data = await response.json();
@@ -24,40 +41,56 @@ function VideoCall() {
     fetchVideoCallData();
   }, [user]);
 
-  const callUser = {
-    id: user.userID,
-    name: user.firstName,
-    image: user.profilePicture
-  };
+  useEffect(() => {
+    if (!user || !streamToken) return;
 
-  const client = new StreamVideoClient({REACT_APP_STREAM_API_KEY, callUser, streamToken});
-  const call = client.call('default', "testCall")
+    const newClient = new StreamVideoClient({
+      apiKey: process.env.REACT_APP_STREAM_API_KEY,
+      user: {
+        id: String(user.userID),
+        name: `${user.firstName} ${user.lastName}`,
+        image: user.profilePicture,
+      },
+      token: streamToken,
+    });
+
+    setClient(newClient);
+  }, [user, streamToken]);
+
+  useEffect(() => {
+    if (!client) return;
+
+    const newCall = client.call("default", "testCall");
+    newCall.join({create: true});
+
+    setCall(newCall);
+  }, [client]);
+
 
   return (
     <StreamVideo client={client}>
-        <StreamCall call={call}>
-            <CallLayout/>
-        </StreamCall>
+      <StreamCall call={call}>
+        <CallLayout />
+      </StreamCall>
     </StreamVideo>
   );
 }
 
 const CallLayout = () => {
-    const call = useCall();
-    const {useCallCallingState, useParticipantCount} = useCallStateHooks();
-    const callingState = useCallCallingState();
-    const participantCount = useParticipantCount();
+  const call = useCall();
+  const { useCallCallingState, useParticipantCount } = useCallStateHooks();
+  const callingState = useCallCallingState();
+  const participantCount = useParticipantCount();
 
-    if (callingState != CallingState.JOINED){
-        return <div>Loading...</div>
-    }
+  if (callingState != CallingState.JOINED) {
+    return <div>Loading...</div>;
+  }
 
-    return( 
-        <div>
-            Call "{call.id}" has {participantCount} participants
-        </div>
-    )
-
-}
+  return (
+    <div>
+      Call "{call.id}" has {participantCount} participants
+    </div>
+  );
+};
 
 export default VideoCall;

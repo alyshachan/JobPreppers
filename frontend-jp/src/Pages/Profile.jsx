@@ -40,11 +40,7 @@ function Profile() {
   const toggleDialog = (type, state) => {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
   };
-
-
-  // const skillsTest = {}
-
-  const [skillsTest, setSkillsTest] = useState({});
+  
   // test message box handler
 
 
