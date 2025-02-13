@@ -11,9 +11,12 @@ import {
   User,
   ParticipantList,
   LocalParticipant,
+  SpeakerLayout,
+  CallControls
 } from "@stream-io/video-react-sdk";
 import LocalParticipantView from "./LocalParticipantView";
 import RemoteParticipantView from "./RemoteParticipantView";
+import "../JobPreppers.css"
 
 function VideoCall() {
   const { user, setAuthData } = useAuth();
@@ -74,6 +77,7 @@ function VideoCall() {
     <StreamVideo client={client}>
       <StreamCall call={call}>
         <CallLayout />
+
       </StreamCall>
     </StreamVideo>
   );
@@ -98,16 +102,15 @@ const CallLayout = () => {
 
   return (
     <StreamTheme>
-      <RemoteParticipantView
+      <SpeakerLayout/>
+      {/* <RemoteParticipantView
         participantList={{ participants: remoteParticipants }}
       />
       <LocalParticipantView
         participantList={{ participant: localParticipant }}
-      />
+      /> */}
+      <CallControls/>
     </StreamTheme>
-    // <div>
-    //   Call "{call.id}" has {participantCount} participants
-    // </div>
   );
 };
 
