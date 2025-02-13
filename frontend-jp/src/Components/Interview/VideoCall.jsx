@@ -3,19 +3,23 @@ import { useAuth } from "../../provider/authProvider";
 import {
   CallingState,
   StreamCall,
+  StreamTheme,
   StreamVideo,
   StreamVideoClient,
   useCall,
   useCallStateHooks,
   User,
+  ParticipantList,
+  LocalParticipant,
 } from "@stream-io/video-react-sdk";
+import LocalParticipantView from "./LocalParticipantView";
+import RemoteParticipantView from "./RemoteParticipantView";
 
 function VideoCall() {
   const { user, setAuthData } = useAuth();
   const [streamToken, setStreamToken] = useState("");
   const [client, setClient] = useState(null);
   const [call, setCall] = useState(null);
-
 
   useEffect(() => {
     if (!user) return;
@@ -61,11 +65,10 @@ function VideoCall() {
     if (!client) return;
 
     const newCall = client.call("default", "testCall");
-    newCall.join({create: true});
+    newCall.join({ create: true });
 
     setCall(newCall);
   }, [client]);
-
 
   return (
     <StreamVideo client={client}>
@@ -78,8 +81,15 @@ function VideoCall() {
 
 const CallLayout = () => {
   const call = useCall();
-  const { useCallCallingState, useParticipantCount } = useCallStateHooks();
+  const {
+    useCallCallingState,
+    useParticipantCount,
+    useLocalParticipant,
+    useRemoteParticipants,
+  } = useCallStateHooks();
   const callingState = useCallCallingState();
+  const localParticipant = useLocalParticipant();
+  const remoteParticipants = useRemoteParticipants();
   const participantCount = useParticipantCount();
 
   if (callingState != CallingState.JOINED) {
@@ -87,9 +97,17 @@ const CallLayout = () => {
   }
 
   return (
-    <div>
-      Call "{call.id}" has {participantCount} participants
-    </div>
+    <StreamTheme>
+      <RemoteParticipantView
+        participantList={{ participants: remoteParticipants }}
+      />
+      <LocalParticipantView
+        participantList={{ participant: localParticipant }}
+      />
+    </StreamTheme>
+    // <div>
+    //   Call "{call.id}" has {participantCount} participants
+    // </div>
   );
 };
 
