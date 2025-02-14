@@ -36,100 +36,64 @@ export default function ApplicationProcess() {
 
   return (
     <>
-    <DialogContent>
-      <div className={styles.input}>
-        <div className={styles.inputField}>
-          <h2>Posting Date</h2>
-          <div className={styles.twoGrid}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <Controller
-                name="postDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    {...field}
-                    label="Post Day"
-                    value={field.value ? dayjs(field.value) : null} // Ensure it's in Dayjs format
-                  />
-                )}
-              />
-            </LocalizationProvider>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <Controller
-                name="endDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    {...field}
-                    label="Apply By Day"
-                    value={field.value ? dayjs(field.value) : null} // Ensure it's in Dayjs format
-                  />
-                )}
-              />
-            </LocalizationProvider>
+      <DialogContent>
+        <div className={styles.input}>
+          <div className={styles.inputField}>
+            <h2>Posting Date</h2>
+            <div className={styles.twoGrid}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Controller
+                  name="postDate"
+                  control={control}
+                  render={({ field }) => (
+                    <DatePicker
+                      {...field}
+                      label="Post Day"
+                      value={field.value ? dayjs(field.value) : null} // Ensure it's in Dayjs format
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Controller
+                  name="endDate"
+                  control={control}
+                  render={({ field }) => (
+                    <DatePicker
+                      {...field}
+                      label="Apply By Day"
+                      value={field.value ? dayjs(field.value) : null} // Ensure it's in Dayjs format
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+            </div>
+            <div className={styles.twoGrid}>
+              {errorMessage(errors.postDate) ? (
+                errorMessage(errors.postDate)
+              ) : (
+                <div />
+              )}
+              {errorMessage(errors.endDate) ? (
+                errorMessage(errors.endDate)
+              ) : (
+                <div />
+              )}
+            </div>
           </div>
-        </div>
 
-        <div className={styles.inputField}>
-          <h2>Number of Hires</h2>
-          <TextField
-            id="hires"
-            type="number"
-            label="Number of Hires"
-            {...register("numberOfHires", { valueAsNumber: true, })}
-          />
-        </div>
-
-        <div className={styles.inputField}>
-          <h2>Apply Options</h2>
-          <ToggleButtonForm
-            name="applyOptions"
-            control={control}
-            options={applyList}
-            exclusive={true}
-          ></ToggleButtonForm>
+          <div className={styles.inputField}>
+            <h2>Number of Hires</h2>
+            <TextField
+              id="hires"
+              type="number"
+              label="Number of Hires"
+              {...register("numberOfHires", { valueAsNumber: true })}
+            />
+            {errorMessage(errors.numberOfHires)}
           </div>
-      <div>
-        <h2>Posting Date</h2>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Controller
-            name="postDate"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                label="Post Day"
-                value={field.value ? dayjs(field.value) : null} // Ensure it's in Dayjs format
-              />
-            )}
-          />
-        </LocalizationProvider>
-        {errorMessage(errors.postDate)}
 
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Controller
-            name="endDate"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                label="Apply By Day"
-                value={field.value ? dayjs(field.value) : null} // Ensure it's in Dayjs format
-              />
-            )}
-          />
-        </LocalizationProvider>
-        {errorMessage(errors.endDate)}
-      </div>
-      <InputLabel htmlFor="hires">Number of Hires: </InputLabel>
-      <Input
-        id="hires"
-        type="number"
-        {...register("numberOfHires", { valueAsNumber: true })}
-      ></Input>
-      {errorMessage(errors.numberOfHires)}
-
-      {/* <div>
+          {/* <div>
         <ToggleButtonForm
           name="applyOptions"
           control={control}
@@ -150,16 +114,16 @@ export default function ApplicationProcess() {
           ) : applyMethod == "Easy Apply" ? (
             <Fragment>
               <h2>Required Documents</h2> */}
-      <div>
-        <InputLabel htmlFor="applyLink"> Enter External Link</InputLabel>
-        <Input
-          idlabel="applyLink"
-          type="url"
-          {...register("applicationLink")}
-        ></Input>
-        {errorMessage(errors.applicationLink)}
-      </div>
-      {/* {applyMethod == "External Apply" ? (
+          <div className={styles.inputField}>
+            <InputLabel htmlFor="applyLink"> Enter External Link</InputLabel>
+            <Input
+              idlabel="applyLink"
+              type="url"
+              {...register("applicationLink")}
+            ></Input>
+            {errorMessage(errors.applicationLink)}
+          </div>
+          {/* {applyMethod == "External Apply" ? (
           <Fragment>
             
           </Fragment>
@@ -187,10 +151,9 @@ export default function ApplicationProcess() {
             {jobForm.setValue()}
           </Fragment>
         ) : null} */}
-      {/* </div> */}
-      </div>
+          {/* </div> */}
+        </div>
       </DialogContent>
-      </>
-    
+    </>
   );
 }

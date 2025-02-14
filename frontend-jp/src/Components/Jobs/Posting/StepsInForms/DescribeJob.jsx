@@ -68,7 +68,6 @@ export default function DescribeJob({ formData, setFormData }) {
                     />
                   </div>
                   {errorMessage(errors.company)}
-                </div>
 
                   <div className={styles.inputField}>
                     <TextField
@@ -76,15 +75,8 @@ export default function DescribeJob({ formData, setFormData }) {
                       required
                       label="Job Title"
                     />
+                    {errorMessage(errors.title)}
                   </div>
-                <div className={styles.input}>
-                  <TextField
-                    {...register("title")}
-                    required
-                    label="Job Title"
-                    className={styles.inputField}
-                  />
-                  {errorMessage(errors.title)}
                 </div>
               </div>
 
@@ -93,68 +85,54 @@ export default function DescribeJob({ formData, setFormData }) {
                   <div className={styles.inputField}>
                     <TextField
                       {...register("location")}
-                      label="Location"
-                      className={styles.inputField}
+                      label="Location *"
+                      onBlur={async (e) => {
+                        const location = e.target.value;
+                        try {
+                          if (location) {
+                            const { lat, lon } = await submitAddress(location);
+                            console.log("Fetched coordinates:", lat, lon);
+                            if (lat && lon) {
+                              setValue("latitude", lat);
+                              setValue("longitude", lon);
+                            } else {
+                              alert("Please enter a correct location");
+                            }
+                          }
+                        } catch (e) {
+                          alert(
+                            "Couldn't find the address, please check spelling"
+                          );
+                        }
+                      }}
                     />
+                    {errorMessage(errors.location)}
                   </div>
                   <div className={styles.inputField}>
                     <AutoCompleteForm
                       control={control}
                       name="type"
                       options={employementTypeOptions}
-                      label="Employment Type"
-                      className={styles.inputField}
+                      label="Employment Type *"
                     />
+                    {errorMessage(errors.type)}
                   </div>
                 </div>
-                  <TextField
-                    {...register("location")}
-                    label="Location *"
-                    className={styles.inputField}
-                    onBlur={async (e) => {
-                      const location = e.target.value;
-                      try {
-                        if (location) {
-                          const { lat, lon } = await submitAddress(location);
-                          console.log("Fetched coordinates:", lat, lon);
-                          if (lat && lon) {
-                            setValue("latitude", lat);
-                            setValue("longitude", lon);
-                          } else {
-                            alert("Please enter a correct location");
-                          }
-                        }
-                      } catch (e) {
-                        alert(
-                          "Couldn't find the address, please check spelling"
-                        );
-                      }
-                    }}
-                  />
-                  {errorMessage(errors.location)}
-                </div>
-
-                <AutoCompleteForm
-                  control={control}
-                  name="type"
-                  options={employementTypeOptions}
-                  label="Employment Type *"
-                  className={styles.inputField}
-                />
-                {errorMessage(errors.type)}
               </div>
             </div>
 
-            <label for="description" className={`${styles.label} mt-[10px]`}>
-              Job Description *
-            </label>
-            <TextareaAutosize
-              {...register("description")}
-              required
-              label="Job Description"
-              placeholder="Enter Job Description"
-            />
-            {errorMessage(errors.description)}
+          <label for="description" className={`${styles.label} mt-[10px]`}>
+            Job Description *
+          </label>
+          <TextareaAutosize
+            {...register("description")}
+            required
+            label="Job Description"
+            placeholder="Enter Job Description"
+          />
+          {errorMessage(errors.description)}
+          </div>
+
         </form>
       </DialogContent>
     </>

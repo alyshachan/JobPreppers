@@ -1,4 +1,10 @@
-import { FormControl, Box, TextField, DialogContent, Typography } from "@mui/material";
+import {
+  FormControl,
+  Box,
+  TextField,
+  DialogContent,
+  Typography,
+} from "@mui/material";
 import { useState, Fragment, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import AutoCompleteForm from "../Helper/AutoCompleteForm";
@@ -68,133 +74,146 @@ export default function Benefits() {
   // Step 2
   return (
     <>
-    <DialogContent>
-      <div className={styles.dialogContent}>
-        <FormControl>
-          <div className={styles.expectedPay}>
+      <DialogContent>
+        <div className={styles.dialogContent}>
+          <FormControl>
+            <div className={styles.expectedPay}>
+              <div className={styles.input}>
+                <div className={`${styles.inputField} justify-center`}>
+                  <h2>Expected Pay</h2>
+                  <ToggleButtonForm
+                    name="payType"
+                    control={control}
+                    options={payOption}
+                    exclusive={true}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className={styles.inputField}>
+                  {payType === "Pay Range" ? (
+                    <>
+                      <div className={styles.payRangeDetails}>
+                        <Typography className={styles.rateLabel}>
+                          Annually
+                        </Typography>
+
+                        <TextField
+                          {...register("minimumSalary", {
+                            valueAsNumber: true,
+                          })}
+                          type="number"
+                          label="Starting Pay *"
+                        />
+                        <TextField
+                          {...register("maximumSalary", {
+                            valueAsNumber: true,
+                          })}
+                          type="number"
+                          label="Maximum Pay"
+                        />
+                        <AutoCompleteForm
+                          name="currencies"
+                          options={currencies}
+                          label="Currency *"
+                          control={control}
+                        />
+                      </div>
+                      <div className={styles.payRangeDetails}>
+                        <div />
+                        {errorMessage(errors.minimumSalary) ? (
+                          errorMessage(errors.minimumSalary)
+                        ) : (
+                          <div />
+                        )}
+                        {errorMessage(errors.maximumSalary) ? (
+                          errorMessage(errors.maximumSalary)
+                        ) : (
+                          <div />
+                        )}
+                        {errorMessage(errors.currencies) ? (
+                          errorMessage(errors.currencies)
+                        ) : (
+                          <div />
+                        )}
+                      </div>
+                    </>
+                  ) : payType === "Exact Amount" ? (
+                    <>
+                      <div className={styles.payExactDetails}>
+                        <Typography className={styles.rateLabel}>
+                          Annually
+                        </Typography>
+
+                        <TextField
+                          {...register("minimumSalary", {
+                            valueAsNumber: true,
+                          })}
+                          type="number"
+                          label="Starting Salary *"
+                        />
+
+                        <AutoCompleteForm
+                          name="currencies"
+                          options={currencies}
+                          label="Currency *"
+                          control={control}
+                        />
+                      </div>
+                      <div className={styles.payExactDetails}>
+                        <div />
+                        {errorMessage(errors.minimumSalary) ? (
+                          errorMessage(errors.minimumSalary)
+                        ) : (
+                          <div />
+                        )}
+                        {errorMessage(errors.currencies) ? (
+                          errorMessage(errors.currencies)
+                        ) : (
+                          <div />
+                        )}
+                      </div>
+                    </>
+                  ) : payType === "Unpaid" ? (
+                    <></>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+
             <div className={styles.input}>
-              <div className={`${styles.inputField} justify-center`}>
-                <h2>Expected Pay</h2>
+              <div className={styles.inputField}>
+                <h2>Bonus</h2>
                 <ToggleButtonForm
-                  name="payType"
+                  name="bonuses"
                   control={control}
-                  options={payOption}
-                  exclusive={true}
-                  className="w-full"
+                  options={bonuses}
+                  exclusive={false}
                 />
               </div>
 
               <div className={styles.inputField}>
-              {payType === "Pay Range" ? (
-                <Fragment>
-                  <Box>
-                    <Typography className={styles.rateLabel}>
-                      Annually
-                    </Typography>
+                <h2>Benefits</h2>
+                <ToggleButtonForm
+                  name="benefits"
+                  control={control}
+                  options={benefits}
+                  exclusive={false}
+                />
+              </div>
 
-                    <TextField
-                      {...register("minimumSalary", {
-                        valueAsNumber: true,
-                      })}
-                      type="number"
-                      label="Starting Pay *"
-                    />
-
-                    {errorMessage(errors.minimumSalary)}
-
-                    <TextField
-                      {...register("maximumSalary", {
-                        valueAsNumber: true,
-                      })}
-                      type="number"
-                      label="Maximum Pay"
-                    />
-
-                    {errorMessage(errors.maximumSalary)}
-
-                    <AutoCompleteForm
-                      name="currencies"
-                      options={currencies}
-                      label="Currency *"
-                      control={control}
-                    />
-
-                    {errorMessage(errors.currencies)}
-                  </Box>
-                  </Fragment>
-              ) : payType === "Exact Amount" ? (
-                <Fragment>
-                  <Box>
-                    {/* <AutoCompleteForm
-                      control={control}
-                      name="rate"
-                      options={rate}
-                      label="Rate"
-                    /> */}
-                    <Typography className={styles.rateLabel}>
-                      Annually
-                    </Typography>
-
-                    <TextField
-                      {...register("minimumSalary", {
-                        valueAsNumber: true,
-                      })}
-                      type="number"
-                      label="Starting Salary *"
-                    />
-                    {errorMessage(errors.minimumSalary)}
-
-                    <AutoCompleteForm
-                      name="currencies"
-                      options={currencies}
-                      label="Currency *"
-                      control={control}
-                    />
-                    {errorMessage(errors.currencies)}
-                  </Box>
-                  </Fragment>
-                ) : payType === "Unpaid" ? (
-                  <Fragment>
-                    <Box></Box>
-                  </Fragment>
-                ) : null}
+              <div className={styles.inputField}>
+                <h2>Perks</h2>
+                <ToggleButtonForm
+                  name="perks"
+                  control={control}
+                  options={perks}
+                  exclusive={false}
+                />
               </div>
             </div>
-          </div>
-
-          <div className={styles.input}>
-            <div className={styles.inputField}>
-              <h2>Bonus</h2>
-              <ToggleButtonForm
-                name="bonuses"
-                control={control}
-                options={bonuses}
-                exclusive={false}
-              />
-            </div>
-
-            <div className={styles.inputField}>
-              <h2>Benefits</h2>
-              <ToggleButtonForm
-                name="benefits"
-                control={control}
-                options={benefits}
-                exclusive={false}
-              />
-            </div>
-
-            <div className={styles.inputField}>
-              <h2>Perks</h2>
-              <ToggleButtonForm
-                name="perks"
-                control={control}
-                options={perks}
-                exclusive={false}
-              />
-            </div>
-          </div>
-        </FormControl>
-      </div>
+          </FormControl>
+        </div>
       </DialogContent>
     </>
   );
