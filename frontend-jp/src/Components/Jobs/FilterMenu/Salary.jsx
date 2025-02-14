@@ -33,7 +33,8 @@ function valuetext(value) {
 }
 
 export default function Salary({ setFilters }) {
-  const [sliderValue, setSliderValue] = useState(20000);
+  const deafultSlider = 20000;
+  const [sliderValue, setSliderValue] = useState(deafultSlider);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -49,6 +50,10 @@ export default function Salary({ setFilters }) {
 
   const handleCancel = () => {
     setSliderValue(20000); // Reset to default value
+    setFilters((prev) => {
+      const updatedFilters = { ...prev, min_salary: deafultSlider };
+      return updatedFilters;
+    });
     handleClose();
   };
 
