@@ -65,6 +65,8 @@ export const applicationProcessSchema = yup.object({
     .min(yup.ref('postDate'), 'End date cannot be earlier than start date'),
 
     numberOfHires : yup.number()
+    .transform((value) => Number.isNaN(value) ? null : value )
+    .nullable()
     .positive("Number of Hires can't be negative")
     .required("Number of Hires is required"),
 
