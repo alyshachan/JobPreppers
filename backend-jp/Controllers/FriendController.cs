@@ -19,6 +19,31 @@ namespace JobPreppersDemo.Controllers
         {
             _context = context;
         }
+        [HttpGet("PendingRequests/{userId}")]
+        public async Task<IActionResult> GetPendingFriendRequests(int userId)
+        {
+            var pendingRequests = await _context.Friends
+                .Where(f => f.friendID == userId && f.status == FriendStatus.Pending)
+                .Join(_context.Users,
+                      f => f.userID,  
+                      user => user.userID,
+                      (f, user) => new
+                      {
+                          Id = user.userID,
+                          Username = user.username,
+                          Name = user.first_name + " " + user.last_name,
+                          Email = user.email,
+                          SentAt = f.created_at
+                      })
+                .ToListAsync();
+
+            if (!pendingRequests.Any())
+            {
+                return Ok("No pending friend requests.");
+            }
+
+            return Ok(pendingRequests);
+        }
         [HttpGet("GetFriends/{userId}")]
         public async Task<IActionResult> GetFriends(int userId)
         {
