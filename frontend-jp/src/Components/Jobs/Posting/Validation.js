@@ -46,7 +46,6 @@ export const qualificationSchema = yup.object({
     .transform((value) => Number.isNaN(value) ? null : value )
     .nullable()
     .moreThan(yup.ref("minimumExperience"), "Maximum Experience needs to be more than the minimum salary."),
-    currencies : yup.string(),
     skills : yup.array().of(
         yup.object().shape({
         label: yup.string().required(),

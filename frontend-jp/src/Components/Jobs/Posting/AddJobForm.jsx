@@ -150,6 +150,7 @@ export default function AddJobForm({ setJobs }) {
     // console.log("Form Data Submitted: ", data);
 
     setActiveStep(0);
+    jobForm.reset();
     handleClose();
   };
 
@@ -270,7 +271,7 @@ export default function AddJobForm({ setJobs }) {
             </DialogActions>
           )}
         </StyledDialog>
-        {/* <pre>{JSON.stringify(jobForm.watch(), null, 2)}</pre> */}
+        <pre>{JSON.stringify(jobForm.watch(), null, 2)}</pre>
       </form>
     </>
   );
