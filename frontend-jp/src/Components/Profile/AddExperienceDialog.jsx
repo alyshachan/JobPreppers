@@ -47,11 +47,11 @@ function AddExperienceDialog({
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
+    onClose();
 
     const start = startDate.toDateString === new Date().toDateString ? null : moment(startDate).format('YYYY-MM-DD');
     const end = endDate.toDateString === new Date().toDateString ? null : moment(endDate).format('YYYY-MM-DD');
   
-
     try {
       const response = await fetch(
         "http://localhost:5000/api/UserExperience/CreateExperience",
@@ -69,11 +69,9 @@ function AddExperienceDialog({
           }),
         }
       );
-
+      window.location.reload();
       if (response.ok) {
         const data = await response.json();
-        onClose();
-        window.location.reload();
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();
