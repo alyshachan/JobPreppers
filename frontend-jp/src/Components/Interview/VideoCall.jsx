@@ -14,8 +14,6 @@ import {
   SpeakerLayout,
   CallControls
 } from "@stream-io/video-react-sdk";
-import LocalParticipantView from "./LocalParticipantView";
-import RemoteParticipantView from "./RemoteParticipantView";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 
 function VideoCall() {
@@ -55,13 +53,12 @@ function VideoCall() {
       apiKey: process.env.REACT_APP_STREAM_API_KEY,
       user: {
         id: String(user.userID),
-        name: String(`${user.firstName} ${user.lastName}`),
+        name: `${user.first_name} ${user.last_name}`,
         image: user.profilePicture,
       },
       token: streamToken,
     });
-console.log("name of user string: ", `${user.firstName} ${user.lastName}`);
-
+Fixe
     setClient(newClient);
   }, [user, streamToken]);
 
@@ -88,14 +85,8 @@ const CallLayout = () => {
   const call = useCall();
   const {
     useCallCallingState,
-    useParticipantCount,
-    useLocalParticipant,
-    useRemoteParticipants,
   } = useCallStateHooks();
   const callingState = useCallCallingState();
-  const localParticipant = useLocalParticipant();
-  const remoteParticipants = useRemoteParticipants();
-  const participantCount = useParticipantCount();
 
   if (callingState != CallingState.JOINED) {
     return <div>Loading...</div>;
@@ -104,12 +95,6 @@ const CallLayout = () => {
   return (
     <StreamTheme>
       <SpeakerLayout/>
-      {/* <RemoteParticipantView
-        participantList={{ participants: remoteParticipants }}
-      />
-      <LocalParticipantView
-        participantList={{ participant: localParticipant }}
-      /> */}
       <CallControls/>
     </StreamTheme>
   );
