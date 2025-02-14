@@ -6,39 +6,60 @@ using Microsoft.AspNetCore.Mvc;
 using Stream;
 using Stream.Models;
 
-namespace JobPreppersDemo.Controllers {
+namespace JobPreppersDemo.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
-    public class FeedController : ControllerBase {
+    public class FeedController : ControllerBase
+    {
         private readonly StreamService _streamService;
         private readonly ApplicationDbContext _context;
 
-        public FeedController(StreamService streamService, ApplicationDbContext context) {
+        public FeedController(StreamService streamService, ApplicationDbContext context)
+        {
             _streamService = streamService;
             _context = context;
         }
 
 
         [HttpGet("{userID}")]
-        public async Task<IActionResult> GetFeed(string userID) {
+        public async Task<IActionResult> GetFeed(string userID)
+        {
             var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
             string jpUsername = jpUser.first_name + " " + jpUser.last_name;
             // api calls go here
             var client = _streamService.Client;
-            
+
             var userFeed = client.Feed("user", userID);
-            // add a test activity
-            // var activity = new Activity(userID, "posted", "content");
-            // await userFeed.AddActivityAsync(activity);
+
             var activities = await userFeed.GetActivitiesAsync();
-            return Ok(new {activities});
+            // var userData = new Dictionary<string, object>
+            // {
+            //     {"name", jpUsername}
+            // };
+
+            var retrievedUser = await client.Users.GetAsync(userID);
+            // Console.WriteLine("Retrieved user:");
+            // Console.WriteLine(retrievedUser.Id);
+
+            // Console.WriteLine("Updating user's name");
+            // client.Users.UpdateAsync(retrievedUser.Id, userData);
+
+            retrievedUser = await client.Users.GetAsync(userID);
+            Console.WriteLine("new user:");
+            Console.WriteLine(retrievedUser);
+            Console.WriteLine(retrievedUser.Id);
+            // Console.WriteLine(retrievedUser.userData);
+
+            return Ok(new { activities });
         }
 
         [HttpGet("token/{userID}")]
-        public async Task<IActionResult> GetStreamAuthToken(string userID) {
+        public async Task<IActionResult> GetStreamAuthToken(string userID)
+        {
             var client = _streamService.Client;
             var token = client.CreateUserToken(userID);
-            return Ok(new {token});
+            return Ok(new { token });
         }
     }
 }

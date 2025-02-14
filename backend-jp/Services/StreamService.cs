@@ -2,11 +2,16 @@ using Stream;
 using Stream.Models;
 using System;
 
-namespace JobPreppersDemo.Services {
-    public class StreamService {
-        public StreamClient Client {get; private set;}
+namespace JobPreppersDemo.Services
+{
+    public class StreamService
+    {
+        public StreamClient Client { get; private set; }
         public StreamService()
         {
+            string apiKey = Environment.GetEnvironmentVariable("STREAM_API_KEY");
+            string apiSecret = Environment.GetEnvironmentVariable("STREAM_API_SECRET");
+
             Client = new StreamClient(
                 Environment.GetEnvironmentVariable("STREAM_API_KEY"), // jobpreppers-app
                 Environment.GetEnvironmentVariable("STREAM_API_SECRET"),
