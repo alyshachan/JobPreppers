@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import AutoCompleteForm from "../Helper/AutoCompleteForm";
 import { useFormContext, Controller } from "react-hook-form";
 import styles from "../Posting.module.css";
+import { errorMessage } from "../Helper/ErrorMessage";
 
 export default function Qualification() {
   const [skills, setSkills] = useState([
@@ -103,65 +104,67 @@ export default function Qualification() {
 
   return (
     <>
-        <div className={styles.dialogContent}>
-          <div className={styles.input}>
+      <div className={styles.dialogContent}>
+        <div className={styles.input}>
           <div className={styles.inputField}>
-
             <h2>Number of Years of Education</h2>
             <AutoCompleteForm
               name="education"
-              label="Education Level"
+              label="Education Level *"
               options={educationOptions}
               control={control}
             />
-            </div>
+            {errorMessage(errors.education)}
+          </div>
 
-            <div className={styles.inputField}>
-              <h2>What is the Number of Years of Experience Necessary:</h2>
-              <InputLabel htmlFor="experienceStartingRange">
-                Starting Range *
-              </InputLabel>
-              <Input
-                id="experienceStartingRange"
-                type="number"
-                {...register("minimumExperience", { valueAsNumber: true })}
-              ></Input>
-              <InputLabel
-                htmlFor="experienceEnding"
-                {...register("maximumExperience", { valueAsNumber: true })}
-              >
-                Ending Range
-              </InputLabel>
-              <Input id="experienceEnding" type="number"></Input>
-            </div>
+          <div className={styles.inputField}>
+            <h2>What is the Number of Years of Experience Necessary:</h2>
+            <InputLabel htmlFor="experienceStartingRange">
+              Starting Range *
+            </InputLabel>
+            <Input
+              id="experienceStartingRange"
+              type="number"
+              {...register("minimumExperience", { valueAsNumber: true })}
+            ></Input>
+            {errorMessage(errors.minimumExperience)}
+            <InputLabel
+              htmlFor="experienceEnding"
+              {...register("maximumExperience", { valueAsNumber: true })}
+            >
+              Ending Range
+            </InputLabel>
+            <Input id="experienceEnding" type="number"></Input>
+          </div>
 
-            <div className={styles.inputField}>
-              <h2>What skills are you looking for?</h2>
-              <Controller
-                control={control}
-                name="skills"
-                render={({ field }) => (
-                  <Autocomplete
-                    {...field}
-                    multiple
-                    options={skills}
-                    value={field.value}
-                    onChange={(_, value) => field.onChange(value)}
-                    getOptionLabel={(option) => option.label || ""} // Adjust based on API response
-                    onInputChange={(event, newInputValue) => {
-                      if (newInputValue.length > 1) {
-                        fetchSkills(newInputValue);
-                      }
-                    }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Search Skills" />
-                    )}
-                  />
-                )}
-              />
-            </div>
+          <div className={styles.inputField}>
+            <h2>What skills are you looking for?</h2>
+            <Controller
+              control={control}
+              name="skills"
+              render={({ field }) => (
+                <Autocomplete
+                  {...field}
+                  multiple
+                  options={skills}
+                  value={field.value}
+                  onChange={(_, value) => field.onChange(value)}
+                  getOptionLabel={(option) => option.label || ""} // Adjust based on API response
+                  onInputChange={(event, newInputValue) => {
+                    if (newInputValue.length > 1) {
+                      fetchSkills(newInputValue);
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Search Skills *" />
+                  )}
+                />
+              )}
+            />
+            {errorMessage(errors.skills)}
+          </div>
 
-            <div className={styles.inputField}>
+          <div className={styles.inputField}>
             <h2>Ask these Question to the Applicant</h2>
             <FormGroup>
               <Controller
@@ -187,9 +190,9 @@ export default function Qualification() {
                 )}
               />
             </FormGroup>
-            </div>
           </div>
         </div>
+      </div>
     </>
   );
 }

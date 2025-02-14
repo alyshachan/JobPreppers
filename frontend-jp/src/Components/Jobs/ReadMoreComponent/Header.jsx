@@ -39,8 +39,7 @@ export default function Header({ job, onClose }) {
         <button
           onClick={(e) => {
             e.preventDefault();
-            // job.link ?  window.open(job.link)  : window.open("http://google.com") ;
-            window.open("http://google.com");
+            job.link ? window.open(job.link) : window.open("http://google.com");
           }}
           className={styles.drawerButton}
         >

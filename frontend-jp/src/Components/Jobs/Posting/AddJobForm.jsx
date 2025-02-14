@@ -17,6 +17,12 @@ import { PostAdd } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import SectionHeader from "../../Profile/SectionHeader";
 import styles from "./Posting.module.css";
+import {
+  describeJobSchema,
+  benefitsSchema,
+  qualificationSchema,
+  applicationProcessSchema,
+} from "./Validation";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .css-10d30g3-MuiPaper-root-MuiDialog-paper": {
@@ -26,16 +32,23 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     overflow: "auto",
     maxWidth: "1000px",
     minWidth: "1000px",
-    overflowX: "hidden"
+    overflowX: "hidden",
   },
 }));
 
 export default function AddJobForm({ setJobs }) {
+  const stepSchemas = [
+    describeJobSchema,
+    benefitsSchema,
+    qualificationSchema,
+    applicationProcessSchema,
+  ];
   // State
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({});
 
-  const jobForm = useForm();
+  const [activeStep, setActiveStep] = useState(0);
+  const jobForm = useForm({ resolver: yupResolver(stepSchemas[activeStep]) });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -49,7 +62,6 @@ export default function AddJobForm({ setJobs }) {
     formState: { error, isSubmitting },
   } = jobForm;
 
-  const [activeStep, setActiveStep] = useState(0);
   const steps = [
     "Describe Your Job",
     "Benefits and Compensation",
@@ -58,20 +70,22 @@ export default function AddJobForm({ setJobs }) {
   ];
 
   const lastStep = activeStep === steps.length - 1;
-  const handleNext = () => {
+  const handleNext = async () => {
+    const isValid = await jobForm.trigger(); // Validate current step before proceeding
+    if (!isValid) return;
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  const handleBack = () => {
+  const handleBack = async () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
   const fetchJobs = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/job");
+      const res = await fetch("http://localhost:5000/api/jobpost");
       if (res.ok) {
         const data = await res.json();
         console.log(data);
-        setJobs(data);
+        setJobs(data.jobs);
       } else {
         console.error("Failed to fetch jobs");
       }
@@ -81,22 +95,39 @@ export default function AddJobForm({ setJobs }) {
   };
 
   const onSubmit = async (data, e) => {
+    const isValid = await jobForm.trigger(); // Validate current step before proceeding
+    if (!isValid) return;
     try {
       const transformedData = {
         title: data.title,
-        description: data.description,
-        company: data.company,
+        description: JSON.stringify(data.description),
+        employer: {
+          companyName: data.company,
+        },
+        location: {
+          name: data.location,
+          longitude: data.longitude,
+          latitude: data.latitude,
+        },
         type: data.type.label,
         minimumSalary: data.minimumSalary,
         maximumSalary: data.maximumSalary ? data.maximumSalary : null,
-        location: data.location,
+        paymentType: data.payType,
+        // location: data.location,
         postDate: data.postDate,
         endDate: data.endDate,
         perks: JSON.stringify(data.perks),
         benefits: JSON.stringify(data.benefits),
         bonus: JSON.stringify(data.bonuses),
+        link: data.applicationLink,
+        qualification: {
+          // ✅ Nest skills inside jobQualification
+          Skills: JSON.stringify(data.skills),
+          MinimumExperience: data.MinimumExperience,
+          EducationLevel: data.EducationLevel,
+        },
       };
-      const response = await fetch("http://localhost:5000/api/job/post", {
+      const response = await fetch("http://localhost:5000/api/jobpost/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(transformedData),
@@ -114,11 +145,9 @@ export default function AddJobForm({ setJobs }) {
       }
     } catch (err) {
       console.log("Catch Error: ", err);
-      console.log("Type of perks:", typeof data.perks);
-      console.log("Value of perks:", data.perks);
       // Maybe put an alert
     }
-    console.log("Form Data Submitted: ", data);
+    // console.log("Form Data Submitted: ", data);
 
     setActiveStep(0);
     handleClose();
@@ -181,12 +210,12 @@ export default function AddJobForm({ setJobs }) {
           </DialogTitle>
 
           <IconButton
-        aria-label="close"
-        onClick={handleClose}
-        className={styles.closeButton}
-      >
-        <CloseIcon />
-      </IconButton>
+            aria-label="close"
+            onClick={handleClose}
+            className={styles.closeButton}
+          >
+            <CloseIcon />
+          </IconButton>
 
           <header>
             <Stepper activeStep={activeStep}>

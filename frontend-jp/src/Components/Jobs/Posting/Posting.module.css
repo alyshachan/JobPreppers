@@ -1,58 +1,75 @@
 .addJobTitle {
-    margin: 0;
-    padding: 0;
-    border-top: 50px solid #4ba173;
-    left: -20px;
-    position: relative;
-    padding-left: 36px;
-    width: calc(100% + 40px);
-  }
+  margin: 0;
+  padding: 0;
+  border-top: 50px solid #4ba173;
+  left: -20px;
+  position: relative;
+  padding-left: 36px;
+  width: calc(100% + 40px);
+}
 
-  .closeButton {
-    position: absolute !important;
-    top: 8px !important;
-    right: 8px !important;
-    color: #085630 !important;
-  }
+.closeButton {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  color: #085630 !important;
+}
 
-  .dialogContent {
-    display: flex;
-    flex-direction: row;
-    column-gap: 50px;
-    width: 900px;
-  }
-  
-  .dialogContentLeft{
-    flex: 1;
-  }
-  
-  .dialogContentRight {
-    flex: 1;
-    height: 100%;
-  }
+.dialogContent {
+  display: flex;
+  flex-direction: row;
+  column-gap: 50px;
+  width: 900px;
+}
 
-  .required::after {
-    content: " *";
-    color: red;
-  }
+.dialogContentLeft {
+  flex: 1;
+}
 
-  .input {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    column-gap: 10px;
-    margin-bottom: 20px;
-    justify-content: space-between;
-  }
+.dialogContentRight {
+  flex: 1;
+  height: 100%;
+}
 
-  .inputField {
-    display: flex;
-    flex-direction: column;
-    width: 100% !important;
-  }
+.required::after {
+  content: " *";
+  color: red;
+}
 
-  .label{
-    color: #4ba173;
-    font-family: 'Roboto', sans-serif;
-    font-size: rem;
-  }
+.input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  column-gap: 10px;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+.inputField {
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+}
+
+.label {
+  color: #4ba173;
+  font-family: "Roboto", sans-serif;
+  font-size: rem;
+}
+
+.rateLabel {
+  color: #4ba173;
+  border: 1px solid #4ba173;
+  padding: 16px 16px;
+  border-radius: 4px;
+  display: inline-block;
+  font-family: "Roboto", sans-serif;
+}
+
+.error {
+  color: red;
+  display: flex;
+  justify-content: start;
+  width: 100%;
+  gap: 3px;
+}

@@ -6,6 +6,7 @@ import { Fragment, useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import ToggleButtonForm from "../Helper/ToggleButtonForm";
 import dayjs from "dayjs";
+import { errorMessage } from "../Helper/ErrorMessage";
 
 export default function ApplicationProcess() {
   const jobForm = useFormContext();
@@ -14,6 +15,7 @@ export default function ApplicationProcess() {
     control,
     resetField,
     watch,
+    setValue,
     formState: { errors },
   } = jobForm;
   const applyList = ["External Apply", "Easy Apply"];
@@ -48,6 +50,8 @@ export default function ApplicationProcess() {
             )}
           />
         </LocalizationProvider>
+        {errorMessage(errors.postDate)}
+
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Controller
             name="endDate"
@@ -61,6 +65,7 @@ export default function ApplicationProcess() {
             )}
           />
         </LocalizationProvider>
+        {errorMessage(errors.endDate)}
       </div>
       <InputLabel htmlFor="hires">Number of Hires: </InputLabel>
       <Input
@@ -68,24 +73,28 @@ export default function ApplicationProcess() {
         type="number"
         {...register("numberOfHires", { valueAsNumber: true })}
       ></Input>
-      <div>
+      {errorMessage(errors.numberOfHires)}
+
+      {/* <div>
         <ToggleButtonForm
           name="applyOptions"
           control={control}
           options={applyList}
           exclusive={true}
-        ></ToggleButtonForm>
+        ></ToggleButtonForm> */}
 
-        {applyMethod == "External Apply" ? (
+      <div>
+        <InputLabel htmlFor="applyLink"> Enter External Link</InputLabel>
+        <Input
+          idlabel="applyLink"
+          type="url"
+          {...register("applicationLink")}
+        ></Input>
+        {errorMessage(errors.applicationLink)}
+      </div>
+      {/* {applyMethod == "External Apply" ? (
           <Fragment>
-            <div>
-              <InputLabel htmlFor="applyLink"> Enter External Link</InputLabel>
-              <Input
-                idlabel="applyLink"
-                type="url"
-                {...register("applicationLink")}
-              ></Input>
-            </div>
+            
           </Fragment>
         ) : applyMethod == "Easy Apply" ? (
           <Fragment>
@@ -97,9 +106,10 @@ export default function ApplicationProcess() {
               options={requiredDocuments}
               exclusive={true}
             ></ToggleButtonForm>
+            {jobForm.setValue()}
           </Fragment>
-        ) : null}
-      </div>
+        ) : null} */}
+      {/* </div> */}
     </>
   );
 }

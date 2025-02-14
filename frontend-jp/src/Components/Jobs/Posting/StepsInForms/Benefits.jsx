@@ -1,13 +1,12 @@
-import { FormControl, Box, TextField } from "@mui/material";
+import { FormControl, Box, TextField, Typography } from "@mui/material";
 import { useState, Fragment, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import AutoCompleteForm from "../Helper/AutoCompleteForm";
 import ToggleButtonForm from "../Helper/ToggleButtonForm";
 import styles from "../Posting.module.css";
-
+import { errorMessage } from "../Helper/ErrorMessage";
 export default function Benefits() {
-  const rate = ["Hourly Rate", "Monthy Rate", "Annually"];
-  //   const [payType, setPayType] = useState("web");
+  // const rate = ["Hourly Rate", "Monthy Rate", "Annually"];
   const bonuses = ["Signing Bonus", "Tip", "Equity Package", "Commission"];
   const benefits = [
     "Medical",
@@ -62,8 +61,7 @@ export default function Benefits() {
 
     if (payType === "Unpaid") {
       setValue("minimumSalary", 0);
-      resetField("rate");
-      resetField("currencies");
+      setValue("currencies", null);
     }
   }, [payType]);
 
@@ -89,53 +87,63 @@ export default function Benefits() {
               {payType === "Pay Range" ? (
                 <Fragment>
                   <Box>
-                    <AutoCompleteForm
-                      control={control}
-                      name="rate"
-                      options={rate}
-                      label="Rate"
-                    />
+                    <Typography className={styles.rateLabel}>
+                      Annually
+                    </Typography>
 
                     <TextField
                       {...register("minimumSalary", { valueAsNumber: true })}
                       type="number"
-                      label="Starting Pay"
+                      label="Starting Pay *"
                     />
+
+                    {errorMessage(errors.minimumSalary)}
+
                     <TextField
                       {...register("maximumSalary", { valueAsNumber: true })}
                       type="number"
                       label="Maximum Pay"
                     />
 
+                    {errorMessage(errors.maximumSalary)}
+
                     <AutoCompleteForm
                       name="currencies"
                       options={currencies}
-                      label="Currency"
+                      label="Currency *"
                       control={control}
                     />
+
+                    {errorMessage(errors.currencies)}
                   </Box>
                 </Fragment>
               ) : payType === "Exact Amount" ? (
                 <Fragment>
                   <Box>
-                    <AutoCompleteForm
+                    {/* <AutoCompleteForm
                       control={control}
                       name="rate"
                       options={rate}
                       label="Rate"
-                    />
+                    /> */}
+                    <Typography className={styles.rateLabel}>
+                      Annually
+                    </Typography>
+
                     <TextField
                       {...register("minimumSalary", { valueAsNumber: true })}
                       type="number"
-                      label="Starting Salary"
+                      label="Starting Salary *"
                     />
+                    {errorMessage(errors.minimumSalary)}
 
                     <AutoCompleteForm
                       name="currencies"
                       options={currencies}
-                      label="Currency"
+                      label="Currency *"
                       control={control}
                     />
+                    {errorMessage(errors.currencies)}
                   </Box>
                 </Fragment>
               ) : payType === "Unpaid" ? (

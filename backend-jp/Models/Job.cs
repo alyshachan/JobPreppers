@@ -30,4 +30,8 @@ public partial class Job
     public string? location { get; set; }
 
     public DateTime? endDate { get; set; }
+
+    public int qualificationID { get; set; }
+
+    public int? column_name { get; set; }
 }
