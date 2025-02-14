@@ -87,7 +87,7 @@ export default function Qualification() {
   const educationOptions = [
     "No Education",
     "High-School Diploma",
-    "bachelor's degree",
+    "Bachelor's Degree",
     "Masters",
     "PHD",
     "Doctorates",
@@ -106,6 +106,8 @@ export default function Qualification() {
     <>
       <div className={styles.dialogContent}>
         <div className={styles.input}>
+      <div className={styles.dialogContent}>
+        <div className={styles.input}>
           <div className={styles.inputField}>
             <h2>Number of Years of Education</h2>
             <AutoCompleteForm
@@ -116,9 +118,10 @@ export default function Qualification() {
             />
             {errorMessage(errors.education)}
           </div>
+          </div>
 
           <div className={styles.inputField}>
-            <h2>What is the Number of Years of Experience Necessary:</h2>
+            <h2>Number of Years of Experience Necessary</h2>
             <InputLabel htmlFor="experienceStartingRange">
               Starting Range *
             </InputLabel>
@@ -135,6 +138,24 @@ export default function Qualification() {
               Ending Range
             </InputLabel>
             <Input id="experienceEnding" type="number"></Input>
+          </div>
+          <div className={styles.inputField}>
+            <h2>Number of Years of Experience Necessary</h2>
+            <div className={styles.twoGrid}>
+              <TextField
+                required
+                id="experienceStartingRange"
+                type="number"
+                label="Starting Range"
+                {...register("minimumExperience", { valueAsNumber: true })}
+              />
+              <TextField
+                id="experienceEnding"
+                type="number"
+                label="Ending Range"
+                {...register("maximumExperience", { valueAsNumber: true })}
+              />
+            </div>
           </div>
 
           <div className={styles.inputField}>
@@ -163,6 +184,31 @@ export default function Qualification() {
             />
             {errorMessage(errors.skills)}
           </div>
+          <div className={styles.inputField}>
+            <h2>Required Skills</h2>
+            <Controller
+              control={control}
+              name="skills"
+              render={({ field }) => (
+                <Autocomplete
+                  {...field}
+                  multiple
+                  options={skills}
+                  value={field.value}
+                  onChange={(_, value) => field.onChange(value)}
+                  getOptionLabel={(option) => option.label || ""} // Adjust based on API response
+                  onInputChange={(event, newInputValue) => {
+                    if (newInputValue.length > 1) {
+                      fetchSkills(newInputValue);
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Search Skills" />
+                  )}
+                />
+              )}
+            />
+          </div>
 
           <div className={styles.inputField}>
             <h2>Ask these Question to the Applicant</h2>
@@ -185,14 +231,16 @@ export default function Qualification() {
                 render={({ field }) => (
                   <FormControlLabel
                     control={<Checkbox {...field} checked={field.value} />}
-                    label="Are you legally Authorized to work in the USA"
+                    label="Are you legally authorized to work in the USA"
                   />
                 )}
               />
             </FormGroup>
           </div>
         </div>
+        </div>
       </div>
     </>
+    
   );
 }

@@ -1,4 +1,4 @@
-import { FormControl, Box, TextField, Typography } from "@mui/material";
+import { FormControl, Box, TextField, DialogContent, Typography } from "@mui/material";
 import { useState, Fragment, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import AutoCompleteForm from "../Helper/AutoCompleteForm";
@@ -68,12 +68,13 @@ export default function Benefits() {
   // Step 2
   return (
     <>
+    <DialogContent>
       <div className={styles.dialogContent}>
         <FormControl>
-          <div className={styles.input}>
-            <div className={styles.inputField}>
-              <h2>Expected Pay</h2>
-              <div className="ExpectedPayType">
+          <div className={styles.expectedPay}>
+            <div className={styles.input}>
+              <div className={`${styles.inputField} justify-center`}>
+                <h2>Expected Pay</h2>
                 <ToggleButtonForm
                   name="payType"
                   control={control}
@@ -82,8 +83,8 @@ export default function Benefits() {
                   className="w-full"
                 />
               </div>
-            </div>
-            <div className={styles.inputField}>
+
+              <div className={styles.inputField}>
               {payType === "Pay Range" ? (
                 <Fragment>
                   <Box>
@@ -92,7 +93,9 @@ export default function Benefits() {
                     </Typography>
 
                     <TextField
-                      {...register("minimumSalary", { valueAsNumber: true })}
+                      {...register("minimumSalary", {
+                        valueAsNumber: true,
+                      })}
                       type="number"
                       label="Starting Pay *"
                     />
@@ -100,7 +103,9 @@ export default function Benefits() {
                     {errorMessage(errors.minimumSalary)}
 
                     <TextField
-                      {...register("maximumSalary", { valueAsNumber: true })}
+                      {...register("maximumSalary", {
+                        valueAsNumber: true,
+                      })}
                       type="number"
                       label="Maximum Pay"
                     />
@@ -116,7 +121,7 @@ export default function Benefits() {
 
                     {errorMessage(errors.currencies)}
                   </Box>
-                </Fragment>
+                  </Fragment>
               ) : payType === "Exact Amount" ? (
                 <Fragment>
                   <Box>
@@ -131,7 +136,9 @@ export default function Benefits() {
                     </Typography>
 
                     <TextField
-                      {...register("minimumSalary", { valueAsNumber: true })}
+                      {...register("minimumSalary", {
+                        valueAsNumber: true,
+                      })}
                       type="number"
                       label="Starting Salary *"
                     />
@@ -145,14 +152,17 @@ export default function Benefits() {
                     />
                     {errorMessage(errors.currencies)}
                   </Box>
-                </Fragment>
-              ) : payType === "Unpaid" ? (
-                <Fragment>
-                  <Box></Box>
-                </Fragment>
-              ) : null}
+                  </Fragment>
+                ) : payType === "Unpaid" ? (
+                  <Fragment>
+                    <Box></Box>
+                  </Fragment>
+                ) : null}
+              </div>
             </div>
+          </div>
 
+          <div className={styles.input}>
             <div className={styles.inputField}>
               <h2>Bonus</h2>
               <ToggleButtonForm
@@ -185,6 +195,7 @@ export default function Benefits() {
           </div>
         </FormControl>
       </div>
+      </DialogContent>
     </>
   );
 }

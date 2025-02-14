@@ -29,7 +29,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     borderRadius: "30px",
     margin: "-20px",
     padding: "0px 20px 20px",
-    overflow: "auto",
+    overflow: "hidden",
     maxWidth: "1000px",
     minWidth: "1000px",
     overflowX: "hidden",
@@ -177,15 +177,13 @@ export default function AddJobForm({ setJobs }) {
         );
       case 3:
         return (
-          <FormProvider {...jobForm} onSubmit={handleSubmit(onSubmit)}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              {" "}
+          <FormProvider {...jobForm} >
+            <form id="jobForm" onSubmit={handleSubmit(onSubmit)}>
               {/* Wrap in form and use handleSubmit */}
               <ApplicationProcess
                 formData={formData}
                 setFormData={setFormData}
               />
-              <button type="submit">Submit</button>
             </form>
           </FormProvider>
         );
@@ -239,11 +237,11 @@ export default function AddJobForm({ setJobs }) {
             </DialogTitle>
           </header>
 
-          <body className="bg-white">{pageDisplay()}</body>
+          <body className="bg-white overflow-y-auto">{pageDisplay()}</body>
 
           {activeStep === steps.length - 1 ? (
             <DialogActions>
-              <footer>
+              <footer className="flex flex-row gap-2">
                 <button
                   disabled={activeStep == 0}
                   style={{ display: activeStep === 0 ? "none" : "block" }}
@@ -251,6 +249,7 @@ export default function AddJobForm({ setJobs }) {
                 >
                   Back
                 </button>
+                <button form="jobForm">Submit</button>
               </footer>
             </DialogActions>
           ) : (

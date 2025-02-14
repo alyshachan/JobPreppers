@@ -56,19 +56,27 @@ export default function DescribeJob({ formData, setFormData }) {
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col">
-            <div className={styles.dialogContent}>
+            <div className={`${styles.dialogContent} pt-2`}>
               <div className={styles.dialogContentLeft}>
                 <div className={styles.input}>
-                  <TextField
-                    {...register("company")}
-                    required
-                    type="text"
-                    label="Company Name"
-                    className={styles.inputField}
-                  />
+                  <div className={styles.inputField}>
+                    <TextField
+                      {...register("company")}
+                      required
+                      type="text"
+                      label="Company Name"
+                    />
+                  </div>
                   {errorMessage(errors.company)}
                 </div>
 
+                  <div className={styles.inputField}>
+                    <TextField
+                      {...register("title")}
+                      required
+                      label="Job Title"
+                    />
+                  </div>
                 <div className={styles.input}>
                   <TextField
                     {...register("title")}
@@ -82,6 +90,23 @@ export default function DescribeJob({ formData, setFormData }) {
 
               <div className={styles.dialogContentRight}>
                 <div className={styles.input}>
+                  <div className={styles.inputField}>
+                    <TextField
+                      {...register("location")}
+                      label="Location"
+                      className={styles.inputField}
+                    />
+                  </div>
+                  <div className={styles.inputField}>
+                    <AutoCompleteForm
+                      control={control}
+                      name="type"
+                      options={employementTypeOptions}
+                      label="Employment Type"
+                      className={styles.inputField}
+                    />
+                  </div>
+                </div>
                   <TextField
                     {...register("location")}
                     label="Location *"
@@ -120,7 +145,7 @@ export default function DescribeJob({ formData, setFormData }) {
               </div>
             </div>
 
-            <label for="description" className={styles.label}>
+            <label for="description" className={`${styles.label} mt-[10px]`}>
               Job Description *
             </label>
             <TextareaAutosize
@@ -130,7 +155,6 @@ export default function DescribeJob({ formData, setFormData }) {
               placeholder="Enter Job Description"
             />
             {errorMessage(errors.description)}
-          </div>
         </form>
       </DialogContent>
     </>
