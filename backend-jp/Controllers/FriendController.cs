@@ -19,6 +19,32 @@ namespace JobPreppersDemo.Controllers
         {
             _context = context;
         }
+        [HttpGet("GetFriends/{userId}")]
+        public async Task<IActionResult> GetFriends(int userId)
+        {
+            var friends = await _context.Friends
+       .Where(f => (f.userID == userId || f.friendID == userId) && f.status == FriendStatus.Accepted)
+       .Select(f => f.userID == userId ? f.friendID : f.userID) 
+       .Join(_context.Users,
+             friendId => friendId,
+             user => user.userID, 
+             (friendId, user) => new
+             {
+                 Id = user.userID,
+                 Username = user.username,
+                 Name = user.first_name + " " + user.last_name, 
+                 Email = user.email,
+                 //ProfilePicture = user.profile_pic 
+             })
+       .ToListAsync();
+
+            if (!friends.Any())
+            {
+                return Ok("No friends found.");
+            }
+
+            return Ok(friends);
+        }
         [HttpPost("FriendRequest")]
         public async Task<IActionResult> SendFriendRequest([FromBody] FriendRequestDto request)
         {
