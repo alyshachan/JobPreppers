@@ -44,7 +44,7 @@ function AddEducationDialog({ open, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
-
+    onClose();
     const start =
       startDate.toDateString === new Date().toDateString
         ? null
@@ -71,11 +71,9 @@ function AddEducationDialog({ open, onClose }) {
           }),
         }
       );
-
+      window.location.reload();
       if (response.ok) {
         const data = await response.json();
-        onClose();
-        window.location.reload();
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();

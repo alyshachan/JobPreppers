@@ -37,7 +37,8 @@ function JobDescription({ setDrawerOpen, jobs }) {
 
   return (
     <>
-      {jobs.map((job) => (
+      {console.log(jobs)}
+      {jobs.map((job, index) => (
         <Card key={job.jobID} className={styles.card}>
           <CardHeader
             avatar={

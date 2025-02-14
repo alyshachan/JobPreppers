@@ -118,7 +118,7 @@ function NavBar() {
             <div className="flex shrink-0 items-center">
               <img
                 alt="Your Company"
-                src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tailwind_CSS_Logo.svg/512px-Tailwind_CSS_Logo.svg.png?20230715030042"
                 className="h-8 w-auto"
               />
             </div>
@@ -166,14 +166,6 @@ function NavBar() {
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
                     Your Profile
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link
-                    to="/EditProfile"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                  >
-                    Edit Profile
                   </Link>
                 </MenuItem>
                 <MenuItem>

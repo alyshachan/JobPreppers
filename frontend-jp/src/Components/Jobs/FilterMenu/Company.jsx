@@ -8,7 +8,6 @@ import "./Menu.css";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-
 export default function Company({ setFilters, jobs }) {
   const [selectValue, setSelectValue] = useState([]);
   const [companyOptions, setCompanyOptions] = useState([]);
@@ -26,12 +25,13 @@ export default function Company({ setFilters, jobs }) {
 
   useEffect(() => {
     const fetchCompanies = async () => {
-      const response = await fetch("http://localhost:5000/api/job"); // Replace with your actual API
+      const response = await fetch("http://localhost:5000/api/jobpost/company"); // Replace with your actual API
       if (response.ok) {
         const data = await response.json();
-        // Outputs: "boolean"
+
+        console.log("Fetch Company", data);
         const uniqueCompanies = [
-          ...new Set(data.map((job) => job.company)),
+          ...new Set(data.jobs.map((job) => job.company)),
         ].map((company) => ({ id: company, value: company }));
 
         setCompanyOptions(uniqueCompanies);
