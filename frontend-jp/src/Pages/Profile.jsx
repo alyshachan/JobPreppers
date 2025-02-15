@@ -22,7 +22,9 @@ import "../Components/JobPreppers.css";
 function Profile() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const { initialUser, setIntialUser } = useState(null);
-  const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState(() => {
+    return localStorage.getItem("editMode") === "true";
+  });
   const [educationDict, setEducationDict] = useState([]);
   const [skillsDict, setSkillsDict] = useState({});
   const [experienceDict, setExperienceDict] = useState([]);
@@ -42,7 +44,9 @@ function Profile() {
   };
   
   // test message box handler
-
+  useEffect(() => {
+    localStorage.setItem("editMode", edit);
+  }, [edit]);
 
   useEffect(() => {
     if (!user) return;

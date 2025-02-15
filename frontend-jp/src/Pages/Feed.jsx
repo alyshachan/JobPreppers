@@ -47,26 +47,9 @@ function Feed(){
 
 
     return(
-        (streamToken && <StreamApp
-        apiKey={process.env.REACT_APP_STREAM_API_KEY}
-        appId={process.env.REACT_APP_STREAM_APP_ID}
-        token={streamToken}
-      >
-        <div className="flex w-full p-4 space-x-4">
-
-            <div className="w-2/3">
-          <StatusUpdateForm feedGroup="user" />
-
-            <FlatFeed
-                classname="flat-feed"
-                feedGroup="user"
-                options={{ limit: 10 }}
-                Activity={(props) => <Activity {...props} />}
-                />
-            </div>
-        </div>
-
-      </StreamApp>)
+        <>
+        <h1>Feed</h1>
+        </>
     )
 }
 

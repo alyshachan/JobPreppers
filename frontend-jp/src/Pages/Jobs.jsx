@@ -30,13 +30,15 @@ function Jobs() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/job");
-        if (res.ok) {
+        const res = await fetch("http://localhost:5000/api/jobpost");
+        const contentType = res.headers.get("Content-Type");
+        if (contentType && contentType.includes("application/json")) {
           const data = await res.json();
-          console.log(data);
-          setJobs(data);
+          console.log("Data:", data);
+          console.log("Data Jobs:", data.jobs);
+          setJobs(data.jobs);
         } else {
-          console.error("Failed to fetch jobs");
+          console.error("Expected JSON, but got:", contentType);
         }
       } catch (error) {
         console.error("Error fetching jobs:", error);
