@@ -58,7 +58,6 @@ function VideoCall() {
       },
       token: streamToken,
     });
-Fixe
     setClient(newClient);
   }, [user, streamToken]);
 
