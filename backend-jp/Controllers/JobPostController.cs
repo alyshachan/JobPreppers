@@ -14,7 +14,7 @@ namespace JobPreppersDemo.Controllers
     public class JobPostController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public class FilterRequest
+        public class PostFilterRequest
         {
             public DateTime? Date { get; set; }
             public List<string>? Type { get; set; }
@@ -209,7 +209,7 @@ namespace JobPreppersDemo.Controllers
 
 
         [HttpPost("filter")]
-        public async Task<IActionResult> FilterJobs([FromBody] FilterRequest request)
+        public async Task<IActionResult> FilterJobs([FromBody] PostFilterRequest request)
         {
             IQueryable<JobPostDto> query;
 
