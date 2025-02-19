@@ -41,6 +41,21 @@ function Feed() {
             catch (error) {
                 console.error(error);
             }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/Stream/update/${user.userID}`);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data);
+                }
+                else {
+                    console.error("Error updating feed actor");
+                }
+            }
+            catch (error) {
+                console.error(error);
+            }
         }
         fetchFeedData();
     }, [user])
@@ -57,7 +72,7 @@ function Feed() {
                 <div className="w-2/3">
                     <StatusUpdateForm feedGroup="user" />
                     <div className="flex w-full p-4 space-x-4">
-                        <div className="w-1/2">
+                        {/* <div className="w-1/2">
                             <h1>Your posts</h1>
                             <FlatFeed
                                 classname="flat-feed"
@@ -65,8 +80,8 @@ function Feed() {
                                 options={{ limit: 10 }}
                                 Activity={(props) => <Activity {...props} />}
                             />
-                        </div>
-                        <div className="w-1/2">
+                        </div> */}
+                        <div className="w-full">
                             <h1>Timeline</h1>
                             <FlatFeed
                                 classname="flat-feed"

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Stream;
 using Stream.Models;
 using System.Web;
+using System.Text.RegularExpressions;
 
 
 namespace JobPreppersDemo.Controllers
@@ -42,29 +43,43 @@ namespace JobPreppersDemo.Controllers
             Console.WriteLine("i hate rest APIS");
             // this stupid method is haunting me, it seems impossible to parse out some stupid kv data
             // out of the uri. figure out tomorrow (kms) - will
-            
+
+            // string apiKey = Environment.GetEnvironmentVariable("STREAM_API_KEY");
+            // string apiSecret = Environment.GetEnvironmentVariable("STREAM_API_SECRET");
+
             // string fullUri = $"{Request.Scheme}://{Request.Host}{Request.Path}";
             // var query = HttpUtility.UrlDecode(fullUri);
-            // Console.WriteLine(query);
-            // Console.WriteLine(fullUri);
+            // string queryString = Regex.Split(query, "(\\?.*)")[1];
+            // // Console.WriteLine(fullUri);
 
-            // var queryParams = HttpUtility.ParseQueryString(query);
+            // var queryParams = HttpUtility.ParseQueryString(queryString);
             // Console.WriteLine("help me");
-            // Console.WriteLine(queryParams);
+            // Console.WriteLine(queryParams["name"]);
+            // Console.WriteLine(queryParams.AllKeys[0]);
+            // Console.WriteLine(apiKey);
+            // Console.WriteLine(apiSecret);
+
+
 
             var client = _streamService.Client;
+            // StreamClient client = new StreamClient(apiKey, apiSecret); // for testing
+            // Console.WriteLine("Client good");
 
 
+            // Dictionary<string, object> userData = new Dictionary<string, object>();
+            var userData = new Dictionary<string, object> {
+                {"name", "Son Goku"}
+            };
 
-            // var streamUser = await client.Users.GetAsync(userID);
 
-            // var userData = new Dictionary<string, object>
-            // {
-            //     {"name", "Poopy shithead"}
-            // };
-            // await client.Users.UpdateAsync(streamUser.Id, userData);
+            // foreach (var key in queryParams.AllKeys) {
+            //     userData.Add(key, queryParams[key]);
+            // }
+            
+            var streamUser = await client.Users.GetAsync(userID);
+            await client.Users.UpdateAsync(streamUser.Id, userData);
 
-            return Ok(new { client });
+            return Ok(new {streamUser.Data});
         }
 
         [HttpGet("token/{userID}")]
