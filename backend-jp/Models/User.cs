@@ -19,8 +19,6 @@ public partial class User
 
     public byte[]? profile_pic { get; set; }
 
-    public int? account_type { get; set; }
-
     public string? title { get; set; }
 
     public string? location { get; set; }
