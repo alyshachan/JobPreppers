@@ -54,10 +54,12 @@ export const qualificationSchema = yup.object({
     
     
 })
-
+const currentDate = new Date();
 //Step 4
 export const applicationProcessSchema = yup.object({
+    
     postDate : yup.date()
+    .min(currentDate, "Date must be greater than the current date")
     .required("Post Date is required"),
 
     endDate : yup.date()

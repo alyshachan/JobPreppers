@@ -1,10 +1,25 @@
 import { useFormContext } from "react-hook-form";
-import { DialogContent, TextField } from "@mui/material";
+import { DialogContent, TextField, IconButton } from "@mui/material";
 import AutoCompleteForm from "../Helper/AutoCompleteForm";
 import styles from "../Posting.module.css";
-import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import { errorMessage } from "../Helper/ErrorMessage";
 import axios from "axios";
+import { useEditor } from "@tiptap/react";
+import { StarterKit } from "@tiptap/starter-kit";
+import TipTapEditor from "../Helper/TipTapEditor";
+import { Placeholder } from "@tiptap/extension-placeholder";
+import FormatBoldIcon from "@mui/icons-material/FormatBold";
+import FormatItalicIcon from "@mui/icons-material/FormatItalic";
+import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
+import LinkIcon from "@mui/icons-material/Link";
+import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
+import Link from "@tiptap/extension-link";
+import React, { useCallback } from "react";
+
 export default function DescribeJob({ formData, setFormData }) {
   const jobForm = useFormContext();
   const onSubmit = (data) => {
@@ -16,9 +31,132 @@ export default function DescribeJob({ formData, setFormData }) {
     register,
     handleSubmit,
     setValue,
+    watch,
     control,
     formState: { errors },
   } = jobForm;
+
+  const description = watch("description", "");
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      TextAlign,
+      Placeholder.configure({
+        placeholder: "Start Typing Here..",
+      }),
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        defaultProtocol: "https",
+        protocols: ["http", "https"],
+        isAllowedUri: (url, ctx) => {
+          try {
+            // construct URL
+            const parsedUrl = url.includes(":")
+              ? new URL(url)
+              : new URL(`${ctx.defaultProtocol}://${url}`);
+
+            // use default validation
+            if (!ctx.defaultValidate(parsedUrl.href)) {
+              return false;
+            }
+
+            // disallowed protocols
+            const disallowedProtocols = ["ftp", "file", "mailto"];
+            const protocol = parsedUrl.protocol.replace(":", "");
+
+            if (disallowedProtocols.includes(protocol)) {
+              return false;
+            }
+
+            // only allow protocols specified in ctx.protocols
+            const allowedProtocols = ctx.protocols.map((p) =>
+              typeof p === "string" ? p : p.scheme
+            );
+
+            if (!allowedProtocols.includes(protocol)) {
+              return false;
+            }
+
+            // disallowed domains
+            const disallowedDomains = [
+              "example-phishing.com",
+              "malicious-site.net",
+            ];
+            const domain = parsedUrl.hostname;
+
+            if (disallowedDomains.includes(domain)) {
+              return false;
+            }
+
+            // all checks have passed
+            return true;
+          } catch {
+            return false;
+          }
+        },
+        shouldAutoLink: (url) => {
+          try {
+            // construct URL
+            const parsedUrl = url.includes(":")
+              ? new URL(url)
+              : new URL(`https://${url}`);
+
+            // only auto-link if the domain is not in the disallowed list
+            const disallowedDomains = [
+              "example-no-autolink.com",
+              "another-no-autolink.com",
+            ];
+            const domain = parsedUrl.hostname;
+
+            return !disallowedDomains.includes(domain);
+          } catch {
+            return false;
+          }
+        },
+      }),
+    ],
+    editorProps: {
+      attributes: {
+        class: styles.textEditor,
+      },
+    },
+  });
+
+  const setLink = useCallback(() => {
+    const previousUrl = editor.getAttributes("link").href;
+    const url = window.prompt("URL", previousUrl);
+
+    // cancelled
+    if (url === null) {
+      return;
+    }
+
+    // empty
+    if (url === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+
+      return;
+    }
+
+    // update link
+    try {
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href: url })
+        .run();
+    } catch (e) {
+      alert(e.message);
+    }
+  }, [editor]);
+
+  if (!editor) {
+    return null;
+  }
 
   const submitAddress = async (location) => {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
@@ -90,13 +228,21 @@ export default function DescribeJob({ formData, setFormData }) {
                         const location = e.target.value;
                         try {
                           if (location) {
-                            const { lat, lon } = await submitAddress(location);
-                            console.log("Fetched coordinates:", lat, lon);
-                            if (lat && lon) {
-                              setValue("latitude", lat);
-                              setValue("longitude", lon);
+                            let lower = location.toLowerCase();
+                            if (lower.match("remote")) {
+                              setValue("latitude", null);
+                              setValue("longitude", null);
                             } else {
-                              alert("Please enter a correct location");
+                              const { lat, lon } = await submitAddress(
+                                location
+                              );
+                              console.log("Fetched coordinates:", lat, lon);
+                              if (lat && lon) {
+                                setValue("latitude", lat);
+                                setValue("longitude", lon);
+                              } else {
+                                alert("Please enter a correct location");
+                              }
                             }
                           }
                         } catch (e) {
@@ -121,18 +267,64 @@ export default function DescribeJob({ formData, setFormData }) {
               </div>
             </div>
 
-          <label for="description" className={`${styles.label} mt-[10px]`}>
-            Job Description *
-          </label>
-          <TextareaAutosize
-            {...register("description")}
-            required
-            label="Job Description"
-            placeholder="Enter Job Description"
-          />
-          {errorMessage(errors.description)}
-          </div>
+            <label for="description" className={`${styles.label} mt-[10px]`}>
+              Job Description *
+            </label>
+            <div className={styles.textEditorContainer}>
+              <div className={styles.toolBar}>
+                <IconButton
+                  onClick={() => editor.chain().focus().toggleBold().run()}
+                >
+                  <FormatBoldIcon />
+                </IconButton>
 
+                <IconButton
+                  onClick={() => editor.chain().focus().toggleItalic().run()}
+                >
+                  <FormatItalicIcon />
+                </IconButton>
+
+                <IconButton
+                  onClick={() => editor.chain().focus().toggleUnderline().run()}
+                >
+                  <FormatUnderlinedIcon />
+                </IconButton>
+
+                <IconButton
+                  onClick={() =>
+                    editor.chain().focus().toggleBulletList().run()
+                  }
+                >
+                  <FormatListBulletedIcon />
+                </IconButton>
+
+                <IconButton
+                  onClick={() =>
+                    editor.chain().focus().toggleOrderedList().run()
+                  }
+                >
+                  <FormatListNumberedIcon />
+                </IconButton>
+
+                <IconButton
+                  onClick={() => editor.chain().setTextAlign("justify").focus()}
+                >
+                  <FormatAlignJustifyIcon />
+                </IconButton>
+
+                <IconButton onClick={setLink}>
+                  <LinkIcon />
+                </IconButton>
+              </div>
+              <div className={styles.toolbarDivider} />
+              <TipTapEditor
+                control={control}
+                name="description"
+                editor={editor}
+              />
+              {errorMessage(errors.description)}
+            </div>
+          </div>
         </form>
       </DialogContent>
     </>

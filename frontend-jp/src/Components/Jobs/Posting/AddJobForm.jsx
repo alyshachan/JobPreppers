@@ -177,7 +177,7 @@ export default function AddJobForm({ setJobs }) {
         );
       case 3:
         return (
-          <FormProvider {...jobForm} >
+          <FormProvider {...jobForm}>
             <form id="jobForm" onSubmit={handleSubmit(onSubmit)}>
               {/* Wrap in form and use handleSubmit */}
               <ApplicationProcess
@@ -270,7 +270,7 @@ export default function AddJobForm({ setJobs }) {
             </DialogActions>
           )}
         </StyledDialog>
-        {/* <pre>{JSON.stringify(jobForm.watch(), null, 2)}</pre> */}
+        <pre>{JSON.stringify(jobForm.watch(), null, 2)}</pre>
       </form>
     </>
   );
