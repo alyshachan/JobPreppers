@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace JobPreppersDemo.Models;
 
-public partial class UserSkill
+public partial class Recruiter
 {
-    public int userSkillID { get; set; }
+    public int recruiterID { get; set; }
 
     public int userID { get; set; }
 
-    public int skillID { get; set; }
+    public int? companyID { get; set; }
 
-    public virtual Skill skill { get; set; } = null!;
+    public virtual Company? company { get; set; }
 
     public virtual User user { get; set; } = null!;
 }
