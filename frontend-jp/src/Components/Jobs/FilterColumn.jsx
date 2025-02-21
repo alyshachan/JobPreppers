@@ -102,10 +102,12 @@ export default function FilterColumn({
           </IconButton>
         </Stack>
         <div className={styles.resultText}>
-          <Typography variant="subtitle1" sx={{ color: "grey" }}>
-            {" "}
-            {jobs.length} job{jobs.length !== 1 ? "s" : ""} found.{" "}
-          </Typography>
+          {jobs.length > 0 ? (
+            <Typography variant="subtitle1" sx={{ color: "grey" }}>
+              {" "}
+              {jobs.length} job{jobs.length !== 1 ? "s" : ""} found.{" "}
+            </Typography>
+          ) : null}
         </div>
       </div>
     </>
