@@ -26,7 +26,7 @@ function Feed() {
             }
 
             try {
-                const response = await fetch(`http://localhost:5000/api/Stream/getOrCreate/${user.userID}`,
+                const response = await fetch(`http://localhost:5000/api/Stream/getOrCreate/${user.userID}`, // get streamUser
                     {
                         method: "POST",
                         headers: {
@@ -39,7 +39,7 @@ function Feed() {
                     const data = await response.json();
 
                     if (data.data.name == "Unknown") {
-                        await fetch(`http://localhost:5000/api/Stream/update/${user.userID}`,
+                        await fetch(`http://localhost:5000/api/Stream/update/${user.userID}`, // update if needed
                             {
                                 method: "POST",
                                 headers: {
@@ -59,11 +59,14 @@ function Feed() {
             }
 
             try {
-                const response = await fetch(`http://localhost:5000/api/Feed/${user.userID}`);
+                const response = await fetch(`http://localhost:5000/api/Friend/GetFriends/${user.userID}`); // get response, then create follow relationships with /followFriendMany in FeedController.cs
 
                 if (response.ok) {
                     const data = await response.json();
-                    // console.log(data);
+                    console.log(data.length);
+                    for (var i = 0; i < data.length; i++ ) {
+                        console.log(data[i].id);
+                    }
                 }
                 else {
                     console.error("Error fetching feed data");

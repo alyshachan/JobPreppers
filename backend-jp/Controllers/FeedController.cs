@@ -22,25 +22,6 @@ namespace JobPreppersDemo.Controllers
         }
 
 
-        [HttpGet("{userID}")]
-        public async Task<IActionResult> GetFeed(string userID)
-        {
-            var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
-            string jpUsername = jpUser.first_name + " " + jpUser.last_name;
-            // api calls go here
-            var client = _streamService.Client;
-
-            var userFeed = client.Feed("user", userID);
-
-            var activities = await userFeed.GetActivitiesAsync();
-            // var userData = new Dictionary<string, object>
-            // {
-            //     {"name", jpUsername}
-            // };
-
-            return Ok(new { activities });
-        }
-
         [HttpGet("getTimeline/{userID}")]
         public async Task<IActionResult> GetOrUpdateFeedTimeline(string userID)
         {
@@ -79,6 +60,54 @@ namespace JobPreppersDemo.Controllers
             string OkMsg = $"{userID} now follows friend {friendID} and vice versa";
 
             return Ok(new { OkMsg });
+        }
+
+        [HttpPost("timeline/followFriendMany/{userID}")]
+        public async Task<IActionResult> AddFriendsToTimeline(string userID, List<string> friendIDs)
+        {
+            var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
+            // api calls go here
+            var client = _streamService.Client;
+            var userUserFeed = client.Feed("user", userID);
+            var userTimelineFeed = client.Feed("timeline", userID);
+
+            var currentFollowing = await userUserFeed.FollowersAsync();
+            // TODO: continue from here, check if feed is already followed by friend first, if not, then create follow
+            // relationship
+            // foreach (string friendID in friendIDs) {
+            //     if (friendID is not in timelineFeed.) {
+
+            //     }
+            //     var friendTimelineFeed = client.Feed("user", friendID);
+            //     await timelineFeed.FollowFeedAsync("user", friendID);
+            //     await friendTimelineFeed.FollowFeedAsync("user", userID);
+            // }
+
+
+
+            string OkMsg = $"{userID} now follows friend all their friends and vice versa";
+
+            return Ok(new { currentFollowing });
+        }
+
+        [HttpGet("getUserFeed/{userID}")]
+        public async Task<IActionResult> GetUserFeed(string userID)
+        {
+            var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
+            string jpUsername = jpUser.first_name + " " + jpUser.last_name;
+            // api calls go here
+            var client = _streamService.Client;
+
+            var userFeed = client.Feed("user", userID);
+
+            var activities = await userFeed.GetActivitiesAsync();
+            
+            // var userData = new Dictionary<string, object>
+            // {
+            //     {"name", jpUsername}
+            // };
+
+            return Ok(new { activities });
         }
 
         // [HttpGet("token/{userID}")]
