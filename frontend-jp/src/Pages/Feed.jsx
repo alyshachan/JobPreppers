@@ -13,26 +13,57 @@ function Feed() {
         const fetchFeedData = async () => {
             try {
                 console.log("requesting user token")
-                const response = await fetch(`http://localhost:5000/api/Feed/token/${user.userID}`);
+                const response = await fetch(`http://localhost:5000/api/Stream/token/${user.userID}`);
                 if (response.ok) {
-                    console.log("did it work?");
                     const data = await response.json()
                     const token = data.token;
                     console.log(token);
-                    setStreamToken(token); //set stream broken, fix tmrw
+                    setStreamToken(token);
                 }
             }
             catch (e) {
                 console.error(e);
             }
 
+            try {
+                const response = await fetch(`http://localhost:5000/api/Stream/getOrCreate/${user.userID}`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ userID: user.userID })
+                    });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    if (data.data.name == "Unknown") {
+                        await fetch(`http://localhost:5000/api/Stream/update/${user.userID}`,
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({ userID: user.userID })
+                            });
+                    }
+                    console.log(data);
+                }
+                else {
+                    console.error("Error getting/creating stream user");
+                }
+            }
+            catch (error) {
+                console.error(error);
+            }
 
             try {
                 const response = await fetch(`http://localhost:5000/api/Feed/${user.userID}`);
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
+                    // console.log(data);
                 }
                 else {
                     console.error("Error fetching feed data");
@@ -42,20 +73,6 @@ function Feed() {
                 console.error(error);
             }
 
-            try {
-                const response = await fetch(`http://localhost:5000/api/Stream/update/${user.userID}`);
-
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log(data);
-                }
-                else {
-                    console.error("Error updating feed actor");
-                }
-            }
-            catch (error) {
-                console.error(error);
-            }
         }
         fetchFeedData();
     }, [user])
@@ -72,7 +89,7 @@ function Feed() {
                 <div className="w-2/3">
                     <StatusUpdateForm feedGroup="user" />
                     <div className="flex w-full p-4 space-x-4">
-                        {/* <div className="w-1/2">
+                        <div className="w-1/2">
                             <h1>Your posts</h1>
                             <FlatFeed
                                 classname="flat-feed"
@@ -80,15 +97,15 @@ function Feed() {
                                 options={{ limit: 10 }}
                                 Activity={(props) => <Activity {...props} />}
                             />
-                        </div> */}
-                        <div className="w-full">
+                        </div>
+                        <div className="w-1/2">
                             <h1>Timeline</h1>
                             <FlatFeed
                                 classname="flat-feed"
-                                feedGroup="user"
-                                options={{ enrich:true, limit: 10 }}
+                                feedGroup="timeline"
+                                options={{ enrich: true, limit: 10 }}
                                 Activity={(props) => <Activity {...props}
-                                actor={(props.activity.actor_data?.name || "Unknown User")} />}
+                                    actor={(props.activity.actor_data?.name || "Unknown User")} />}
                             />
                         </div>
 

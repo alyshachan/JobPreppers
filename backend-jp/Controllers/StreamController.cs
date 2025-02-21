@@ -24,70 +24,71 @@ namespace JobPreppersDemo.Controllers
             _context = context;
         }
 
-
-        [HttpGet("get/{userID}")]
-        public async Task<IActionResult> GetStreamUser(string userID)
-        {
-            // api calls go here
-            var client = _streamService.Client;
-            var streamUser = await client.Users.GetAsync(userID);
-            var data = streamUser.Data;
-
-            return Ok(new { streamUser.Id, streamUser.Data });
-        }
-
-        [HttpPost("update/{userID}")]
-        public async Task<IActionResult> UpdateStreamUser(string userID)
-        {
-            // api calls go here
-            Console.WriteLine("i hate rest APIS");
-            // this stupid method is haunting me, it seems impossible to parse out some stupid kv data
-            // out of the uri. figure out tomorrow (kms) - will
-
-            // string apiKey = Environment.GetEnvironmentVariable("STREAM_API_KEY");
-            // string apiSecret = Environment.GetEnvironmentVariable("STREAM_API_SECRET");
-
-            // string fullUri = $"{Request.Scheme}://{Request.Host}{Request.Path}";
-            // var query = HttpUtility.UrlDecode(fullUri);
-            // string queryString = Regex.Split(query, "(\\?.*)")[1];
-            // // Console.WriteLine(fullUri);
-
-            // var queryParams = HttpUtility.ParseQueryString(queryString);
-            // Console.WriteLine("help me");
-            // Console.WriteLine(queryParams["name"]);
-            // Console.WriteLine(queryParams.AllKeys[0]);
-            // Console.WriteLine(apiKey);
-            // Console.WriteLine(apiSecret);
-
-
-
-            var client = _streamService.Client;
-            // StreamClient client = new StreamClient(apiKey, apiSecret); // for testing
-            // Console.WriteLine("Client good");
-
-
-            // Dictionary<string, object> userData = new Dictionary<string, object>();
-            var userData = new Dictionary<string, object> {
-                {"name", "Son Goku"}
-            };
-
-
-            // foreach (var key in queryParams.AllKeys) {
-            //     userData.Add(key, queryParams[key]);
-            // }
-            
-            var streamUser = await client.Users.GetAsync(userID);
-            await client.Users.UpdateAsync(streamUser.Id, userData);
-
-            return Ok(new {streamUser.Data});
-        }
-
         [HttpGet("token/{userID}")]
         public async Task<IActionResult> GetStreamAuthToken(string userID)
         {
             var client = _streamService.Client;
             var token = client.CreateUserToken(userID);
             return Ok(new { token });
+        }
+
+        [HttpPost("getOrCreate/{userID}")]
+        public async Task<IActionResult> GetOrCreateStreamUser(string userID)
+        {
+            // api calls go here
+            var client = _streamService.Client;
+            try
+            {
+                var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
+                try
+                {
+                    var streamUser = await client.Users.GetAsync(userID);
+                    Console.WriteLine("User retrieved successfully");
+                    return Ok(new { streamUser.Id, streamUser.Data });
+                }
+                catch (StreamException e) when (e.Message.Contains("User does not existl"))
+                {
+                    string jpUsername = jpUser.first_name + " " + jpUser.last_name;
+                    Dictionary<string, object> userData = new Dictionary<string, object>
+                        {
+                        {"name", $"{jpUsername}" },
+                        };
+                    await client.Users.AddAsync(userID, userData);
+                    string OkMsg = $"Stream user {userID} did not exist, created new one";
+                    var newStreamUser = await client.Users.GetAsync(userID);
+                    return Ok(new {OkMsg, newStreamUser.Id, newStreamUser.Data});
+                }
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+        }
+
+        [HttpPost("update/{userID}")]
+        public async Task<IActionResult> UpdateStreamUser(string userID)
+        {
+            // api calls go here
+            var client = _streamService.Client;
+            Console.WriteLine("Client good");
+            var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
+
+
+            if (jpUser != null)
+            {
+                string jpUsername = jpUser.first_name + " " + jpUser.last_name;
+                var userData = new Dictionary<string, object> {
+                    {"name", $"{jpUsername}"}
+                };
+
+                var streamUser = await client.Users.GetAsync(userID);
+                await client.Users.UpdateAsync(streamUser.Id, userData);
+
+                return Ok(new { streamUser.Data });
+            }
+
+            return NotFound();
         }
     }
 }
