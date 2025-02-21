@@ -4,20 +4,7 @@ import AutoCompleteForm from "../Helper/AutoCompleteForm";
 import styles from "../Posting.module.css";
 import { errorMessage } from "../Helper/ErrorMessage";
 import axios from "axios";
-import { useEditor, FloatingMenu, BubbleMenu } from "@tiptap/react";
-import { StarterKit } from "@tiptap/starter-kit";
 import TipTap from "../Helper/TipTap";
-import { Placeholder } from "@tiptap/extension-placeholder";
-import FormatBoldIcon from "@mui/icons-material/FormatBold";
-import FormatItalicIcon from "@mui/icons-material/FormatItalic";
-import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
-import LinkIcon from "@mui/icons-material/Link";
-import Underline from "@tiptap/extension-underline";
-import TextAlign from "@tiptap/extension-text-align";
-import Link from "@tiptap/extension-link";
 import React, { useCallback } from "react";
 
 export default function DescribeJob({ formData, setFormData }) {
@@ -35,132 +22,6 @@ export default function DescribeJob({ formData, setFormData }) {
     control,
     formState: { errors },
   } = jobForm;
-
-  const description = watch("description", "");
-
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      TextAlign,
-      Placeholder.configure({
-        placeholder: "Start Typing Here..",
-      }),
-      Link.configure({
-        openOnClick: false,
-        autolink: true,
-        defaultProtocol: "https",
-        protocols: ["http", "https"],
-        isAllowedUri: (url, ctx) => {
-          try {
-            // construct URL
-            const parsedUrl = url.includes(":")
-              ? new URL(url)
-              : new URL(`${ctx.defaultProtocol}://${url}`);
-
-            // use default validation
-            if (!ctx.defaultValidate(parsedUrl.href)) {
-              return false;
-            }
-
-            // disallowed protocols
-            const disallowedProtocols = ["ftp", "file", "mailto"];
-            const protocol = parsedUrl.protocol.replace(":", "");
-
-            if (disallowedProtocols.includes(protocol)) {
-              return false;
-            }
-
-            // only allow protocols specified in ctx.protocols
-            const allowedProtocols = ctx.protocols.map((p) =>
-              typeof p === "string" ? p : p.scheme
-            );
-
-            if (!allowedProtocols.includes(protocol)) {
-              return false;
-            }
-
-            // disallowed domains
-            const disallowedDomains = [
-              "example-phishing.com",
-              "malicious-site.net",
-            ];
-            const domain = parsedUrl.hostname;
-
-            if (disallowedDomains.includes(domain)) {
-              return false;
-            }
-
-            // all checks have passed
-            return true;
-          } catch {
-            return false;
-          }
-        },
-        shouldAutoLink: (url) => {
-          try {
-            // construct URL
-            const parsedUrl = url.includes(":")
-              ? new URL(url)
-              : new URL(`https://${url}`);
-
-            // only auto-link if the domain is not in the disallowed list
-            const disallowedDomains = [
-              "example-no-autolink.com",
-              "another-no-autolink.com",
-            ];
-            const domain = parsedUrl.hostname;
-
-            return !disallowedDomains.includes(domain);
-          } catch {
-            return false;
-          }
-        },
-      }),
-    ],
-    content: watch("description"), // Keep value in sync
-    onUpdate: ({ editor }) => {
-      setValue("description", editor.getHTML(), { shouldValidate: true }); // Update form value
-    },
-    editorProps: {
-      attributes: {
-        class: styles.textEditor,
-      },
-    },
-  });
-
-  const setLink = useCallback(() => {
-    const previousUrl = editor.getAttributes("link").href;
-    const url = window.prompt("URL", previousUrl);
-
-    // cancelled
-    if (url === null) {
-      return;
-    }
-
-    // empty
-    if (url === "") {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
-
-      return;
-    }
-
-    // update link
-    try {
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href: url })
-        .run();
-    } catch (e) {
-      alert(e.message);
-    }
-  }, [editor]);
-
-  if (!editor) {
-    return null;
-  }
 
   const submitAddress = async (location) => {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
@@ -275,18 +136,6 @@ export default function DescribeJob({ formData, setFormData }) {
               Job Description *
             </label>
             <div className={styles.textEditorContainer}>
-              {/* 
-                <IconButton
-                  onClick={() => editor.chain().setTextAlign("justify").focus()}
-                >
-                  <FormatAlignJustifyIcon />
-                </IconButton>
-
-                <IconButton onClick={setLink}>
-                  <LinkIcon />
-                </IconButton>
-              </div> */}
-
               <TipTap control={control} name="description"></TipTap>
             </div>
             {errorMessage(errors.description)}
