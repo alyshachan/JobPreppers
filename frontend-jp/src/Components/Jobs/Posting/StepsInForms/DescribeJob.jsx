@@ -6,7 +6,7 @@ import { errorMessage } from "../Helper/ErrorMessage";
 import axios from "axios";
 import { useEditor, FloatingMenu, BubbleMenu } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
-import TipTapEditor from "../Helper/TipTapEditor";
+import TipTap from "../Helper/TipTap";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import FormatBoldIcon from "@mui/icons-material/FormatBold";
 import FormatItalicIcon from "@mui/icons-material/FormatItalic";
@@ -275,41 +275,7 @@ export default function DescribeJob({ formData, setFormData }) {
               Job Description *
             </label>
             <div className={styles.textEditorContainer}>
-              <div className={styles.toolBar}>
-                <IconButton
-                  onClick={() => editor.chain().focus().toggleBold().run()}
-                >
-                  <FormatBoldIcon />
-                </IconButton>
-
-                <IconButton
-                  onClick={() => editor.chain().focus().toggleItalic().run()}
-                >
-                  <FormatItalicIcon />
-                </IconButton>
-
-                <IconButton
-                  onClick={() => editor.chain().focus().toggleUnderline().run()}
-                >
-                  <FormatUnderlinedIcon />
-                </IconButton>
-
-                <IconButton
-                  onClick={() =>
-                    editor.chain().focus().toggleBulletList().run()
-                  }
-                >
-                  <FormatListBulletedIcon />
-                </IconButton>
-
-                <IconButton
-                  onClick={() =>
-                    editor.chain().focus().toggleOrderedList().run()
-                  }
-                >
-                  <FormatListNumberedIcon />
-                </IconButton>
-
+              {/* 
                 <IconButton
                   onClick={() => editor.chain().setTextAlign("justify").focus()}
                 >
@@ -319,21 +285,11 @@ export default function DescribeJob({ formData, setFormData }) {
                 <IconButton onClick={setLink}>
                   <LinkIcon />
                 </IconButton>
-              </div>
-              <div className={styles.toolbarDivider} />
+              </div> */}
 
-              <TipTapEditor
-                control={control}
-                name="description"
-                editor={editor}
-              >
-                {/* <FloatingMenu editor={editor}>
-                  This is the floating menu
-                </FloatingMenu>
-                <BubbleMenu editor={editor}>This is the bubble menu</BubbleMenu> */}
-              </TipTapEditor>
-              {errorMessage(errors.description)}
+              <TipTap control={control} name="description"></TipTap>
             </div>
+            {errorMessage(errors.description)}
           </div>
         </form>
       </DialogContent>
