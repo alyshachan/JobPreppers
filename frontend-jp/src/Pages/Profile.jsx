@@ -25,6 +25,7 @@ function Profile() {
   const [edit, setEdit] = useState(() => {
     return localStorage.getItem("editMode") === "true";
   });
+  const [friendCount, setFriendCount] = useState(0);
   const [educationDict, setEducationDict] = useState([]);
   const [skillsDict, setSkillsDict] = useState({});
   const [experienceDict, setExperienceDict] = useState([]);
@@ -43,10 +44,6 @@ function Profile() {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
   };
 
-
-  // const skillsTest = {}
-
-  const [skillsTest, setSkillsTest] = useState({});
   // test message box handler
   useEffect(() => {
     localStorage.setItem("editMode", edit);
@@ -129,6 +126,30 @@ function Profile() {
         description,
       }))
     );
+
+    const fetchFriendCount = async() => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/Friend/GetFriends/${user.userID}`, {
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+        
+          if (Array.isArray(data)) {
+            setFriendCount(data.length); // Count the number of friends
+          } else {
+            setFriendCount(0); // No friends found
+          }
+        }else {
+          throw new Error("Failed to fetch friends list");
+        }
+        
+      } catch (error) {
+        console.error("Error fetching friend count:", error);
+      }
+    }
+    fetchFriendCount()
   }, [user]);
 
   useEffect(() => {
@@ -189,6 +210,7 @@ function Profile() {
             <p className="subtitle">
               {user.location}
             </p>
+            <a href="/Friends"className="font-bold text-xl text-[#4ba173] hover:underline">{friendCount} connections</a>
 
             <div className={styles.actionButtons}>
               <Button variant="contained" startIcon={<AddCircleOutlineIcon />}>

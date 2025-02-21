@@ -73,14 +73,14 @@ function NavBar() {
           console.log("fetched friends: ", data);
           if (data) {
             const newPendingFriendDict = data.map((pendingFriend) => ({
-              userID: pendingFriend.userID,
+              userID: pendingFriend.id,
               username: pendingFriend.username,
               name: pendingFriend.name,
               profilePic:
-                pendingFriend.profile_pic == null
+                pendingFriend.profilePicture == null
                   ? defaultProfilePicture
                   : "data:image/png;base64," +
-                    pendingFriend.profile_pic.toString().toString("base64"),
+                    pendingFriend.profilePicture.toString().toString("base64"),
               title: pendingFriend.title,
               sentAt: new Date(pendingFriend.sentAt),
             }));
@@ -103,6 +103,58 @@ function NavBar() {
 
     requestPendingFriends();
   }, [user]);
+
+  const handleAcceptFriend = async (friendID) => {
+    console.log("printing the deets");
+    console.log("User ID:", user?.userID);
+    console.log("Friend ID:", friendID);
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/Friend/AcceptFriendRequest",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: user.userID, friendId: friendID }),
+        }
+      );
+
+      if (response.ok) {
+        setNotificationDict(
+          notificationDict.filter((n) => n.userID !== friendID)
+        );
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
+
+  const handleDeclineFriend = async (friendID) => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/Friend/DenyFriendRequest",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ userId: user.userID, friendId: friendID }),
+        }
+      );
+
+      if (response.ok) {
+        setNotificationDict(
+          notificationDict.filter((n) => n.userID !== friendID)
+        );
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
 
   const handleLogoutSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -202,7 +254,10 @@ function NavBar() {
                 {notificationDict.map((notification, index) => (
                   <MenuItem>
                     <div className="flex flex-col">
-                      <div className="flex p-2 gap-4">
+                      <div
+                        className="flex p-2 gap-4"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <img
                           className="rounded-full aspect-square w-20 h-20"
                           alt={`${notification.name}'s Profile Picture`}
@@ -219,12 +274,14 @@ function NavBar() {
                           </p>
 
                           <div className="flex gap-2 pt-2 items-center justify-end flex-grow">
-                            <button>Accept</button>
-                            <button className="lightButton">Decline</button>
+                            <button onClick={() => handleAcceptFriend(notification.userID)}>Accept</button>
+                            <button className="lightButton" onClick={() => handleDeclineFriend(notification.userID)}>Decline</button>
                           </div>
                         </div>
                       </div>
-                      {index < notificationDict.length - 1 && <hr className="border-t border-gray-300 -ml-[3px] my-5"/>}
+                      {index < notificationDict.length - 1 && (
+                        <hr className="border-t border-gray-300 -ml-[3px] my-2" />
+                      )}
                     </div>
                   </MenuItem>
                 ))}

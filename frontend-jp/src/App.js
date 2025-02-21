@@ -18,6 +18,7 @@ import Education from "./ProfileSections/Education";
 import Experience from "./ProfileSections/Experience";
 import Project from "./ProfileSections/Project";
 import Skills from "./ProfileSections/Skills";
+import Friends from "./ProfileSections/Friends"
 import { AuthProvider } from "./provider/authProvider";
 import { ConnectionProvider } from "./provider/connectionProvider";
 
@@ -43,6 +44,7 @@ function App() {
           <Route path="/Experience" element={<Experience />} />
           <Route path="/Project" element={<Project />} />
           <Route path="/Skills" element={<Skills />} />
+          <Route path="/Friends" element={<Friends />} />
         </Routes>
         <Messaging/>
         </ConnectionProvider>
