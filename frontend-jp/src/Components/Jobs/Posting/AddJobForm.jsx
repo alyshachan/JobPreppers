@@ -192,15 +192,15 @@ export default function AddJobForm({ setJobs }) {
 
   return (
     <>
-      <Fragment>
-        <Button
-          variant="filled"
-          onClick={handleClickOpen}
-          startIcon={<PostAdd />}
-        >
-          Post
-        </Button>
-      </Fragment>
+      {/* <Fragment> */}
+      <Button
+        variant="filled"
+        onClick={handleClickOpen}
+        startIcon={<PostAdd />}
+      >
+        Add Job
+      </Button>
+      {/* </Fragment> */}
 
       <form>
         <StyledDialog onClose={handleClose} open={open}>
@@ -270,7 +270,7 @@ export default function AddJobForm({ setJobs }) {
             </DialogActions>
           )}
         </StyledDialog>
-        {/* <pre>{JSON.stringify(jobForm.watch(), null, 2)}</pre> */}
+        <pre>{JSON.stringify(jobForm.watch(), null, 2)}</pre>
       </form>
     </>
   );

@@ -119,3 +119,12 @@
   min-height: 15rem;
   /* padding: 0.5rem 0 0 0.2rem; */
 /* } */
+
+.MuiYearPicker-root {
+  max-height: 200px !important;
+  /* position: fixed !important; */
+}
+
+.MuiPaper-root {
+  overflow: visible;
+}

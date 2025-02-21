@@ -1,11 +1,12 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Box, Button } from "@mui/material";
+import React, { useState } from "react";
+import { Box } from "@mui/material";
 import SearchColumn from "../Components/Jobs/SearchColumn";
 import "../Components/JobPreppers.css";
 import styles from "../Components/Jobs/Jobs.module.css";
 import FilterColumn from "../Components/Jobs/FilterColumn";
 import JobDescription from "../Components/Jobs/JobDescription";
 import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
+import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
 
 function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -73,10 +74,13 @@ function Jobs() {
 
               {}
             </div>
-
-            {/* <Fragment> */}
-            <JobDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
-            {/* </Fragment>  */}
+            {jobs.length > 0 ? (
+              <div className={styles.containerForCard}>
+                <JobDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
+              </div>
+            ) : (
+              <NoResultPage />
+            )}
           </div>
         </Box>
 

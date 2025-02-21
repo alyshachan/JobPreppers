@@ -47,9 +47,8 @@ export const qualificationSchema = yup.object({
     .nullable()
     .moreThan(yup.ref("minimumExperience"), "Maximum Experience needs to be more than the minimum salary."),
     skills : yup.array().of(
-        yup.object().shape({
-        label: yup.string().required(),
-    })).min(1, "Skills is required, please select atleast one")
+        yup.string().required(),
+    ).min(1, "Skills is required, please select atleast one")
 
     
     
