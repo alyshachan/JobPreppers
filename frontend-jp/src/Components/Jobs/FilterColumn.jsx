@@ -23,12 +23,15 @@ export default function FilterColumn({
       // e.preventDefault(); // Prevent default form submission
       console.log("Filter: ", { filters });
       try {
-        const response = await fetch("http://localhost:5000/api/job/filter", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(filters),
-          credentials: "include",
-        });
+        const response = await fetch(
+          "http://localhost:5000/api/jobpost/filter",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(filters),
+            credentials: "include",
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
@@ -68,7 +71,9 @@ export default function FilterColumn({
         <Stack
           direction="row"
           spacing={2}
-          className={`${styles.filterColumn} ${isOverflowing ? styles.filterColumnOverflow : ""}`}
+          className={`${styles.filterColumn} ${
+            isOverflowing ? styles.filterColumnOverflow : ""
+          }`}
         >
           <Salary setFilters={setFilters} />
           <Distance setFilters={setFilters} userCoordinate={userCoordinate} />

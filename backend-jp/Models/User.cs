@@ -19,11 +19,13 @@ public partial class User
 
     public byte[]? profile_pic { get; set; }
 
-    public int? account_type { get; set; }
-
     public string? title { get; set; }
 
     public string? location { get; set; }
+
+    public virtual ICollection<Friend> Friendfriends { get; set; } = new List<Friend>();
+
+    public virtual ICollection<Friend> Friendusers { get; set; } = new List<Friend>();
 
     public virtual ICollection<Resume> Resumes { get; set; } = new List<Resume>();
 
