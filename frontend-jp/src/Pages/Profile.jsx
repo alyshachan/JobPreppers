@@ -43,10 +43,6 @@ function Profile() {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
   };
 
-
-  // const skillsTest = {}
-
-  const [skillsTest, setSkillsTest] = useState({});
   // test message box handler
   useEffect(() => {
     localStorage.setItem("editMode", edit);
@@ -156,11 +152,13 @@ function Profile() {
     fetchUser();
   }, [user]);
     
-    useEffect(() => {
+  useEffect(() => {
       console.log("connecting to hub from profile.jsx");
       connectToHub();
   }, []);
 
+
+  
   if (user == null) {
     return <div>Loading...</div>;
   }
@@ -275,18 +273,28 @@ function Profile() {
       <AddEducationDialog
         open={openDialog.education}
         onClose={() => toggleDialog("education", false)}
+        onAdd={(newEducation) => setEducationDict((prev) => [...prev, newEducation])}
       />
       <AddSkillDialog
         open={openDialog.skill}
         onClose={() => toggleDialog("skill", false)}
+        onAdd={(newSkill) => setSkillsDict((prev) => {
+          const updatedSkills = { ...prev };
+          updatedSkills[newSkill.category] = updatedSkills[newSkill.category]
+            ? [...updatedSkills[newSkill.category], newSkill.name]
+            : [newSkill.name];
+          return updatedSkills;
+        })}
       />
       <AddExperienceDialog
         open={openDialog.experience}
         onClose={() => toggleDialog("experience", false)}
+        onAdd={(newExperience) => setExperienceDict((prev) => [...prev, newExperience])}
       />
       <AddProjectDialog
         open={openDialog.project}
         onClose={() => toggleDialog("project", false)}
+        onAdd={(newProject) => setProjectDict((prev) => [...prev, newProject])}
       />
     </>
   );

@@ -32,7 +32,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddEducationDialog({ open, onClose }) {
+function AddEducationDialog({ open, onClose, onAdd }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [school, setSchool] = useState("");
   const [degree, setDegree] = useState("");
@@ -44,7 +44,6 @@ function AddEducationDialog({ open, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
-    onClose();
     const start =
       startDate.toDateString === new Date().toDateString
         ? null
@@ -71,9 +70,18 @@ function AddEducationDialog({ open, onClose }) {
           }),
         }
       );
-      window.location.reload();
+
       if (response.ok) {
         const data = await response.json();
+        onAdd({
+          school_name: school,
+          degree_name: degree,
+          study_name: study,
+          start_date: start,
+          end_date: end,
+          description: description
+        });
+        onClose();
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();
