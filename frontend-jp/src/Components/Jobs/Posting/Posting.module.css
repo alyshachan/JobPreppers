@@ -120,22 +120,37 @@
   justify-content: space-between;
 }
 
-.textEditor {
+/* .textEditor {
   display: flex;
   min-height: 13rem;
   /* border: 1px solid #4ba173; */
-  overflow: auto;
-  flex: 1;
-}
+overflow: auto;
+flex: 1;
+/* }
 
-.toolbar {
+.textEditor p {
+  display: block; /* Prevents flex from interfering */
+/* } */
+
+/* .toolbar {
   display: flex;
   min-height: 2rem;
   flex-grow: 1;
-}
+} */
 
-.toolbarDivider {
+/* .toolbarDivider {
   background-color: #4ba173;
   height: 1px;
   flex-grow: 0;
+} */
+
+ul,
+ol {
+  padding: 0 1rem;
+  margin: 1.25rem 1rem 1.25rem 0.4rem;
+
+  li p {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
 }

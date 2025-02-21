@@ -4,7 +4,7 @@ import AutoCompleteForm from "../Helper/AutoCompleteForm";
 import styles from "../Posting.module.css";
 import { errorMessage } from "../Helper/ErrorMessage";
 import axios from "axios";
-import { useEditor } from "@tiptap/react";
+import { useEditor, FloatingMenu, BubbleMenu } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import TipTapEditor from "../Helper/TipTapEditor";
 import { Placeholder } from "@tiptap/extension-placeholder";
@@ -118,6 +118,10 @@ export default function DescribeJob({ formData, setFormData }) {
         },
       }),
     ],
+    content: watch("description"), // Keep value in sync
+    onUpdate: ({ editor }) => {
+      setValue("description", editor.getHTML(), { shouldValidate: true }); // Update form value
+    },
     editorProps: {
       attributes: {
         class: styles.textEditor,
@@ -317,11 +321,17 @@ export default function DescribeJob({ formData, setFormData }) {
                 </IconButton>
               </div>
               <div className={styles.toolbarDivider} />
+
               <TipTapEditor
                 control={control}
                 name="description"
                 editor={editor}
-              />
+              >
+                {/* <FloatingMenu editor={editor}>
+                  This is the floating menu
+                </FloatingMenu>
+                <BubbleMenu editor={editor}>This is the bubble menu</BubbleMenu> */}
+              </TipTapEditor>
               {errorMessage(errors.description)}
             </div>
           </div>
