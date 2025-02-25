@@ -63,7 +63,7 @@ namespace JobPreppersDemo.Controllers
         }
 
         [HttpPost("timeline/followFriendMany/{userID}")]
-        public async Task<IActionResult> AddFriendsToTimeline(string userID, List<string> friendIDs)
+        public async Task<IActionResult> AddFriendsToTimeline(string userID, [FromBody] List<string> friendIDs)
         {
             var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
             // api calls go here
@@ -71,23 +71,17 @@ namespace JobPreppersDemo.Controllers
             var userUserFeed = client.Feed("user", userID);
             var userTimelineFeed = client.Feed("timeline", userID);
 
-            var currentFollowing = await userUserFeed.FollowersAsync();
-            // TODO: continue from here, check if feed is already followed by friend first, if not, then create follow
-            // relationship
-            // foreach (string friendID in friendIDs) {
-            //     if (friendID is not in timelineFeed.) {
-
-            //     }
-            //     var friendTimelineFeed = client.Feed("user", friendID);
-            //     await timelineFeed.FollowFeedAsync("user", friendID);
-            //     await friendTimelineFeed.FollowFeedAsync("user", userID);
-            // }
+            foreach (string friendID in friendIDs) {
+                var friendTimelineFeed = client.Feed("timeline", friendID);
+                await userTimelineFeed.FollowFeedAsync("user", friendID);
+                await friendTimelineFeed.FollowFeedAsync("user", userID);
+            }
 
 
+            string joinedIDs = string.Join(",", friendIDs);
+            string OkMsg = $"{userID} now follows users {joinedIDs} and vice versa";
 
-            string OkMsg = $"{userID} now follows friend all their friends and vice versa";
-
-            return Ok(new { currentFollowing });
+            return Ok(new { OkMsg });
         }
 
         [HttpGet("getUserFeed/{userID}")]
