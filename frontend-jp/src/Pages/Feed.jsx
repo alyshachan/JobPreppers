@@ -113,8 +113,8 @@ function Feed() {
 
                 <div className="w-2/3">
                     <StatusUpdateForm feedGroup="user" />
-                    <div className="flex w-full p-4 space-x-4">
-                        <div className="w-1/2">
+                    {/* <div className="flex w-full p-4 space-x-4"> */}
+                    {/* <div className="w-1/2">
                             <h1>Your posts</h1>
                             <FlatFeed
                                 classname="flat-feed"
@@ -122,24 +122,34 @@ function Feed() {
                                 options={{ limit: 10 }}
                                 Activity={(props) => <CustomActivity {...props} />}
                             />
-                        </div>
-                        <div className="w-1/2">
-                            <h1>Timeline</h1>
-                            <FlatFeed
-                                classname="flat-feed"
-                                feedGroup="timeline"
-                                options={{
-                                    enrich: true,
-                                    limit: 10,
-                                    reactions: { own: true, counts: true }
-                                }}
-                                //     Activity={(props) => <Activity {...props}
-                                //         actor={(props.activity.actor_data?.name || "Unknown User")} />}
-                                // />
-                                Activity={(props) => <CustomActivity {...props} />}
-                            />
-                        </div>
+                        </div> */}
+                    <div>
+                        <h1>Timeline</h1>
+                        <FlatFeed
+                            classname="flat-feed"
+                            feedGroup="timeline"
+                            options={{
+                                enrich: true,
+                                limit: 10,
+                                reactions: { own: true, counts: true }
+                            }}
+                            //     Activity={(props) => <Activity {...props}
+                            //         actor={(props.activity.actor_data?.name || "Unknown User")} />}
+                            // />
+                            Activity={(props) => <CustomActivity {...props} />}
+                        />
+                    </div>
 
+                    {/* </div> */}
+                </div>
+                <div className="w-1/3">
+                    <h1>Discover new connections</h1>
+                    <div className="flex flex-col">
+                        <hr />
+                        <div className="panel">
+                            <hr />
+                            <button className="lightButton">Load more</button>
+                        </div>
                     </div>
                 </div>
             </div>
