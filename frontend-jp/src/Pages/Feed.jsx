@@ -2,7 +2,7 @@ import AddProjectDialog from "../Components/Profile/AddProjectDialog"
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import 'react-activity-feed/dist/index.css';
-import { StreamApp, FlatFeed, Activity, StatusUpdateForm } from 'react-activity-feed';
+import { StreamApp, FlatFeed, Activity, StatusUpdateForm, LikeButton } from 'react-activity-feed';
 
 
 
@@ -17,8 +17,8 @@ function Feed() {
                 if (response.ok) {
                     const data = await response.json()
                     const token = data.token;
-                    console.log(token);
                     setStreamToken(token);
+                    console.log("stream client authorized")
                 }
             }
             catch (e) {
@@ -48,7 +48,7 @@ function Feed() {
                                 body: JSON.stringify({ userID: user.userID })
                             });
                     }
-                    console.log(data);
+                    console.log("stream user acquired :)")
                 }
                 else {
                     console.error("Error getting/creating stream user");
@@ -58,27 +58,49 @@ function Feed() {
                 console.error(error);
             }
 
-            try {
-                const response = await fetch(`http://localhost:5000/api/Friend/GetFriends/${user.userID}`); // get response, then create follow relationships with /followFriendMany in FeedController.cs
+            // try {
+            //     const response = await fetch(`http://localhost:5000/api/Friend/GetFriends/${user.userID}`); // get response, then create follow relationships with /followFriendMany in FeedController.cs
 
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log(data.length);
-                    for (var i = 0; i < data.length; i++ ) {
-                        console.log(data[i].id);
-                    }
-                }
-                else {
-                    console.error("Error fetching feed data");
-                }
-            }
-            catch (error) {
-                console.error(error);
-            }
+            //     if (response.ok) {
+            //         const data = await response.json();
+            //         console.log(data.length);
+            //         for (var i = 0; i < data.length; i++ ) {
+            //             console.log(data[i].id);
+            //         }
+            //     }
+            //     else {
+            //         console.error("Error fetching feed data");
+            //     }
+            // }
+            // catch (error) {
+            //     console.error(error);
+            // }
 
         }
         fetchFeedData();
     }, [user])
+
+
+    const CustomActivity = ({ activity }) => {
+        return (
+            <div className="activity">
+                {/* Displaying basic activity info */}
+                <div color="white">
+
+
+                    <div className="bg-white p-2 border border-gray-300 rounded-lg mt-2 shadow-md relative">
+                        <Activity activity={activity} />
+
+                        {/* Like button to add a like reaction */}
+                        <div className="absolute bottom-0 right-0 mb-0 mr-2">
+                            <LikeButton reactionKind="like" activity={activity} background-color="white" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
 
 
     return (
@@ -98,7 +120,7 @@ function Feed() {
                                 classname="flat-feed"
                                 feedGroup="user"
                                 options={{ limit: 10 }}
-                                Activity={(props) => <Activity {...props} />}
+                                Activity={(props) => <CustomActivity {...props} />}
                             />
                         </div>
                         <div className="w-1/2">
@@ -106,9 +128,15 @@ function Feed() {
                             <FlatFeed
                                 classname="flat-feed"
                                 feedGroup="timeline"
-                                options={{ enrich: true, limit: 10 }}
-                                Activity={(props) => <Activity {...props}
-                                    actor={(props.activity.actor_data?.name || "Unknown User")} />}
+                                options={{
+                                    enrich: true,
+                                    limit: 10,
+                                    reactions: { own: true, counts: true }
+                                }}
+                                //     Activity={(props) => <Activity {...props}
+                                //         actor={(props.activity.actor_data?.name || "Unknown User")} />}
+                                // />
+                                Activity={(props) => <CustomActivity {...props} />}
                             />
                         </div>
 

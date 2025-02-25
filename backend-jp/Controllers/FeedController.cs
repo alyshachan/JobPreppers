@@ -43,6 +43,7 @@ namespace JobPreppersDemo.Controllers
             return Ok(new { activities });
         }
 
+        // NOTE: deprecated, use AddFriendsToTimeline, too scared to delete for now
         [HttpPost("timeline/followFriend/{userID}")]
         public async Task<IActionResult> AddFriendToTimeline(string userID, string friendID)
         {
@@ -54,8 +55,6 @@ namespace JobPreppersDemo.Controllers
 
             await timelineFeed.FollowFeedAsync("user", friendID);
             await friendTimelineFeed.FollowFeedAsync("user", userID);
-
-
 
             string OkMsg = $"{userID} now follows friend {friendID} and vice versa";
 
@@ -102,6 +101,28 @@ namespace JobPreppersDemo.Controllers
             // };
 
             return Ok(new { activities });
+        }
+
+        [HttpPost("timeline/LikePost/{likedUserID}/{activityID}")]
+        public async Task<IActionResult> LikePost(string likedUserID, string activityID)
+        {
+            // var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
+            // api calls go here
+            var client = _streamService.Client;
+
+            var activities = client.Feed("timeline", likedUserID).GetActivitiesAsync();
+
+            var firstActivityID = activities.Result.Results[0].Id;
+            var reactions = await client.Reactions.FilterAsync(ReactionFiltering.Default, ReactionPagination.By.ActivityId(firstActivityID));
+
+
+            // await client.Reactions.AddAsync(null, "like", firstActivityID, likedUserID);
+
+            // string OkMsg = $"added a like";
+            string OkMsg = $"testing";
+
+
+            return Ok(new { firstActivityID, reactions });
         }
 
         // [HttpGet("token/{userID}")]
