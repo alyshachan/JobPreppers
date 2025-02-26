@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Stream;
 using Stream.Models;
+using StreamChat;
+using StreamChat.Clients;
 using System.Web;
 using System.Text.RegularExpressions;
 
@@ -18,18 +20,42 @@ namespace JobPreppersDemo.Controllers
         private readonly StreamService _streamService;
         private readonly ApplicationDbContext _context;
 
+        private readonly StreamClientFactory _clientFactory;
+
         public StreamController(StreamService streamService, ApplicationDbContext context)
         {
             _streamService = streamService;
             _context = context;
+            _clientFactory = new StreamClientFactory();
         }
 
-        [HttpGet("token/{userID}")]
-        public async Task<IActionResult> GetStreamAuthToken(string userID)
+        [HttpGet("feedToken/{userID}")]
+        public async Task<IActionResult> GetStreamFeedAuthToken(string userID)
         {
             var client = _streamService.Client;
             var token = client.CreateUserToken(userID);
             return Ok(new { token });
+        }
+
+        [HttpGet("chatToken/{userID}")]
+        public async Task<IActionResult> GetStreamChatAuthToken(string userID)
+        {
+            var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
+            // string jpUsername = jpUser.first_name + " " + jpUser.last_name;
+            // api calls go here
+            var client = _streamService.Client;
+
+            // will dev note 2/21: when a friends list frontend is completed, add a controller that
+            // will call .FollowFeed() on new friends
+            var timelineFeed = client.Feed("timeline", userID);
+
+            var activities = await timelineFeed.GetActivitiesAsync();
+            // var userData = new Dictionary<string, object>
+            // {
+            //     {"name", jpUsername}
+            // };
+
+            return Ok(new { activities });
         }
 
         [HttpPost("getOrCreate/{userID}")]
@@ -56,7 +82,7 @@ namespace JobPreppersDemo.Controllers
                     await client.Users.AddAsync(userID, userData);
                     string OkMsg = $"Stream user {userID} did not exist, created new one";
                     var newStreamUser = await client.Users.GetAsync(userID);
-                    return Ok(new {OkMsg, newStreamUser.Id, newStreamUser.Data});
+                    return Ok(new { OkMsg, newStreamUser.Id, newStreamUser.Data });
                 }
             }
             catch

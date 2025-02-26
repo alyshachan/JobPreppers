@@ -27,7 +27,7 @@ public partial class User
 
     public string? description { get; set; }
 
-    public string? job_title { get; set; }
+    // public string? job_title { get; set; }
 
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 

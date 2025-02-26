@@ -13,7 +13,7 @@ function Feed() {
         const fetchFeedData = async () => {
             try {
                 console.log("requesting user token")
-                const response = await fetch(`http://localhost:5000/api/Stream/token/${user.userID}`);
+                const response = await fetch(`http://localhost:5000/api/Stream/feedToken/${user.userID}`);
                 if (response.ok) {
                     const data = await response.json()
                     const token = data.token;

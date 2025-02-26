@@ -112,7 +112,7 @@ namespace JobPreppersDemo.Controllers
 
             var activities = client.Feed("timeline", likedUserID).GetActivitiesAsync();
 
-            var firstActivityID = activities.Result.Results[0].Id;
+            var firstActivityID = activities.Result.Results[1].Id;
             var reactions = await client.Reactions.FilterAsync(ReactionFiltering.Default, ReactionPagination.By.ActivityId(firstActivityID));
 
 
