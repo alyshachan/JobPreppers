@@ -59,6 +59,11 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Work> Works { get; set; }
 
+
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseMySql("name=ConnectionStrings:DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -305,7 +310,6 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.description).HasColumnType("text");
             entity.Property(e => e.email).HasMaxLength(100);
             entity.Property(e => e.first_name).HasMaxLength(50);
-            entity.Property(e => e.job_title).HasMaxLength(200);
             entity.Property(e => e.last_name).HasMaxLength(50);
             entity.Property(e => e.location).HasMaxLength(255);
             entity.Property(e => e.password).HasMaxLength(255);
@@ -414,6 +418,8 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.location).HasMaxLength(255);
             entity.Property(e => e.work_name).HasMaxLength(255);
         });
+
+      
 
         OnModelCreatingPartial(modelBuilder);
     }
