@@ -5,29 +5,39 @@ import { useConnection } from "../provider/connectionProvider";
 import * as signalR from '@microsoft/signalr';
 import 'react-chat-elements/dist/main.css';
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
-import { MessageList, SystemMessage, ChatList, Input, Button } from 'react-chat-elements';
+// import { MessageList, SystemMessage, ChatList, Input, Button } from 'react-chat-elements'; // deprecrated 2/26
 import { styled } from "@mui/material/styles";
-import { StreamChat } from "stream-chat";
+import {StreamChat} from "stream-chat";
+
+import { Chat,
+    Channel,
+    ChannelList,
+    Window,
+    ChannelHeader,
+    MessageList,
+    MessageInput,
+    Thread,
+    useCreateChatClient} from "stream-chat-react"
 
 /* Style overrides */
-const StyledInput = styled(Input)(({ theme }) => ({
-    "& .input": {
-        marginbottom: "-20px !important"
-    },
-  }));
+// const StyledInput = styled(Input)(({ theme }) => ({
+//     "& .input": {
+//         marginbottom: "-20px !important"
+//     },
+// }));
 
-const StyledChatList = styled(ChatList)(({ theme }) => ({
-"& .rce-citem": {
-    minHeight: "100px !important",
-    alignItems: "start"
-},
-"& .rce-citem-body": {
-    alignSelf: "center"
-},
-"& .rce-citem-avatar": {
-    alignSelf: "center"
-}
-}));
+// const StyledChatList = styled(ChatList)(({ theme }) => ({
+//     "& .rce-citem": {
+//         minHeight: "100px !important",
+//         alignItems: "start"
+//     },
+//     "& .rce-citem-body": {
+//         alignSelf: "center"
+//     },
+//     "& .rce-citem-avatar": {
+//         alignSelf: "center"
+//     }
+// }));
 
 
 
@@ -35,7 +45,7 @@ const StyledChatList = styled(ChatList)(({ theme }) => ({
 
 function Messaging() {
     const { user, setAuthData } = useAuth();
-    const {signalRConnection, setSignalRConnection, connectToHub, disconnectFromHub} = useConnection();
+    const { signalRConnection, setSignalRConnection, connectToHub, disconnectFromHub } = useConnection();
     /* div render booleans */
     const [chatListOpened, setChatListOpened] = useState(false);
     const [convoOpened, setConvoOpened] = useState(false);
@@ -50,15 +60,15 @@ function Messaging() {
     const messageListReference = React.createRef();
     const inputReference = React.createRef();
 
-    
+
     const chatClient = StreamChat.getInstance(process.env.REACT_APP_STREAM_API_KEY, {
         timeout: 6000
     });
 
 
-    
+
     useEffect(() => {
-        const fetchMessagingData = async() => {
+        const fetchMessagingData = async () => {
             try {
                 console.log(`retrieving chat token for ${user.userID}`);
                 const response = await fetch(`http://localhost:5000/api/Chat/getChatToken/${user.userID}`);
@@ -66,20 +76,29 @@ function Messaging() {
                     const data = await response.json();
                     await chatClient.connectUser({
                         id: `${user.userID}`,
-                        name: `${user.first_name + ' ' + user.last_name}`
+                        name: `${user.first_name + ' ' + user.last_name}`,
+                        privacy_settings: {
+                            typing_indicators: {
+                                enabled: false,
+                            },
+                            read_receipts: {
+                                enabled: true,
+                            },
+                        },
                     }, data.token)
                     console.log("User connection confirmed :)");
                 }
-                console.log("how did we get here?");
             }
-            catch (e){
+            catch (e) {
                 console.error("Error connecting to Stream Chat API");
                 console.error(e);
             }
         }
         fetchMessagingData();
-    });
-    
+    }, [user]);
+
+    return
+
     /*
     HANDLERS
     */
@@ -88,226 +107,184 @@ function Messaging() {
     everything below here is old signalR chat implementation - will
     2/26
     */
-    const inputClear = () => {
-        if (inputReference.current != null) {
-            inputReference.current.value = "";
-        }
-    }
+//     const inputClear = () => {
+//         if (inputReference.current != null) {
+//             inputReference.current.value = "";
+//         }
+//     }
 
-    const handleMessagingClicked = (e) => {
-        e.preventDefault();
-        setChatListOpened(!chatListOpened);
-    }
+//     const handleMessagingClicked = (e) => {
+//         e.preventDefault();
+//         setChatListOpened(!chatListOpened);
+//     }
 
-    const handleMessageSubmit = async (e) => {
-        e.preventDefault();
+//     const handleMessageSubmit = async (e) => {
+//         e.preventDefault();
 
-        if (!inputReference.current) {
-            console.warn("Input ref is null, something went wrong!");
-            return;
-        }
+//         if (!inputReference.current) {
+//             console.warn("Input ref is null, something went wrong!");
+//             return;
+//         }
 
-        const outMsg = inputReference.current.value;
-        if (!outMsg.trim()) return;
-        console.log(`You inputted ${outMsg}`);
+//         const outMsg = inputReference.current.value;
+//         if (!outMsg.trim()) return;
+//         console.log(`You inputted ${outMsg}`);
 
-        try {
+//         try {
 
-            console.log("Attempting a message");
-            await signalRConnection.invoke("SendDirectMessage", user.username, parseInt(receiverID), outMsg).then(
-                // () => console.log(`You sent this message: ${msg} \n to receiverID: ${receiverID}`)
-                () => {
-                    setMessages(messages => [...messages, {                        
-                        position: 'right',
-                        type: 'text',
-                        text: outMsg,
-                        date: new Date(),
-                        
-                }])
-        
-            }
-            );
-        } catch (error) {
-            console.error('Connection failed or invoke error:', error);
-        }
-        inputClear();
-    }
+//             console.log("Attempting a message");
+//             await signalRConnection.invoke("SendDirectMessage", user.username, parseInt(receiverID), outMsg).then(
+//                 // () => console.log(`You sent this message: ${msg} \n to receiverID: ${receiverID}`)
+//                 () => {
+//                     setMessages(messages => [...messages, {
+//                         position: 'right',
+//                         type: 'text',
+//                         text: outMsg,
+//                         date: new Date(),
 
-    const handleChatListClick = (chatListItem) => {
-        setMessages([]);
-        console.log(chatListItem.title);
-        setConvoOpened(!convoOpened);
+//                     }])
 
-        // TODO: VERY stupid hard coded crap
-        // change this to retrieve userID's some other way - will jan 28
+//                 }
+//             );
+//         } catch (error) {
+//             console.error('Connection failed or invoke error:', error);
+//         }
+//         inputClear();
+//     }
 
-        if (chatListItem.title == "Alexander Lex") {
-            console.log("Now conversing with userID 32")
-            setReceiverID(32);
-        }
-        else if (chatListItem.title == "Justin Ellis") {
-            console.log("Now conversing with userID 33")
-            setReceiverID(33);
-        }
-        else if (chatListItem.title == "Alysha Chan") {
-            console.log("Now conversing with userID 5")
-            setReceiverID(5);
-        }
+//     const handleChatListClick = (chatListItem) => {
+//         setMessages([]);
+//         console.log(chatListItem.title);
+//         setConvoOpened(!convoOpened);
 
-    }
+//         if (chatListItem.title == "Alexander Lex") {
+//             console.log("Now conversing with userID 32")
+//             setReceiverID(32);
+//         }
+//         else if (chatListItem.title == "Justin Ellis") {
+//             console.log("Now conversing with userID 33")
+//             setReceiverID(33);
+//         }
+//         else if (chatListItem.title == "Alysha Chan") {
+//             console.log("Now conversing with userID 5")
+//             setReceiverID(5);
+//         }
 
-    const handleMessageListClose = (e) => {
-        e.preventDefault();
-        setConvoOpened(false);
-    }
-    
-    /* 
-    CHAT SERVER CONNECTION
-    TODO: move this into a provider like authProvider then make it accessible to Messaging.jsx by wrapping it with the connection provider
-    */
+//     }
 
-    // useEffect(() => {
-    //     const connectToHub = async () => {
-    //         console.log("why does this code run?");
-    //         console.log("Attempting to connect to /DirectMessageHub");
-    //         const connection = new signalR.HubConnectionBuilder()
-    //             .withUrl("http://localhost:5070/directMessageHub", {
-    //                 accessTokenFactory: () => document.cookie.split('authToken=')[1] || '',
-    //             })
-    //             .withAutomaticReconnect()
-    //             .build();
+//     const handleMessageListClose = (e) => {
+//         e.preventDefault();
+//         setConvoOpened(false);
+//     }
 
-    //         // configure the connection
-    //         connection.onclose((error) => {
-    //             console.error('Connection closed:', error);
-    //         });
 
-    //         try {
-    //             console.log("Attempting to start connection");
-    //             await connection.start()
-    //                 .then(() => {
-    //                     console.log('Connected to SignalR Hub');
-    //                     setSignalRConnection(connection); // store the connection in a state
-    //                 });
+//     useEffect(() => {
+//         if (signalRConnection) {
+//             signalRConnection.on("ReceiveDirectMessage", function (user, inMsg) {
+//                 // console.log("New message:");
+//                 // console.log(`${user}: ${inMsg}`)
+//                 setMessages([...messages, {
+//                     position: 'left',
+//                     type: 'text',
+//                     text: `${user}: ${inMsg}`,
+//                     date: new Date(),
+//                 }])
+//             });
+//         }
+//     }, [messages]);
 
-    //         } catch (error) {
-    //             console.error('Connection failed or invoke error:', error);
-    //         }
+//     return (
+//         <div className="flex w-full">
+//             <div
+//                 className="fixed bottom-4 left-4">
+//                 {user && signalRConnection && <button onClick={handleMessagingClicked}>
+//                     {chatListOpened ? "Close messaging" : "Open Messaging"}
+//                 </button>}
 
-    //         return () => {
-    //             connection.stop();
-    //         };
-    //     };
-    //     connectToHub();
-    // }, [])
+//                 {chatListOpened && <div>
 
-    useEffect(() => {
-        if (signalRConnection) {
-            signalRConnection.on("ReceiveDirectMessage", function (user, inMsg) {
-                // console.log("New message:");
-                // console.log(`${user}: ${inMsg}`)
-                setMessages([...messages, {                        
-                    position: 'left',
-                    type: 'text',
-                    text: `${user}: ${inMsg}`,
-                    date: new Date(),
-                }])
-            });
-        }
-    }, [messages]);
+//                     <StyledChatList
+//                         className='outline outline-2 outline-green-500 p-2 bg-[#4ba173]'
+//                         onClick={handleChatListClick}
+//                         dataSource={[ // TODO: hardcoded for now, query backend for users then fill in
+//                             // the json array items with user data - will jan 28
+//                             {
+//                                 avatar: 'https://github.com/github.png',
+//                                 alt: 'Reactjs',
+//                                 title: 'Alexander Lex',
+//                                 subtitle: '',
+//                                 date: null,
+//                                 unread: 0,
+//                             },
+//                             {
+//                                 avatar: 'https://github.com/github.png',
+//                                 alt: 'Reactjs',
+//                                 title: 'Justin Ellis',
+//                                 subtitle: '',
+//                                 date: null,
+//                                 unread: 0,
+//                             },
+//                             {
+//                                 avatar: 'https://github.com/github.png',
+//                                 alt: 'Reactjs',
+//                                 title: 'Alysha Chan',
+//                                 subtitle: "",
+//                                 date: null,
+//                                 unread: 0,
+//                             },
 
-    return (
-        <div className="flex w-full">
-            <div
-                className="fixed bottom-4 left-4">
-                {user && signalRConnection && <button onClick={handleMessagingClicked}>
-                    {chatListOpened ? "Close messaging" : "Open Messaging"}
-                </button>}
+//                         ]}
+//                     />
 
-                {chatListOpened && <div>
-
-                    <StyledChatList
-                        className='outline outline-2 outline-green-500 p-2 bg-[#4ba173]'
-                        onClick={handleChatListClick}
-                        dataSource={[ // TODO: hardcoded for now, query backend for users then fill in
-                            // the json array items with user data - will jan 28
-                            {
-                                avatar: 'https://github.com/github.png',
-                                alt: 'Reactjs',
-                                title: 'Alexander Lex',
-                                subtitle: '',
-                                date: null,
-                                unread: 0,
-                            },
-                            {
-                                avatar: 'https://github.com/github.png',
-                                alt: 'Reactjs',
-                                title: 'Justin Ellis',
-                                subtitle: '',
-                                date: null,
-                                unread: 0,
-                            },
-                            {
-                                avatar: 'https://github.com/github.png',
-                                alt: 'Reactjs',
-                                title: 'Alysha Chan',
-                                subtitle: "",
-                                date: null,
-                                unread: 0,
-                            },
-
-                        ]}
-                    />
-
-                </div>}
+//                 </div>}
 
 
 
-            </div>
-            {convoOpened && chatListOpened && <div className="fixed w-128 flex-none bottom-4 right-4 outline outline-2 outline-green-500 p-2 bg-[#4ba173] max-h-[500px] items-center">
-            {/* <h2 className="text-lg font-bold">User placeholder</h2> */}
-            {/* <div className="w-16 right-10 bg-red-400"> X </div>
-             */}
-             <Button 
-                className="ml-auto mt-[-3px] w-7 h-7"
-                text={'X'}
-                backgroundColor="#f55b5b"
-                onClick={handleMessageListClose}/>
+//             </div>
+//             {convoOpened && chatListOpened && <div className="fixed w-128 flex-none bottom-4 right-4 outline outline-2 outline-green-500 p-2 bg-[#4ba173] max-h-[500px] items-center">
+//                 {/* <h2 className="text-lg font-bold">User placeholder</h2> */}
+//                 {/* <div className="w-16 right-10 bg-red-400"> X </div>
+//              */}
+//                 <Button
+//                     className="ml-auto mt-[-3px] w-7 h-7"
+//                     text={'X'}
+//                     backgroundColor="#f55b5b"
+//                     onClick={handleMessageListClose} />
 
-                <div className="w-80 flex-none bg-white">
-                    
-                    <MessageList
-                        referance={messageListReference}
-                        className='outline outline-2 outline-green-500 items-end h-[500px] max-h-[300px] overflow-y-scroll '
-                        // lockable={true}
-                        // toBottomHeight={'100%'}
-                        dataSource={messages} 
-                    />
+//                 <div className="w-80 flex-none bg-white">
 
-                    <StyledInput
-                        className=""
-                        referance={inputReference}
-                        clear={inputClear}
-                        placeholder='Type here...'
-                        multiline={true}
-                        autoHeight={false}
-                        minHeight={2}
-                        maxHeight={10}
-                        style="h-20"
-                        rightButtons={
-                            <Button 
-                                onClick={handleMessageSubmit}
-                                color='white'
-                                backgroundColor='#4ba173' 
-                                text='Send' />
-                            }
-                    />
-                </div>
-            </div>}
+//                     <MessageList
+//                         referance={messageListReference}
+//                         className='outline outline-2 outline-green-500 items-end h-[500px] max-h-[300px] overflow-y-scroll '
+//                         // lockable={true}
+//                         // toBottomHeight={'100%'}
+//                         dataSource={messages}
+//                     />
 
-        </div>
+//                     <StyledInput
+//                         className=""
+//                         referance={inputReference}
+//                         clear={inputClear}
+//                         placeholder='Type here...'
+//                         multiline={true}
+//                         autoHeight={false}
+//                         minHeight={2}
+//                         maxHeight={10}
+//                         style="h-20"
+//                         rightButtons={
+//                             <Button
+//                                 onClick={handleMessageSubmit}
+//                                 color='white'
+//                                 backgroundColor='#4ba173'
+//                                 text='Send' />
+//                         }
+//                     />
+//                 </div>
+//             </div>}
 
-    );
+//         </div>
+
+//     );
 
 }
 
