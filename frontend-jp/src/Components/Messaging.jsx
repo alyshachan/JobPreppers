@@ -7,6 +7,7 @@ import 'react-chat-elements/dist/main.css';
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 import { MessageList, SystemMessage, ChatList, Input, Button } from 'react-chat-elements';
 import { styled } from "@mui/material/styles";
+import { StreamChat } from "stream-chat";
 
 /* Style overrides */
 const StyledInput = styled(Input)(({ theme }) => ({
@@ -28,6 +29,12 @@ const StyledChatList = styled(ChatList)(({ theme }) => ({
 }
 }));
 
+
+const chatClient = StreamChat.getInstance(process.env.REACT_APP_STREAM_API_KEY, {
+    timeout: 6000
+});
+
+// 2/25: put useState for await chatClient.connectUser... check stream docs
 
 function Messaging() {
     const { user, setAuthData } = useAuth();
