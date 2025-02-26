@@ -52,7 +52,7 @@ namespace JobPreppersDemo.Controllers
                    eventEndTime = eventDto.endTime,
                    hostID = eventDto.host,
                    eventDetails = eventDto.details,
-                   participantID = JsonSerializer.Serialize(eventDto.participants),
+                   participantID = JsonSerializer.Serialize(eventDto.participants.Split(',').Select(p => p.Trim())),
                    eventLink = eventDto.link,
 
 
@@ -78,5 +78,19 @@ namespace JobPreppersDemo.Controllers
 
             return Ok(events);
         }
+        [HttpGet("GetEventsByParticipant/{userId}")]
+        public async Task<IActionResult> GetEventsByParticipant(int userId)
+        {
+            var userIdJson = $"\"{userId}\""; 
+            var events = await _context.Events
+                .Where(e => EF.Functions.JsonContains(e.participantID, userIdJson))
+                .ToListAsync();
+
+            if (!events.Any())
+                return NotFound("No events found for this participant.");
+
+            return Ok(events);
+        }
+
     }
 }
