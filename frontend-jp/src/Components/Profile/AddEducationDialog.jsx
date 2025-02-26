@@ -68,6 +68,7 @@ function AddEducationDialog({ open, onClose, onAdd }) {
             end_date: end,
             description: description,
           }),
+          credentials: "include",
         }
       );
 
