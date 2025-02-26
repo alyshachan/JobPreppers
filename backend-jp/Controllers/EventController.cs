@@ -66,5 +66,17 @@ namespace JobPreppersDemo.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpGet("GetEventsByHost/{userId}")]
+        public async Task<IActionResult> GetEventsByHost(int userId)
+        {
+            var events = await _context.Events
+                .Where(e => e.hostID == userId)
+                .ToListAsync();
+
+            if (!events.Any())
+                return NotFound("No events found for this host.");
+
+            return Ok(events);
+        }
     }
 }
