@@ -4,41 +4,6 @@ import "../Components/JobPreppers.css";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
 
-const testExpDict = [
-  {
-    work_name: "test work place",
-    location: "Antarctica",
-    job_title: "CEO",
-    start_date: new Date(2020, 2, 14),
-    end_date: new Date(),
-    description: "i love working. Feb 2020",
-  },
-  {
-    work_name: "another work place",
-    location: "usa",
-    job_title: "software developer",
-    start_date: new Date(2002, 1, 22),
-    end_date: new Date(2025, 1, 19),
-    description: "coder 4 lyfe <3 January 2002 to Jan 2025",
-  },
-  {
-    work_name: "another work place",
-    location: "usa",
-    job_title: "software developer",
-    start_date: new Date(2023, 1, 19),
-    end_date: new Date(),
-    description: "coder 4 lyfe <3 Nov 2023 jan 2025",
-  },
-  {
-    work_name: "another work place",
-    location: "usa",
-    job_title: "software developer",
-    start_date: new Date(2002, 0, 22),
-    end_date: new Date(),
-    description: "coder 4 lyfe <3",
-  },
-];
-
 const monthsOfYear = [
   "January",
   "February",

@@ -53,8 +53,6 @@ function AddProjectDialog({ open, onClose }) {
         }
       );
       
-      window.location.reload();
-
       if (response.ok) {
         const data = await response.json();
         setError(""); // Clear any previous error message

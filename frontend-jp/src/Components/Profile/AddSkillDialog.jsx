@@ -30,7 +30,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddSkillDialog({ open, onClose }) {
+function AddSkillDialog({ open, onClose, existingCategories = [] }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [category, setCategory] = useState("");
   const [skill, setSkill] = useState("");
@@ -53,10 +53,12 @@ function AddSkillDialog({ open, onClose }) {
         }
       );
       
-      window.location.reload();
+      const responseData = await response.json();
+      console.log("Response Data:", responseData);
 
       if (response.ok) {
-        const data = await response.json();
+        window.alert("it was added");
+        onClose();
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();

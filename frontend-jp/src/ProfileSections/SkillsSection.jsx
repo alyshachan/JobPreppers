@@ -40,6 +40,7 @@ function SkillsSection({ skillsDict, edit }) {
       <AddSkillDialog
         open={openSkillDialog}
         onClose={handleCloseSkillDialog}
+        existingCategories={Object.keys(skillsDict)}
       />
 
       <div className={styles.sectionContent}>

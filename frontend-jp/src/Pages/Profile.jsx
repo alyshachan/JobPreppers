@@ -108,6 +108,7 @@ function Profile() {
           ? [...skills[category], name]
           : [name];
       });
+      console.log("user skills updated on the front")
       return skills;
     }, skillsDict);
   }, [user, skillsDict]);
@@ -289,6 +290,7 @@ function Profile() {
       <AddSkillDialog
         open={openDialog.skill}
         onClose={() => toggleDialog("skill", false)}
+        existingCategories={Object.keys(skillsDict)}
       />
       <AddExperienceDialog
         open={openDialog.experience}
