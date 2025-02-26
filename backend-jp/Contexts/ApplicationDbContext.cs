@@ -307,10 +307,8 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.username, "username").IsUnique();
 
-<<<<<<< HEAD
             entity.Property(e => e.description).HasColumnType("text");
-=======
->>>>>>> 94857b55103a11327812e3e5a01841382b68b6f2
+
             entity.Property(e => e.email).HasMaxLength(100);
             entity.Property(e => e.first_name).HasMaxLength(50);
             entity.Property(e => e.last_name).HasMaxLength(50);
