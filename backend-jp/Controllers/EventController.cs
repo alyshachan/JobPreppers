@@ -52,7 +52,7 @@ namespace JobPreppersDemo.Controllers
                    eventEndTime = eventDto.endTime,
                    hostID = eventDto.host,
                    eventDetails = eventDto.details,
-                   participantID = eventDto.participants,
+                   participantID = JsonSerializer.Serialize(eventDto.participants),
                    eventLink = eventDto.link,
 
 
