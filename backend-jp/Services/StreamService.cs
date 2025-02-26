@@ -1,12 +1,14 @@
 using Stream;
 using Stream.Models;
 using System;
+using StreamChat.Clients;
 
 namespace JobPreppersDemo.Services
 {
     public class StreamService
     {
         public StreamClient Client { get; private set; }
+        public StreamClientFactory ChatClientFactory {get; private set;}
         public StreamService()
         {
             string apiKey = Environment.GetEnvironmentVariable("STREAM_API_KEY");
@@ -20,6 +22,8 @@ namespace JobPreppersDemo.Services
                     Location = StreamApiLocation.USEast,
                     Timeout = 16000
                 });
+
+            ChatClientFactory = new StreamClientFactory(apiKey, apiSecret);
         }
     }
 }

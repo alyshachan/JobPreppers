@@ -20,13 +20,11 @@ namespace JobPreppersDemo.Controllers
         private readonly StreamService _streamService;
         private readonly ApplicationDbContext _context;
 
-        private readonly StreamClientFactory _clientFactory;
 
         public StreamController(StreamService streamService, ApplicationDbContext context)
         {
             _streamService = streamService;
             _context = context;
-            _clientFactory = new StreamClientFactory();
         }
 
         [HttpGet("feedToken/{userID}")]
