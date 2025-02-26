@@ -23,14 +23,14 @@ namespace JobPreppersDemo.Controllers {
             _streamChatFactory = streamService.ChatClientFactory;
         }
 
-        [HttpGet("generateChatToken/{userID}")]
-        public async Task<IActionResult> GenerateChatToken(string userID)
+        [HttpGet("getChatToken/{userID}")]
+        public async Task<IActionResult> GetStreamChatToken(string userID)
         {
             // api calls go here
             var userClient = _streamChatFactory.GetUserClient();
             var token = userClient.CreateToken(userID, DateTimeOffset.UtcNow.AddHours(1));
             string OkMsg = $"Created token {token} for user {userID}";
-            return Ok(new { OkMsg });
+            return Ok(new { OkMsg, token });
         }
 
         

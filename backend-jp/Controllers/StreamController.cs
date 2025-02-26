@@ -27,34 +27,13 @@ namespace JobPreppersDemo.Controllers
             _context = context;
         }
 
-        [HttpGet("feedToken/{userID}")]
-        public async Task<IActionResult> GetStreamFeedAuthToken(string userID)
-        {
-            var client = _streamService.Client;
-            var token = client.CreateUserToken(userID);
-            return Ok(new { token });
-        }
-
-        [HttpGet("chatToken/{userID}")]
-        public async Task<IActionResult> GetStreamChatAuthToken(string userID)
-        {
-            var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
-            // string jpUsername = jpUser.first_name + " " + jpUser.last_name;
-            // api calls go here
-            var client = _streamService.Client;
-
-            // will dev note 2/21: when a friends list frontend is completed, add a controller that
-            // will call .FollowFeed() on new friends
-            var timelineFeed = client.Feed("timeline", userID);
-
-            var activities = await timelineFeed.GetActivitiesAsync();
-            // var userData = new Dictionary<string, object>
-            // {
-            //     {"name", jpUsername}
-            // };
-
-            return Ok(new { activities });
-        }
+        // [HttpGet("feedToken/{userID}")]
+        // public async Task<IActionResult> GetStreamFeedAuthToken(string userID)
+        // {
+        //     var client = _streamService.Client;
+        //     var token = client.CreateUserToken(userID);
+        //     return Ok(new { token });
+        // }
 
         [HttpPost("getOrCreate/{userID}")]
         public async Task<IActionResult> GetOrCreateStreamUser(string userID)

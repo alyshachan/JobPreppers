@@ -30,9 +30,6 @@ const StyledChatList = styled(ChatList)(({ theme }) => ({
 }));
 
 
-const chatClient = StreamChat.getInstance(process.env.REACT_APP_STREAM_API_KEY, {
-    timeout: 6000
-});
 
 // 2/25: put useState for await chatClient.connectUser... check stream docs
 
@@ -53,10 +50,44 @@ function Messaging() {
     const messageListReference = React.createRef();
     const inputReference = React.createRef();
 
+    
+    const chatClient = StreamChat.getInstance(process.env.REACT_APP_STREAM_API_KEY, {
+        timeout: 6000
+    });
+
+
+    
+    useEffect(() => {
+        const fetchMessagingData = async() => {
+            try {
+                console.log(`retrieving chat token for ${user.userID}`);
+                const response = await fetch(`http://localhost:5000/api/Chat/getChatToken/${user.userID}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    await chatClient.connectUser({
+                        id: `${user.userID}`,
+                        name: `${user.first_name + ' ' + user.last_name}`
+                    }, data.token)
+                    console.log("User connection confirmed :)");
+                }
+                console.log("how did we get here?");
+            }
+            catch (e){
+                console.error("Error connecting to Stream Chat API");
+                console.error(e);
+            }
+        }
+        fetchMessagingData();
+    });
+    
     /*
     HANDLERS
     */
 
+    /*
+    everything below here is old signalR chat implementation - will
+    2/26
+    */
     const inputClear = () => {
         if (inputReference.current != null) {
             inputReference.current.value = "";

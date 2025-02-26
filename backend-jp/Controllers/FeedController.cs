@@ -21,6 +21,13 @@ namespace JobPreppersDemo.Controllers
             _context = context;
         }
 
+        [HttpGet("getFeedToken/{userID}")]
+        public async Task<IActionResult> GetStreamFeedAuthToken(string userID)
+        {
+            var client = _streamService.Client;
+            var token = client.CreateUserToken(userID);
+            return Ok(new { token });
+        }
 
         [HttpGet("getTimeline/{userID}")]
         public async Task<IActionResult> GetOrUpdateFeedTimeline(string userID)
