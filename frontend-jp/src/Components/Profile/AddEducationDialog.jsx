@@ -72,15 +72,6 @@ function AddEducationDialog({ open, onClose, onAdd }) {
       );
 
       if (response.ok) {
-        const data = await response.json();
-        onAdd({
-          school_name: school,
-          degree_name: degree,
-          study_name: study,
-          start_date: start,
-          end_date: end,
-          description: description
-        });
         onClose();
         setError(""); // Clear any previous error message
       } else {

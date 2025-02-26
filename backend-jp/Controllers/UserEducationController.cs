@@ -145,7 +145,8 @@ namespace JobPreppersDemo.Controllers
                 await _context.UserEducations.AddAsync(newEducation);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(CreateEducation), new { id = newEducation.userEducationID }, newEducation);
+                // return CreatedAtAction(nameof(CreateEducation), new { id = newEducation.userEducationID }, newEducation);
+                return Ok(new { message = "Education added successfully", educationID = newEducation.userEducationID });
             }
             catch (Exception ex)
             {

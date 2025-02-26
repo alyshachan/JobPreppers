@@ -89,6 +89,7 @@ function Profile() {
       )
     );
 
+
     fetchData("UserSkills", setSkillsDict, (data) => {
       const skills = {};
       data.forEach(({ category, name }) => {
@@ -125,7 +126,7 @@ function Profile() {
         description,
       }))
     );
-  }, [user]);
+  }, [user, educationDict]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -273,7 +274,6 @@ function Profile() {
       <AddEducationDialog
         open={openDialog.education}
         onClose={() => toggleDialog("education", false)}
-        onAdd={(newEducation) => setEducationDict((prev) => [...prev, newEducation])}
       />
       <AddSkillDialog
         open={openDialog.skill}
