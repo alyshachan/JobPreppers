@@ -6,7 +6,7 @@ import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png"
+import defaultProfilePicture from "../Components/defaultProfilePicture.png";
 import { useConnection } from "../provider/connectionProvider";
 import AddEducationDialog from "../Components/Profile/AddEducationDialog";
 import AddSkillDialog from "../Components/Profile/AddSkillDialog";
@@ -37,7 +37,12 @@ function Profile() {
   });
   const [message, setMessage] = useState("");
   const [receiverID, setReceiverID] = useState("");
-  const {signalRConnection, setSignalRConnection, connectToHub, disconnectFromHub} = useConnection();
+  const {
+    signalRConnection,
+    setSignalRConnection,
+    connectToHub,
+    disconnectFromHub,
+  } = useConnection();
 
   const toggleDialog = (type, state) => {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
@@ -48,48 +53,54 @@ function Profile() {
     localStorage.setItem("editMode", edit);
   }, [edit]);
 
+  const fetchData = async (endpoint, setter, transform, currentState) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/${endpoint}/${user.userID}`,
+        { credentials: "include" }
+      );
+      if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
+      const data = await response.json();
+      const transformedData = transform(data);
+
+      // Only update state if the new data is different
+      if (JSON.stringify(transformedData) !== JSON.stringify(currentState)) {
+        setter(transformedData);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     if (!user) return;
 
-    const fetchData = async (endpoint, setter, transform) => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/${endpoint}/${user.userID}`,
-          { credentials: "include" }
-        );
-        if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
-        const data = await response.json();
-        setter((prevState) =>
-          JSON.stringify(prevState) !== JSON.stringify(data)
-            ? transform(data)
-            : prevState
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData("UserEducation", setEducationDict, (data) =>
-      data.map(
-        ({
-          schoolName,
-          degreeName,
-          studyName,
-          startDate,
-          endDate,
-          description,
-        }) => ({
-          school_name: schoolName,
-          degree_name: degreeName,
-          study_name: studyName,
-          start_date: startDate ? new Date(startDate) : null,
-          end_date: endDate ? new Date(endDate) : null,
-          description,
-        })
-      )
+    fetchData(
+      "UserEducation",
+      setEducationDict,
+      (data) =>
+        data.map(
+          ({
+            schoolName,
+            degreeName,
+            studyName,
+            startDate,
+            endDate,
+            description,
+          }) => ({
+            school_name: schoolName,
+            degree_name: degreeName,
+            study_name: studyName,
+            start_date: startDate ? new Date(startDate) : null,
+            end_date: endDate ? new Date(endDate) : null,
+            description,
+          })
+        ),
+      educationDict
     );
+  }, [user, educationDict]);
 
-
+  useEffect(() => {
     fetchData("UserSkills", setSkillsDict, (data) => {
       const skills = {};
       data.forEach(({ category, name }) => {
@@ -98,8 +109,10 @@ function Profile() {
           : [name];
       });
       return skills;
-    });
+    }, skillsDict);
+  }, [user, skillsDict]);
 
+  useEffect(() => {
     fetchData("UserExperience", setExperienceDict, (data) =>
       data.map(
         ({
@@ -117,16 +130,18 @@ function Profile() {
           end_date: endDate ? new Date(endDate) : null,
           description,
         })
-      )
+      ), experienceDict
     );
+  }, [user, experienceDict]);
 
+  useEffect(() => {
     fetchData("UserProject", setProjectDict, (data) =>
       data.map(({ projectTitle, description }) => ({
         project_title: projectTitle,
         description,
-      }))
+      })), projectDict
     );
-  }, [user, educationDict]);
+  }, [user, projectDict]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -152,18 +167,15 @@ function Profile() {
 
     fetchUser();
   }, [user]);
-    
+
   useEffect(() => {
-      console.log("connecting to hub from profile.jsx");
-      connectToHub();
+    console.log("connecting to hub from profile.jsx");
+    connectToHub();
   }, []);
 
-
-  
   if (user == null) {
     return <div>Loading...</div>;
   }
-
 
   const userPic =
     user.profile_pic == null
@@ -185,9 +197,7 @@ function Profile() {
               {user.first_name} {user.last_name}
             </p>
             <p>{user.title}</p>
-            <p className="subtitle">
-              {user.location}
-            </p>
+            <p className="subtitle">{user.location}</p>
 
             <div className={styles.actionButtons}>
               <Button variant="contained" startIcon={<AddCircleOutlineIcon />}>
@@ -204,11 +214,12 @@ function Profile() {
             </div>
           </div>
 
-          {!edit && (educationDict.length === 0 &&
+          {!edit &&
+          educationDict.length === 0 &&
           skillsDict &&
           Object.keys(skillsDict).length === 0 &&
           experienceDict.length === 0 &&
-          projectDict.length === 0) ? (
+          projectDict.length === 0 ? (
             <div className={styles.noProfileText}>
               {user.first_name} {user.last_name} hasn't added to their profile
               yet
@@ -278,23 +289,14 @@ function Profile() {
       <AddSkillDialog
         open={openDialog.skill}
         onClose={() => toggleDialog("skill", false)}
-        onAdd={(newSkill) => setSkillsDict((prev) => {
-          const updatedSkills = { ...prev };
-          updatedSkills[newSkill.category] = updatedSkills[newSkill.category]
-            ? [...updatedSkills[newSkill.category], newSkill.name]
-            : [newSkill.name];
-          return updatedSkills;
-        })}
       />
       <AddExperienceDialog
         open={openDialog.experience}
         onClose={() => toggleDialog("experience", false)}
-        onAdd={(newExperience) => setExperienceDict((prev) => [...prev, newExperience])}
       />
       <AddProjectDialog
         open={openDialog.project}
         onClose={() => toggleDialog("project", false)}
-        onAdd={(newProject) => setProjectDict((prev) => [...prev, newProject])}
       />
     </>
   );
