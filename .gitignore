@@ -21,3 +21,4 @@ appsettings*.json
 # Ignore Properties folder (auto-generated files)
 Properties/
 node_modules/
+Models/__EFMigrationsHistory.cs

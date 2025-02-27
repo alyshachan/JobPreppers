@@ -154,7 +154,6 @@ namespace JobPreppersProto.Controllers
         {
             if (request == null ||
             string.IsNullOrEmpty(request.FirstName) ||
-            string.IsNullOrEmpty(request.LastName) ||
             string.IsNullOrEmpty(request.Username) ||
             string.IsNullOrEmpty(request.Email) ||
             string.IsNullOrEmpty(request.Password))
