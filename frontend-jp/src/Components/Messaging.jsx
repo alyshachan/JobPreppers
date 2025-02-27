@@ -8,7 +8,13 @@ import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 // import { MessageList, SystemMessage, ChatList, Input, Button } from 'react-chat-elements'; // deprecrated 2/26
 import { styled } from "@mui/material/styles";
 import { StreamChat } from "stream-chat";
-// import 'stream-chat-react/dist/css/index.css';
+// import '@stream-io/stream-chat-css';
+// import 'stream-chat-css/dist/v2/css/index.css';
+import 'stream-chat-react/dist/css/v2/index.css';
+// import 'stream-chat-react/dist/css/styles.css';
+// import './styles/stream-chat.css';
+
+
 
 import {
     Chat,
@@ -69,30 +75,30 @@ function Messaging() {
         timeout: 6000
     });
 
- 
+
     useEffect(() => {
         const fetchMessagingData = async () => {
             // if (user && user.userID) {
-                try {
-                    console.log(`retrieving chat token for ${user.userID}`);
-                    const response = await fetch(`http://localhost:5000/api/Chat/getChatToken/${user.userID}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        setChatToken(data.token)
-                        console.log("token set");
-                    }
+            try {
+                console.log(`retrieving chat token for ${user.userID}`);
+                const response = await fetch(`http://localhost:5000/api/Chat/getChatToken/${user.userID}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setChatToken(data.token)
+                    console.log("token set");
                 }
-                catch (e) {
-                    console.error("Error connecting to Stream Chat API");
-                    console.error(e);
-                }
+            }
+            catch (e) {
+                console.error("Error connecting to Stream Chat API");
+                console.error(e);
+            }
             // }
             // if (user && user.userID){
-                // }
-            }
-            if (user && user.userID) {
-                fetchMessagingData();
-            }
+            // }
+        }
+        if (user && user.userID) {
+            fetchMessagingData();
+        }
 
     }, [user]);
 
@@ -102,13 +108,16 @@ function Messaging() {
                 console.log(chatToken)
                 console.log(client);
                 try {
+                    console.log(`token being used: ${chatToken}`)
                     await client.connectUser({
                         id: `${user.userID}`,
                         name: `${user.first_name + ' ' + user.last_name}`,
                     }, chatToken)
+                    
                     setChatClient(client);
-                    // console.log("hello?")
+                    console.log("hello?")
                     console.log(chatClient);
+                    console.log(client.user);
                 }
                 catch (e) {
                     console.log("in error")
@@ -122,6 +131,7 @@ function Messaging() {
             }
 
             return () => {
+                console.log("disconnecting user from chat");
                 client.disconnectUser();
                 // chatClient.disconnectUser();
             }
@@ -130,30 +140,49 @@ function Messaging() {
 
     if (!user && !chatClient) {
         return <div>Loading user data...</div>;
+    }
+
+    // if (!chatClient.wsConnection || !chatClient.wsConnection.isHealthy) {
+    //     return <div>Connecting to chat...</div>;  // Display a loading state until connection is healthy
+    // }
+
+    if (!user) {
+        return <div>loading..</div>
+    }
+
+    if (!chatClient || !chatClient.wsConnection || !chatClient.wsConnection.isHealthy) {
+        return <div>Loading chat...</div>;
       }
 
-// figure out why these chat components arent rendering. i hate my life
-      
-      return (
-        (chatClient && chatClient.user && <div>
-            checking if div renders at all
-          <Chat client={chatClient}>
-              <ChannelList
-              filters={{
-                type: 'messaging',
-                members: { $in: [user.userID.toString()] },
-              }} />
-              <Channel>
-                  <Window>
-                      <ChannelHeader />
-                      <MessageList />
-                      <MessageInput />
-                  </Window>
-                  <Thread />
-              </Channel>
-          </Chat>
-          </div>)
-      )
+    if (chatClient) {
+        console.log("here");
+        console.log(chatClient.wsConnection);
+    }
+
+    const options = {presence: true, connection_id: chatClient.wsConnection.connectionID };
+    return (
+        (chatClient && chatClient.user && chatClient.wsConnection && <div>
+            div render check
+            <Chat client={chatClient}>
+                <ChannelList
+                    filters={{
+                        type: 'messaging',
+                        members: { $in: [user.userID.toString()] },
+                    }}
+                    options={options}
+                    connectionID={chatClient.wsConnection.connectionID}
+                    />
+                <Channel>
+                    <Window>
+                        <ChannelHeader />
+                        <MessageList />
+                        <MessageInput />
+                    </Window>
+                    <Thread />
+                </Channel>
+            </Chat>
+        </div>)
+    )
     /*
     HANDLERS
     */
