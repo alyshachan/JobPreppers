@@ -38,7 +38,7 @@ namespace JobPreppersDemo.Controllers
         {
             // api calls go here
             var userClient = _streamChatFactory.GetUserClient();
-            var token = userClient.CreateToken(userID, DateTimeOffset.UtcNow.AddHours(1));
+            var token = userClient.CreateToken(userID);
             string OkMsg = $"Created token {token} for user {userID}";
             return Ok(new { OkMsg, token });
         }

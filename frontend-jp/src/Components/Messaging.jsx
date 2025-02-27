@@ -8,6 +8,7 @@ import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 // import { MessageList, SystemMessage, ChatList, Input, Button } from 'react-chat-elements'; // deprecrated 2/26
 import { styled } from "@mui/material/styles";
 import { StreamChat } from "stream-chat";
+// import 'stream-chat-react/dist/css/index.css';
 
 import {
     Chat,
@@ -104,17 +105,10 @@ function Messaging() {
                     await client.connectUser({
                         id: `${user.userID}`,
                         name: `${user.first_name + ' ' + user.last_name}`,
-                        privacy_settings: {
-                            typing_indicators: {
-                                enabled: false,
-                            },
-                            read_receipts: {
-                                enabled: true,
-                            },
-                        },
                     }, chatToken)
-                    setChatClient(client)
-                    console.log("hello?")
+                    setChatClient(client);
+                    // console.log("hello?")
+                    console.log(chatClient);
                 }
                 catch (e) {
                     console.log("in error")
@@ -126,18 +120,29 @@ function Messaging() {
                 console.log("please")
                 createConnection();
             }
-        }
-    }, [chatToken, user]);
 
-    if (!user) {
+            return () => {
+                client.disconnectUser();
+                // chatClient.disconnectUser();
+            }
+        }
+    }, [chatToken, user, chatClient, client]);
+
+    if (!user && !chatClient) {
         return <div>Loading user data...</div>;
       }
 
 // figure out why these chat components arent rendering. i hate my life
       
       return (
-          <Chat client={client}>
-              <ChannelList />
+        (chatClient && chatClient.user && <div>
+            checking if div renders at all
+          <Chat client={chatClient}>
+              <ChannelList
+              filters={{
+                type: 'messaging',
+                members: { $in: [user.userID.toString()] },
+              }} />
               <Channel>
                   <Window>
                       <ChannelHeader />
@@ -147,6 +152,7 @@ function Messaging() {
                   <Thread />
               </Channel>
           </Chat>
+          </div>)
       )
     /*
     HANDLERS
