@@ -11,6 +11,10 @@ using JobPreppersDemo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+//Test for TextAnalytics
+// Test.Experience();
+// Test.Salary();
 // Add services to the container.
 
 if (builder.Environment.IsDevelopment())

@@ -9,6 +9,7 @@ using System.Security.Policy;
 using Org.BouncyCastle.Security;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Text.RegularExpressions;
+using Mysqlx;
 
 public class ResultEntities
 {
@@ -20,9 +21,9 @@ public class ResultEntities
 
     public string? companyName { get; set; }
 
-    public decimal? minimumSalary { get; set; }
+    public int? minimumSalary { get; set; }
 
-    public decimal? maximumSalary { get; set; }
+    public int? maximumSalary { get; set; }
 
     public string? benefits { get; set; }
 
@@ -32,6 +33,11 @@ public class ResultEntities
 
     public string? type { get; set; }
 
+    public override string ToString()
+    {
+        return String.Format("Name: {0}, Type: {1}, Title: {2}, minimumSalary: {3}", companyName, type, title, minimumSalary);
+    }
+
 
 }
 
@@ -40,6 +46,31 @@ namespace JobPreppersDemo.Services
 {
     public class TextAnalyticsService
     {
+        public int parseSalary(string input)
+        {
+            string salaryPattern = @"(?<salary>\d+)";
+            Match match = Regex.Match(input, salaryPattern);
+            if (match.Success && int.TryParse(match.Groups["salary"].Value, out int parseSalary))
+            {
+
+                if (input.ToLower().Contains("k") || input.Contains(","))
+                {
+                    Console.WriteLine($"Input: {input} -> Extracted Salary: {parseSalary}");
+                    return parseSalary *= 1000;
+                }
+
+                Console.WriteLine($"Input: {input} -> Extracted Salary: {parseSalary}");
+                return parseSalary;
+            }
+            else
+            {
+                Console.WriteLine($"Input: {input} -> No valid experience found.");
+                return 0;
+            }
+        }
+
+
+
         private readonly TextAnalyticsClient _client;
 
         public TextAnalyticsService(string apiKey, string endpointUrl)
@@ -59,9 +90,11 @@ namespace JobPreppersDemo.Services
                 Language = "en",
             }
             };
+
             ResultEntities entities = new ResultEntities();
             string projectName = "parsejobdescription";
             string deploymentName = "job-description-model";
+
             RecognizeCustomEntitiesOperation result = await _client.RecognizeCustomEntitiesAsync(WaitUntil.Completed, batchedDocuments, projectName, deploymentName);
             await foreach (RecognizeCustomEntitiesResultCollection documentsInPage in result.Value)
             {
@@ -77,7 +110,18 @@ namespace JobPreppersDemo.Services
                     }
                     foreach (CategorizedEntity entity in documentResult.Entities)
                     {
-                        var category = entity.Category;
+
+                        Console.WriteLine($"  Category: {entity.Category}");
+                        Console.WriteLine($"  Text: {entity.Text}");
+                        Console.WriteLine($"  Offset: {entity.Offset}");
+                        Console.WriteLine($"  Length: {entity.Length}");
+                        Console.WriteLine($"  ConfidenceScore: {entity.ConfidenceScore}");
+                        Console.WriteLine($"  SubCategory: {entity.SubCategory}");
+                        Console.WriteLine();
+
+
+
+                        var category = entity.Category.ToString();
                         if (String.Equals(category, "company_name"))
                         {
                             entities.companyName = entity.Text;
@@ -92,9 +136,11 @@ namespace JobPreppersDemo.Services
 
                         if (String.Equals(category, "education_level"))
                         {
+                            Console.WriteLine("Enter String Match");
                             entities.educationLevel = entity.Text;
                             continue;
                         }
+
 
                         if (String.Equals(category, "location"))
                         {
@@ -112,34 +158,51 @@ namespace JobPreppersDemo.Services
                         {
                             string input = entity.Text;
                             string pattern = @"(?<experience>\d+)";
-                            // RegexOptions options = RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace;
                             Match match = Regex.Match(input, pattern);
                             if (match.Success)
                             {
                                 if (Int32.TryParse(match.Groups["experience"].Value, out int min))
                                 {
-                                    entities.minimumSalary = min;
                                     Console.WriteLine($" Was able to parse correctly {min}");
+                                    entities.minimumExperience = min;
+                                    continue;
                                 }
                                 else
                                 {
                                     Console.WriteLine("String could not be parsed.");
+                                    continue;
                                 }
                             }
                         }
 
+                        if (String.Equals(category, "minimum_salary"))
+                        {
+                            // 0 means it wasn't able to parse
+                            var salary = parseSalary(entity.Text);
+                            if (salary != 0)
+                            {
+                                entities.minimumSalary = salary;
+                            }
+                            continue;
+                        }
+
+                        if (String.Equals(category, "maximum_salary"))
+                        {
+                            var salary = parseSalary(entity.Text);
+                            if (salary != 0)
+                            {
+                                entities.minimumSalary = salary;
+                            }
+                            continue;
+                        }
 
 
-
-                        Console.WriteLine($"  Text: {entity.Text}");
-                        Console.WriteLine($"  Category: {entity.Category}");
-                        Console.WriteLine($"  Offset: {entity.Offset}");
-                        Console.WriteLine($"  Length: {entity.Length}");
-                        Console.WriteLine($"  ConfidenceScore: {entity.ConfidenceScore}");
-                        Console.WriteLine($"  SubCategory: {entity.SubCategory}");
-                        Console.WriteLine();
                     }
+
+                    // Console.WriteLine($"minimumExperience: {entities.minimumExperience}");
+
                 }
+                Console.WriteLine($"Entities: {entities.ToString()}");
             }
             return await _client.RecognizeCustomEntitiesAsync(WaitUntil.Completed, batchedDocuments, projectName, deploymentName);
         }
