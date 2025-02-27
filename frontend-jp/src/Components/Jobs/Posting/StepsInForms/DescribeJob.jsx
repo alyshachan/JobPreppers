@@ -135,7 +135,7 @@ export default function DescribeJob({ formData, setFormData }) {
             <label for="description" className={`${styles.label} mt-[10px]`}>
               Job Description *
             </label>
-            <div className={styles.textEditorContainer}>
+            <div>
               <TipTap control={control} name="description"></TipTap>
             </div>
             {errorMessage(errors.description)}

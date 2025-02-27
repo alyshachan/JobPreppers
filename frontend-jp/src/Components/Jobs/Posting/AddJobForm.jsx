@@ -1,23 +1,28 @@
-import { useState, Fragment, useEffect } from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
+import { useState } from "react";
+import {
+  DialogActions,
+  IconButton,
+  Button,
+  Dialog,
+  DialogTitle,
+  Stepper,
+  Step,
+  StepLabel,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
 import { FormProvider, useForm } from "react-hook-form";
+import ParseJobDescription from "./StepsInForms/ParseJobDescription";
 import ApplicationProcess from "./StepsInForms/ApplicationProcess";
 import DescribeJob from "./StepsInForms/DescribeJob";
 import Benefits from "./StepsInForms/Benefits";
 import Qualification from "./StepsInForms/Qualification";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { DialogActions, IconButton } from "@mui/material";
 import { PostAdd } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import SectionHeader from "../../Profile/SectionHeader";
 import styles from "./Posting.module.css";
 import {
+  parseJobSchema,
   describeJobSchema,
   benefitsSchema,
   qualificationSchema,
@@ -38,6 +43,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 
 export default function AddJobForm({ setJobs }) {
   const stepSchemas = [
+    parseJobSchema,
     describeJobSchema,
     benefitsSchema,
     qualificationSchema,
@@ -63,6 +69,7 @@ export default function AddJobForm({ setJobs }) {
   } = jobForm;
 
   const steps = [
+    "Parse Job Description",
     "Describe Your Job",
     "Benefits and Compensation",
     "Qualification for Position",
@@ -80,6 +87,21 @@ export default function AddJobForm({ setJobs }) {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
   const fetchJobs = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/jobpost");
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+        setJobs(data.jobs);
+      } else {
+        console.error("Failed to fetch jobs");
+      }
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+    }
+  };
+
+  const parseDescription = async (data, e) => {
     try {
       const res = await fetch("http://localhost:5000/api/jobpost");
       if (res.ok) {
@@ -159,23 +181,32 @@ export default function AddJobForm({ setJobs }) {
       case 0:
         return (
           <FormProvider {...jobForm}>
+            <ParseJobDescription
+              formData={formData}
+              setFormData={setFormData}
+            />
+          </FormProvider>
+        );
+      case 1:
+        return (
+          <FormProvider {...jobForm}>
             <DescribeJob formData={formData} setFormData={setFormData} />
           </FormProvider>
         );
 
-      case 1:
+      case 2:
         return (
           <FormProvider {...jobForm}>
             <Benefits formData={formData} setFormData={setFormData} />
           </FormProvider>
         );
-      case 2:
+      case 3:
         return (
           <FormProvider {...jobForm}>
             <Qualification formData={formData} setFormData={setFormData} />
           </FormProvider>
         );
-      case 3:
+      case 4:
         return (
           <FormProvider {...jobForm}>
             <form id="jobForm" onSubmit={handleSubmit(onSubmit)}>
@@ -242,28 +273,29 @@ export default function AddJobForm({ setJobs }) {
           {activeStep === steps.length - 1 ? (
             <DialogActions>
               <footer className="flex flex-row gap-2">
-                <button
-                  disabled={activeStep == 0}
-                  style={{ display: activeStep === 0 ? "none" : "block" }}
-                  onClick={handleBack}
-                >
-                  Back
-                </button>
+                <button onClick={handleBack}>Back</button>
                 <button form="jobForm">Submit</button>
+              </footer>
+            </DialogActions>
+          ) : activeStep === 0 ? (
+            <DialogActions>
+              <footer className="flex flex-row gap-2">
+                <button onClick={parseDescription}>Parse</button>
+                <button onClick={handleNext}>Skip</button>
               </footer>
             </DialogActions>
           ) : (
             <DialogActions>
               <footer className="flex flex-row gap-2">
                 <button
-                  disabled={activeStep == 0}
-                  style={{ display: activeStep === 0 ? "none" : "block" }}
+                  disabled={activeStep == 1}
+                  style={{ display: activeStep === 1 ? "none" : "block" }}
                   onClick={handleBack}
                 >
                   Back
                 </button>
                 <button onClick={handleNext}>
-                  {/* {lastStep ? "Submit" : "Next"} */}
+                  {/* {activeStep == 0 ? "Skip" : "Next"} */}
                   Next
                 </button>
               </footer>

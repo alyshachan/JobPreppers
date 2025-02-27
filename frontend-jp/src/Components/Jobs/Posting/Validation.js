@@ -1,4 +1,9 @@
 import * as yup from 'yup'
+// Step 0 
+export const parseJobSchema = yup.object({
+    description: yup.string().required("Job Description is required")
+})
+
 
 //Step 1 
 export const describeJobSchema = yup.object({

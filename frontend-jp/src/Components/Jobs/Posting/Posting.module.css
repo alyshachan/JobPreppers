@@ -112,13 +112,13 @@
   gap: 3px;
 }
 
-/* .textEditorContainer {
+.parseTextEditor {
   display: flex;
-  flex-direction: column;
   border: 1px solid #4ba173;
   min-height: 15rem;
+  width: 100%;
   /* padding: 0.5rem 0 0 0.2rem; */
-/* } */
+}
 
 .MuiYearPicker-root {
   max-height: 200px !important;
@@ -127,4 +127,17 @@
 
 .MuiPaper-root {
   overflow: visible;
+}
+
+.parseJobContainer {
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+}
+
+.parseHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
 }
