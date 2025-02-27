@@ -35,7 +35,9 @@ public class ResultEntities
 
     public override string ToString()
     {
-        return String.Format("Name: {0}, Type: {1}, Title: {2}, minimumSalary: {3}", companyName, type, title, minimumSalary);
+        return String.Format("Name: {0}, Type: {1}, Title: {2}, minimum_salary: {3}, minimum_experience: {4},",
+       "Benefits: {5}, location: {6}, Education_Level: {7}, skills: {8}, maximum_salary: {9} "
+        , companyName, type, title, minimumSalary, minimumExperience, benefits, location, educationLevel, skills, maximumSalary);
     }
 
 
@@ -68,6 +70,7 @@ namespace JobPreppersDemo.Services
                 return 0;
             }
         }
+
 
 
 
@@ -120,7 +123,7 @@ namespace JobPreppersDemo.Services
                         Console.WriteLine();
 
 
-
+                        // All the strings --> company_name title, education_level, location, type, and benefits
                         var category = entity.Category.ToString();
                         if (String.Equals(category, "company_name"))
                         {
@@ -136,11 +139,9 @@ namespace JobPreppersDemo.Services
 
                         if (String.Equals(category, "education_level"))
                         {
-                            Console.WriteLine("Enter String Match");
                             entities.educationLevel = entity.Text;
                             continue;
                         }
-
 
                         if (String.Equals(category, "location"))
                         {
@@ -154,6 +155,15 @@ namespace JobPreppersDemo.Services
                             continue;
                         }
 
+                        if (String.Equals(category, "benefits"))
+                        {
+                            entities.benefits = entity.Text;
+                            continue;
+                        }
+
+
+
+                        // Int ---> Minimum Experience, Minimum Salary and Maximum Salary 
                         if (String.Equals(category, "minimum_experience"))
                         {
                             string input = entity.Text;
@@ -196,10 +206,12 @@ namespace JobPreppersDemo.Services
                             continue;
                         }
 
+                        if (String.Equals(category, "skills"))
+                        {
+
+                        }
 
                     }
-
-                    // Console.WriteLine($"minimumExperience: {entities.minimumExperience}");
 
                 }
                 Console.WriteLine($"Entities: {entities.ToString()}");

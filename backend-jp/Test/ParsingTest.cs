@@ -55,4 +55,36 @@ class Test
 
     }
 
+
+    public static void Skills()
+    {
+
+        string[] salary = { "10.00", "10000", "100k", "$100000", "100,000", "400000-500000", "15.00 per hours" };
+
+        string salaryPattern = @"(?<salary>\d+)";
+
+        foreach (var input in salary)
+        {
+            Match match = Regex.Match(input, salaryPattern);
+            if (match.Success && int.TryParse(match.Groups["salary"].Value, out int parseSalary))
+            {
+
+                if (input.ToLower().Contains("k") || input.Contains(","))
+                {
+                    parseSalary *= 1000;
+                    Console.WriteLine($"Input: {input} -> Extracted Salary: {parseSalary}");
+                    continue;
+                }
+
+                Console.WriteLine($"Input: {input} -> Extracted Salary: {parseSalary}");
+            }
+            else
+            {
+                Console.WriteLine($"Input: {input} -> No valid experience found.");
+            }
+        }
+
+    }
+
+
 }
