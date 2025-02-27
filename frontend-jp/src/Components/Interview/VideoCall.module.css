@@ -1,0 +1,15 @@
+.participantView{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+.localParticipant{
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 240px;
+    height: 135px;
+    box-shadow: black 0 0 10px 3px;
+    border-radius: 15px;
+}
