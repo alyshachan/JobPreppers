@@ -84,14 +84,9 @@ function Feed() {
     const CustomActivity = ({ activity }) => {
         return (
             <div className="activity">
-                {/* Displaying basic activity info */}
                 <div color="white">
-
-
                     <div className="bg-white p-2 border border-gray-300 rounded-lg mt-2 shadow-md relative">
                         <Activity activity={activity} />
-
-                        {/* Like button to add a like reaction */}
                         <div className="absolute bottom-0 right-0 mb-0 mr-2">
                             <LikeButton reactionKind="like" activity={activity} background-color="white" />
                         </div>

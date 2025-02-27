@@ -40,6 +40,7 @@ namespace JobPreppersDemo.Controllers
         {
             // api calls go here
             var client = _streamService.Client;
+            // var chatClient = _streamService.ChatClientFactory.GetUserClient();
             try
             {
                 var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
@@ -56,7 +57,8 @@ namespace JobPreppersDemo.Controllers
                         {
                         {"name", $"{jpUsername}" },
                         };
-                    await client.Users.AddAsync(userID, userData);
+                    await client.Users.AddAsync(userID, userData); // Feed user
+                    // await factory.Get
                     string OkMsg = $"Stream user {userID} did not exist, created new one";
                     var newStreamUser = await client.Users.GetAsync(userID);
                     return Ok(new { OkMsg, newStreamUser.Id, newStreamUser.Data });
