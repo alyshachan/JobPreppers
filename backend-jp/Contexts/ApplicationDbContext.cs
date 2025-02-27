@@ -203,7 +203,6 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.username, "username").IsUnique();
 
-            entity.Property(e => e.account_type).HasDefaultValueSql("'1'");
             entity.Property(e => e.email).HasMaxLength(100);
             entity.Property(e => e.first_name).HasMaxLength(50);
             entity.Property(e => e.last_name).HasMaxLength(50);
