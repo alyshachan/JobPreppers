@@ -17,13 +17,9 @@ export default function ParseJobDescription({ formData, setFormData }) {
     <>
       <DialogContent>
         <div className={styles.parseJobContainer}>
-          <div className={styles.parseHeader}>
-            <label for="description" className={`${styles.label} mt-[10px]`}>
-              Job Description *
-            </label>
-            {/* <button>Parse Job Description</button> */}
-          </div>
-
+          <label for="description" className={`${styles.label} mt-[10px]`}>
+            Job Description *
+          </label>
           <div>
             <TipTap control={control} name="description"></TipTap>
           </div>

@@ -101,15 +101,19 @@ export default function AddJobForm({ setJobs }) {
     }
   };
 
-  const parseDescription = async (data, e) => {
+  const parseDescription = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/jobpost");
+      const res = await fetch("http://localhost:5000/api/textanalytics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(jobForm.getValues("description")),
+        credentials: "include",
+      });
       if (res.ok) {
         const data = await res.json();
-        console.log(data);
-        setJobs(data.jobs);
+        console.log("Parse Job Description: ", data);
       } else {
-        console.error("Failed to fetch jobs");
+        console.error("Failed to parse job description");
       }
     } catch (error) {
       console.error("Error fetching jobs:", error);
