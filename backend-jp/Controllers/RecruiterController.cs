@@ -30,7 +30,7 @@ namespace JobPreppersDemo.Controllers
             _context = context;
         }
 
-        [HttpPost("CreateCompany")]
+        [HttpPost("CreateRecruiter")]
         public async Task<IActionResult> CreateRecruiter([FromBody] RecruiterDTO recruiterDto)
         {
             if (recruiterDto == null)

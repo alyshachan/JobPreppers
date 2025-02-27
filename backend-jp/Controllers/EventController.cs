@@ -91,6 +91,26 @@ namespace JobPreppersDemo.Controllers
 
             return Ok(events);
         }
+        [HttpGet("GetEventsByUserID/{userId}")]
+        public async Task<IActionResult> GetUserEvents(int userId)
+        {
+            var userIdJson = $"\"{userId}\""; 
+
+            var hostEvents = await _context.Events
+                .Where(e => e.hostID == userId)
+                .ToListAsync();
+            
+            var participantEvents = await _context.Events
+                .Where(e => EF.Functions.JsonContains(e.participantID, userIdJson))
+                .ToListAsync();
+
+            var allEvents = hostEvents.Concat(participantEvents).ToList();
+
+            if (!allEvents.Any())
+                return NotFound("No events found for this user.");
+
+            return Ok(allEvents);
+        }
 
     }
 }

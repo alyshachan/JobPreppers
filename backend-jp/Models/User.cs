@@ -13,7 +13,7 @@ public partial class User
 
     public string first_name { get; set; } = null!;
 
-    public string last_name { get; set; } = null!;
+    public string? last_name { get; set; }
 
     public string email { get; set; } = null!;
 
@@ -26,8 +26,6 @@ public partial class User
     public string? website { get; set; }
 
     public string? description { get; set; }
-
-    public string? job_title { get; set; }
 
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 
