@@ -15,12 +15,15 @@ import {
   CallControls
 } from "@stream-io/video-react-sdk";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
+import { useSearchParams} from "react-router-dom"
 
 function VideoCall() {
   const { user, setAuthData } = useAuth();
   const [streamToken, setStreamToken] = useState("");
   const [client, setClient] = useState(null);
   const [call, setCall] = useState(null);
+  const [searchParams] = useSearchParams();
+  const eventLink = searchParams.get("link") || "globalCall";
 
   useEffect(() => {
     if (!user) return;
@@ -64,7 +67,7 @@ function VideoCall() {
   useEffect(() => {
     if (!client) return;
 
-    const newCall = client.call("default", "testCall");
+    const newCall = client.call("default", eventLink);
     newCall.join({ create: true });
 
     setCall(newCall);
@@ -81,7 +84,6 @@ function VideoCall() {
 }
 
 const CallLayout = () => {
-  const call = useCall();
   const {
     useCallCallingState,
   } = useCallStateHooks();
