@@ -64,7 +64,7 @@ function NavBar() {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch("http://52.90.94.171:5000/api/Users/logout", {
+      const response = await fetch("http://107.23.196.38:5000/api/Users/logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

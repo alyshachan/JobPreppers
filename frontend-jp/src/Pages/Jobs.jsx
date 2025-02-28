@@ -31,7 +31,7 @@ function Jobs() {
   // useEffect(() => {
   //   const fetchJobs = async () => {
   //     try {
-  //       const res = await fetch("http://52.90.94.171:5000/api/jobpost");
+  //       const res = await fetch("http://107.23.196.38:5000/api/jobpost");
   //       const contentType = res.headers.get("Content-Type");
   //       if (contentType && contentType.includes("application/json")) {
   //         const data = await res.json();

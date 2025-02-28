@@ -30,7 +30,7 @@ function Resume() {
         formData.append("userID", user.userID);
 
         try {
-            const response = await fetch("http://52.90.94.171:5000/api/Resume/PostFile", {
+            const response = await fetch("http://107.23.196.38:5000/api/Resume/PostFile", {
                 method: "POST",
                 body: formData,
             });
@@ -59,7 +59,7 @@ function Resume() {
         }
         setLoading(true);
         try {
-            const response = await fetch("http://52.90.94.171:5000/api/Resume/generate-suggestions", {
+            const response = await fetch("http://107.23.196.38:5000/api/Resume/generate-suggestions", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

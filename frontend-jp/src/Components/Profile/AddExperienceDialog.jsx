@@ -54,7 +54,7 @@ function AddExperienceDialog({
   
     try {
       const response = await fetch(
-        "http://52.90.94.171:5000/api/UserExperience/CreateExperience",
+        "http://107.23.196.38:5000/api/UserExperience/CreateExperience",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
