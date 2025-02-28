@@ -5,6 +5,8 @@
         "launchBrowser": true,
         "environmentVariables": {
           "ASPNETCORE_ENVIRONMENT": "Development",
+          "STREAM_API_KEY": "v4c5s4852hcx",
+          "STREAM_API_SECRET": "bg5qgk2kp87td9npmbr7r7hkxudebhjry97ts2t8pbcgpgsrcfkbjsbf5q7y7zgr"
         },
         "applicationUrl": "https://localhost:5000;http://localhost:5000"
       }
