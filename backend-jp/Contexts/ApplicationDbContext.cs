@@ -18,18 +18,11 @@ public partial class ApplicationDbContext : DbContext
     }
 
     public virtual DbSet<Company> Companies { get; set; }
-
-    public virtual DbSet<Company> Companies { get; set; }
-
     public virtual DbSet<Degree> Degrees { get; set; }
 
     public virtual DbSet<Event> Events { get; set; }
 
-    public virtual DbSet<Event> Events { get; set; }
-
     public virtual DbSet<Friend> Friends { get; set; }
-
-    public virtual DbSet<Interviewer> Interviewers { get; set; }
 
     public virtual DbSet<Interviewer> Interviewers { get; set; }
 
@@ -44,9 +37,6 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<JobQualification> JobQualifications { get; set; }
 
     public virtual DbSet<Recruiter> Recruiters { get; set; }
-
-    public virtual DbSet<Recruiter> Recruiters { get; set; }
-
     public virtual DbSet<Resume> Resumes { get; set; }
 
     public virtual DbSet<School> Schools { get; set; }
@@ -72,12 +62,6 @@ public partial class ApplicationDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseMySql("name=ConnectionStrings:DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
     public virtual DbSet<__EFMigrationsHistory> __EFMigrationsHistories { get; set; }
-
-// swag yay
-//     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-// #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//         => optionsBuilder.UseMySql("server=jobpreppers.cbgwos8q0ls4.us-east-2.rds.amazonaws.com;database=JobPreppersDB;port=3306;user id=JobPrepper;password=ILoveCanes2025!;sslmode=None", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder

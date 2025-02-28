@@ -51,7 +51,6 @@ function App() {
           <Route path="/VideoCall" element={<VideoCall />}/>
 
         </Routes>
-        <Messaging/>
         </ConnectionProvider>
       </AuthProvider>
     </>
