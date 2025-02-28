@@ -22,3 +22,4 @@ appsettings*.json
 Properties/
 node_modules/
 Models/__EFMigrationsHistory.cs
+build/
