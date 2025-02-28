@@ -10,9 +10,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen; 
 using System.Text;
+using JobPreppersDemo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+//Test for TextAnalytics
+// Test.Experience();
+// Test.Salary();
 // Add services to the container.
 
 
@@ -42,7 +47,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://52.90.94.171:3000") // react url
+        policy.WithOrigins("http://52.90.94.171", "http://52.90.94.171:5000", "http://localhost:3000") // react url
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -92,7 +97,23 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Azure Language SetUp
+var azureSettings = builder.Configuration.GetSection("AzureLanguage");
 
+var apiKey = azureSettings["APIKey"] ?? Environment.GetEnvironmentVariable("AzureLanguage__APIKey");
+var endpoint = azureSettings["Endpoint"] ?? Environment.GetEnvironmentVariable("AzureLanguage__Endpoint");
+
+if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(endpoint))
+{
+    throw new InvalidOperationException("Azure API Key or Endpoint is missing from configuration.");
+}
+else
+{
+    builder.Services.AddSingleton<TextAnalyticsService>(sp => new TextAnalyticsService(
+        apiKey,
+        endpoint
+    ));
+}
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
  builder.Services.AddSwaggerGen(options =>
@@ -144,8 +165,10 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowReactApp");
 app.UseAuthentication();
 app.UseAuthorization();
-app.Urls.Add("http://52.90.94.171:5000");
-app.Urls.Add("https://52.90.94.171:5001");
+//app.Urls.Add("http://localhost:5000");
+//app.Urls.Add("https://localhost:5001");
+app.Urls.Add("http://0.0.0.0:5000");
+app.Urls.Add("https://0.0.0.0:5001");
 
 
 app.MapControllers();

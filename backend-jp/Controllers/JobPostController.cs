@@ -7,6 +7,8 @@ using JobPreppersDemo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+
+
 namespace JobPreppersDemo.Controllers
 {
     [Route("api/[controller]")]
@@ -42,13 +44,10 @@ namespace JobPreppersDemo.Controllers
             public string title { get; set; } = string.Empty;
             public string type { get; set; } = string.Empty;
             public string location { get; set; } = string.Empty;
+            public string description { get; set; } = string.Empty;
 
         }
 
-        // public class PostRequest
-        // {
-
-        // }
 
 
         public JobPostController(ApplicationDbContext context)
@@ -212,83 +211,92 @@ namespace JobPreppersDemo.Controllers
         public async Task<IActionResult> FilterJobs([FromBody] PostFilterRequest request)
         {
             IQueryable<JobPostDto> query;
-
-
-            if (request.Latitude != null && request.Longitude != null && request.Distance != 0)
+            try
             {
-                var distance = request.Distance * 1609.34;
-                query = _context.JobPosts.FromSqlInterpolated(
-                    $@"
-                    SELECT jp.* FROM JobPosts jp
+
+
+                if (request.Latitude != null && request.Longitude != null && request.Distance != 0)
+                {
+                    var distance = request.Distance * 1609.34;
+                    query = _context.JobPosts.FromSqlInterpolated(
+                        $@"
+                    SELECT jp.* FROM JobPosts jp,
                     JOIN JobLocations l on jp.locationID = l.locationID
-                    WHERE ST_Distance_Sphere(Point({request.Longitude}, {request.Latitude}), Point(l.longitude, l.latitude)) <= {distance}"
-                ).Include(job => job.employer)
-                .Include(job => job.location)
-                .Select(job => new JobPostDto
+                    WHERE (LOWER(l.name) REGEXP 'remote') OR ST_Distance_Sphere(Point({request.Longitude}, {request.Latitude}), Point(l.longitude, l.latitude)) <= {distance}"
+                    ).Include(job => job.employer)
+                    .Include(job => job.location)
+                    .Select(job => new JobPostDto
+                    {
+                        company = job.employer.companyName,
+                        minimumSalary = job.minimumSalary,
+                        postDate = job.postDate,
+                        endDate = job.endDate,
+                        title = job.title,
+                        type = job.type,
+                        location = job.location.name,
+                        description = job.description
+
+                    });
+
+                }
+
+                else
                 {
-                    company = job.employer.companyName,
-                    minimumSalary = job.minimumSalary,
-                    postDate = job.postDate,
-                    endDate = job.endDate,
-                    title = job.title,
-                    type = job.type,
-                    location = job.location.name
+                    query = _context.JobPosts
+                    .Include(job => job.employer)
+                    .Include(job => job.location)
+                    .Select(job => new JobPostDto
+                    {
+                        company = job.employer.companyName,
+                        minimumSalary = job.minimumSalary,
+                        postDate = job.postDate,
+                        endDate = job.endDate,
+                        title = job.title,
+                        type = job.type,
+                        location = job.location.name,
+                        description = job.description
 
-                });
+                    });
 
-            }
+                }
 
-            else
-            {
-                query = _context.JobPosts
-                .Include(job => job.employer)
-                .Include(job => job.location)
-                .Select(job => new JobPostDto
+                if (request.Date != null)
                 {
-                    company = job.employer.companyName,
-                    minimumSalary = job.minimumSalary,
-                    postDate = job.postDate,
-                    endDate = job.endDate,
-                    title = job.title,
-                    type = job.type,
-                    location = job.location.name
+                    var filterDate = request.Date.Value.Date;
+                    query = query.Where(job => job.postDate >= filterDate);
+                }
 
-                });
+                if (request.Type != null && request.Type.Any())
+                {
 
+                    query = query.Where(job => request.Type.Contains(job.type));
+                }
+
+                if (request.Company != null && request.Company.Any())
+                {
+                    query = query.Where(job => request.Company.Contains(job.company));
+                }
+
+                if (request.Min_Salary != 0)
+                {
+                    query = query.Where(job => job.minimumSalary >= request.Min_Salary);
+                }
+
+
+                var filteredJobs = await query.ToListAsync();
+
+
+                if (filteredJobs == null || filteredJobs.Count == 0)
+                {
+                    return Ok(new List<Job>()); // Return an empty list with HTTP 200
+                }
+
+                return Ok(filteredJobs);
             }
-
-            if (request.Date != null)
+            catch (Exception error)
             {
-                var filterDate = request.Date.Value.Date;
-                query = query.Where(job => job.postDate >= filterDate);
+                return StatusCode(500, new { message = $"Internal server error: {error.Message}" });
             }
-
-            if (request.Type != null && request.Type.Any())
-            {
-
-                query = query.Where(job => request.Type.Contains(job.type));
-            }
-
-            if (request.Company != null && request.Company.Any())
-            {
-                query = query.Where(job => request.Company.Contains(job.company));
-            }
-
-            if (request.Min_Salary != 0)
-            {
-                query = query.Where(job => job.minimumSalary >= request.Min_Salary);
-            }
-
-
-            var filteredJobs = await query.ToListAsync();
-
-
-            if (filteredJobs == null || filteredJobs.Count == 0)
-            {
-                return Ok(new List<Job>()); // Return an empty list with HTTP 200
-            }
-
-            return Ok(filteredJobs);
         }
 
 
