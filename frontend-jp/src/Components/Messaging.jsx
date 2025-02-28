@@ -71,9 +71,9 @@ function Messaging() {
 
     const [chatToken, setChatToken] = useState(null);
     const [chatClient, setChatClient] = useState(null);
-    const client = StreamChat.getInstance(process.env.REACT_APP_STREAM_API_KEY, {
-        timeout: 6000
-    });
+    // const client = StreamChat.getInstance(process.env.REACT_APP_STREAM_API_KEY, {
+    //     secret: process.env.REACT_APP_STREAM_SECRET
+    // });
 
 
     useEffect(() => {
@@ -106,18 +106,25 @@ function Messaging() {
         if (chatToken && user) {
             const createConnection = async () => {
                 console.log(chatToken)
-                console.log(client);
+                // console.log(client);
+                const client = StreamChat.getInstance(process.env.REACT_APP_STREAM_API_KEY, {
+                    secret: process.env.REACT_APP_STREAM_SECRET
+                });
                 try {
                     console.log(`token being used: ${chatToken}`)
-                    await client.connectUser({
-                        id: `${user.userID}`,
-                        name: `${user.first_name + ' ' + user.last_name}`,
-                    }, chatToken)
-                    
-                    setChatClient(client);
-                    console.log("hello?")
-                    console.log(chatClient);
-                    console.log(client.user);
+                    if (!client.user) {
+
+                        await client.connectUser({
+                            id: `${user.userID}`,
+                            name: `${user.first_name + ' ' + user.last_name}`,
+                        }, chatToken)
+
+                        console.log("hello?")
+                        setChatClient(client);
+                        console.log(chatClient);
+                        console.log(client.user);
+                    }
+
                 }
                 catch (e) {
                     console.log("in error")
@@ -132,37 +139,30 @@ function Messaging() {
 
             return () => {
                 console.log("disconnecting user from chat");
-                client.disconnectUser();
+                if (chatClient) {
+                    chatClient.disconnectUser();
+                }
                 // chatClient.disconnectUser();
             }
         }
-    }, [chatToken, user, chatClient, client]);
+    }, [chatToken, user, chatClient]);
 
-    if (!user && !chatClient) {
+    if (!user || !chatClient) {
         return <div>Loading user data...</div>;
-    }
-
-    // if (!chatClient.wsConnection || !chatClient.wsConnection.isHealthy) {
-    //     return <div>Connecting to chat...</div>;  // Display a loading state until connection is healthy
-    // }
-
-    if (!user) {
-        return <div>loading..</div>
     }
 
     if (!chatClient || !chatClient.wsConnection || !chatClient.wsConnection.isHealthy) {
         return <div>Loading chat...</div>;
-      }
+    }
 
     if (chatClient) {
         console.log("here");
         console.log(chatClient.wsConnection);
     }
 
-    const options = {presence: true, connection_id: chatClient.wsConnection.connectionID };
+    const options = { presence: true, watch: true, state: true, connection_id: chatClient.wsConnection.connectionID };
     return (
         (chatClient && chatClient.user && chatClient.wsConnection && <div>
-            div render check
             <Chat client={chatClient}>
                 <ChannelList
                     filters={{
@@ -171,7 +171,7 @@ function Messaging() {
                     }}
                     options={options}
                     connectionID={chatClient.wsConnection.connectionID}
-                    />
+                />
                 <Channel>
                     <Window>
                         <ChannelHeader />
