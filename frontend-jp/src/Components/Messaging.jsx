@@ -1,7 +1,6 @@
 import "../App.css"
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../provider/authProvider";
-import { useConnection } from "../provider/connectionProvider";
 import * as signalR from '@microsoft/signalr';
 import 'react-chat-elements/dist/main.css';
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
@@ -54,7 +53,6 @@ import {
 
 function Messaging() {
     const { user, setAuthData } = useAuth();
-    // const { signalRConnection, setSignalRConnection, connectToHub, disconnectFromHub } = useConnection();
     // /* div render booleans */
     // const [chatListOpened, setChatListOpened] = useState(false);
     // const [convoOpened, setConvoOpened] = useState(false);

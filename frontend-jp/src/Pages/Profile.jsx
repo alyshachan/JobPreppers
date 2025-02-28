@@ -7,7 +7,6 @@ import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
-import { useConnection } from "../provider/connectionProvider";
 import AddEducationDialog from "../Components/Profile/AddEducationDialog";
 import AddSkillDialog from "../Components/Profile/AddSkillDialog";
 import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
@@ -37,7 +36,6 @@ function Profile() {
   });
   const [message, setMessage] = useState("");
   const [receiverID, setReceiverID] = useState("");
-  const {signalRConnection, setSignalRConnection, connectToHub, disconnectFromHub} = useConnection();
 
   const toggleDialog = (type, state) => {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
@@ -152,10 +150,6 @@ function Profile() {
     fetchUser();
   }, [user]);
     
-    useEffect(() => {
-      console.log("connecting to hub from profile.jsx");
-      connectToHub();
-  }, []);
 
   if (user == null) {
     return <div>Loading...</div>;

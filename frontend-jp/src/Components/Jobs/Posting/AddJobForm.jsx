@@ -116,7 +116,7 @@ export default function AddJobForm({ setJobs }) {
 
   const parseDescription = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/textanalytics", {
+      const res = await fetch("http://52.90.94.171:5000/api/textanalytics", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ description: jobForm.getValues("description") }),

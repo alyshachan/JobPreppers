@@ -47,7 +47,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://52.90.94.171", "http://52.90.94.171:5000", "http://localhost:3000") // react url
+        policy.WithOrigins("http://52.90.94.171:5000", "http://52.90.94.171:3000") // react url
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -157,7 +157,7 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "JobPreppersDemo API");
 
-        c.RoutePrefix = string.Empty; // Set Swagger UI as the root (e.g., localhost:5000)
+        c.RoutePrefix = string.Empty; // Set Swagger UI as the root (e.g., 52.90.94.171:5000)
     });
 }
 
@@ -165,10 +165,10 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowReactApp");
 app.UseAuthentication();
 app.UseAuthorization();
-//app.Urls.Add("http://localhost:5000");
-//app.Urls.Add("https://localhost:5001");
-app.Urls.Add("http://0.0.0.0:5000");
-app.Urls.Add("https://0.0.0.0:5001");
+//app.Urls.Add("http://52.90.94.171:5000");
+//app.Urls.Add("https://52.90.94.171:5001");
+app.Urls.Add("http://52.90.94.171:5000");
+app.Urls.Add("https://52.90.94.171:5001");
 
 
 app.MapControllers();
