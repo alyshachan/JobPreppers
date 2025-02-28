@@ -17,7 +17,7 @@ export default function Login() {
   
     // reach login endpoint
     try {
-      const response = await fetch("http://localhost:5000/api/Users/login", {
+      const response = await fetch("http://52.90.94.171:5000/api/Users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
