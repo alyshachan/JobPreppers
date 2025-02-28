@@ -98,9 +98,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 // Azure Language SetUp
-var azureSettings = builder.Configuration.GetRequiredSection("AzureLanguage");
-var apiKey = azureSettings["APIKey"];
-var endpoint = azureSettings["Endpoint"];
+var azureSettings = builder.Configuration.GetSection("AzureLanguage");
+
+var apiKey = azureSettings["APIKey"] ?? Environment.GetEnvironmentVariable("AzureLanguage__APIKey");
+var endpoint = azureSettings["Endpoint"] ?? Environment.GetEnvironmentVariable("AzureLanguage__Endpoint");
+
 if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(endpoint))
 {
     throw new InvalidOperationException("Azure API Key or Endpoint is missing from configuration.");
@@ -112,7 +114,6 @@ else
         endpoint
     ));
 }
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
  builder.Services.AddSwaggerGen(options =>
