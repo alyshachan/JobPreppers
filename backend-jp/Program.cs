@@ -96,6 +96,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             },
         };
     });
+builder.Services.ConfigureApplicationCookie(options => { 
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+    options.Cookie.HttpOnly = true;
+});
 
 // Azure Language SetUp
 var azureSettings = builder.Configuration.GetSection("AzureLanguage");
