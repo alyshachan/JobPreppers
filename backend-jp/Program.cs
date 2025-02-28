@@ -4,8 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using JobPreppersDemo.Models;
 using JobPreppersDemo.Contexts;
+using JobPreppersDemo.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen; 
 using System.Text;
 using JobPreppersDemo.Services;
 
@@ -17,15 +20,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Test.Salary();
 // Add services to the container.
 
+
 if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
 }
+var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
+var gptKey = Environment.GetEnvironmentVariable("GPTKey")
+             ?? builder.Configuration["GPTKey"];
+
+
+builder.Services.AddSingleton<StreamService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-        Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql")));
+    options.UseMySql(connectionString, Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql")));
 
 builder.Services.AddControllers();
 builder.Services.AddLogging(options =>
@@ -105,7 +115,34 @@ else
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+ builder.Services.AddSwaggerGen(options =>
+        {
+            // Define the security schema for the API key in header
+            options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header, // Where to send the key (header, query, etc.)
+                Name = "Authorization", // Name of the header
+                Type = SecuritySchemeType.ApiKey, // Type is API Key
+                Description = "API key needed to access the Stream API"
+            });
+
+            // Apply the security definition globally
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "ApiKey"
+                        }
+                    },
+                    new string[] {}
+                }
+            });
+        });
+
 builder.Services.AddAuthorization();
 
 

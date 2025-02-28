@@ -18,6 +18,7 @@ import Education from "./ProfileSections/Education";
 import Experience from "./ProfileSections/Experience";
 import Project from "./ProfileSections/Project";
 import Skills from "./ProfileSections/Skills";
+import VideoCall from "./Components/Interview/VideoCall";
 import { AuthProvider } from "./provider/authProvider";
 import { ConnectionProvider } from "./provider/connectionProvider";
 
@@ -27,24 +28,29 @@ function App() {
     <>
       <AuthProvider>
         <ConnectionProvider>
-        <NavBar/>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/Signup" element={<Signup />} />
-          
-          <Route path="/Profile" element={<Profile />} />
-          <Route path="/Feed" element={<Feed />} />
-          <Route path="/Jobs" element={<Jobs />} />
-          <Route path="/Interview" element={<Interview />} />
-          <Route path="/Resume" element={<Resume />} />
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/Signup" element={<Signup />} />
+
+            <Route path="/Profile" element={<Profile />} />
+            <Route path="/Feed" element={
+              <div>
+                <Feed />
+                <Messaging />
+                </div>} />
+                <Route path="/Jobs" element={<Jobs />} />
+                <Route path="/Interview" element={<Interview />} />
+                <Route path="/Resume" element={<Resume />} />
 
           <Route path="/Education" element={<Education />} />
           <Route path="/Experience" element={<Experience />} />
           <Route path="/Project" element={<Project />} />
           <Route path="/Skills" element={<Skills />} />
+          <Route path="/VideoCall" element={<VideoCall />}/>
+
         </Routes>
-        <Messaging/>
         </ConnectionProvider>
       </AuthProvider>
     </>
