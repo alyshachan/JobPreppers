@@ -10,9 +10,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen; 
 using System.Text;
+using JobPreppersDemo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+//Test for TextAnalytics
+// Test.Experience();
+// Test.Salary();
 // Add services to the container.
 
 
@@ -92,6 +97,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Azure Language SetUp
+var azureSettings = builder.Configuration.GetRequiredSection("AzureLanguage");
+var apiKey = azureSettings["APIKey"];
+var endpoint = azureSettings["Endpoint"];
+if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(endpoint))
+{
+    throw new InvalidOperationException("Azure API Key or Endpoint is missing from configuration.");
+}
+else
+{
+    builder.Services.AddSingleton<TextAnalyticsService>(sp => new TextAnalyticsService(
+        apiKey,
+        endpoint
+    ));
+}
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
