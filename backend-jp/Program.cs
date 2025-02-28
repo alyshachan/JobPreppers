@@ -48,6 +48,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp", policy =>
     {
         policy.WithOrigins("http://107.23.196.38:5000", "http://107.23.196.38:3000") // react url
+        policy.WithOrigins("http://52.90.94.171", "http://localhost:3000", "http://52.90.94.171:3000") // react url
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -96,6 +97,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             },
         };
     });
+builder.Services.ConfigureApplicationCookie(options => { 
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+    options.Cookie.HttpOnly = true;
+});
 
 // Azure Language SetUp
 var azureSettings = builder.Configuration.GetSection("AzureLanguage");
@@ -167,8 +173,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 //app.Urls.Add("http://107.23.196.38:5000");
 //app.Urls.Add("https://107.23.196.38:5001");
-app.Urls.Add("http://107.23.196.38:5000");
-app.Urls.Add("https://107.23.196.38:5001");
+app.Urls.Add("http://0.0.0.0:5000");
+app.Urls.Add("https://0.0.0.0:5001");
+
+
 
 
 app.MapControllers();
