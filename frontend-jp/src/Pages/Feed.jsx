@@ -13,7 +13,7 @@ function Feed() {
         const fetchFeedData = async () => {
             try {
                 console.log("requesting user token")
-                const response = await fetch(`http://localhost:5000/api/Feed/getFeedToken/${user.userID}`);
+                const response = await fetch(`http://52.90.94.171:5000/api/Feed/getFeedToken/${user.userID}`);
                 if (response.ok) {
                     const data = await response.json()
                     const token = data.token;
@@ -26,7 +26,7 @@ function Feed() {
             }
 
             try {
-                const response = await fetch(`http://localhost:5000/api/Stream/getOrCreate/${user.userID}`, // get streamUser
+                const response = await fetch(`http://52.90.94.171:5000/api/Stream/getOrCreate/${user.userID}`, // get streamUser
                     {
                         method: "POST",
                         headers: {
@@ -39,7 +39,7 @@ function Feed() {
                     const data = await response.json();
 
                     if (data.data.name == "Unknown") {
-                        await fetch(`http://localhost:5000/api/Stream/update/${user.userID}`, // update if needed
+                        await fetch(`http://52.90.94.171:5000/api/Stream/update/${user.userID}`, // update if needed
                             {
                                 method: "POST",
                                 headers: {
@@ -57,25 +57,6 @@ function Feed() {
             catch (error) {
                 console.error(error);
             }
-
-            // try {
-            //     const response = await fetch(`http://localhost:5000/api/Friend/GetFriends/${user.userID}`); // get response, then create follow relationships with /followFriendMany in FeedController.cs
-
-            //     if (response.ok) {
-            //         const data = await response.json();
-            //         console.log(data.length);
-            //         for (var i = 0; i < data.length; i++ ) {
-            //             console.log(data[i].id);
-            //         }
-            //     }
-            //     else {
-            //         console.error("Error fetching feed data");
-            //     }
-            // }
-            // catch (error) {
-            //     console.error(error);
-            // }
-
         }
         fetchFeedData();
     }, [user])

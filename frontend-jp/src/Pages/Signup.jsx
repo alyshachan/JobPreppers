@@ -15,7 +15,7 @@ export default function Signup() {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch("http://localhost:5000/api/Users/signup", {
+      const response = await fetch("http://52.90.94.171:5000/api/Users/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firstName, lastName, username, email, password}),

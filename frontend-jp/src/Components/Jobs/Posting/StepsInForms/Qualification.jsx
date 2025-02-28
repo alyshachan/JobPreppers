@@ -37,7 +37,7 @@ export default function Qualification() {
       if (accessToken && tokenTimeExpiration > Date.now()) {
         return accessToken;
       } else {
-        const response = await fetch("http://localhost:8000/get-token");
+        const response = await fetch("http://52.90.94.171:8000/get-token");
         const data = await response.json();
         tokenTimeExpiration = Date.now() + 3600 * 1000;
         accessToken = data.access_token;
