@@ -42,6 +42,19 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 export default function AddJobForm({ setJobs }) {
+  const [jobDescriptionData, setjobDescriptionData] = useState({
+    benefits: [],
+    companyName: null,
+    educationLevel: "",
+    location: null,
+    maximumSalary: null,
+    minimumExperience: null,
+    minimumSalary: null,
+    skills: [],
+    title: null,
+    type: null,
+  });
+
   const stepSchemas = [
     parseJobSchema,
     describeJobSchema,
@@ -106,12 +119,14 @@ export default function AddJobForm({ setJobs }) {
       const res = await fetch("http://localhost:5000/api/textanalytics", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(jobForm.getValues("description")),
+        body: JSON.stringify({ description: jobForm.getValues("description") }),
         credentials: "include",
       });
       if (res.ok) {
         const data = await res.json();
+        setjobDescriptionData(data);
         console.log("Parse Job Description: ", data);
+        handleNext();
       } else {
         console.error("Failed to parse job description");
       }
@@ -194,20 +209,32 @@ export default function AddJobForm({ setJobs }) {
       case 1:
         return (
           <FormProvider {...jobForm}>
-            <DescribeJob formData={formData} setFormData={setFormData} />
+            <DescribeJob
+              formData={formData}
+              setFormData={setFormData}
+              jobDescriptionData={jobDescriptionData}
+            />
           </FormProvider>
         );
 
       case 2:
         return (
           <FormProvider {...jobForm}>
-            <Benefits formData={formData} setFormData={setFormData} />
+            <Benefits
+              formData={formData}
+              setFormData={setFormData}
+              jobDescriptionData={jobDescriptionData}
+            />
           </FormProvider>
         );
       case 3:
         return (
           <FormProvider {...jobForm}>
-            <Qualification formData={formData} setFormData={setFormData} />
+            <Qualification
+              formData={formData}
+              setFormData={setFormData}
+              jobDescriptionData={jobDescriptionData}
+            />
           </FormProvider>
         );
       case 4:
@@ -292,8 +319,8 @@ export default function AddJobForm({ setJobs }) {
             <DialogActions>
               <footer className="flex flex-row gap-2">
                 <button
-                  disabled={activeStep == 1}
-                  style={{ display: activeStep === 1 ? "none" : "block" }}
+                  // disabled={activeStep == 1}
+                  // style={{ display: activeStep === 1 ? "none" : "block" }}
                   onClick={handleBack}
                 >
                   Back

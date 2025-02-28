@@ -15,7 +15,7 @@ public class ResultEntities
 {
     public string? educationLevel { get; set; }
 
-    public List<string>? skills { get; set; }
+    public List<string> skills { get; set; } = new List<string>();
 
     public string? title { get; set; }
 
@@ -25,7 +25,7 @@ public class ResultEntities
 
     public int? maximumSalary { get; set; }
 
-    public string? benefits { get; set; }
+    public List<string> benefits { get; set; } = new List<string>();
 
     public int? minimumExperience { get; set; }
 
@@ -35,9 +35,8 @@ public class ResultEntities
 
     public override string ToString()
     {
-        return String.Format("Name: {0}, Type: {1}, Title: {2}, minimum_salary: {3}, minimum_experience: {4},",
-       "Benefits: {5}, location: {6}, Education_Level: {7}, skills: {8}, maximum_salary: {9} "
-        , companyName, type, title, minimumSalary, minimumExperience, benefits, location, educationLevel, skills, maximumSalary);
+        return String.Format("Name: {0}, Type: {1}, Title: {2}, minimum_salary: {3}, minimum_experience: {4}, Benefits: {5}, location: {6}, Education_Level: {7}, skills: {8}, maximum_salary: {9} ",
+        companyName, type, title, minimumSalary, minimumExperience, string.Join(", ", benefits), location, educationLevel, string.Join(", ", skills), maximumSalary);
     }
 
 
@@ -83,7 +82,7 @@ namespace JobPreppersDemo.Services
             _client = new TextAnalyticsClient(endpoint, credential);
         }
 
-        public async Task<RecognizeCustomEntitiesOperation> EntityEntryRecognition(string jobDescription)
+        public async Task<ResultEntities> EntityEntryRecognition(string jobDescription)
         {
 
             List<TextDocumentInput> batchedDocuments = new()
@@ -123,48 +122,43 @@ namespace JobPreppersDemo.Services
                         Console.WriteLine();
 
 
-                        // All the strings --> company_name title, education_level, location, type, and benefits
+                        // All the strings --> company_name title, education_level, location, and type
                         var category = entity.Category.ToString();
-                        if (String.Equals(category, "company_name"))
+                        var confident = entity.ConfidenceScore;
+                        double maxConfident = .80;
+                        if (String.Equals(category, "company_name") && confident >= maxConfident)
                         {
                             entities.companyName = entity.Text;
                             continue;
                         }
 
-                        if (String.Equals(category, "title"))
+                        if (String.Equals(category, "title") && confident >= maxConfident)
                         {
                             entities.title = entity.Text;
                             continue;
                         }
 
-                        if (String.Equals(category, "education_level"))
+                        if (String.Equals(category, "education_level") && confident >= maxConfident)
                         {
                             entities.educationLevel = entity.Text;
                             continue;
                         }
 
-                        if (String.Equals(category, "location"))
+                        if (String.Equals(category, "location") && confident >= maxConfident)
                         {
                             entities.location = entity.Text;
                             continue;
                         }
 
-                        if (String.Equals(category, "type"))
+                        if (String.Equals(category, "type") && confident >= maxConfident)
                         {
                             entities.type = entity.Text;
                             continue;
                         }
 
-                        if (String.Equals(category, "benefits"))
-                        {
-                            entities.benefits = entity.Text;
-                            continue;
-                        }
-
-
 
                         // Int ---> Minimum Experience, Minimum Salary and Maximum Salary 
-                        if (String.Equals(category, "minimum_experience"))
+                        if (String.Equals(category, "minimum_experience") && confident >= maxConfident)
                         {
                             string input = entity.Text;
                             string pattern = @"(?<experience>\d+)";
@@ -185,7 +179,7 @@ namespace JobPreppersDemo.Services
                             }
                         }
 
-                        if (String.Equals(category, "minimum_salary"))
+                        if (String.Equals(category, "minimum_salary") && confident >= maxConfident)
                         {
                             // 0 means it wasn't able to parse
                             var salary = parseSalary(entity.Text);
@@ -196,7 +190,7 @@ namespace JobPreppersDemo.Services
                             continue;
                         }
 
-                        if (String.Equals(category, "maximum_salary"))
+                        if (String.Equals(category, "maximum_salary") && confident >= maxConfident)
                         {
                             var salary = parseSalary(entity.Text);
                             if (salary != 0)
@@ -206,9 +200,19 @@ namespace JobPreppersDemo.Services
                             continue;
                         }
 
-                        if (String.Equals(category, "skills"))
+
+                        // List --> Skills and Benefits
+                        if (String.Equals(category, "skills") && confident >= maxConfident)
+                        {
+                            entities.skills.Add(entity.Text);
+
+                        }
+
+                        if (String.Equals(category, "benefits") && confident >= maxConfident)
                         {
 
+                            entities.benefits.Add(entity.Text);
+                            continue;
                         }
 
                     }
@@ -216,7 +220,7 @@ namespace JobPreppersDemo.Services
                 }
                 Console.WriteLine($"Entities: {entities.ToString()}");
             }
-            return await _client.RecognizeCustomEntitiesAsync(WaitUntil.Completed, batchedDocuments, projectName, deploymentName);
+            return entities;
         }
     }
 

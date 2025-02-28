@@ -11,7 +11,7 @@ import AutoCompleteForm from "../Helper/AutoCompleteForm";
 import ToggleButtonForm from "../Helper/ToggleButtonForm";
 import styles from "../Posting.module.css";
 import { errorMessage } from "../Helper/ErrorMessage";
-export default function Benefits() {
+export default function Benefits({ jobDescriptionData }) {
   // const rate = ["Hourly Rate", "Monthy Rate", "Annually"];
   const bonuses = ["Signing Bonus", "Tip", "Equity Package", "Commission"];
   const benefits = [
@@ -70,6 +70,34 @@ export default function Benefits() {
       setValue("currencies", null);
     }
   }, [payType]);
+
+  useEffect(() => {
+    if (jobDescriptionData.minimumSalary) {
+      const min = jobDescriptionData.minimumSalary;
+      // If its two digits then convert hourly to annual wage
+      const regex = /\b\d{1,2}\b/;
+      if (regex.test(min)) {
+        setValue("minimumSalary", min * 40 * 52);
+      } else {
+        setValue("minimumSalary", min);
+      }
+    }
+
+    if (jobDescriptionData.maximumSalary) {
+      const min = jobDescriptionData.minimumSalary;
+      // If its two digits then convert hourly to annual wage
+      const regex = /\b\d{1,2}\b/;
+      if (regex.test(min)) {
+        setValue("maximumSalary", min * 40 * 52);
+      } else {
+        setValue("maximumSalary", min);
+      }
+    }
+
+    // if (jobDescriptionData.benefits){
+
+    // }
+  }, [jobDescriptionData]);
 
   // Step 2
   return (

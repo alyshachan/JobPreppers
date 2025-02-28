@@ -9,6 +9,12 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
 using JobPreppersDemo.Services;
+using System.Text.Json;
+
+public class JobDescriptionRequest
+{
+    public string Description { get; set; }
+}
 
 
 namespace JobPreppersDemo.Controllers
@@ -27,18 +33,17 @@ namespace JobPreppersDemo.Controllers
 
         [HttpPost("")]
 
-        public async Task<IActionResult> ParseDescription([FromBody] string jobDescription)
+        public async Task<IActionResult> ParseDescription([FromBody] JobDescriptionRequest jobDescription)
         {
-            if (jobDescription.IsNullOrEmpty())
+            if (jobDescription.Description.IsNullOrEmpty())
             {
                 return BadRequest("Bad job description.");
             }
             try
             {
-                List<string> list = new List<string>();
-
-                var result = await _textAnalyticsService.EntityEntryRecognition(jobDescription);
-
+                Console.WriteLine($"Job Description sent from the frontend:  {jobDescription.Description}");
+                Console.WriteLine(" ");
+                var result = await _textAnalyticsService.EntityEntryRecognition(jobDescription.Description);
 
                 return Ok(result);
 

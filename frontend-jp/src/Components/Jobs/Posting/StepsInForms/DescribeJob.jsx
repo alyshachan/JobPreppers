@@ -5,9 +5,13 @@ import styles from "../Posting.module.css";
 import { errorMessage } from "../Helper/ErrorMessage";
 import axios from "axios";
 import TipTap from "../Helper/TipTap";
-import React, { useCallback } from "react";
+import React, { useEffect } from "react";
 
-export default function DescribeJob({ formData, setFormData }) {
+export default function DescribeJob({
+  formData,
+  setFormData,
+  jobDescriptionData,
+}) {
   const jobForm = useFormContext();
   const onSubmit = (data) => {
     console.log(data);
@@ -51,6 +55,40 @@ export default function DescribeJob({ formData, setFormData }) {
     { value: 4, label: "PRN" },
     { value: 5, label: "Apprentices" },
   ];
+
+  useEffect(() => {
+    if (jobDescriptionData.companyName) {
+      setValue("company", jobDescriptionData.companyName);
+    }
+
+    if (jobDescriptionData.title) {
+      setValue("title", jobDescriptionData.title);
+    }
+
+    if (jobDescriptionData.type) {
+      for (let option of employementTypeOptions) {
+        const label = option.label;
+        // console.log("Type Label: ", option.label);
+        if (
+          label.toLowerCase().includes(jobDescriptionData.type.toLowerCase())
+        ) {
+          // console.log("Went into the if");
+          setValue("type", option);
+          break;
+        }
+      }
+    }
+
+    if (jobDescriptionData.location) {
+      const location = jobDescriptionData.location;
+      try {
+        submitAddress(location);
+        setValue("location", location);
+      } catch (error) {
+        console.log("Not right location");
+      }
+    }
+  }, [jobDescriptionData]);
 
   // Step 1
 

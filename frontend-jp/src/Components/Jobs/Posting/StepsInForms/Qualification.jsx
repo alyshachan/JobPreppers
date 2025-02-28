@@ -14,7 +14,7 @@ import { useFormContext, Controller } from "react-hook-form";
 import styles from "../Posting.module.css";
 import { errorMessage } from "../Helper/ErrorMessage";
 
-export default function Qualification() {
+export default function Qualification(jobDescriptionData) {
   const [skills, setSkills] = useState([
     "Communication",
     "Leadership",
