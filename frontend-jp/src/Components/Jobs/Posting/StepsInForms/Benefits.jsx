@@ -94,7 +94,18 @@ export default function Benefits({ jobDescriptionData }) {
       }
     }
 
-    // if (jobDescriptionData.benefits){
+    if (jobDescriptionData.benefits) {
+      const benefitList = [];
+      for (const benefit of benefits) {
+        for (const input of jobDescriptionData.benefits) {
+          const regex = new RegExp(`\\b${benefit}\\b`, "i"); // i make it not case sensitive
+          if (regex.test(benefit)) {
+            benefitList.push(benefit);
+          }
+        }
+      }
+      setValue("benefits", benefitList);
+    }
 
     // }
   }, [jobDescriptionData]);
