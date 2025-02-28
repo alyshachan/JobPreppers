@@ -100,6 +100,7 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.Cookie.SameSite = SameSiteMode.None;
     options.Cookie.SecurePolicy = CookieSecurePolicy.None;
     options.Cookie.HttpOnly = true;
+    options.Cookie.Domain = "107.23.196.38";
 });
 
 // Azure Language SetUp
