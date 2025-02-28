@@ -167,8 +167,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 //app.Urls.Add("http://52.90.94.171:5000");
 //app.Urls.Add("https://52.90.94.171:5001");
-app.Urls.Add("http://52.90.94.171:5000");
-app.Urls.Add("https://52.90.94.171:5001");
+app.Urls.Add("http://0.0.0.0:5000");
+app.Urls.Add("https://0.0.0.0:5001");
+
 
 
 app.MapControllers();
