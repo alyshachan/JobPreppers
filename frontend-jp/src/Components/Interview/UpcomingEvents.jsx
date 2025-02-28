@@ -30,8 +30,8 @@ function UpcomingEvents({ events }) {
 
           <div className={styles.eventTimeText}>
             <div className={styles.eventDateWrapper}>
-              <div className={styles.startTime}>{event.start}</div>
-              <div className={styles.endTime}>{event.end}</div>
+              <div className={styles.startTime}>{event.start_time}</div>
+              <div className={styles.endTime}>{event.end_time}</div>
             </div>
 
             <div className={`${styles.eventText} ${index === 0 ? styles.firstEvent : ''}`}>
@@ -42,7 +42,7 @@ function UpcomingEvents({ events }) {
                   index === 0 ? "text-[#EEEEEE]" : "subtitle"
                 }`}
               >
-                {event.details}
+                {event.description}
               </p>
 
               <div className={styles.joinCallButton}>
