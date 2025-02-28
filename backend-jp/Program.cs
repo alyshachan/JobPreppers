@@ -7,6 +7,8 @@ using JobPreppersDemo.Contexts;
 using JobPreppersDemo.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen; 
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -93,7 +95,34 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+ builder.Services.AddSwaggerGen(options =>
+        {
+            // Define the security schema for the API key in header
+            options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header, // Where to send the key (header, query, etc.)
+                Name = "Authorization", // Name of the header
+                Type = SecuritySchemeType.ApiKey, // Type is API Key
+                Description = "API key needed to access the Stream API"
+            });
+
+            // Apply the security definition globally
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "ApiKey"
+                        }
+                    },
+                    new string[] {}
+                }
+            });
+        });
+
 builder.Services.AddAuthorization();
 
 
