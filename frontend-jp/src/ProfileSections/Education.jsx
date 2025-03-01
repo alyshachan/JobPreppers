@@ -27,7 +27,7 @@ function Education() {
     const requestEducation = async () => {
       try {
         const response = await fetch(
-          `http://107.23.196.38:5000/api/UserEducation/${user.userID}`,
+          `http://localhost:5000/api/UserEducation/${user.userID}`,
           {
             credentials: "include", // include cookies
           }
@@ -95,7 +95,9 @@ function Education() {
                   <p className="title">{education.school_name}</p>
                   <p className="subtitle">
                     {education.degree_name}
-                    {(!education.degree_name || !education.study_name) ? "" : ", "}
+                    {!education.degree_name || !education.study_name
+                      ? ""
+                      : ", "}
                     {education.study_name}
                   </p>
                   <p className="subtitle">
