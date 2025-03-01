@@ -12,10 +12,10 @@ import {
   ParticipantList,
   LocalParticipant,
   SpeakerLayout,
-  CallControls
+  CallControls,
 } from "@stream-io/video-react-sdk";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
-import { useSearchParams} from "react-router-dom"
+import { useSearchParams } from "react-router-dom";
 
 function VideoCall() {
   const { user, setAuthData } = useAuth();
@@ -32,7 +32,7 @@ function VideoCall() {
       try {
         console.log("requesting user token");
         const response = await fetch(
-          `http://107.23.196.38:5000/api/VideoCall/token/${user.userID}`,
+          `http://localhost:5000/api/VideoCall/token/${user.userID}`,
           {
             credentials: "include", // include cookies
           }
@@ -77,16 +77,13 @@ function VideoCall() {
     <StreamVideo client={client}>
       <StreamCall call={call}>
         <CallLayout />
-
       </StreamCall>
     </StreamVideo>
   );
 }
 
 const CallLayout = () => {
-  const {
-    useCallCallingState,
-  } = useCallStateHooks();
+  const { useCallCallingState } = useCallStateHooks();
   const callingState = useCallCallingState();
 
   if (callingState != CallingState.JOINED) {
@@ -95,8 +92,8 @@ const CallLayout = () => {
 
   return (
     <StreamTheme>
-      <SpeakerLayout/>
-      <CallControls/>
+      <SpeakerLayout />
+      <CallControls />
     </StreamTheme>
   );
 };
