@@ -19,6 +19,7 @@ import Experience from "./ProfileSections/Experience";
 import Project from "./ProfileSections/Project";
 import Skills from "./ProfileSections/Skills";
 import VideoCall from "./Components/Interview/VideoCall";
+import Friends from "./ProfileSections/Friends"
 import { AuthProvider } from "./provider/authProvider";
 
 
@@ -43,6 +44,7 @@ function App() {
   return (
     <>
       <AuthProvider>
+        <ConnectionProvider>
           <NavBar />
           <Routes>
             <Route path="/" element={<Login />} />
@@ -64,8 +66,10 @@ function App() {
             <Route path="/Project" element={<Project />} />
             <Route path="/Skills" element={<Skills />} />
             <Route path="/VideoCall" element={<VideoCall />} />
-
-          </Routes>
+          <Route path="/Friends" element={<Friends />} />
+        </Routes>
+        <Messaging/>
+        </ConnectionProvider>
       </AuthProvider>
     </>
   );

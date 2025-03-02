@@ -4,25 +4,6 @@ import "../Components/JobPreppers.css";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
 
-const testProjDict = [
-  {
-    project_title: "raspberry pi ring doorbell",
-    description: "blah blah blah",
-  },
-  {
-    project_title: "raspberry pi ring doorbell",
-    description: "blah blah blah",
-  },
-  {
-    project_title: "raspberry pi ring doorbell",
-    description: "blah blah blah",
-  },
-  {
-    project_title: "raspberry pi ring doorbell",
-    description: "blah blah blah",
-  },
-];
-
 function Project() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [projectDict, setProjectDict] = useState([]);
