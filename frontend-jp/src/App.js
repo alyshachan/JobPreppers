@@ -44,7 +44,6 @@ function App() {
   return (
     <>
       <AuthProvider>
-        <ConnectionProvider>
           <NavBar />
           <Routes>
             <Route path="/" element={<Login />} />
@@ -68,8 +67,6 @@ function App() {
             <Route path="/VideoCall" element={<VideoCall />} />
           <Route path="/Friends" element={<Friends />} />
         </Routes>
-        <Messaging/>
-        </ConnectionProvider>
       </AuthProvider>
     </>
   );

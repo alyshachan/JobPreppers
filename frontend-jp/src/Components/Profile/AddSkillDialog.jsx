@@ -60,7 +60,7 @@ function AddSkillDialog({ open, onClose }) {
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();
-        window.alert("Your input has invalid characters, please try again.");
+        // window.alert("Your input has invalid characters, please try again.");
         setError(errorData.message); // Show error message from the backend
       }
     } catch (err) {

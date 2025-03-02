@@ -147,7 +147,7 @@ button:hover{
   font-size: 16px;
   padding: 8px 20px; 
   border: none;
-  border-radius: 5px;
+  border-radius: 100px;
   cursor: pointer;
   text-align: center;
   font-family: inherit;
