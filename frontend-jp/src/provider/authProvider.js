@@ -10,26 +10,38 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/Users/auth", {
-            credentials: "include", // include cookies
-          });
+        const response = await fetch("http://107.23.196.38:5000/api/Users/auth", {
+          method: "GET",
+          credentials: "include", // include cookies
+          headers: {
+            "Accept": "*/*", // Or any other headers you need
+            "Accept-Encoding": "gzip, deflate",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Connection": "keep-alive",
+            "Host": "107.23.196.38:5000",
+            "Origin": "http://107.23.196.38",
+            "Referer": "http://107.23.196.38/",
+            "Sec-GPC": "1",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+          }
+        });
 
         if (response.ok) {
-            console.log("Auth OK");
-            const data = await response.json();
-            if (data) {
-              const newUser = {
-                userID: data.userID,
-                username: data.username,
-                first_name: data.first_name,
-                last_name: data.last_name,
-                email: data.email,
-                profile_pic: data.profile_pic,
-                title: data.title,
-                location: data.location
-              };
-              setUser(newUser);
-            }
+          console.log("Auth OK");
+          const data = await response.json();
+          if (data) {
+            const newUser = {
+              userID: data.userID,
+              username: data.username,
+              first_name: data.first_name,
+              last_name: data.last_name,
+              email: data.email,
+              profile_pic: data.profile_pic,
+              title: data.title,
+              location: data.location
+            };
+            setUser(newUser);
+          }
         }
       } catch (error) {
         setUser(null); // clear user data if the token is invalid or expired

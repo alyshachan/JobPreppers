@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../provider/authProvider";
 
 import SectionHeader from "../Components/Profile/SectionHeader";
 import Calendar from "../Components/Interview/Calendar";
@@ -8,9 +9,53 @@ import InterviewerCard from "../Components/Interview/InterviewerCard";
 import "../Components/JobPreppers.css"
 
 function Interview() {
+  const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [events, setEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [openEventDialog, setOpenEventDialog] = useState(false);
+
+    useEffect(() => {
+      const requestEvents = async () => {
+        try {
+          const response = await fetch(
+            `http://107.23.196.38:5000/api/Event/GetEventsByUserID/${user.userID}`,
+            {
+              credentials: "include", // include cookies
+            }
+          );
+  
+          if (response.ok) {
+            const data = await response.json();
+  
+            if (data) {
+              const newEvents = data.map((event) => ({
+                name: event.eventName,
+                date: event.eventDate == null ? null : new Date(event.eventDate),
+                start_time: event.eventStartTime ? event.eventStartTime.split(':').slice(0, 2).join(':') : null,
+                end_time: event.eventEndTime ? event.eventEndTime.split(':').slice(0, 2).join(':') : null,
+                host: event.hostID,
+                participants: event.participantID,
+                description: event.eventDetails,
+                link: event.eventLink
+              }));
+  
+              setEvents((prevState) => {
+                if (
+                  JSON.stringify(prevState) !== JSON.stringify(newEvents)
+                ) {
+                  return newEvents;
+                }
+                return prevState;
+              });
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+  
+      requestEvents();
+    }, [user]);
 
   const handleOpenEventDialog = () => {
     setOpenEventDialog(true);
@@ -49,7 +94,7 @@ function Interview() {
         <div className="panel">
           <SectionHeader header="Upcoming Events" />
           <div className="overflow-x-auto">
-            {events && events.length > 0 ? (
+            { events.length > 0 ? (
               <UpcomingEvents events={events} />
             ) : (
               <h2 className="text-[#4BA173] text-center">

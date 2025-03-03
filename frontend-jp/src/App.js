@@ -18,34 +18,54 @@ import Education from "./ProfileSections/Education";
 import Experience from "./ProfileSections/Experience";
 import Project from "./ProfileSections/Project";
 import Skills from "./ProfileSections/Skills";
+import VideoCall from "./Components/Interview/VideoCall";
 import { AuthProvider } from "./provider/authProvider";
-import { ConnectionProvider } from "./provider/connectionProvider";
 
 
 function App() {
+  console.log("NavBar:", NavBar);
+  console.log("Messaging:", Messaging);
+  console.log("Feed:", Feed);
+  console.log("Jobs:", Jobs);
+  console.log("Profile:", Profile);
+  console.log("Resume:", Resume);
+  console.log("Interview:", Interview);
+  console.log("Login:", Login);
+  console.log("Signup:", Signup);
+  console.log("Education:", Education);
+  console.log("Experience:", Experience);
+  console.log("Project:", Project);
+  console.log("Skills:", Skills);
+  console.log("VideoCall:", VideoCall);
+  console.log("AuthProvider:", AuthProvider);
+  // console.log("ConnectionProvider:", ConnectionProvider);
+
   return (
     <>
       <AuthProvider>
-        <ConnectionProvider>
-        <NavBar/>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/Signup" element={<Signup />} />
-          
-          <Route path="/Profile" element={<Profile />} />
-          <Route path="/Feed" element={<Feed />} />
-          <Route path="/Jobs" element={<Jobs />} />
-          <Route path="/Interview" element={<Interview />} />
-          <Route path="/Resume" element={<Resume />} />
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/Signup" element={<Signup />} />
 
-          <Route path="/Education" element={<Education />} />
-          <Route path="/Experience" element={<Experience />} />
-          <Route path="/Project" element={<Project />} />
-          <Route path="/Skills" element={<Skills />} />
-        </Routes>
-        <Messaging/>
-        </ConnectionProvider>
+            <Route path="/Profile" element={<Profile />} />
+            <Route path="/Feed" element={
+              <div>
+                <Feed />
+                <Messaging />
+              </div>} />
+            <Route path="/Jobs" element={<Jobs />} />
+            <Route path="/Interview" element={<Interview />} />
+            <Route path="/Resume" element={<Resume />} />
+
+            <Route path="/Education" element={<Education />} />
+            <Route path="/Experience" element={<Experience />} />
+            <Route path="/Project" element={<Project />} />
+            <Route path="/Skills" element={<Skills />} />
+            <Route path="/VideoCall" element={<VideoCall />} />
+
+          </Routes>
       </AuthProvider>
     </>
   );

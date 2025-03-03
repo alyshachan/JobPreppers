@@ -7,7 +7,6 @@ import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png";
-import { useConnection } from "../provider/connectionProvider";
 import AddEducationDialog from "../Components/Profile/AddEducationDialog";
 import AddSkillDialog from "../Components/Profile/AddSkillDialog";
 import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
@@ -37,12 +36,6 @@ function Profile() {
   });
   const [message, setMessage] = useState("");
   const [receiverID, setReceiverID] = useState("");
-  const {
-    signalRConnection,
-    setSignalRConnection,
-    connectToHub,
-    disconnectFromHub,
-  } = useConnection();
 
   const toggleDialog = (type, state) => {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
@@ -53,102 +46,118 @@ function Profile() {
     localStorage.setItem("editMode", edit);
   }, [edit]);
 
-  const fetchData = async (endpoint, setter, transform, currentState) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/${endpoint}/${user.userID}`,
-        { credentials: "include" }
-      );
-      if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
-      const data = await response.json();
-      const transformedData = transform(data);
-
-      // Only update state if the new data is different
-      if (JSON.stringify(transformedData) !== JSON.stringify(currentState)) {
-        setter(transformedData);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
     if (!user) return;
 
-    fetchData(
-      "UserEducation",
-      setEducationDict,
-      (data) =>
-        data.map(
-          ({
-            schoolName,
-            degreeName,
-            studyName,
-            startDate,
-            endDate,
+    const fetchData = async (endpoint, setter, transform) => {
+      try {
+        const response = await fetch(
+          `http://107.23.196.38:5000/api/${endpoint}/${user.userID}`,
+          { credentials: "include" }
+        );
+        if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
+        const data = await response.json();
+        setter((prevState) =>
+          JSON.stringify(prevState) !== JSON.stringify(data)
+            ? transform(data)
+            : prevState
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    useEffect(() => {
+      if (!user) return;
+
+      fetchData(
+        "UserEducation",
+        setEducationDict,
+        (data) =>
+          data.map(
+            ({
+              schoolName,
+              degreeName,
+              studyName,
+              startDate,
+              endDate,
+              description,
+            }) => ({
+              school_name: schoolName,
+              degree_name: degreeName,
+              study_name: studyName,
+              start_date: startDate ? new Date(startDate) : null,
+              end_date: endDate ? new Date(endDate) : null,
+              description,
+            })
+          ),
+        educationDict
+      );
+    }, [user, educationDict]);
+
+    useEffect(() => {
+      fetchData(
+        "UserSkills",
+        setSkillsDict,
+        (data) => {
+          const skills = {};
+          data.forEach(({ category, name }) => {
+            skills[category] = skills[category]
+              ? [...skills[category], name]
+              : [name];
+          });
+          console.log("user skills updated on the front");
+          return skills;
+        },
+        skillsDict
+      );
+    }, [user, skillsDict]);
+
+    useEffect(() => {
+      fetchData(
+        "UserExperience",
+        setExperienceDict,
+        (data) =>
+          data.map(
+            ({
+              workName,
+              workLocation,
+              jobTitle,
+              startDate,
+              endDate,
+              description,
+            }) => ({
+              work_name: workName,
+              location: workLocation,
+              job_title: jobTitle,
+              start_date: startDate ? new Date(startDate) : null,
+              end_date: endDate ? new Date(endDate) : null,
+              description,
+            })
+          ),
+        experienceDict
+      );
+    }, [user, experienceDict]);
+
+    useEffect(() => {
+      fetchData(
+        "UserProject",
+        setProjectDict,
+        (data) =>
+          data.map(({ projectTitle, description }) => ({
+            project_title: projectTitle,
             description,
-          }) => ({
-            school_name: schoolName,
-            degree_name: degreeName,
-            study_name: studyName,
-            start_date: startDate ? new Date(startDate) : null,
-            end_date: endDate ? new Date(endDate) : null,
-            description,
-          })
-        ),
-      educationDict
-    );
-  }, [user, educationDict]);
-
-  useEffect(() => {
-    fetchData("UserSkills", setSkillsDict, (data) => {
-      const skills = {};
-      data.forEach(({ category, name }) => {
-        skills[category] = skills[category]
-          ? [...skills[category], name]
-          : [name];
-      });
-      console.log("user skills updated on the front")
-      return skills;
-    }, skillsDict);
-  }, [user, skillsDict]);
-
-  useEffect(() => {
-    fetchData("UserExperience", setExperienceDict, (data) =>
-      data.map(
-        ({
-          workName,
-          workLocation,
-          jobTitle,
-          startDate,
-          endDate,
-          description,
-        }) => ({
-          work_name: workName,
-          location: workLocation,
-          job_title: jobTitle,
-          start_date: startDate ? new Date(startDate) : null,
-          end_date: endDate ? new Date(endDate) : null,
-          description,
-        })
-      ), experienceDict
-    );
-  }, [user, experienceDict]);
-
-  useEffect(() => {
-    fetchData("UserProject", setProjectDict, (data) =>
-      data.map(({ projectTitle, description }) => ({
-        project_title: projectTitle,
-        description,
-      })), projectDict
-    );
-  }, [user, projectDict]);
+          })),
+        projectDict
+      );
+    }, [user, projectDict]);
+  }, [user]);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/GetUser/${user.userID}`,
+          `http://107.23.196.38:5000/api/GetUser/${user.userID}`,
           {
             credentials: "include", // include cookies
           }
@@ -168,11 +177,6 @@ function Profile() {
 
     fetchUser();
   }, [user]);
-
-  useEffect(() => {
-    console.log("connecting to hub from profile.jsx");
-    connectToHub();
-  }, []);
 
   if (user == null) {
     return <div>Loading...</div>;

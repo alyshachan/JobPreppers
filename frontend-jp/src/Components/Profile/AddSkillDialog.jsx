@@ -41,7 +41,7 @@ function AddSkillDialog({ open, onClose, existingCategories = [] }) {
     onClose();
     try {
       const response = await fetch(
-        "http://localhost:5000/api/UserSkills/AddSkillToUser",
+        "http://107.23.196.38:5000/api/UserSkills/AddSkillToUser",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

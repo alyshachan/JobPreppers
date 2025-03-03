@@ -5,7 +5,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+Test.
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenAnyIP(5690); // Listen on port 5690 for HTTP
@@ -14,12 +14,12 @@ builder.WebHost.ConfigureKestrel(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSignalR(e => {e.EnableDetailedErrors = true;});
+builder.Services.AddSignalR(e => { e.EnableDetailedErrors = true; });
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") // react url
+        policy.WithOrigins("http://107.23.196.38:3000") // react url
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

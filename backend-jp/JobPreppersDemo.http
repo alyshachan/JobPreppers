@@ -1,4 +1,4 @@
-@JobPreppersDemo_HostAddress = http://localhost:5260
+@JobPreppersDemo_HostAddress = http://107.23.196.38:5260
 
 GET {{JobPreppersDemo_HostAddress}}/weatherforecast/
 Accept: application/json
