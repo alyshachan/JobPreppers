@@ -14,8 +14,8 @@ import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import styles from "./AddSectionDialog.module.css";
 import "../JobPreppers.css";
 import { useAuth } from "../../provider/authProvider";
-import SettingsIcon from '@mui/icons-material/Settings';
-import PsychologyIcon from '@mui/icons-material/Psychology';
+import SettingsIcon from "@mui/icons-material/Settings";
+import PsychologyIcon from "@mui/icons-material/Psychology";
 
 import SectionHeader from "./SectionHeader";
 
@@ -41,7 +41,7 @@ function AddSkillDialog({ open, onClose, existingCategories = [] }) {
     onClose();
     try {
       const response = await fetch(
-        "http://107.23.196.38:5000/api/UserSkills/AddSkillToUser",
+        "http://localhost:5000/api/UserSkills/AddSkillToUser",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -52,7 +52,7 @@ function AddSkillDialog({ open, onClose, existingCategories = [] }) {
           }),
         }
       );
-      
+
       const responseData = await response.json();
       console.log("Response Data:", responseData);
 

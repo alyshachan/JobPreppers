@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
 
 // Create context
 const AuthContext = createContext();
@@ -10,20 +16,21 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch("http://107.23.196.38:5000/api/Users/auth", {
+        const response = await fetch("http://localhost:5000/api/Users/auth", {
           method: "GET",
           credentials: "include", // include cookies
           headers: {
-            "Accept": "*/*", // Or any other headers you need
+            Accept: "*/*", // Or any other headers you need
             "Accept-Encoding": "gzip, deflate",
             "Accept-Language": "en-US,en;q=0.9",
-            "Connection": "keep-alive",
-            "Host": "107.23.196.38:5000",
-            "Origin": "http://107.23.196.38",
-            "Referer": "http://107.23.196.38/",
+            Connection: "keep-alive",
+            Host: "localhost:5000",
+            Origin: "http://localhost",
+            Referer: "http://localhost/",
             "Sec-GPC": "1",
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
-          }
+            "User-Agent":
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+          },
         });
 
         if (response.ok) {
@@ -38,7 +45,7 @@ export const AuthProvider = ({ children }) => {
               email: data.email,
               profile_pic: data.profile_pic,
               title: data.title,
-              location: data.location
+              location: data.location,
             };
             setUser(newUser);
           }
@@ -55,10 +62,11 @@ export const AuthProvider = ({ children }) => {
     setUser(newUser); // Set user data after successful login
   };
 
-
   const contextValue = useMemo(() => ({ user, setAuthData }), [user]);
 
-  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => useContext(AuthContext);

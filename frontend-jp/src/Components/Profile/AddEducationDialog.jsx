@@ -55,7 +55,7 @@ function AddEducationDialog({ open, onClose, onAdd }) {
 
     try {
       const response = await fetch(
-        "http://107.23.196.38:5000/api/UserEducation/CreateEducation",
+        "http://localhost:5000/api/UserEducation/CreateEducation",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -47,7 +47,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://107.23.196.38:5000", "http://107.23.196.38:3000", "http://107.23.196.38") // react url
+        policy.WithOrigins("http://localhost:5000", "http://localhost:3000", "http://localhost") // react url
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -100,7 +100,7 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.Cookie.SameSite = SameSiteMode.None;
     options.Cookie.SecurePolicy = CookieSecurePolicy.None;
     options.Cookie.HttpOnly = true;
-    options.Cookie.Domain = "107.23.196.38";
+    options.Cookie.Domain = "localhost";
 });
 
 // Azure Language SetUp
@@ -163,7 +163,7 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "JobPreppersDemo API");
 
-        c.RoutePrefix = string.Empty; // Set Swagger UI as the root (e.g., 107.23.196.38:5000)
+        c.RoutePrefix = string.Empty; // Set Swagger UI as the root (e.g., localhost:5000)
     });
 }
 
@@ -171,8 +171,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowReactApp");
 app.UseAuthentication();
 app.UseAuthorization();
-app.Urls.Add("http://107.23.196.38:5000");
-app.Urls.Add("https://107.23.196.38:5001");
+app.Urls.Add("http://localhost:5000");
+app.Urls.Add("https://localhost:5001");
 // app.Urls.Add("http://0.0.0.0:5000");
 // app.Urls.Add("https://0.0.0.0:5001");
 

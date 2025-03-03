@@ -41,7 +41,7 @@ function AddProjectDialog({ open, onClose }) {
 
     try {
       const response = await fetch(
-        "http://107.23.196.38:5000/api/UserProject/CreateProject",
+        "http://localhost:5000/api/UserProject/CreateProject",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -52,7 +52,7 @@ function AddProjectDialog({ open, onClose }) {
           }),
         }
       );
-      
+
       if (response.ok) {
         const data = await response.json();
         setError(""); // Clear any previous error message

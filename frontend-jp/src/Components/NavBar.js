@@ -16,7 +16,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png"
+import defaultProfilePicture from "../Components/defaultProfilePicture.png";
 
 const navigation = [
   { name: "Feed", href: "/Feed", current: true },
@@ -51,20 +51,16 @@ function CustomLink({ to, children, className, ...props }) {
   );
 }
 
-
-
 function NavBar() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  
-
   const handleLogoutSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch("http://107.23.196.38:5000/api/Users/logout", {
+      const response = await fetch("http://localhost:5000/api/Users/logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -88,11 +84,15 @@ function NavBar() {
   };
 
   if (user == null) {
-    return
+    return;
   }
 
-  const userPic = (user.profile_pic == null) ? defaultProfilePicture : "data:image/png;base64," + user.profile_pic.toString().toString('base64');
-  
+  const userPic =
+    user.profile_pic == null
+      ? defaultProfilePicture
+      : "data:image/png;base64," +
+        user.profile_pic.toString().toString("base64");
+
   return (
     <Disclosure as="nav" className="bg-[#4BA173] w-full padding">
       <div className="mx-auto w-full px-2">
@@ -180,7 +180,7 @@ function NavBar() {
                   <Link
                     to="/Login"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                    onClick = {handleLogoutSubmit}
+                    onClick={handleLogoutSubmit}
                   >
                     Sign out
                   </Link>

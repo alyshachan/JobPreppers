@@ -52,7 +52,7 @@ function Profile() {
     const fetchData = async (endpoint, setter, transform) => {
       try {
         const response = await fetch(
-          `http://107.23.196.38:5000/api/${endpoint}/${user.userID}`,
+          `http://localhost:5000/api/${endpoint}/${user.userID}`,
           { credentials: "include" }
         );
         if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
@@ -157,7 +157,7 @@ function Profile() {
     const fetchUser = async () => {
       try {
         const res = await fetch(
-          `http://107.23.196.38:5000/api/GetUser/${user.userID}`,
+          `http://localhost:5000/api/GetUser/${user.userID}`,
           {
             credentials: "include", // include cookies
           }

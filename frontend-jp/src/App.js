@@ -40,6 +40,8 @@ function App() {
   console.log("AuthProvider:", AuthProvider);
   // console.log("ConnectionProvider:", ConnectionProvider);
 
+  //End Point: 107.23.196.38
+
   return (
     <>
       <AuthProvider>
