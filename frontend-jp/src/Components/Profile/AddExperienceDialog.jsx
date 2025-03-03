@@ -15,9 +15,9 @@ import moment from "moment";
 import styles from "./AddSectionDialog.module.css";
 import "../JobPreppers.css";
 import { useAuth } from "../../provider/authProvider";
-import WorkIcon from "@mui/icons-material/Work";
-import BusinessIcon from "@mui/icons-material/Business";
-import PlaceIcon from "@mui/icons-material/Place";
+import WorkIcon from '@mui/icons-material/Work';
+import BusinessIcon from '@mui/icons-material/Business';
+import PlaceIcon from '@mui/icons-material/Place';
 
 import SectionHeader from "./SectionHeader";
 
@@ -32,11 +32,14 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddExperienceDialog({ open, onClose }) {
+function AddExperienceDialog({
+  open,
+  onClose,
+}) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
-  const [work, setWork] = useState("");
-  const [location, setLocation] = useState("");
-  const [title, setTitle] = useState("");
+  const[work, setWork] = useState("")
+  const[location, setLocation] = useState("")
+  const[title, setTitle] = useState("")
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [description, setDescription] = useState("");
@@ -46,26 +49,20 @@ function AddExperienceDialog({ open, onClose }) {
     e.preventDefault(); // Prevent default form submission
     onClose();
 
-    const start =
-      startDate.toDateString === new Date().toDateString
-        ? null
-        : moment(startDate).format("YYYY-MM-DD");
-    const end =
-      endDate.toDateString === new Date().toDateString
-        ? null
-        : moment(endDate).format("YYYY-MM-DD");
-
+    const start = startDate.toDateString === new Date().toDateString ? null : moment(startDate).format('YYYY-MM-DD');
+    const end = endDate.toDateString === new Date().toDateString ? null : moment(endDate).format('YYYY-MM-DD');
+  
     try {
       const response = await fetch(
-        "http://localhost:5000/api/UserExperience/CreateExperience",
+        "http://107.23.196.38:5000/api/UserExperience/CreateExperience",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            userID: user.userID,
+            userID : user.userID,
             workName: work,
             location: location,
-            jobTitle: title,
+            jobTitle : title,
             start_date: start,
             end_date: end,
             description: description,
@@ -104,7 +101,7 @@ function AddExperienceDialog({ open, onClose }) {
         <form onSubmit={handleSubmit}>
           <div className={styles.dialogContent}>
             <div className={styles.dialogContentLeft}>
-              <div className={styles.input}>
+            <div className={styles.input}>
                 <WorkIcon className={styles.icon} />
                 <div className={styles.inputField}>
                   <label for="title">Job Title</label>

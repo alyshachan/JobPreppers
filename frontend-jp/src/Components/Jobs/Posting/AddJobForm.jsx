@@ -101,7 +101,7 @@ export default function AddJobForm({ setJobs }) {
   };
   const fetchJobs = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/jobpost");
+      const res = await fetch("http://107.23.196.38:5000/api/jobpost");
       if (res.ok) {
         const data = await res.json();
         console.log(data);
@@ -116,7 +116,7 @@ export default function AddJobForm({ setJobs }) {
 
   const parseDescription = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/textanalytics", {
+      const res = await fetch("http://107.23.196.38:5000/api/textanalytics", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ description: jobForm.getValues("description") }),
@@ -168,7 +168,7 @@ export default function AddJobForm({ setJobs }) {
           EducationLevel: data.EducationLevel,
         },
       };
-      const response = await fetch("http://localhost:5000/api/jobpost/add", {
+      const response = await fetch("http://107.23.196.38:5000/api/jobpost/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(transformedData),

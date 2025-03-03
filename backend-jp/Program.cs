@@ -8,7 +8,7 @@ using JobPreppersDemo.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerGen; 
 using System.Text;
 using JobPreppersDemo.Services;
 
@@ -47,7 +47,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:5000", "http://localhost:3000", "http://localhost") // react url
+        policy.WithOrigins("http://107.23.196.38:5000", "http://107.23.196.38:3000", "http://107.23.196.38") // react url
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -96,12 +96,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             },
         };
     });
-builder.Services.ConfigureApplicationCookie(options =>
-{
+builder.Services.ConfigureApplicationCookie(options => { 
     options.Cookie.SameSite = SameSiteMode.None;
     options.Cookie.SecurePolicy = CookieSecurePolicy.None;
     options.Cookie.HttpOnly = true;
-    options.Cookie.Domain = "localhost";
+    options.Cookie.Domain = "107.23.196.38";
 });
 
 // Azure Language SetUp
@@ -123,20 +122,20 @@ else
 }
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-       {
-           // Define the security schema for the API key in header
-           options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
-           {
-               In = ParameterLocation.Header, // Where to send the key (header, query, etc.)
-               Name = "Authorization", // Name of the header
-               Type = SecuritySchemeType.ApiKey, // Type is API Key
-               Description = "API key needed to access the Stream API"
-           });
+ builder.Services.AddSwaggerGen(options =>
+        {
+            // Define the security schema for the API key in header
+            options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header, // Where to send the key (header, query, etc.)
+                Name = "Authorization", // Name of the header
+                Type = SecuritySchemeType.ApiKey, // Type is API Key
+                Description = "API key needed to access the Stream API"
+            });
 
-           // Apply the security definition globally
-           options.AddSecurityRequirement(new OpenApiSecurityRequirement
-           {
+            // Apply the security definition globally
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
                 {
                     new OpenApiSecurityScheme
                     {
@@ -148,8 +147,8 @@ builder.Services.AddSwaggerGen(options =>
                     },
                     new string[] {}
                 }
-           });
-       });
+            });
+        });
 
 builder.Services.AddAuthorization();
 
@@ -164,7 +163,7 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "JobPreppersDemo API");
 
-        c.RoutePrefix = string.Empty; // Set Swagger UI as the root (e.g., localhost:5000)
+        c.RoutePrefix = string.Empty; // Set Swagger UI as the root (e.g., 107.23.196.38:5000)
     });
 }
 
@@ -172,8 +171,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowReactApp");
 app.UseAuthentication();
 app.UseAuthorization();
-app.Urls.Add("http://localhost:5000");
-app.Urls.Add("https://localhost:5001");
+app.Urls.Add("http://107.23.196.38:5000");
+app.Urls.Add("https://107.23.196.38:5001");
 // app.Urls.Add("http://0.0.0.0:5000");
 // app.Urls.Add("https://0.0.0.0:5001");
 

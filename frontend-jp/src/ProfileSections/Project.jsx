@@ -24,46 +24,46 @@ const testProjDict = [
 ];
 
 function Project() {
-  const { user, setAuthData } = useAuth(); // custom hook for authprovider
-  const [projectDict, setProjectDict] = useState([]);
+    const { user, setAuthData } = useAuth(); // custom hook for authprovider
+    const [projectDict, setProjectDict] = useState([]);
 
-  useEffect(() => {
-    const requestProjects = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/UserProject/${user.userID}`,
-          {
-            credentials: "include", // include cookies
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("API Response: ", data); // Log the response to verify the structure
-
-          if (data) {
-            const newProjectDict = data.map((project) => ({
-              project_title: project.projectTitle,
-              description: project.description,
-            }));
-
-            setProjectDict((prevState) => {
-              if (
-                JSON.stringify(prevState) !== JSON.stringify(newProjectDict)
-              ) {
-                return newProjectDict;
-              }
-              return prevState;
-            });
-          }
+    useEffect(() => {
+  const requestProjects = async () => {
+    try {
+      const response = await fetch(
+        `http://107.23.196.38:5000/api/UserProject/${user.userID}`,
+        {
+          credentials: "include", // include cookies
         }
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      );
 
-    requestProjects();
-  }, [user]);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("API Response: ", data); // Log the response to verify the structure
+
+        if (data) {
+          const newProjectDict = data.map((project) => ({
+            project_title: project.projectTitle,
+            description: project.description,
+          }));
+
+          setProjectDict((prevState) => {
+            if (
+              JSON.stringify(prevState) !== JSON.stringify(newProjectDict)
+            ) {
+              return newProjectDict;
+            }
+            return prevState;
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  requestProjects();
+}, [user]);
   return (
     <div className="content">
       <div className="panelTransparent">
@@ -72,7 +72,7 @@ function Project() {
         </a>
         <h1>Projects</h1>
 
-        <div className="panel !w-full">
+          <div className="panel !w-full">
           {projectDict.map((project, index) => (
             <div key={index}>
               <div className={styles.project}>
@@ -91,7 +91,8 @@ function Project() {
               )}
             </div>
           ))}
-        </div>
+          </div>
+
       </div>
     </div>
   );
