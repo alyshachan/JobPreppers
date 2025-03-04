@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DialogActions,
   IconButton,
@@ -8,6 +8,7 @@ import {
   Stepper,
   Step,
   StepLabel,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormProvider, useForm } from "react-hook-form";
@@ -21,6 +22,7 @@ import { PostAdd } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import SectionHeader from "../../Profile/SectionHeader";
 import styles from "./Posting.module.css";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   parseJobSchema,
   describeJobSchema,
@@ -28,6 +30,7 @@ import {
   qualificationSchema,
   applicationProcessSchema,
 } from "./Validation";
+import { PacmanLoader, RingLoader, PropagateLoader } from "react-spinners";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .css-10d30g3-MuiPaper-root-MuiDialog-paper": {
@@ -89,7 +92,6 @@ export default function AddJobForm({ setJobs }) {
     "Application Process",
   ];
 
-  const lastStep = activeStep === steps.length - 1;
   const handleNext = async () => {
     const isValid = await jobForm.trigger(); // Validate current step before proceeding
     if (!isValid) return;
@@ -101,7 +103,7 @@ export default function AddJobForm({ setJobs }) {
   };
   const fetchJobs = async () => {
     try {
-      const res = await fetch("http://107.23.196.38:5000/api/jobpost");
+      const res = await fetch("http://localhost:5000/api/jobpost");
       if (res.ok) {
         const data = await res.json();
         console.log(data);
@@ -115,85 +117,90 @@ export default function AddJobForm({ setJobs }) {
   };
 
   const parseDescription = async () => {
-    try {
-      const res = await fetch("http://107.23.196.38:5000/api/textanalytics", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description: jobForm.getValues("description") }),
-        credentials: "include",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setjobDescriptionData(data);
-        console.log("Parse Job Description: ", data);
-        handleNext();
-      } else {
-        console.error("Failed to parse job description");
-      }
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
+    const res = await fetch("http://localhost:5000/api/textanalytics", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ description: jobForm.getValues("description") }),
+      credentials: "include",
+    });
+    if (!res.ok) {
+      throw new Error("Failed to Parse Job Description");
     }
+    return res.json();
   };
+
+  // Use Mutation for Post calls and anything involving user doing an action
+  const {
+    mutate,
+    isPending: isParseLoading,
+    isError,
+  } = useMutation({
+    mutationFn: parseDescription,
+    onSuccess: (data) => {
+      setjobDescriptionData(data);
+      console.log("Parse Job Description: ", data);
+      handleNext();
+    },
+    onError: (error) => {
+      console.error("Error Parsing Job Description:", error);
+    },
+  });
 
   const onSubmit = async (data, e) => {
     const isValid = await jobForm.trigger(); // Validate current step before proceeding
     if (!isValid) return;
-    try {
-      const transformedData = {
-        title: data.title,
-        description: JSON.stringify(data.description),
-        employer: {
-          companyName: data.company,
-        },
-        location: {
-          name: data.location,
-          longitude: data.longitude,
-          latitude: data.latitude,
-        },
-        type: data.type.label,
-        minimumSalary: data.minimumSalary,
-        maximumSalary: data.maximumSalary ? data.maximumSalary : null,
-        paymentType: data.payType,
-        // location: data.location,
-        postDate: data.postDate,
-        endDate: data.endDate,
-        perks: JSON.stringify(data.perks),
-        benefits: JSON.stringify(data.benefits),
-        bonus: JSON.stringify(data.bonuses),
-        link: data.applicationLink,
-        qualification: {
-          // ✅ Nest skills inside jobQualification
-          Skills: JSON.stringify(data.skills),
-          MinimumExperience: data.MinimumExperience,
-          EducationLevel: data.EducationLevel,
-        },
-      };
-      const response = await fetch("http://107.23.196.38:5000/api/jobpost/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(transformedData),
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        fetchJobs();
-      } else {
-        const errorData = await response.json();
-        console.log("Hello: ", transformedData);
-        console.log("Error: ", { errorData });
-
-        // setError(errorData.message); // Show error message from the backend
-      }
-    } catch (err) {
-      console.log("Catch Error: ", err);
-      // Maybe put an alert
-    }
-    // console.log("Form Data Submitted: ", data);
-
-    setActiveStep(0);
-    jobForm.reset();
-    handleClose();
+    const transformedData = {
+      title: data.title,
+      description: JSON.stringify(data.description),
+      employer: {
+        companyName: data.company,
+      },
+      location: {
+        name: data.location,
+        longitude: data.longitude,
+        latitude: data.latitude,
+      },
+      type: data.type.label,
+      minimumSalary: data.minimumSalary,
+      maximumSalary: data.maximumSalary ? data.maximumSalary : null,
+      paymentType: data.payType,
+      postDate: data.postDate,
+      endDate: data.endDate,
+      perks: JSON.stringify(data.perks),
+      benefits: JSON.stringify(data.benefits),
+      bonus: JSON.stringify(data.bonuses),
+      link: data.applicationLink,
+      qualification: {
+        Skills: JSON.stringify(data.skills),
+        MinimumExperience: data.minimumExperience,
+        MaximumExperience: data.maximumExperience,
+        EducationLevel: data.education,
+      },
+    };
+    const response = await fetch("http://localhost:5000/api/jobpost/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(transformedData),
+      credentials: "include",
+    });
   };
+
+  const {
+    mutate: submitMutate,
+    isPending: submitLoading,
+    isError: submitError,
+  } = useMutation({
+    mutationFn: (data) => onSubmit(data),
+    onSuccess: () => {
+      fetchJobs();
+      setActiveStep(0);
+      jobForm.reset();
+      handleClose();
+    },
+    onError: (error) => {
+      console.log("Error: ", { error });
+    },
+  });
 
   const pageDisplay = () => {
     switch (activeStep) {
@@ -254,7 +261,6 @@ export default function AddJobForm({ setJobs }) {
 
   return (
     <>
-      {/* <Fragment> */}
       <Button
         variant="filled"
         onClick={handleClickOpen}
@@ -262,14 +268,25 @@ export default function AddJobForm({ setJobs }) {
       >
         Add Job
       </Button>
-      {/* </Fragment> */}
 
       <form>
         <StyledDialog onClose={handleClose} open={open}>
+          {submitLoading && (
+            <div className={styles.greyOverlay}>
+              <div>
+                <h1 className="text-[3rem] text-[#0d0080]">Submitting...</h1>
+              </div>
+              <div>
+                {/* <RingLoader size={100} color="#4ba173" /> */}
+                {/* <PacmanLoader size={100} color="#4ba173" /> */}
+                <PacmanLoader size={100} color="#f5df4d" />
+              </div>
+            </div>
+          )}
+
           <DialogTitle className={styles.addJobTitle}>
             <SectionHeader header="Add Job Posting" />
           </DialogTitle>
-
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -278,7 +295,7 @@ export default function AddJobForm({ setJobs }) {
             <CloseIcon />
           </IconButton>
 
-          <header>
+          <header className="mt-2">
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => {
                 const stepProps = {};
@@ -298,21 +315,41 @@ export default function AddJobForm({ setJobs }) {
               </h1>
             </DialogTitle>
           </header>
-
           <body className="bg-white overflow-y-auto">{pageDisplay()}</body>
 
           {activeStep === steps.length - 1 ? (
             <DialogActions>
               <footer className="flex flex-row gap-2">
                 <button onClick={handleBack}>Back</button>
-                <button form="jobForm">Submit</button>
+                <button
+                  disabled={submitLoading}
+                  onClick={handleSubmit((data) => submitMutate(data))}
+                  form="jobForm"
+                >
+                  Submit
+                </button>
               </footer>
             </DialogActions>
           ) : activeStep === 0 ? (
             <DialogActions>
-              <footer className="flex flex-row gap-2">
-                <button onClick={parseDescription}>Parse</button>
-                <button onClick={handleNext}>Skip</button>
+              <footer className="flex flex-row gap-2 items-center">
+                {isParseLoading ? (
+                  <div>
+                    <Typography>
+                      {" "}
+                      Loading:
+                      <PacmanLoader size={12} color="#f5df4d" />
+                    </Typography>
+                  </div>
+                ) : null}
+                <div className="grow-1">
+                  <button disabled={isParseLoading} onClick={() => mutate()}>
+                    Parse
+                  </button>
+                </div>
+                <div className="grow-1">
+                  <button onClick={handleNext}>Skip</button>
+                </div>
               </footer>
             </DialogActions>
           ) : (

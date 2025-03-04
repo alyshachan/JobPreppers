@@ -20,6 +20,9 @@ import Project from "./ProfileSections/Project";
 import Skills from "./ProfileSections/Skills";
 import VideoCall from "./Components/Interview/VideoCall";
 import { AuthProvider } from "./provider/authProvider";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 
 function App() {
@@ -42,6 +45,7 @@ function App() {
 
   return (
     <>
+      <QueryClientProvider client={queryClient}>
       <AuthProvider>
           <NavBar />
           <Routes>
@@ -67,6 +71,7 @@ function App() {
 
           </Routes>
       </AuthProvider>
+      </QueryClientProvider>
     </>
   );
 }

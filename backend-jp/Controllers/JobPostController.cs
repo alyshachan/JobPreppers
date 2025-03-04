@@ -155,7 +155,6 @@ namespace JobPreppersDemo.Controllers
                 locationID = location.locationID;
 
 
-
                 // Add - need to firstorDefault for location
                 int qualificationID;
                 var qualification = new JobQualification
@@ -163,6 +162,7 @@ namespace JobPreppersDemo.Controllers
                     Skills = request.qualification.Skills,
                     MinimumExperience = request.qualification.MinimumExperience,
                     EducationLevel = request.qualification.EducationLevel,
+                    MaximumExperience = request.qualification.MaximumExperience
                 };
                 _context.JobQualifications.Add(qualification);
                 await _context.SaveChangesAsync();
@@ -220,9 +220,9 @@ namespace JobPreppersDemo.Controllers
                     var distance = request.Distance * 1609.34;
                     query = _context.JobPosts.FromSqlInterpolated(
                         $@"
-                    SELECT jp.* FROM JobPosts jp,
+                    SELECT jp.* FROM JobPosts jp
                     JOIN JobLocations l on jp.locationID = l.locationID
-                    WHERE (LOWER(l.name) REGEXP 'remote') OR ST_Distance_Sphere(Point({request.Longitude}, {request.Latitude}), Point(l.longitude, l.latitude)) <= {distance}"
+                    WHERE LOWER(l.name) REGEXP 'remote' OR ST_Distance_Sphere(Point({request.Longitude}, {request.Latitude}), Point(l.longitude, l.latitude)) <= {distance}"
                     ).Include(job => job.employer)
                     .Include(job => job.location)
                     .Select(job => new JobPostDto

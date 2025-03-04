@@ -37,7 +37,7 @@ export default function Qualification(jobDescriptionData) {
       if (accessToken && tokenTimeExpiration > Date.now()) {
         return accessToken;
       } else {
-        const response = await fetch("http://107.23.196.38:8000/get-token");
+        const response = await fetch("http://localhost:8000/get-token");
         const data = await response.json();
         tokenTimeExpiration = Date.now() + 3600 * 1000;
         accessToken = data.access_token;
@@ -152,7 +152,7 @@ export default function Qualification(jobDescriptionData) {
               freeSolo
               autoSelect
               options={skills}
-              value={field.value}
+              value={field.value ?? []}
               onChange={(_, value) => {
                 field.onChange(value);
               }}

@@ -11,6 +11,8 @@ import AutoCompleteForm from "../Helper/AutoCompleteForm";
 import ToggleButtonForm from "../Helper/ToggleButtonForm";
 import styles from "../Posting.module.css";
 import { errorMessage } from "../Helper/ErrorMessage";
+import { Controller } from "react-hook-form";
+import Autocomplete from "@mui/material/Autocomplete";
 export default function Benefits({ jobDescriptionData }) {
   // const rate = ["Hourly Rate", "Monthy Rate", "Annually"];
   const bonuses = ["Signing Bonus", "Tip", "Equity Package", "Commission"];
@@ -98,7 +100,7 @@ export default function Benefits({ jobDescriptionData }) {
       const benefitList = [];
       for (const benefit of benefits) {
         for (const input of jobDescriptionData.benefits) {
-          const regex = new RegExp(`\\b${benefit}\\b`, "i"); // i make it not case sensitive
+          const regex = new RegExp(`\\b${input}\\b`, "i"); // i make it not case sensitive
           if (regex.test(benefit)) {
             benefitList.push(benefit);
           }
@@ -106,8 +108,6 @@ export default function Benefits({ jobDescriptionData }) {
       }
       setValue("benefits", benefitList);
     }
-
-    // }
   }, [jobDescriptionData]);
 
   // Step 2
@@ -151,11 +151,20 @@ export default function Benefits({ jobDescriptionData }) {
                           type="number"
                           label="Maximum Pay"
                         />
-                        <AutoCompleteForm
+                        <Controller
                           name="currencies"
-                          options={currencies}
-                          label="Currency *"
                           control={control}
+                          render={({ field }) => (
+                            <Autocomplete
+                              {...field}
+                              options={currencies}
+                              value={field.value || "USD"}
+                              onChange={(_, value) => field.onChange(value)}
+                              renderInput={(params) => (
+                                <TextField {...params} label={"Currency *"} />
+                              )}
+                            />
+                          )}
                         />
                       </div>
                       <div className={styles.payRangeDetails}>
@@ -192,11 +201,20 @@ export default function Benefits({ jobDescriptionData }) {
                           label="Starting Salary *"
                         />
 
-                        <AutoCompleteForm
+                        <Controller
                           name="currencies"
-                          options={currencies}
-                          label="Currency *"
                           control={control}
+                          render={({ field }) => (
+                            <Autocomplete
+                              {...field}
+                              options={currencies}
+                              value={field.value || "USD"}
+                              onChange={(_, value) => field.onChange(value)}
+                              renderInput={(params) => (
+                                <TextField {...params} label={"Currency *"} />
+                              )}
+                            />
+                          )}
                         />
                       </div>
                       <div className={styles.payExactDetails}>

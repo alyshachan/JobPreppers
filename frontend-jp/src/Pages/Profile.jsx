@@ -6,7 +6,7 @@ import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png"
+import defaultProfilePicture from "../Components/defaultProfilePicture.png";
 import AddEducationDialog from "../Components/Profile/AddEducationDialog";
 import AddSkillDialog from "../Components/Profile/AddSkillDialog";
 import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
@@ -40,7 +40,7 @@ function Profile() {
   const toggleDialog = (type, state) => {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
   };
-  
+
   // test message box handler
   useEffect(() => {
     localStorage.setItem("editMode", edit);
@@ -52,7 +52,7 @@ function Profile() {
     const fetchData = async (endpoint, setter, transform) => {
       try {
         const response = await fetch(
-          `http://107.23.196.38:5000/api/${endpoint}/${user.userID}`,
+          `http://localhost:5000/api/${endpoint}/${user.userID}`,
           { credentials: "include" }
         );
         if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
@@ -129,7 +129,7 @@ function Profile() {
     const fetchUser = async () => {
       try {
         const res = await fetch(
-          `http://107.23.196.38:5000/api/GetUser/${user.userID}`,
+          `http://localhost:5000/api/GetUser/${user.userID}`,
           {
             credentials: "include", // include cookies
           }
@@ -149,12 +149,10 @@ function Profile() {
 
     fetchUser();
   }, [user]);
-    
 
   if (user == null) {
     return <div>Loading...</div>;
   }
-
 
   const userPic =
     user.profile_pic == null
@@ -176,9 +174,7 @@ function Profile() {
               {user.first_name} {user.last_name}
             </p>
             <p>{user.title}</p>
-            <p className="subtitle">
-              {user.location}
-            </p>
+            <p className="subtitle">{user.location}</p>
 
             <div className={styles.actionButtons}>
               <Button variant="contained" startIcon={<AddCircleOutlineIcon />}>
@@ -195,11 +191,12 @@ function Profile() {
             </div>
           </div>
 
-          {!edit && (educationDict.length === 0 &&
+          {!edit &&
+          educationDict.length === 0 &&
           skillsDict &&
           Object.keys(skillsDict).length === 0 &&
           experienceDict.length === 0 &&
-          projectDict.length === 0) ? (
+          projectDict.length === 0 ? (
             <div className={styles.noProfileText}>
               {user.first_name} {user.last_name} hasn't added to their profile
               yet
