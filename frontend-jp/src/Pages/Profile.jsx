@@ -244,7 +244,11 @@ function Profile() {
         </div>
 
         {experienceDict.length > 0 ? (
-          <ExperienceSection experienceDict={experienceDict} edit={edit} />
+          <ExperienceSection
+            experienceDict={experienceDict}
+            edit={edit}
+            onAdd={fetchExperience}
+          />
         ) : (
           edit && (
             <button

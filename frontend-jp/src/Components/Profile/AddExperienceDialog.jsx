@@ -32,7 +32,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddExperienceDialog({ open, onClose }) {
+function AddExperienceDialog({ open, onClose, onAdd }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [work, setWork] = useState("");
   const [location, setLocation] = useState("");
@@ -73,7 +73,9 @@ function AddExperienceDialog({ open, onClose }) {
         }
       );
       if (response.ok) {
-        const data = await response.json();
+        console.log("user experience ok!")
+        onAdd();
+        onClose();
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();

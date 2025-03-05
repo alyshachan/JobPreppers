@@ -7,7 +7,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {useState } from "react";
 import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
 
-function ExperienceSection({ experienceDict, edit }) {
+function ExperienceSection({ experienceDict, edit, onAdd }) {
   const [openExperienceDialog, setOpenExperienceDialog] = useState(false);
 
   const handleOpenExperienceDialog = () => {
@@ -73,6 +73,7 @@ function ExperienceSection({ experienceDict, edit }) {
         <AddExperienceDialog
           open={openExperienceDialog}
           onClose={handleCloseExperienceDialog}
+          onAdd={onAdd}
         />
 
         <div className={styles.sectionContent}>
@@ -98,13 +99,13 @@ function ExperienceSection({ experienceDict, edit }) {
                         ? `${
                             experience.start_date
                               ? `${
-                                  monthsOfYear[experience.start_date.getMonth() + 1]
+                                  monthsOfYear[experience.start_date.getMonth()]
                                 } ${experience.start_date.getFullYear()} - `
                               : ""
                           }${
                             experience.end_date
                               ? `${
-                                  monthsOfYear[experience.end_date.getMonth() + 1]
+                                  monthsOfYear[experience.end_date.getMonth()]
                                 } ${experience.end_date.getFullYear()}`
                               : "Present"
                           }`

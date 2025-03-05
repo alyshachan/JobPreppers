@@ -21,7 +21,7 @@ namespace JobPreppersDemo.Controllers
         public class UserProjectDto
         {
             public int userID { get; set; }
-            public string projectTitle{ get; set; }
+            public string projectTitle { get; set; }
             public string description { get; set; }
         }
         public UserProjectController(ApplicationDbContext context)
@@ -81,9 +81,9 @@ namespace JobPreppersDemo.Controllers
             try
             {
                 // Check if the project already exists
-        var existingProject = await _context.UserProjects
-            .FirstOrDefaultAsync(p => p.userID == project.userID &&
-                                      p.project_title.ToLower() == project.projectTitle.ToLower());
+                var existingProject = await _context.UserProjects
+                    .FirstOrDefaultAsync(p => p.userID == project.userID &&
+                                              p.project_title.ToLower() == project.projectTitle.ToLower());
 
                 if (existingProject != null)
                 {
@@ -97,13 +97,13 @@ namespace JobPreppersDemo.Controllers
                 };
                 await _context.UserProjects.AddAsync(newProject);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(CreateProject), new { id = newProject.projectID }, newProject);
+                return Ok(new { message = "Project added successfully", projectID = newProject.projectID });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-            
+
         }
     }
 }

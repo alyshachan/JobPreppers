@@ -121,7 +121,7 @@ namespace JobPreppersDemo.Controllers
                 await _context.UserExperiences.AddAsync(userExperience);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(createExperience), new { id = userExperience.userExperienceID }, userExperience);
+                return Ok(new { message = "Experience added successfully", experienceID = userExperience.userExperienceID });
             }
             catch (Exception ex)
             {
