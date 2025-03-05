@@ -73,8 +73,12 @@ function AddEducationDialog({ open, onClose, onAdd }) {
       );
 
       if (response.ok) {
+        console.log("add education dialog ok");
+        onAdd()
         onClose();
         setError(""); // Clear any previous error message
+        console.log("add education dialog done");
+
       } else {
         const errorData = await response.json();
         window.alert("Your input has invalid characters, please try again.");

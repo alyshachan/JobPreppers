@@ -34,8 +34,6 @@ function Profile() {
     experience: false,
     project: false,
   });
-  const [message, setMessage] = useState("");
-  const [receiverID, setReceiverID] = useState("");
 
   const toggleDialog = (type, state) => {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
@@ -46,111 +44,96 @@ function Profile() {
     localStorage.setItem("editMode", edit);
   }, [edit]);
 
+  const fetchData = async (endpoint, setter, transform) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/${endpoint}/${user.userID}`,
+        { credentials: "include" }
+      );
+      if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
+      const data = await response.json();
+      setter((prevState) =>
+        JSON.stringify(prevState) !== JSON.stringify(data)
+          ? transform(data)
+          : prevState
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     if (!user) return;
 
-    const fetchData = async (endpoint, setter, transform) => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/${endpoint}/${user.userID}`,
-          { credentials: "include" }
-        );
-        if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
-        const data = await response.json();
-        setter((prevState) =>
-          JSON.stringify(prevState) !== JSON.stringify(data)
-            ? transform(data)
-            : prevState
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    fetchData("UserEducation", setEducationDict, (data) =>
+      data.map(
+        ({
+          schoolName,
+          degreeName,
+          studyName,
+          startDate,
+          endDate,
+          description,
+        }) => ({
+          school_name: schoolName,
+          degree_name: degreeName,
+          study_name: studyName,
+          start_date: startDate ? new Date(startDate) : null,
+          end_date: endDate ? new Date(endDate) : null,
+          description,
+        })
+      )
+    );
+  }, [user]);
 
-    useEffect(() => {
-      if (!user) return;
+  useEffect(() => {
+    if (!user) return;
 
-      fetchData(
-        "UserEducation",
-        setEducationDict,
-        (data) =>
-          data.map(
-            ({
-              schoolName,
-              degreeName,
-              studyName,
-              startDate,
-              endDate,
-              description,
-            }) => ({
-              school_name: schoolName,
-              degree_name: degreeName,
-              study_name: studyName,
-              start_date: startDate ? new Date(startDate) : null,
-              end_date: endDate ? new Date(endDate) : null,
-              description,
-            })
-          ),
-        educationDict
-      );
-    }, [user, educationDict]);
+    fetchData("UserSkills", setSkillsDict, (data) => {
+      const skills = {};
+      data.forEach(({ category, name }) => {
+        skills[category] = skills[category]
+          ? [...skills[category], name]
+          : [name];
+      });
+      console.log("user skills updated on the front");
+      return skills;
+    });
+  }, [user]);
 
-    useEffect(() => {
-      fetchData(
-        "UserSkills",
-        setSkillsDict,
-        (data) => {
-          const skills = {};
-          data.forEach(({ category, name }) => {
-            skills[category] = skills[category]
-              ? [...skills[category], name]
-              : [name];
-          });
-          console.log("user skills updated on the front");
-          return skills;
-        },
-        skillsDict
-      );
-    }, [user, skillsDict]);
+  useEffect(() => {
+    if (!user) return;
 
-    useEffect(() => {
-      fetchData(
-        "UserExperience",
-        setExperienceDict,
-        (data) =>
-          data.map(
-            ({
-              workName,
-              workLocation,
-              jobTitle,
-              startDate,
-              endDate,
-              description,
-            }) => ({
-              work_name: workName,
-              location: workLocation,
-              job_title: jobTitle,
-              start_date: startDate ? new Date(startDate) : null,
-              end_date: endDate ? new Date(endDate) : null,
-              description,
-            })
-          ),
-        experienceDict
-      );
-    }, [user, experienceDict]);
+    fetchData("UserExperience", setExperienceDict, (data) =>
+      data.map(
+        ({
+          workName,
+          workLocation,
+          jobTitle,
+          startDate,
+          endDate,
+          description,
+        }) => ({
+          work_name: workName,
+          location: workLocation,
+          job_title: jobTitle,
+          start_date: startDate ? new Date(startDate) : null,
+          end_date: endDate ? new Date(endDate) : null,
+          description,
+        })
+      )
+    );
+  }, [user]);
 
-    useEffect(() => {
-      fetchData(
-        "UserProject",
-        setProjectDict,
-        (data) =>
-          data.map(({ projectTitle, description }) => ({
-            project_title: projectTitle,
-            description,
-          })),
-        projectDict
-      );
-    }, [user, projectDict]);
+  useEffect(() => {
+    if (!user) return;
+
+    fetchData("UserProject", setProjectDict, (data) =>
+      data.map(({ projectTitle, description }) => ({
+        project_title: projectTitle,
+        description,
+      }))
+    );
   }, [user]);
 
   useEffect(() => {
@@ -232,7 +215,31 @@ function Profile() {
           ) : (
             <div className={styles.highlightedInfo}>
               {educationDict.length > 0 ? (
-                <EducationSection educationDict={educationDict} edit={edit} />
+                <EducationSection
+                  educationDict={educationDict}
+                  edit={edit}
+                  onAdd={() => {console.log("yo whatsupppp"); 
+                    fetchData("UserEducation", setEducationDict, (data) =>
+                      data.map(
+                        ({
+                          schoolName,
+                          degreeName,
+                          studyName,
+                          startDate,
+                          endDate,
+                          description,
+                        }) => ({
+                          school_name: schoolName,
+                          degree_name: degreeName,
+                          study_name: studyName,
+                          start_date: startDate ? new Date(startDate) : null,
+                          end_date: endDate ? new Date(endDate) : null,
+                          description,
+                        })
+                      )
+                    );
+                  }}
+                />
               ) : (
                 edit && (
                   <button
@@ -287,7 +294,7 @@ function Profile() {
         )}
       </div>
 
-      <AddEducationDialog
+      {/* <AddEducationDialog
         open={openDialog.education}
         onClose={() => toggleDialog("education", false)}
       />
@@ -303,7 +310,7 @@ function Profile() {
       <AddProjectDialog
         open={openDialog.project}
         onClose={() => toggleDialog("project", false)}
-      />
+      /> */}
     </>
   );
 }

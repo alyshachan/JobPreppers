@@ -9,7 +9,7 @@ import {useState } from "react";
 import { IconButton } from "@mui/material";
 import AddEducationDialog from "../Components/Profile/AddEducationDialog";
 
-function EducationSection({ educationDict, edit }) {
+function EducationSection({ educationDict, edit, onAdd }) {
   const [openEducationDialog, setOpenEducationDialog] = useState(false);
 
   const handleOpenEducationDialog = () => {
@@ -44,6 +44,7 @@ function EducationSection({ educationDict, edit }) {
       <AddEducationDialog
         open={openEducationDialog}
         onClose={handleCloseEducationDialog}
+        onAdd={onAdd}
       />
 
       <div className={styles.sectionContent}>
@@ -67,13 +68,13 @@ function EducationSection({ educationDict, edit }) {
                     ? `${
                         education.start_date
                           ? `${
-                              monthsOfYear[education.start_date.getMonth() + 1]
+                              monthsOfYear[education.start_date.getMonth()]
                             } ${education.start_date.getFullYear()} - `
                           : ""
                       }${
                         education.end_date
                           ? `${
-                              monthsOfYear[education.end_date.getMonth() + 1]
+                              monthsOfYear[education.end_date.getMonth()]
                             } ${education.end_date.getFullYear()}`
                           : "Present"
                       }`
