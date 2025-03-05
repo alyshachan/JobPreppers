@@ -277,9 +277,7 @@ export default function AddJobForm({ setJobs }) {
               <div>
                 <h1 className="text-[3rem] text-[#ffffff]">Submitting...</h1>
               </div>
-              <div className="relative">
-                <PacmanLoader size={100} />
-              </div>
+              <PacmanLoader size={100} />
             </div>
           )}
 
@@ -337,9 +335,7 @@ export default function AddJobForm({ setJobs }) {
                     <div>
                       <Typography> Loading:</Typography>
                     </div>
-                    <div className="relative">
-                      <PacmanLoader size={30} />
-                    </div>
+                    <PacmanLoader size={30} />
                   </div>
                 ) : null}
                 <div className="grow-1">

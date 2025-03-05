@@ -5,7 +5,7 @@ const PacmanLoader = ({
   ballColor = "#db851c",
 }) => {
   return (
-    <>
+    <div className="relative">
       <div
         className={styles.loader}
         style={{
@@ -25,7 +25,7 @@ const PacmanLoader = ({
           <span className={styles.left}></span>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
