@@ -148,7 +148,8 @@
   align-items: center;
   flex-direction: column;
   pointer-events: none;
-  z-index: 9999;
+  gap: 4rem;
+  z-index: 2;
   height: 100%;
   top: 0;
   left: 0;

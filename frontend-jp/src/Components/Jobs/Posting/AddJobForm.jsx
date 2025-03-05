@@ -30,7 +30,8 @@ import {
   qualificationSchema,
   applicationProcessSchema,
 } from "./Validation";
-import { PacmanLoader, RingLoader, PropagateLoader } from "react-spinners";
+// import { PacmanLoader, RingLoader, PropagateLoader } from "react-spinners";
+import PacmanLoader from "../../Pacman/Pacman";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .css-10d30g3-MuiPaper-root-MuiDialog-paper": {
@@ -274,12 +275,10 @@ export default function AddJobForm({ setJobs }) {
           {submitLoading && (
             <div className={styles.greyOverlay}>
               <div>
-                <h1 className="text-[3rem] text-[#0d0080]">Submitting...</h1>
+                <h1 className="text-[3rem] text-[#ffffff]">Submitting...</h1>
               </div>
-              <div>
-                {/* <RingLoader size={100} color="#4ba173" /> */}
-                {/* <PacmanLoader size={100} color="#4ba173" /> */}
-                <PacmanLoader size={100} color="#f5df4d" />
+              <div className="relative">
+                <PacmanLoader size={100} />
               </div>
             </div>
           )}
@@ -332,14 +331,15 @@ export default function AddJobForm({ setJobs }) {
             </DialogActions>
           ) : activeStep === 0 ? (
             <DialogActions>
-              <footer className="flex flex-row gap-2 items-center">
+              <footer className="flex flex-row gap-2 items-center justify-center h-full">
                 {isParseLoading ? (
-                  <div>
-                    <Typography>
-                      {" "}
-                      Loading:
-                      <PacmanLoader size={12} color="#f5df4d" />
-                    </Typography>
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <Typography> Loading:</Typography>
+                    </div>
+                    <div className="relative">
+                      <PacmanLoader size={30} />
+                    </div>
                   </div>
                 ) : null}
                 <div className="grow-1">
