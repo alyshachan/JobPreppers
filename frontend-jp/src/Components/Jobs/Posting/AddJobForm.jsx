@@ -48,7 +48,7 @@ export default function AddJobForm({ setJobs }) {
   const [jobDescriptionData, setjobDescriptionData] = useState({
     benefits: [],
     companyName: null,
-    educationLevel: "",
+    educationLevel: null,
     location: null,
     maximumSalary: null,
     minimumExperience: null,

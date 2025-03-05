@@ -14,23 +14,29 @@ import { useFormContext, Controller } from "react-hook-form";
 import styles from "../Posting.module.css";
 import { errorMessage } from "../Helper/ErrorMessage";
 
-export default function Qualification(jobDescriptionData) {
+export default function Qualification({ jobDescriptionData }) {
   const [skills, setSkills] = useState([
     "Communication",
     "Leadership",
     "Team-Management",
+    "Problem Solving",
+    "Critical Thinking",
   ]);
   const [inputValue, setInputValue] = useState("");
-  const [value, setValue] = useState("");
+  // const [value, setValue] = useState("");
   let tokenTimeExpiration = null;
   let accessToken = null;
 
-  const [experienceLabel, setExperienceLevel] = useState("Entry Level");
+  // const [experienceLabel, setExperienceLevel] = useState("Entry Level");
+  const jobForm = useFormContext();
+  const {
+    register,
+    control,
+    setValue,
+    formState: { errors },
+  } = jobForm;
 
   const handleExperienceLabel = () => {};
-  useEffect(() => {
-    console.log("Skills updated:", skills); // Logs when skills are updated
-  }, [skills]);
 
   const fetchToken = async () => {
     try {
@@ -69,35 +75,54 @@ export default function Qualification(jobDescriptionData) {
     }
   };
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-    if (newValue[0] < 2) {
-      setExperienceLevel("Entry Level");
-    } else if (newValue[0] < 5) {
-      setExperienceLevel("Associate");
-    } else if (newValue[0] < 10) {
-      setExperienceLevel("Mid Level");
-    } else {
-      setExperienceLevel("Senior");
-    }
-  };
+  // const handleChange = (event, newValue) => {
+  //   setValue(newValue);
+  //   if (newValue[0] < 2) {
+  //     setExperienceLevel("Entry Level");
+  //   } else if (newValue[0] < 5) {
+  //     setExperienceLevel("Associate");
+  //   } else if (newValue[0] < 10) {
+  //     setExperienceLevel("Mid Level");
+  //   } else {
+  //     setExperienceLevel("Senior");
+  //   }
+  // };
 
   const educationOptions = [
     "No Education",
     "High-School Diploma",
-    "Bachelor's Degree",
+    "Bachelors Degree",
     "Masters",
     "PHD",
     "Doctorates",
   ];
-  const jobForm = useFormContext();
-  const {
-    register,
-    control,
-    resetField,
-    formState: { errors },
-  } = jobForm;
   /** Need to Implement  */
+
+  useEffect(() => {
+    console.log("In Qualification: ", jobDescriptionData);
+
+    const minExp = jobDescriptionData.minimumExperience;
+    if (minExp) {
+      setValue("minimumExperience", minExp);
+    }
+    const educationLevel = jobDescriptionData.educationLevel;
+    if (educationLevel) {
+      const lowerEducation = educationLevel.toLowerCase();
+
+      for (const education of educationOptions) {
+        if (education.toLowerCase().includes(lowerEducation)) {
+          setValue("education", education);
+          break;
+        }
+      }
+    }
+
+    const parseSkill = jobDescriptionData.skills;
+    if (parseSkill && parseSkill.length > 0) {
+      console.log("Skills: ", parseSkill);
+      setValue("skills", parseSkill);
+    }
+  }, [jobDescriptionData]);
 
   return (
     <>

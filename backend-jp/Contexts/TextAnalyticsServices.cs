@@ -10,12 +10,13 @@ using Org.BouncyCastle.Security;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Text.RegularExpressions;
 using Mysqlx;
+using Microsoft.IdentityModel.Tokens;
 
 public class ResultEntities
 {
     public string? educationLevel { get; set; }
 
-    public List<string> skills { get; set; } = new List<string>();
+    public HashSet<string> skills { get; set; } = new HashSet<string>();
 
     public string? title { get; set; }
 
@@ -220,6 +221,25 @@ namespace JobPreppersDemo.Services
                 }
                 Console.WriteLine($"Entities: {entities.ToString()}");
             }
+            if (!entities.skills.IsNullOrEmpty())
+            {
+                var rawSkills = entities.skills;
+                HashSet<string> finishedSkills = new HashSet<string>();
+
+                foreach (var skill in rawSkills)
+                {
+                    var normalizeSkills = Regex.Split(skill, @"\s*,\s*|\s+and\s?|\s+or\s?", RegexOptions.IgnoreCase).Select(s => s.Trim())
+                                           .Where(s => !string.IsNullOrEmpty(s))  // Remove empty strings
+                                           .ToList();
+                    foreach (var newSkill in normalizeSkills)
+                    {
+                        Console.WriteLine($"Input: {skill} -> Extracted skills: {newSkill}");
+                        finishedSkills.Add(newSkill);
+                    }
+                }
+                entities.skills = finishedSkills;
+            }
+
             return entities;
         }
     }

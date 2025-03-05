@@ -18,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 //Test for TextAnalytics
 // Test.Experience();
 // Test.Salary();
+// Test.Skills();
 // Add services to the container.
 
 

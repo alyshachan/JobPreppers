@@ -81,6 +81,8 @@ export default function DescribeJob({
   };
 
   useEffect(() => {
+    console.log("Set Job Description Value: ", jobDescriptionData);
+
     if (jobDescriptionData.companyName) {
       setValue("company", jobDescriptionData.companyName);
     }
