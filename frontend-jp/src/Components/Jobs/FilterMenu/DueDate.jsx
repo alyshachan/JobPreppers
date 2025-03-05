@@ -13,6 +13,7 @@ export default function DueDate({ setFilters }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedDate, setSelectDate] = React.useState(dayjs());
   const open = Boolean(anchorEl);
+  const [selected, setSetlected] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,6 +25,7 @@ export default function DueDate({ setFilters }) {
       const updatedFilters = { ...prev, date: null };
       return updatedFilters;
     });
+    setSetlected(false);
   };
 
   const handleSearch = () => {
@@ -35,13 +37,15 @@ export default function DueDate({ setFilters }) {
       console.log("Updated Filters: ", updatedFilters);
       return updatedFilters;
     });
+    setSetlected(true);
+
     setAnchorEl(null);
   };
 
   return (
     <>
       <Button
-        className="filter-button"
+        className={selected ? "selected-filter-button" : "filter-button"}
         variant="outlined"
         endIcon={<ArrowDropDownIcon />}
         id="due-date-button"

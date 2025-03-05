@@ -46,6 +46,14 @@ namespace JobPreppersDemo.Controllers
             public string location { get; set; } = string.Empty;
             public string description { get; set; } = string.Empty;
 
+            public string benefits { get; set; } = string.Empty;
+
+            public string perks { get; set; } = string.Empty;
+
+            public string bonues { get; set; } = string.Empty;
+
+
+
         }
 
 
@@ -79,7 +87,10 @@ namespace JobPreppersDemo.Controllers
                                     title = job.title,
                                     type = job.type,
                                     link = job.link,
-                                    location = job.location.name
+                                    location = job.location.name,
+                                    bonues = job.bonus,
+                                    perks = job.perks,
+
 
                                 }
                                 )
@@ -234,7 +245,10 @@ namespace JobPreppersDemo.Controllers
                         title = job.title,
                         type = job.type,
                         location = job.location.name,
-                        description = job.description
+                        description = job.description ?? "",
+                        benefits = job.benefits ?? "",
+                        bonues = job.bonus ?? "",
+                        perks = job.perks ?? ""
 
                     });
 
@@ -254,7 +268,10 @@ namespace JobPreppersDemo.Controllers
                         title = job.title,
                         type = job.type,
                         location = job.location.name,
-                        description = job.description
+                        description = job.description ?? "",
+                        benefits = job.benefits ?? "",
+                        bonues = job.bonus ?? "",
+                        perks = job.perks ?? ""
 
                     });
 

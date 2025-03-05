@@ -25,6 +25,7 @@ export default function Benefits({ jobDescriptionData }) {
     "Paternal Leave",
     "Student Loan Repayment",
     "Tuition Reimbursement",
+    "401K",
     "Pet Insurance",
     "Relocation Location",
   ];
@@ -100,8 +101,8 @@ export default function Benefits({ jobDescriptionData }) {
       const benefitList = [];
       for (const benefit of benefits) {
         for (const input of jobDescriptionData.benefits) {
-          const regex = new RegExp(`\\b${input}\\b`, "i"); // i make it not case sensitive
-          if (regex.test(benefit)) {
+          const regex = new RegExp(`\\b${benefit}\\b`, "i"); // i make it not case sensitive
+          if (regex.test(input)) {
             benefitList.push(benefit);
           }
         }
