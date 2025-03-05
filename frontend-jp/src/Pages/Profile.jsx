@@ -7,10 +7,6 @@ import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png";
-import AddEducationDialog from "../Components/Profile/AddEducationDialog";
-import AddSkillDialog from "../Components/Profile/AddSkillDialog";
-import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
-import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 
 import EditIcon from "@mui/icons-material/Edit";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -39,7 +35,6 @@ function Profile() {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
   };
 
-  // test message box handler
   useEffect(() => {
     localStorage.setItem("editMode", edit);
   }, [edit]);
@@ -62,9 +57,7 @@ function Profile() {
     }
   };
 
-  useEffect(() => {
-    if (!user) return;
-
+  const fetchEducation = async () => {
     fetchData("UserEducation", setEducationDict, (data) =>
       data.map(
         ({
@@ -84,11 +77,9 @@ function Profile() {
         })
       )
     );
-  }, [user]);
+  };
 
-  useEffect(() => {
-    if (!user) return;
-
+  const fetchSkills = async () => {
     fetchData("UserSkills", setSkillsDict, (data) => {
       const skills = {};
       data.forEach(({ category, name }) => {
@@ -99,11 +90,9 @@ function Profile() {
       console.log("user skills updated on the front");
       return skills;
     });
-  }, [user]);
+  };
 
-  useEffect(() => {
-    if (!user) return;
-
+  const fetchExperience = async () => {
     fetchData("UserExperience", setExperienceDict, (data) =>
       data.map(
         ({
@@ -123,17 +112,24 @@ function Profile() {
         })
       )
     );
-  }, [user]);
+  };
 
-  useEffect(() => {
-    if (!user) return;
-
+  const fetchProject = async () => {
     fetchData("UserProject", setProjectDict, (data) =>
       data.map(({ projectTitle, description }) => ({
         project_title: projectTitle,
         description,
       }))
     );
+  };
+
+  useEffect(() => {
+    if (!user) return;
+
+    fetchEducation();
+    fetchSkills();
+    fetchExperience();
+    fetchProject();
   }, [user]);
 
   useEffect(() => {
@@ -218,27 +214,7 @@ function Profile() {
                 <EducationSection
                   educationDict={educationDict}
                   edit={edit}
-                  onAdd={() => {console.log("yo whatsupppp"); 
-                    fetchData("UserEducation", setEducationDict, (data) =>
-                      data.map(
-                        ({
-                          schoolName,
-                          degreeName,
-                          studyName,
-                          startDate,
-                          endDate,
-                          description,
-                        }) => ({
-                          school_name: schoolName,
-                          degree_name: degreeName,
-                          study_name: studyName,
-                          start_date: startDate ? new Date(startDate) : null,
-                          end_date: endDate ? new Date(endDate) : null,
-                          description,
-                        })
-                      )
-                    );
-                  }}
+                  onAdd={fetchEducation}
                 />
               ) : (
                 edit && (
@@ -293,24 +269,6 @@ function Profile() {
           )
         )}
       </div>
-
-      {/* <AddEducationDialog
-        open={openDialog.education}
-        onClose={() => toggleDialog("education", false)}
-      />
-      <AddSkillDialog
-        open={openDialog.skill}
-        onClose={() => toggleDialog("skill", false)}
-        existingCategories={Object.keys(skillsDict)}
-      />
-      <AddExperienceDialog
-        open={openDialog.experience}
-        onClose={() => toggleDialog("experience", false)}
-      />
-      <AddProjectDialog
-        open={openDialog.project}
-        onClose={() => toggleDialog("project", false)}
-      /> */}
     </>
   );
 }
