@@ -29,7 +29,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddProjectDialog({ open, onClose }) {
+function AddProjectDialog({ open, onClose, onAdd }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -54,7 +54,8 @@ function AddProjectDialog({ open, onClose }) {
       );
 
       if (response.ok) {
-        const data = await response.json();
+        onAdd();
+        onClose();
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();

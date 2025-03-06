@@ -6,7 +6,7 @@ import {useState } from "react";
 
 import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 
-function ProjectSection({ projectDict, edit }) {
+function ProjectSection({ projectDict, edit, onAdd }) {
   const [openProjectDialog, setOpenProjectDialog] = useState(false);
 
   const handleOpenProjectDialog = () => {
@@ -27,6 +27,7 @@ function ProjectSection({ projectDict, edit }) {
       <AddProjectDialog
         open={openProjectDialog}
         onClose={handleCloseProjectDialog}
+        onAdd={onAdd}
       />
         <div className={styles.sectionContent}>
           {displayedItems.map((project, index) => (

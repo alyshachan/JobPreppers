@@ -261,7 +261,11 @@ function Profile() {
         )}
 
         {projectDict.length > 0 ? (
-          <ProjectSection projectDict={projectDict} edit={edit} />
+          <ProjectSection
+            projectDict={projectDict}
+            edit={edit}
+            onAdd={fetchProject}
+          />
         ) : (
           edit && (
             <button

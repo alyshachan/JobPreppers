@@ -73,7 +73,6 @@ function AddExperienceDialog({ open, onClose, onAdd }) {
         }
       );
       if (response.ok) {
-        console.log("user experience ok!")
         onAdd();
         onClose();
         setError(""); // Clear any previous error message
