@@ -171,10 +171,10 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowReactApp");
 app.UseAuthentication();
 app.UseAuthorization();
-app.Urls.Add("http://107.23.196.38:5000");
-app.Urls.Add("https://107.23.196.38:5001");
-// app.Urls.Add("http://0.0.0.0:5000");
-// app.Urls.Add("https://0.0.0.0:5001");
+// app.Urls.Add("http://107.23.196.38:5000");
+// app.Urls.Add("https://107.23.196.38:5001");
+app.Urls.Add("http://0.0.0.0:5000");
+app.Urls.Add("https://0.0.0.0:5001");
 
 
 
