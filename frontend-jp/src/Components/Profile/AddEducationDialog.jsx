@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -32,7 +32,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddEducationDialog({ open, onClose, onAdd }) {
+function AddEducationDialog({ open, onClose, onAdd, education }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [school, setSchool] = useState("");
   const [degree, setDegree] = useState("");
@@ -41,6 +41,32 @@ function AddEducationDialog({ open, onClose, onAdd }) {
   const [endDate, setEndDate] = useState(new Date());
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (education) {
+      setSchool(education.school_name || "");
+      setDegree(education.degree_name || "");
+      setStudy(education.study_name || "");
+      setStartDate(
+        education.start_date
+          ? moment(education.start_date).format("YYYY-MM-DD")
+          : new Date()
+      );
+      setEndDate(
+        education.end_date
+          ? moment(education.end_date).format("YYYY-MM-DD")
+          : new Date()
+      );
+      setDescription(education.description || "");
+    } else {
+      setSchool("");
+      setDegree("");
+      setStudy("");
+      setStartDate(new Date());
+      setEndDate(new Date());
+      setDescription("");
+    }
+  }, [education]);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -54,10 +80,12 @@ function AddEducationDialog({ open, onClose, onAdd }) {
         : moment(endDate).format("YYYY-MM-DD");
 
     try {
+      const url = education ? `EditEducation/${education.userEducationID}`:"CreateEducation"
+      const method = education ? "PUT" : "POST"
       const response = await fetch(
-        "http://localhost:5000/api/UserEducation/CreateEducation",
+        `http://localhost:5000/api/UserEducation/${url}`,
         {
-          method: "POST",
+          method: method,
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userID: user.userID,
@@ -89,7 +117,9 @@ function AddEducationDialog({ open, onClose, onAdd }) {
   return (
     <StyledDialog onClose={onClose} open={open}>
       <DialogTitle className={styles.dialogTitle}>
-        <SectionHeader header="Add Education" />
+        <SectionHeader
+          header={education ? "Edit Education" : "Add Education"}
+        />
       </DialogTitle>
 
       <IconButton
@@ -189,7 +219,9 @@ function AddEducationDialog({ open, onClose, onAdd }) {
             </div>
           </div>
           <DialogActions>
-            <button type="submit">Add Education</button>
+            <button type="submit">
+              {education ? "Save Changes" : "Add Education"}
+            </button>
           </DialogActions>
         </form>
       </DialogContent>

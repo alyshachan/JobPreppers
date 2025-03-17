@@ -11,13 +11,16 @@ import AddEducationDialog from "../Components/Profile/AddEducationDialog";
 
 function EducationSection({ educationDict, edit, onAdd }) {
   const [openEducationDialog, setOpenEducationDialog] = useState(false);
+  const [selectedEducation, setSelectedEducation] = useState(null);
 
-  const handleOpenEducationDialog = () => {
+  const handleOpenEducationDialog = (education = null) => {
     setOpenEducationDialog(true);
+    setSelectedEducation(education ? { ...education} : null)
   };
 
   const handleCloseEducationDialog = () => {
     setOpenEducationDialog(false);
+    setSelectedEducation(null)
   };
 
   const displayedItems =
@@ -40,11 +43,12 @@ function EducationSection({ educationDict, edit, onAdd }) {
 
   return (
     <>
-      <SectionHeader header={"Education"} edit={edit} onAdd={handleOpenEducationDialog}/>
+      <SectionHeader header={"Education"} edit={edit} onAdd={() => handleOpenEducationDialog(null)}/>
       <AddEducationDialog
         open={openEducationDialog}
         onClose={handleCloseEducationDialog}
         onAdd={onAdd}
+        education={selectedEducation ? { ...selectedEducation } : null}
       />
 
       <div className={styles.sectionContent}>
@@ -87,7 +91,7 @@ function EducationSection({ educationDict, edit, onAdd }) {
 
               {edit && (
                 <div className="ml-auto mb-auto">
-                  <IconButton>
+                  <IconButton onClick={() => handleOpenEducationDialog(education)}>
                     <EditIcon />
                   </IconButton>
                 </div>

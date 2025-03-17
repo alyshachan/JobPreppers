@@ -61,6 +61,7 @@ function Profile() {
     fetchData("UserEducation", setEducationDict, (data) =>
       data.map(
         ({
+          userEducationID,
           schoolName,
           degreeName,
           studyName,
@@ -68,6 +69,7 @@ function Profile() {
           endDate,
           description,
         }) => ({
+          userEducationID: userEducationID,
           school_name: schoolName,
           degree_name: degreeName,
           study_name: studyName,
