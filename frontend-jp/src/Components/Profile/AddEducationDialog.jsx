@@ -80,8 +80,10 @@ function AddEducationDialog({ open, onClose, onAdd, education }) {
         : moment(endDate).format("YYYY-MM-DD");
 
     try {
-      const url = education ? `EditEducation/${education.userEducationID}`:"CreateEducation"
-      const method = education ? "PUT" : "POST"
+      const url = education
+        ? `EditEducation/${education.userEducationID}`
+        : "CreateEducation";
+      const method = education ? "PUT" : "POST";
       const response = await fetch(
         `http://localhost:5000/api/UserEducation/${url}`,
         {
@@ -107,6 +109,28 @@ function AddEducationDialog({ open, onClose, onAdd, education }) {
       } else {
         const errorData = await response.json();
         window.alert("Your input has invalid characters, please try again.");
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+    try {
+      const response = await fetch(`http://localhost:5000/api/UserEducation/DeleteEducation/${education.userEducationID}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (response.ok){
+        onAdd();
+        onClose();
+        setError("");
+      } else {
+        const errorData = await response.json();
+        window.alert("Error whilst trying to delete education");
         setError(errorData.message); // Show error message from the backend
       }
     } catch (err) {
@@ -218,11 +242,18 @@ function AddEducationDialog({ open, onClose, onAdd, education }) {
               </div>
             </div>
           </div>
-          <DialogActions>
-            <button type="submit">
-              {education ? "Save Changes" : "Add Education"}
-            </button>
-          </DialogActions>
+          {education ? (
+            <DialogActions className="flex !justify-between w-full">
+              <button className="lightButton" onClick={handleDelete}>
+                Delete Education
+              </button>
+              <button type="submit">Save Changes</button>
+            </DialogActions>
+          ) : (
+            <DialogActions>
+              <button type="submit">Add Education</button>
+            </DialogActions>
+          )}
         </form>
       </DialogContent>
     </StyledDialog>

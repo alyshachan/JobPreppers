@@ -226,5 +226,23 @@ namespace JobPreppersDemo.Controllers
             }
         }
 
+        [HttpDelete("DeleteEducation/{educationID}")]
+        public async Task<IActionResult> DeleteEducation(int educationID){
+            try{
+                var education = await _context.UserEducations.FindAsync(educationID);
+                if (education == null){
+                    return NotFound("Education not found");
+                }
+
+                _context.UserEducations.Remove(education);
+                await _context.SaveChangesAsync();
+
+                return Ok(new {message = "Education deleted sucessfully"});
+            }
+            catch(Exception ex){
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }
