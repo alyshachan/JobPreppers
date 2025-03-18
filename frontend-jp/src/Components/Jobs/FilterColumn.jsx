@@ -26,7 +26,7 @@ export default function FilterColumn({
       console.log("Filter: ", { filters });
       try {
         const response = await fetch(
-          "http://jobpreppers.co:5000/api/jobpost/filter",
+          "https://jobpreppers.co:5000/api/jobpost/filter",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

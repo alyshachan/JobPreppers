@@ -56,7 +56,7 @@ function AddEducationDialog({ open, onClose }) {
 
     try {
       const response = await fetch(
-        "http://jobpreppers.co:5000/api/UserEducation/CreateEducation",
+        "https://jobpreppers.co:5000/api/UserEducation/CreateEducation",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

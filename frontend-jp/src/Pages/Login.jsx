@@ -16,7 +16,7 @@ export default function Login() {
   
     // reach login endpoint
     try {
-      const response = await fetch("http://jobpreppers.co:5000/api/Users/login", {
+      const response = await fetch("https://jobpreppers.co:5000/api/Users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

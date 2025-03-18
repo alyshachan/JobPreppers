@@ -27,7 +27,7 @@ function Education() {
     const requestEducation = async () => {
       try {
         const response = await fetch(
-          `http://jobpreppers.co:5000/api/UserEducation/${user.userID}`,
+          `https://jobpreppers.co:5000/api/UserEducation/${user.userID}`,
           {
             credentials: "include", // include cookies
           }

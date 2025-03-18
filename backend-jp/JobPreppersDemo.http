@@ -1,4 +1,4 @@
-@JobPreppersDemo_HostAddress = http://jobpreppers.co:5260
+@JobPreppersDemo_HostAddress = https://jobpreppers.co:5260
 
 GET {{JobPreppersDemo_HostAddress}}/weatherforecast/
 Accept: application/json

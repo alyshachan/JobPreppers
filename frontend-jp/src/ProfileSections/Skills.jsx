@@ -35,7 +35,7 @@ function Skills() {
     const requestSkills = async () => {
       try {
         const response = await fetch(
-          `http://jobpreppers.co:5000/api/UserSkills/${user.userID}`,
+          `https://jobpreppers.co:5000/api/UserSkills/${user.userID}`,
           {
             credentials: "include", // include cookies
           }

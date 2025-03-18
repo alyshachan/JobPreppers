@@ -88,7 +88,7 @@ function Experience() {
     const requestExperience = async () => {
       try {
         const response = await fetch(
-          `http://jobpreppers.co:5000/api/UserExperience/${user.userID}`,
+          `https://jobpreppers.co:5000/api/UserExperience/${user.userID}`,
           {
             credentials: "include", // include cookies
           }

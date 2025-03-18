@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://jobpreppers.co:3000") // react url
+        policy.WithOrigins("https://jobpreppers.co:3000") // react url
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

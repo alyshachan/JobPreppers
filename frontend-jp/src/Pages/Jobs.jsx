@@ -31,7 +31,7 @@ function Jobs() {
   // useEffect(() => {
   //   const fetchJobs = async () => {
   //     try {
-  //       const res = await fetch("http://jobpreppers.co:5000/api/jobpost");
+  //       const res = await fetch("https://jobpreppers.co:5000/api/jobpost");
   //       const contentType = res.headers.get("Content-Type");
   //       if (contentType && contentType.includes("application/json")) {
   //         const data = await res.json();
