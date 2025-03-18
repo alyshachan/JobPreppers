@@ -88,7 +88,7 @@ function Experience() {
     const requestExperience = async () => {
       try {
         const response = await fetch(
-          `http://107.23.196.38:5000/api/UserExperience/${user.userID}`,
+          `http://jobpreppers.co:5000/api/UserExperience/${user.userID}`,
           {
             credentials: "include", // include cookies
           }

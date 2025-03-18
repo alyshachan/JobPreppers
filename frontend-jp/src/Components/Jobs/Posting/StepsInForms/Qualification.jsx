@@ -37,7 +37,7 @@ export default function Qualification(jobDescriptionData) {
       if (accessToken && tokenTimeExpiration > Date.now()) {
         return accessToken;
       } else {
-        const response = await fetch("http://107.23.196.38:8000/get-token");
+        const response = await fetch("http://jobpreppers.co:8000/get-token");
         const data = await response.json();
         tokenTimeExpiration = Date.now() + 3600 * 1000;
         accessToken = data.access_token;

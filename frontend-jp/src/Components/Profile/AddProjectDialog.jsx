@@ -41,7 +41,7 @@ function AddProjectDialog({ open, onClose }) {
 
     try {
       const response = await fetch(
-        "http://107.23.196.38:5000/api/UserProject/CreateProject",
+        "http://jobpreppers.co:5000/api/UserProject/CreateProject",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

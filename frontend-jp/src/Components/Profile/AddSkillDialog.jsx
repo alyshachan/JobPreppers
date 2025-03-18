@@ -41,7 +41,7 @@ function AddSkillDialog({ open, onClose }) {
     onClose();
     try {
       const response = await fetch(
-        "http://107.23.196.38:5000/api/UserSkills/AddSkillToUser",
+        "http://jobpreppers.co:5000/api/UserSkills/AddSkillToUser",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

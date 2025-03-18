@@ -14,7 +14,7 @@
 //     //     const connectToHub = async () => {
 //     //         console.log("Attempting to connect to /DirectMessageHub");
 //     //         const connection = new signalR.HubConnectionBuilder()
-//     //             .withUrl("http://107.23.196.38:5070/directMessageHub", {
+//     //             .withUrl("http://jobpreppers.co:5070/directMessageHub", {
 //     //                 accessTokenFactory: () => document.cookie.split('authToken=')[1] || '',
 //     //             })
 //     //             .withAutomaticReconnect()
@@ -48,7 +48,7 @@
 //         console.log("Attempting to connect to /DirectMessageHub");
 //         if (!signalRConnection) {
 //             const connection = new signalR.HubConnectionBuilder()
-//                 .withUrl("http://107.23.196.38:5690/directMessageHub", {
+//                 .withUrl("http://jobpreppers.co:5690/directMessageHub", {
 //                     accessTokenFactory: () => document.cookie.split('authToken=')[1] || '',
 //                 })
 //                 .withAutomaticReconnect()
