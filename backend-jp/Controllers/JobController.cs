@@ -146,6 +146,23 @@ namespace JobPreppersDemo.Controllers
 
             return Ok(filteredJobs);
         }
+        [HttpGet("JobSearch")]
+        public async Task<ActionResult<IEnumerable<Job>>> JobSearch([FromQuery] string  query)
+        {
+            if(string.IsNullOrWhiteSpace(query))
+            {
+                return BadRequest("Search query cannot be empty");
+            }
+            else
+            {
+                var jobs = await _context.Jobs
+                    .Where(job => job.title.Contains(query))
+                    .ToListAsync();
+                return Ok(jobs);
+            }
+            
+
+        }
 
         // [HttpPost("post")]
         // public async Task<IActionResult> PostJob([FromBody] FilterRequest request)
