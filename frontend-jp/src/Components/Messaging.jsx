@@ -79,7 +79,7 @@ function Messaging() {
             // if (user && user.userID) {
             try {
                 console.log(`retrieving chat token for ${user.userID}`);
-                const response = await fetch(`https://jobpreppers.co:5000/api/Chat/getChatToken/${user.userID}`);
+                const response = await fetch(`https://jobpreppers.co/api/Chat/getChatToken/${user.userID}`);
                 if (response.ok) {
                     const data = await response.json();
                     setChatToken(data.token)

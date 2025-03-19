@@ -30,7 +30,7 @@ function Resume() {
         formData.append("userID", user.userID);
 
         try {
-            const response = await fetch("https://jobpreppers.co:5000/api/Resume/PostFile", {
+            const response = await fetch("https://jobpreppers.co/api/Resume/PostFile", {
                 method: "POST",
                 body: formData,
             });
@@ -59,7 +59,7 @@ function Resume() {
         }
         setLoading(true);
         try {
-            const response = await fetch("https://jobpreppers.co:5000/api/Resume/generate-suggestions", {
+            const response = await fetch("https://jobpreppers.co/api/Resume/generate-suggestions", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

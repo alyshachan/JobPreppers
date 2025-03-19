@@ -52,7 +52,7 @@ function Profile() {
     const fetchData = async (endpoint, setter, transform) => {
       try {
         const response = await fetch(
-          `https://jobpreppers.co:5000/api/${endpoint}/${user.userID}`,
+          `https://jobpreppers.co/api/${endpoint}/${user.userID}`,
           { credentials: "include" }
         );
         if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
@@ -129,7 +129,7 @@ function Profile() {
     const fetchUser = async () => {
       try {
         const res = await fetch(
-          `https://jobpreppers.co:5000/api/GetUser/${user.userID}`,
+          `https://jobpreppers.co/api/GetUser/${user.userID}`,
           {
             credentials: "include", // include cookies
           }
