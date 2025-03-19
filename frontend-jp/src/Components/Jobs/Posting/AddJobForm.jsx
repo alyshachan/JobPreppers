@@ -72,6 +72,7 @@ export default function AddJobForm({ setJobs }) {
 
   const [activeStep, setActiveStep] = useState(0);
   const jobForm = useForm({ resolver: yupResolver(stepSchemas[activeStep]) });
+  const { user, setAuthData } = useAuth(); // custom hook for authprovider
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -92,6 +93,31 @@ export default function AddJobForm({ setJobs }) {
     "Qualification for Position",
     "Application Process",
   ];
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/GetUser/${user.userID}`,
+          {
+            credentials: "include", // include cookies
+          }
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log("GetUser: ", data);
+          setIntialUser(data);
+        } else {
+          console.error("Failed to fetch User");
+        }
+      } catch (error) {
+        console.error("Error fetching User:", error);
+      }
+    };
+
+    fetchUser();
+  }, [user]);
 
   const handleNext = async () => {
     const isValid = await jobForm.trigger(); // Validate current step before proceeding
@@ -151,6 +177,7 @@ export default function AddJobForm({ setJobs }) {
     const isValid = await jobForm.trigger(); // Validate current step before proceeding
     if (!isValid) return;
     const transformedData = {
+      userID: userID,
       title: data.title,
       description: JSON.stringify(data.description),
       employer: {

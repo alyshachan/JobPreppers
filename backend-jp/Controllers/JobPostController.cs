@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using JobPreppersDemo.Contexts;
 using JobPreppersDemo.Models;
@@ -74,11 +75,11 @@ namespace JobPreppersDemo.Controllers
                 // var jobs = await _context.Jobs.ToListAsync();
                 var jobs = await _context.JobPosts
                                 .Include(job => job.qualification)
-                                .Include(job => job.employer)
+                                .Include(job => job.recruiter)
                                 .Include(job => job.location)
                                 .Select(job => new
                                 {
-                                    company = job.employer.companyName,
+                                    company = job.recruiter.company.Name,
                                     minimumSalary = job.minimumSalary,
                                     benefits = job.benefits,
                                     postDate = job.postDate,
@@ -124,24 +125,44 @@ namespace JobPreppersDemo.Controllers
 
             try
             {
-                int employerID;
-                // Add need to look for Company
-                if (string.IsNullOrWhiteSpace(request.employer.companyName))
+                // int employerID;
+                // // Add need to look for Company
+                // if (string.IsNullOrWhiteSpace(request.employer.Name))
+                // {
+                //     return BadRequest("Employer info needed");
+                // }
+
+                // // Might need to change to Recruiter and just get that company ID
+                // var employer = await _context.JobEmployers.FirstOrDefaultAsync(e => e.companyName == request.employer.Name);
+                // if (employer == null)
+                // {
+                //     employer = new JobEmployer
+                //     {
+                //         companyName = request.employer.Name
+                //     };
+                //     _context.JobEmployers.Add(employer);
+                //     await _context.SaveChangesAsync();
+                //     //Add
+                // }
+                // employerID = employer.companyID;
+
+
+                int recruiterID;
+                // int companyID;
+                var recruiter = await _context.Recruiters.FirstOrDefaultAsync(rec => rec.userID == request.userID);
+                if (recruiter == null)
                 {
-                    return BadRequest("Employer info needed");
+                    return BadRequest("You're not a recruiter");
                 }
-                var employer = await _context.JobEmployers.FirstOrDefaultAsync(e => e.companyName == request.employer.companyName);
-                if (employer == null)
+                else
                 {
-                    employer = new JobEmployer
-                    {
-                        companyName = request.employer.companyName
-                    };
-                    _context.JobEmployers.Add(employer);
-                    await _context.SaveChangesAsync();
-                    //Add
+                    recruiterID = recruiter.recruiterID;
+                    // Might not need
+                    // companyID = recruiter.companyID;
+                    // var company = await _context.Companies.FirstOrDefaultAsync(employeer => employeer.companyID == companyID);
+
                 }
-                employerID = employer.companyID;
+
 
 
                 int locationID;
@@ -183,7 +204,7 @@ namespace JobPreppersDemo.Controllers
                 {
                     title = request.title,
                     description = request.description,
-                    employerID = employerID,
+                    recruiterID = recruiterID,
                     locationID = locationID,
                     minimumSalary = request.minimumSalary,
                     postDate = request.postDate,
@@ -233,12 +254,12 @@ namespace JobPreppersDemo.Controllers
                         $@"
                     SELECT jp.* FROM JobPosts jp
                     JOIN JobLocations l on jp.locationID = l.locationID
-                    WHERE LOWER(l.name) REGEXP 'remote' OR ST_Distance_Sphere(Point({request.Longitude}, {request.Latitude}), Point(l.longitude, l.latitude)) <= {distance}"
-                    ).Include(job => job.employer)
+                    WHERE LOWER(l.name) REGEXP 'remote' OR ST_Distance_Sphere(Point({request.Longitude}, {request.Latitude}), Point(l.longitude, l.latitude)) <= {distance}")
+                    .Include(job => job.recruiter)
                     .Include(job => job.location)
                     .Select(job => new JobPostDto
                     {
-                        company = job.employer.companyName,
+                        company = job.recruiter.company.Name,
                         minimumSalary = job.minimumSalary,
                         postDate = job.postDate,
                         endDate = job.endDate,
@@ -257,11 +278,11 @@ namespace JobPreppersDemo.Controllers
                 else
                 {
                     query = _context.JobPosts
-                    .Include(job => job.employer)
+                    .Include(job => job.recruiter)
                     .Include(job => job.location)
                     .Select(job => new JobPostDto
                     {
-                        company = job.employer.companyName,
+                        company = job.recruiter.company.Name,
                         minimumSalary = job.minimumSalary,
                         postDate = job.postDate,
                         endDate = job.endDate,
@@ -326,10 +347,10 @@ namespace JobPreppersDemo.Controllers
 
                 // var jobs = await _context.Jobs.ToListAsync();
                 var jobs = await _context.JobPosts
-                                .Include(job => job.employer)
+                                .Include(job => job.recruiter)
                                 .Select(job => new
                                 {
-                                    company = job.employer.companyName,
+                                    company = job.recruiter.company.Name,
                                 }
                                 )
                                 .ToListAsync();
