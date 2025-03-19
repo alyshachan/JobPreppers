@@ -237,6 +237,32 @@ namespace JobPreppersProto.Controllers
             }
         }
 
+        [HttpGet("UserSearch")]
+        public async Task<IActionResult> SearchUsers(
+    [FromQuery] string? title,
+    [FromQuery] string? firstName,
+    [FromQuery] string? lastName)
+        {
+            var users = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                users = users.Where(u => u.title.Contains(title));
+            }
+
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                users = users.Where(u => u.first_name.Contains(firstName));
+            }
+
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                users = users.Where(u => u.last_name.Contains(lastName));
+            }
+
+            var result = await users.ToListAsync();
+            return Ok(result);
+        }
 
         // Define the request model
         public class LoginRequest
