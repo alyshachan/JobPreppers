@@ -167,7 +167,31 @@ namespace JobPreppersDemo.Controllers
                 {
                     return BadRequest("Failed to extract text from the resume.");
                 }
+                //get skills, projects and experience from resume
+                var userSkills = await _context.UserSkills
+                        .Where(us => us.userID == input.UserID)
+                        .Join(_context.Skills, us => us.skillID, s => s.skillID, (us, s) => s.Name)
+                        .ToListAsync();
+                var userProjects = await _context.UserProjects
+                    .Where(up => up.userID == input.UserID)
+                    .Select(up => new { up.project_title, up.description })
+                    .ToListAsync();
+                var userExperience = await _context.UserExperiences
+                    .Where(ue => ue.userID == input.UserID)
+                    .Select(ue => new { ue.job_title, ue.description })
+                    .ToListAsync();
                 // Prepare the prompt for GPT
+                string skillsText = userSkills.Any() ? string.Join(", ", userSkills) : "No skills listed.";
+
+                string projectsText = userProjects.Any()
+                   ? string.Join("\n", userProjects.Select(p => $"- {p.project_title}: {p.description}"))
+                   : "No projects listed.";
+
+           
+                string experienceText = userExperience.Any()
+                    ? string.Join("\n", userExperience.Select(e => $"- {e.job_title}: {e.description}"))
+                    : "No work experience listed.";
+
                 var prompt = @$"
 You are a career coach. 
 Here is the job description:
@@ -175,6 +199,14 @@ Here is the job description:
 
 Here is the user's resume:
 {resumeText}
+
+Here are additional details about the user:
+- Skills: 
+{skillsText}
+- Projects: 
+{projectsText}
+- Work Experience:
+{experienceText}
 
 Provide suggestions on how to improve the resume to better match the job description. 
 Additionally, recommend projects or skills the user can work on to align with the job requirements. Provide 3 short and concise suggestions";
