@@ -13,7 +13,7 @@ function Feed() {
         const fetchFeedData = async () => {
             try {
                 console.log("requesting user token")
-                const response = await fetch(`https://jobpreppers.co/api/Feed/getFeedToken/${user.userID}`);
+                const response = await fetch(`localhost:5000/api/Feed/getFeedToken/${user.userID}`);
                 if (response.ok) {
                     const data = await response.json()
                     const token = data.token;
@@ -26,7 +26,7 @@ function Feed() {
             }
 
             try {
-                const response = await fetch(`https://jobpreppers.co/api/Stream/getOrCreate/${user.userID}`, // get streamUser
+                const response = await fetch(`localhost:5000/api/Stream/getOrCreate/${user.userID}`, // get streamUser
                     {
                         method: "POST",
                         headers: {
@@ -39,7 +39,7 @@ function Feed() {
                     const data = await response.json();
 
                     if (data.data.name == "Unknown") {
-                        await fetch(`https://jobpreppers.co/api/Stream/update/${user.userID}`, // update if needed
+                        await fetch(`localhost:5000/api/Stream/update/${user.userID}`, // update if needed
                             {
                                 method: "POST",
                                 headers: {

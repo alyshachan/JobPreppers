@@ -31,7 +31,7 @@ function Project() {
   const requestProjects = async () => {
     try {
       const response = await fetch(
-        `https://jobpreppers.co/api/UserProject/${user.userID}`,
+        `localhost:5000/api/UserProject/${user.userID}`,
         {
           credentials: "include", // include cookies
         }

@@ -32,7 +32,7 @@ function VideoCall() {
       try {
         console.log("requesting user token");
         const response = await fetch(
-          `https://jobpreppers.co/api/VideoCall/token/${user.userID}`,
+          `localhost:5000/api/VideoCall/token/${user.userID}`,
           {
             credentials: "include", // include cookies
           }

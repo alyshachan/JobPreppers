@@ -41,7 +41,7 @@ function AddProjectDialog({ open, onClose }) {
 
     try {
       const response = await fetch(
-        "https://jobpreppers.co/api/UserProject/CreateProject",
+        "localhost:5000/api/UserProject/CreateProject",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

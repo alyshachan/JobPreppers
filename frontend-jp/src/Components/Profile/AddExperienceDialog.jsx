@@ -54,7 +54,7 @@ function AddExperienceDialog({
   
     try {
       const response = await fetch(
-        "https://jobpreppers.co/api/UserExperience/CreateExperience",
+        "localhost:5000/api/UserExperience/CreateExperience",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

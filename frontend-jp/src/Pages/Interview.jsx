@@ -18,7 +18,7 @@ function Interview() {
       const requestEvents = async () => {
         try {
           const response = await fetch(
-            `https://jobpreppers.co/api/Event/GetEventsByUserID/${user.userID}`,
+            `localhost:5000/api/Event/GetEventsByUserID/${user.userID}`,
             {
               credentials: "include", // include cookies
             }

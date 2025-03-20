@@ -64,7 +64,7 @@ function NavBar() {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch("https://jobpreppers.co/api/Users/logout", {
+      const response = await fetch("localhost:5000/api/Users/logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
