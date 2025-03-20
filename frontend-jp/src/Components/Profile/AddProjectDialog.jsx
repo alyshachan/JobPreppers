@@ -28,6 +28,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     minWidth: "800px",
   },
 }));
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function AddProjectDialog({ open, onClose }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
@@ -41,7 +42,7 @@ function AddProjectDialog({ open, onClose }) {
 
     try {
       const response = await fetch(
-        "localhost:5000/api/UserProject/CreateProject",
+        apiURL + "/api/UserProject/CreateProject",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

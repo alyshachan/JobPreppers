@@ -3,20 +3,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import styles from '../Components/Login/Login.module.css';
 
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const {user, setAuthData } = useAuth(); // custom hook for authprovider
-  
-
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
   
     // reach login endpoint
     try {
-      const response = await fetch("localhost:5000/api/Users/login", {
+      const response = await fetch(apiURL + "/api/Users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

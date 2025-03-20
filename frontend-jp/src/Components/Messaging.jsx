@@ -73,13 +73,15 @@ function Messaging() {
     //     secret: process.env.REACT_APP_STREAM_SECRET
     // });
 
+    const apiURL = process.env.REACT_APP_JP_API_URL;
+
 
     useEffect(() => {
         const fetchMessagingData = async () => {
             // if (user && user.userID) {
             try {
                 console.log(`retrieving chat token for ${user.userID}`);
-                const response = await fetch(`localhost:5000/api/Chat/getChatToken/${user.userID}`);
+                const response = await fetch(apiURL + `/api/Chat/getChatToken/${user.userID}`);
                 if (response.ok) {
                     const data = await response.json();
                     setChatToken(data.token)

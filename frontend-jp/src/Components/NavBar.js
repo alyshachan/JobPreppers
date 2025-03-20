@@ -17,6 +17,8 @@ import React, { useState } from "react";
 import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
 
 const navigation = [
   { name: "Feed", href: "/Feed", current: true },
@@ -64,7 +66,7 @@ function NavBar() {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch("localhost:5000/api/Users/logout", {
+      const response = await fetch(apiURL + "/api/Users/logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

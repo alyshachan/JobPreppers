@@ -3,8 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import 'react-activity-feed/dist/index.css';
 import { StreamApp, FlatFeed, Activity, StatusUpdateForm, LikeButton } from 'react-activity-feed';
-
-
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Feed() {
     const { user, setAuthData } = useAuth();
@@ -13,7 +12,7 @@ function Feed() {
         const fetchFeedData = async () => {
             try {
                 console.log("requesting user token")
-                const response = await fetch(`localhost:5000/api/Feed/getFeedToken/${user.userID}`);
+                const response = await fetch(apiURL + `/api/Feed/getFeedToken/${user.userID}`);
                 if (response.ok) {
                     const data = await response.json()
                     const token = data.token;
@@ -26,7 +25,7 @@ function Feed() {
             }
 
             try {
-                const response = await fetch(`localhost:5000/api/Stream/getOrCreate/${user.userID}`, // get streamUser
+                const response = await fetch(apiURL + `/api/Stream/getOrCreate/${user.userID}`, // get streamUser
                     {
                         method: "POST",
                         headers: {
@@ -39,7 +38,7 @@ function Feed() {
                     const data = await response.json();
 
                     if (data.data.name == "Unknown") {
-                        await fetch(`localhost:5000/api/Stream/update/${user.userID}`, // update if needed
+                        await fetch(apiURL + `/api/Stream/update/${user.userID}`, // update if needed
                             {
                                 method: "POST",
                                 headers: {

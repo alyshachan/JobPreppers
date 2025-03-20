@@ -10,12 +10,14 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const apiURL = process.env.REACT_APP_JP_API_URL;
+
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch("localhost:5000/api/Users/signup", {
+      const response = await fetch(apiURL + "/api/Users/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firstName, lastName, username, email, password}),

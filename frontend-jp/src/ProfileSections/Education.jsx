@@ -18,6 +18,7 @@ const monthsOfYear = [
   "November",
   "December",
 ];
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Education() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
@@ -27,7 +28,7 @@ function Education() {
     const requestEducation = async () => {
       try {
         const response = await fetch(
-          `localhost:5000/api/UserEducation/${user.userID}`,
+          apiURL + `/api/UserEducation/${user.userID}`,
           {
             credentials: "include", // include cookies
           }

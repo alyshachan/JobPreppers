@@ -15,7 +15,8 @@ import {
   CallControls
 } from "@stream-io/video-react-sdk";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
-import { useSearchParams} from "react-router-dom"
+import { useSearchParams} from "react-router-dom";
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function VideoCall() {
   const { user, setAuthData } = useAuth();
@@ -32,7 +33,7 @@ function VideoCall() {
       try {
         console.log("requesting user token");
         const response = await fetch(
-          `localhost:5000/api/VideoCall/token/${user.userID}`,
+          apiURL + `/api/VideoCall/token/${user.userID}`,
           {
             credentials: "include", // include cookies
           }

@@ -36,6 +36,8 @@ function Profile() {
   });
   const [message, setMessage] = useState("");
   const [receiverID, setReceiverID] = useState("");
+  const apiURL = process.env.REACT_APP_JP_API_URL;
+
 
   const toggleDialog = (type, state) => {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
@@ -52,7 +54,7 @@ function Profile() {
     const fetchData = async (endpoint, setter, transform) => {
       try {
         const response = await fetch(
-          `localhost:5000/api/${endpoint}/${user.userID}`,
+          apiURL + `/api/${endpoint}/${user.userID}`,
           { credentials: "include" }
         );
         if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
@@ -129,7 +131,7 @@ function Profile() {
     const fetchUser = async () => {
       try {
         const res = await fetch(
-          `localhost:5000/api/GetUser/${user.userID}`,
+          apiURL + `/api/GetUser/${user.userID}`,
           {
             credentials: "include", // include cookies
           }

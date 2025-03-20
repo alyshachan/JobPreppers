@@ -4,6 +4,7 @@ import ListBox from "./ListBox";
 import "../Components/JobPreppers.css"
 import styles from "../Components/Profile/ProfileSections.module.css"
 import { useAuth } from "../provider/authProvider";
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Skills() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
@@ -35,7 +36,7 @@ function Skills() {
     const requestSkills = async () => {
       try {
         const response = await fetch(
-          `localhost:5000/api/UserSkills/${user.userID}`,
+          apiURL + `/api/UserSkills/${user.userID}`,
           {
             credentials: "include", // include cookies
           }
