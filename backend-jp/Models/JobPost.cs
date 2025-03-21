@@ -29,8 +29,6 @@ public partial class JobPost
 
     public string paymentType { get; set; } = null!;
 
-    public int employerID { get; set; }
-
     public int qualificationID { get; set; }
 
     public string? currency { get; set; }
@@ -41,9 +39,15 @@ public partial class JobPost
 
     public int locationID { get; set; }
 
-    public virtual JobEmployer employer { get; set; } = null!;
+    public int recruiterID { get; set; }
+
+    public int companyID { get; set; }
+
+    public virtual Company company { get; set; } = null!;
 
     public virtual JobLocation location { get; set; } = null!;
 
     public virtual JobQualification qualification { get; set; } = null!;
+
+    public virtual Recruiter recruiter { get; set; } = null!;
 }

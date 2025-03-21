@@ -102,7 +102,7 @@ function JobDescription({ setDrawerOpen, jobs }) {
           <CardActions>
             <Box className={styles.descriptionFooter}>
               <Typography variant="body" className={styles.descriptionText}>
-                Apply by {new Date(job.postDate).toLocaleDateString()}
+                Apply by {new Date(job.endDate).toLocaleDateString()}
               </Typography>
               <button
                 onClick={() => handleOpenDrawer(job)}

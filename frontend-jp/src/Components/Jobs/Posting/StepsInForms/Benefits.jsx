@@ -49,7 +49,6 @@ export default function Benefits({ jobDescriptionData }) {
   const payType = watch("payType");
 
   const [currencies, setCurrencies] = useState([]);
-
   useEffect(() => {
     fetch("https://api.exchangerate-api.com/v4/latest/USD")
       .then((response) => response.json())

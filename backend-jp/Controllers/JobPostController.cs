@@ -6,6 +6,7 @@ using JobPreppersDemo.Contexts;
 using JobPreppersDemo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ZstdSharp.Unsafe;
 
 
 
@@ -52,10 +53,52 @@ namespace JobPreppersDemo.Controllers
 
             public string bonues { get; set; } = string.Empty;
 
+        }
+
+
+        public class AddJobDto
+        {
+
+            public DateTime postDate { get; set; }
+
+            public DateTime endDate { get; set; }
+
+            public string title { get; set; } = null!;
+
+            public string type { get; set; } = null!;
+
+            public string? benefits { get; set; }
+
+            public string? perks { get; set; }
+
+            public string? bonus { get; set; }
+
+            public int minimumSalary { get; set; }
+
+            public int? maximumSalary { get; set; }
+
+            public string? description { get; set; }
+
+            public string paymentType { get; set; } = null!;
+
+            public int qualificationID { get; set; }
+
+            // public string? currency { get; set; }
+
+            // public int? numberOfHires { get; set; }
+
+            public string? link { get; set; }
+
+            public int locationID { get; set; }
+
+            public int userID { get; set; }
+
+            public virtual JobLocation location { get; set; } = null!;
+
+            public virtual JobQualification qualification { get; set; } = null!;
 
 
         }
-
 
 
         public JobPostController(ApplicationDbContext context)
@@ -74,11 +117,11 @@ namespace JobPreppersDemo.Controllers
                 // var jobs = await _context.Jobs.ToListAsync();
                 var jobs = await _context.JobPosts
                                 .Include(job => job.qualification)
-                                .Include(job => job.employer)
+                                .Include(job => job.company)
                                 .Include(job => job.location)
                                 .Select(job => new
                                 {
-                                    company = job.employer.companyName,
+                                    company = job.company.Name,
                                     minimumSalary = job.minimumSalary,
                                     benefits = job.benefits,
                                     postDate = job.postDate,
@@ -117,32 +160,25 @@ namespace JobPreppersDemo.Controllers
 
         }
 
-        // // GET: api/jobpost/add
+        // GET: api/jobpost/add
         [HttpPost("add")]
-        public async Task<ActionResult> PostJob([FromBody] JobPost request)
+        public async Task<ActionResult> PostJob([FromBody] AddJobDto request)
         {
 
             try
             {
-                int employerID;
-                // Add need to look for Company
-                if (string.IsNullOrWhiteSpace(request.employer.companyName))
+                // Add need to look for Recruiter 
+                int recruiterID;
+                int companyID;
+                var recruiter = await _context.Recruiters.FirstOrDefaultAsync(rec => rec.userID == request.userID);
+                if (recruiter == null)
                 {
-                    return BadRequest("Employer info needed");
+                    return BadRequest("Not a recruiter");
                 }
-                var employer = await _context.JobEmployers.FirstOrDefaultAsync(e => e.companyName == request.employer.companyName);
-                if (employer == null)
-                {
-                    employer = new JobEmployer
-                    {
-                        companyName = request.employer.companyName
-                    };
-                    _context.JobEmployers.Add(employer);
-                    await _context.SaveChangesAsync();
-                    //Add
-                }
-                employerID = employer.companyID;
-
+                recruiterID = recruiter.recruiterID;
+                companyID = recruiter.companyID;
+                Console.WriteLine($"This should be RecruiterID: {recruiterID}. It should be 1 ");
+                Console.WriteLine($"This should be CompanyID: {companyID}. It should be 1 ");
 
                 int locationID;
                 // Add need to look for Company
@@ -183,7 +219,8 @@ namespace JobPreppersDemo.Controllers
                 {
                     title = request.title,
                     description = request.description,
-                    employerID = employerID,
+                    recruiterID = recruiterID,
+                    companyID = companyID,
                     locationID = locationID,
                     minimumSalary = request.minimumSalary,
                     postDate = request.postDate,
@@ -234,11 +271,11 @@ namespace JobPreppersDemo.Controllers
                     SELECT jp.* FROM JobPosts jp
                     JOIN JobLocations l on jp.locationID = l.locationID
                     WHERE LOWER(l.name) REGEXP 'remote' OR ST_Distance_Sphere(Point({request.Longitude}, {request.Latitude}), Point(l.longitude, l.latitude)) <= {distance}"
-                    ).Include(job => job.employer)
+                    ).Include(job => job.company)
                     .Include(job => job.location)
                     .Select(job => new JobPostDto
                     {
-                        company = job.employer.companyName,
+                        company = job.company.Name,
                         minimumSalary = job.minimumSalary,
                         postDate = job.postDate,
                         endDate = job.endDate,
@@ -257,11 +294,11 @@ namespace JobPreppersDemo.Controllers
                 else
                 {
                     query = _context.JobPosts
-                    .Include(job => job.employer)
+                    .Include(job => job.company)
                     .Include(job => job.location)
                     .Select(job => new JobPostDto
                     {
-                        company = job.employer.companyName,
+                        company = job.company.Name,
                         minimumSalary = job.minimumSalary,
                         postDate = job.postDate,
                         endDate = job.endDate,
@@ -280,7 +317,7 @@ namespace JobPreppersDemo.Controllers
                 if (request.Date != null)
                 {
                     var filterDate = request.Date.Value.Date;
-                    query = query.Where(job => job.postDate >= filterDate);
+                    query = query.Where(job => job.endDate >= filterDate);
                 }
 
                 if (request.Type != null && request.Type.Any())
@@ -326,10 +363,10 @@ namespace JobPreppersDemo.Controllers
 
                 // var jobs = await _context.Jobs.ToListAsync();
                 var jobs = await _context.JobPosts
-                                .Include(job => job.employer)
+                                .Include(job => job.company)
                                 .Select(job => new
                                 {
-                                    company = job.employer.companyName,
+                                    company = job.company.Name,
                                 }
                                 )
                                 .ToListAsync();
