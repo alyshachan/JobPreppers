@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -32,7 +32,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddExperienceDialog({ open, onClose, onAdd }) {
+function AddExperienceDialog({ open, onClose, onAdd, experience }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [work, setWork] = useState("");
   const [location, setLocation] = useState("");
@@ -41,6 +41,32 @@ function AddExperienceDialog({ open, onClose, onAdd }) {
   const [endDate, setEndDate] = useState(new Date());
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (experience) {
+      setWork(experience.workName || "");
+      setLocation(experience.location || "");
+      setTitle(experience.jobTitle || "");
+      setStartDate(
+        experience.start_date
+          ? moment(experience.start_date).format("YYYY-MM-DD")
+          : new Date()
+      );
+      setEndDate(
+        experience.end_date
+          ? moment(experience.end_date).format("YYYY-MM-DD")
+          : new Date()
+      );
+      setDescription(experience.description || "");
+    } else {
+      setWork("");
+      setLocation("");
+      setTitle("");
+      setStartDate(new Date());
+      setEndDate(new Date());
+      setDescription("");
+    }
+  }, [experience]);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -56,10 +82,14 @@ function AddExperienceDialog({ open, onClose, onAdd }) {
         : moment(endDate).format("YYYY-MM-DD");
 
     try {
+      const url = experience
+        ? `EditExperience/${experience.userExperienceID}`
+        : "CreateExperience";
+      const method = experience ? "PUT" : "POST";
       const response = await fetch(
-        "http://localhost:5000/api/UserExperience/CreateExperience",
+        `http://localhost:5000/api/UserExperience/${url}`,
         {
-          method: "POST",
+          method: method,
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userID: user.userID,
@@ -89,7 +119,9 @@ function AddExperienceDialog({ open, onClose, onAdd }) {
   return (
     <StyledDialog onClose={onClose} open={open}>
       <DialogTitle className={styles.dialogTitle}>
-        <SectionHeader header="Add Experience" />
+        <SectionHeader
+          header={experience ? "Edit Experience" : "Add Experience"}
+        />
       </DialogTitle>
 
       <IconButton
@@ -186,7 +218,9 @@ function AddExperienceDialog({ open, onClose, onAdd }) {
             </div>
           </div>
           <DialogActions>
-            <button type="submit">Add Experience</button>
+            <button type="submit">
+              {experience ? "Save Changes" : "Add Experience"}
+            </button>
           </DialogActions>
         </form>
       </DialogContent>

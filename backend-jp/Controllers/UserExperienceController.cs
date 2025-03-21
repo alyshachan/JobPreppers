@@ -54,6 +54,7 @@ namespace JobPreppersDemo.Controllers
                            .ThenByDescending(ue => ue.start_date)
                            .Select(ue => new
                            {
+                               UserExperienceID = ue.userExperienceID,
                                WorkName = ue.work.work_name,
                                WorkLocation = ue.work.location,
                                JobTitle = ue.job_title,
@@ -80,7 +81,7 @@ namespace JobPreppersDemo.Controllers
         }
 
         [HttpPost("CreateExperience")]
-        public async Task<IActionResult> createExperience([FromBody] UserExperienceDto experience)
+        public async Task<IActionResult> CreateExperience([FromBody] UserExperienceDto experience)
         {
             if (experience == null)
             {
@@ -122,6 +123,57 @@ namespace JobPreppersDemo.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok(new { message = "Experience added successfully", experienceID = userExperience.userExperienceID });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPut("EditExperience/{experienceID}")]
+        public async Task<IActionResult> EditExperience(int experienceID, [FromBody] UserExperienceDto userExperienceDto)
+        {
+            if (userExperienceDto == null)
+            {
+                return BadRequest("Experience information not filled out.");
+            }
+
+            try
+            {
+                var experience = await _context.UserExperiences.FindAsync(experienceID);
+                if (experience == null)
+                {
+                    return NotFound("Education not found");
+                }
+
+                // Check if the work already exists by name and location
+                var work = await _context.Works
+                    .FirstOrDefaultAsync(w => w.work_name.ToLower() == userExperienceDto.workName.ToLower() &&
+                                              w.location.ToLower() == userExperienceDto.location.ToLower());
+
+                // If the work doesn't exist, add it to the database
+                if (work == null)
+                {
+                    work = new Work
+                    {
+                        work_name = userExperienceDto.workName,
+                        location = userExperienceDto.location
+                    };
+
+                    await _context.Works.AddAsync(work);
+                    await _context.SaveChangesAsync(); // Save to generate the workID
+                }
+
+                experience.workID = work.workID;
+                experience.job_title = userExperienceDto.jobTitle;
+                experience.start_date = userExperienceDto.start_date;
+                experience.end_date = userExperienceDto.end_date;
+                experience.description = userExperienceDto.description;
+
+                _context.UserExperiences.Update(experience);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Experience updated successfully" });
             }
             catch (Exception ex)
             {

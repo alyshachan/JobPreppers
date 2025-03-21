@@ -98,6 +98,7 @@ function Profile() {
     fetchData("UserExperience", setExperienceDict, (data) =>
       data.map(
         ({
+          userExperienceID,
           workName,
           workLocation,
           jobTitle,
@@ -105,6 +106,7 @@ function Profile() {
           endDate,
           description,
         }) => ({
+          userExperienceID: userExperienceID,
           work_name: workName,
           location: workLocation,
           job_title: jobTitle,

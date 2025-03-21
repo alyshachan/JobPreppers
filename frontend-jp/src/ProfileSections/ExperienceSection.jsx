@@ -9,13 +9,16 @@ import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
 
 function ExperienceSection({ experienceDict, edit, onAdd }) {
   const [openExperienceDialog, setOpenExperienceDialog] = useState(false);
+  const [selectedExperience, setSelectedExperience] = useState(null);
 
-  const handleOpenExperienceDialog = () => {
+  const handleOpenExperienceDialog = (experience = null) => {
     setOpenExperienceDialog(true);
+    setSelectedExperience(experience ? { ...experience} : null)
   };
 
   const handleCloseExperienceDialog = () => {
     setOpenExperienceDialog(false);
+    setSelectedExperience(null)
   };
 
   const displayedItems =
@@ -68,12 +71,13 @@ function ExperienceSection({ experienceDict, edit, onAdd }) {
         <SectionHeader
           header={"Experience"}
           edit={edit}
-          onAdd={handleOpenExperienceDialog}
+          onAdd={() => handleOpenExperienceDialog(null)}
         />
         <AddExperienceDialog
           open={openExperienceDialog}
           onClose={handleCloseExperienceDialog}
           onAdd={onAdd}
+          experience={selectedExperience ? { ...selectedExperience } : null}
         />
 
         <div className={styles.sectionContent}>
@@ -122,7 +126,7 @@ function ExperienceSection({ experienceDict, edit, onAdd }) {
                   </div>
                   {edit && (
                     <div className="ml-5">
-                      <IconButton>
+                      <IconButton  onClick={() => handleOpenExperienceDialog(experience)}>
                         <EditIcon />
                       </IconButton>
                     </div>

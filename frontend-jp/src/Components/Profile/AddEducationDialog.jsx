@@ -119,12 +119,15 @@ function AddEducationDialog({ open, onClose, onAdd, education }) {
   const handleDelete = async (e) => {
     e.preventDefault(); // Prevent default form submission
     try {
-      const response = await fetch(`http://localhost:5000/api/UserEducation/DeleteEducation/${education.userEducationID}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/UserEducation/DeleteEducation/${education.userEducationID}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
 
-      if (response.ok){
+      if (response.ok) {
         onAdd();
         onClose();
         setError("");
