@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import SearchColumn from "../Components/Jobs/SearchColumn";
 import "../Components/JobPreppers.css";
@@ -7,25 +7,32 @@ import FilterColumn from "../Components/Jobs/FilterColumn";
 import JobDescription from "../Components/Jobs/JobDescription";
 import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
 import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
-function Jobs() {
+import { useAuth } from "../provider/authProvider";
+function BookmarkedJobs() {
+  const { user } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  const [filters, setFilters] = useState({
-    date: null,
-    type: [],
-    company: [],
-    min_salary: 0,
-    longitude: null,
-    latitude: null,
-    distance: 0,
-  });
-
   const [jobs, setJobs] = useState([]);
-  const [userCoordinate, setUserCoordinate] = useState({
-    latitude: null,
-    longitude: null,
-  });
+  useEffect(() => {
+    if (!user?.userID) return;
+
+    const fetchJobs = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/Manage/?userID=${user.userID}`,
+          { credentials: "include" }
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          setJobs(data.jobs);
+        }
+      } catch (error) {
+        console.error("Error Getting Jobs:", error);
+      }
+    };
+
+    fetchJobs();
+  }, []);
 
   return (
     <>
@@ -38,18 +45,18 @@ function Jobs() {
         >
           <div className="content">
             <div className="panelTransparent !p-0 items-center">
-              <SearchColumn
-                setUserCoordinate={setUserCoordinate}
-                setFilters={setFilters}
-                setJobs={setJobs}
-              />
-              <FilterColumn
-                setJobs={setJobs}
-                jobs={jobs}
-                filters={filters}
-                setFilters={setFilters}
-                userCoordinate={userCoordinate}
-              />
+              {/* <SearchColumn
+                  setUserCoordinate={setUserCoordinate}
+                  setFilters={setFilters}
+                  setJobs={setJobs}
+                />
+                <FilterColumn
+                  setJobs={setJobs}
+                  jobs={jobs}
+                  filters={filters}
+                  setFilters={setFilters}
+                  userCoordinate={userCoordinate}
+                /> */}
 
               {}
             </div>
@@ -74,4 +81,4 @@ function Jobs() {
   );
 }
 
-export default Jobs;
+export default BookmarkedJobs;

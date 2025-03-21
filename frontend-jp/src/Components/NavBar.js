@@ -146,19 +146,19 @@ function NavBar() {
                opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-opacity duration-200"
                         >
                           <Link
-                            to="/Jobs/JobBoard"
+                            to="/Jobs"
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           >
                             Job Board
                           </Link>
                           <Link
-                            to="/Jobs/Manage"
+                            to="/Jobs/ManageJobs"
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           >
                             Manage Jobs
                           </Link>
                           <Link
-                            to="/Jobs/Bookmarked"
+                            to="/Jobs/BookmarkedJobs"
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           >
                             Bookmarked Jobs

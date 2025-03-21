@@ -21,7 +21,8 @@ import Skills from "./ProfileSections/Skills";
 import VideoCall from "./Components/Interview/VideoCall";
 import { AuthProvider } from "./provider/authProvider";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-
+import ManageJobs from "./Pages/ManageJobs";
+import BookmarkedJobs from "./Pages/BookmarkedJobs"; 
 const queryClient = new QueryClient();
 
 
@@ -60,6 +61,8 @@ function App() {
                 <Messaging />
               </div>} />
             <Route path="/Jobs" element={<Jobs />} />
+            <Route path="/Jobs/ManageJobs" element={<ManageJobs/>}/>
+            <Route path="/Jobs/BookmarkedJobs" element={<BookmarkedJobs/>}/>
             <Route path="/Interview" element={<Interview />} />
             <Route path="/Resume" element={<Resume />} />
 

@@ -11,7 +11,6 @@ import {
   IconButton,
   Box,
 } from "@mui/material";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import PaidIcon from "@mui/icons-material/Paid";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
@@ -20,11 +19,10 @@ import amazonIcon from "./Img/amazon-icon.png";
 import ReadMoreDrawer from "./ReadMoreComponent/ReadMoreDrawer";
 import styles from "./Jobs.module.css";
 import "../JobPreppers.css";
-
+import Bookmark from "./Posting/Helper/Bookmark";
+import { useAuth } from "../../provider/authProvider";
 function JobDescription({ setDrawerOpen, jobs }) {
-  //   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null); // Track the currently selected job
-
   const handleOpenDrawer = (job) => {
     setSelectedJob(job);
     setDrawerOpen(true); // Open the drawer when "Learn More" is clicked
@@ -34,6 +32,30 @@ function JobDescription({ setDrawerOpen, jobs }) {
     setDrawerOpen(false); // Close the drawer
     setSelectedJob(null);
   };
+
+  const [bookmarkedJobs, setBookmarkedJobs] = useState([]);
+  const { user } = useAuth();
+  useEffect(() => {
+    const fetchBookmarkedJobs = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/Bookmark/getBookmarkedJobs/?userID=${user.userID}`,
+          { credentials: "include" }
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log("Bookmarked: ", data);
+          setBookmarkedJobs(data);
+        }
+      } catch (error) {
+        console.error("Error Getting Jobs:", error);
+      }
+    };
+    if (user?.userID) {
+      fetchBookmarkedJobs();
+    }
+  }, [user?.userID]);
 
   return (
     <>
@@ -50,9 +72,11 @@ function JobDescription({ setDrawerOpen, jobs }) {
             subheader={job.company}
             action={
               <>
-                <IconButton aria-label="bookmark">
-                  <BookmarkBorderIcon />
-                </IconButton>
+                <Bookmark
+                  jobID={job.jobID}
+                  setBookmarkedJobs={setBookmarkedJobs}
+                  bookmarkedJobs={bookmarkedJobs}
+                />
                 <IconButton aria-label="highlight-off">
                   <HighlightOffIcon />
                 </IconButton>

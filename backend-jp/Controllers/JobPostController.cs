@@ -52,6 +52,7 @@ namespace JobPreppersDemo.Controllers
             public string perks { get; set; } = string.Empty;
 
             public string bonues { get; set; } = string.Empty;
+            public int jobID { get; set; }
 
         }
 
@@ -133,6 +134,7 @@ namespace JobPreppersDemo.Controllers
                                     location = job.location.name,
                                     bonues = job.bonus,
                                     perks = job.perks,
+                                    jobID = job.postID
 
 
                                 }
@@ -177,8 +179,6 @@ namespace JobPreppersDemo.Controllers
                 }
                 recruiterID = recruiter.recruiterID;
                 companyID = recruiter.companyID;
-                Console.WriteLine($"This should be RecruiterID: {recruiterID}. It should be 1 ");
-                Console.WriteLine($"This should be CompanyID: {companyID}. It should be 1 ");
 
                 int locationID;
                 // Add need to look for Company
@@ -285,7 +285,8 @@ namespace JobPreppersDemo.Controllers
                         description = job.description ?? "",
                         benefits = job.benefits ?? "",
                         bonues = job.bonus ?? "",
-                        perks = job.perks ?? ""
+                        perks = job.perks ?? "",
+                        jobID = job.postID
 
                     });
 
@@ -308,7 +309,8 @@ namespace JobPreppersDemo.Controllers
                         description = job.description ?? "",
                         benefits = job.benefits ?? "",
                         bonues = job.bonus ?? "",
-                        perks = job.perks ?? ""
+                        perks = job.perks ?? "",
+                        jobID = job.postID,
 
                     });
 

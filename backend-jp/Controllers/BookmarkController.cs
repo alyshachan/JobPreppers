@@ -1,0 +1,93 @@
+using JobPreppersDemo.Contexts;
+using JobPreppersDemo.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
+using Newtonsoft.Json.Serialization;
+using System.Text.Json;
+
+namespace JobPreppersDemo.Controllers
+{
+    public class BookmarkDto
+    {
+        public int userID { get; set; }
+        public int JobID { get; set; }
+
+
+    }
+
+    [Route("api/[controller]")]
+    [ApiController]
+    public class BookmarkController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        public BookmarkController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet("getBookmarkedJobs")]
+        public async Task<IActionResult> GetBookmarkedJobs([FromQuery] int userID)
+        {
+            var bookmarkedJobs = await _context.Bookmarks
+                                      .Where(b => b.userID == userID)
+                                      .Select(b => b.JobID)
+                                      .ToListAsync();
+
+            // var jobs = await _context.JobPosts
+            //                          .Where(job => bookmarkedJobs.Contains(job.postID))
+            //                          .ToListAsync();
+
+            return Ok(bookmarkedJobs);
+        }
+
+        [HttpPost("ToggleBookmark")]
+        public async Task<IActionResult> ToggleBookmark([FromBody] BookmarkDto request)
+        {
+            try
+            {
+
+                var bookmarkedJob = await _context.Bookmarks
+                .FirstOrDefaultAsync(bj => bj.userID == request.userID && bj.JobID == request.JobID);
+
+                // if doesn't exist, add
+                if (bookmarkedJob == null)
+                {
+                    var newBookmark = new Bookmark
+                    {
+                        userID = request.userID,
+                        JobID = request.JobID
+                    };
+                    await _context.Bookmarks.AddAsync(newBookmark);
+
+                }
+
+                // If exist, remove 
+                else
+                {
+                    _context.Bookmarks.Remove(bookmarkedJob);
+
+                }
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Bookmark toggled successfully" });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+
+        }
+
+
+
+    }
+}
+
+
+
