@@ -43,6 +43,8 @@ public partial class JobPost
 
     public int companyID { get; set; }
 
+    public virtual ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
+
     public virtual Company company { get; set; } = null!;
 
     public virtual JobLocation location { get; set; } = null!;

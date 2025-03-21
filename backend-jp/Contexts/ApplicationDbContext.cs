@@ -17,6 +17,8 @@ public partial class ApplicationDbContext : DbContext
     {
     }
 
+    public virtual DbSet<Bookmark> Bookmarks { get; set; }
+
     public virtual DbSet<Company> Companies { get; set; }
 
     public virtual DbSet<Degree> Degrees { get; set; }
@@ -26,8 +28,6 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<Friend> Friends { get; set; }
 
     public virtual DbSet<Interviewer> Interviewers { get; set; }
-
-    public virtual DbSet<Job> Jobs { get; set; }
 
     public virtual DbSet<JobEmployer> JobEmployers { get; set; }
 
@@ -61,15 +61,31 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<__EFMigrationsHistory> __EFMigrationsHistories { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=jobpreppers.cbgwos8q0ls4.us-east-2.rds.amazonaws.com;database=JobPreppersDB;port=3306;user id=JobPrepper;password=ILoveCanes2025!;sslmode=None", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
+
+        modelBuilder.Entity<Bookmark>(entity =>
+        {
+            entity.HasKey(e => e.bookmarkID).HasName("PRIMARY");
+
+            entity.ToTable("Bookmark");
+
+            entity.HasIndex(e => e.userID, "Bookmark_Users_userID_fk");
+
+            entity.HasIndex(e => new { e.JobID, e.userID }, "Bookmark_pk").IsUnique();
+
+            entity.HasOne(d => d.Job).WithMany(p => p.Bookmarks)
+                .HasForeignKey(d => d.JobID)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("Bookmark_JobPosts_postID_fk");
+
+            entity.HasOne(d => d.user).WithMany(p => p.Bookmarks)
+                .HasForeignKey(d => d.userID)
+                .HasConstraintName("Bookmark_Users_userID_fk");
+        });
 
         modelBuilder.Entity<Company>(entity =>
         {
@@ -153,22 +169,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey<Interviewer>(d => d.userID)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("Interviewer_ibfk_1");
-        });
-
-        modelBuilder.Entity<Job>(entity =>
-        {
-            entity.HasKey(e => e.jobID).HasName("PRIMARY");
-
-            entity.Property(e => e.benefits).HasColumnType("json");
-            entity.Property(e => e.bonus).HasColumnType("json");
-            entity.Property(e => e.company).HasMaxLength(100);
-            entity.Property(e => e.description).HasColumnType("text");
-            entity.Property(e => e.endDate).HasColumnType("datetime");
-            entity.Property(e => e.location).HasMaxLength(100);
-            entity.Property(e => e.perks).HasColumnType("json");
-            entity.Property(e => e.postDate).HasColumnType("datetime");
-            entity.Property(e => e.title).HasMaxLength(100);
-            entity.Property(e => e.type).HasMaxLength(50);
         });
 
         modelBuilder.Entity<JobEmployer>(entity =>
