@@ -4,15 +4,21 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { SvgIcon, TextField } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import styles from "./Jobs.module.css";
 import AddJobForm from "./Posting/AddJobForm";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "../../provider/authProvider";
 function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
   const [jobName, setJobName] = useState("");
   // Still need to cache but that for later
   const [location, setLocation] = useState(null);
   const [locationChanged, setLocationChanged] = useState(false);
+  const [isRecruiter, setIsRecruiter] = useState(false);
+  const [companyName, setCompanyName] = useState("");
+  const { user } = useAuth(); // custom hook for authprovider
+
   useEffect(() => {
     const getUserLocation = () => {
       if (navigator.geolocation) {
@@ -99,6 +105,30 @@ function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
     }
   };
 
+  useEffect(() => {
+    if (!user?.userID) return;
+
+    const checkRole = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/Recruiter/isRecruiter?userID=${user.userID}`,
+          { credentials: "include" }
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log(user.userID);
+          setIsRecruiter(data.isRecruiter);
+          setCompanyName(data.companyName);
+        }
+      } catch (error) {
+        console.error("Error checking recruiter role:", error);
+      }
+    };
+
+    checkRole();
+  }, [user?.userID]);
+
   return (
     <>
       <div className={styles.searchContent}>
@@ -148,7 +178,10 @@ function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
             },
           }}
         />
-        <AddJobForm setJobs={setJobs} />
+        {/* Eventually change to nav bar */}
+        {isRecruiter ? (
+          <AddJobForm setJobs={setJobs} companyName={companyName} />
+        ) : null}
       </div>
     </>
   );

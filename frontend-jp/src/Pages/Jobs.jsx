@@ -7,7 +7,7 @@ import FilterColumn from "../Components/Jobs/FilterColumn";
 import JobDescription from "../Components/Jobs/JobDescription";
 import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
 import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
-
+import { useQuery } from "@tanstack/react-query";
 function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -28,26 +28,26 @@ function Jobs() {
     longitude: null,
   });
 
-  // useEffect(() => {
-  //   const fetchJobs = async () => {
-  //     try {
-  //       const res = await fetch("http://localhost:5000/api/jobpost");
-  //       const contentType = res.headers.get("Content-Type");
-  //       if (contentType && contentType.includes("application/json")) {
-  //         const data = await res.json();
-  //         console.log("Data:", data);
-  //         console.log("Data Jobs:", data.jobs);
-  //         setJobs(data.jobs);
-  //       } else {
-  //         console.error("Expected JSON, but got:", contentType);
+  // const fetchUser = async () => {
+  //     const res = await fetch(
+  //       `http://localhost:5000/api/GetUser/${user.userID}`,
+  //       {
+  //         credentials: "include", // include cookies
   //       }
-  //     } catch (error) {
-  //       console.error("Error fetching jobs:", error);
+  //     );
+
+  //     if (!res.ok) {
+  //       throw new Error("Failed to fetch user");
   //     }
+  //     return res.json();
   //   };
 
-  //   fetchJobs();
-  // }, []);
+  //   const { data: initialUser, isLoading, isError } = useQuery({
+  //     queryKey: ["user", user.userID], // Cache key based on userID
+  //     queryFn: () => fetchUser(user.userID),
+  //     enabled: !!user.userID, // Prevent fetching if userID is undefined
+  //   });
+
   return (
     <>
       <Box className={styles.jobs}>

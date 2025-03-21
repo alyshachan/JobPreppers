@@ -30,7 +30,6 @@ import {
   qualificationSchema,
   applicationProcessSchema,
 } from "./Validation";
-// import { PacmanLoader, RingLoader, PropagateLoader } from "react-spinners";
 import PacmanLoader from "../../Pacman/Pacman";
 import { useAuth } from "../../../provider/authProvider";
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -45,7 +44,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function AddJobForm({ setJobs }) {
+export default function AddJobForm({ setJobs, companyName }) {
   const [jobDescriptionData, setjobDescriptionData] = useState({
     benefits: [],
     companyName: null,
@@ -69,10 +68,8 @@ export default function AddJobForm({ setJobs }) {
   // State
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({});
-  const { initialUser, setIntialUser } = useState(null);
-  const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const { company, setCompany } = useState(null);
-
+  const { user } = useAuth(); // custom hook for authprovider
   const [activeStep, setActiveStep] = useState(0);
   const jobForm = useForm({
     resolver: yupResolver(stepSchemas[activeStep]),
@@ -81,6 +78,7 @@ export default function AddJobForm({ setJobs }) {
 
   const handleClickOpen = () => {
     setOpen(true);
+    jobForm.setValue("company", companyName);
   };
 
   const handleClose = () => {
@@ -145,38 +143,12 @@ export default function AddJobForm({ setJobs }) {
     mutationFn: parseDescription,
     onSuccess: (data) => {
       setjobDescriptionData(data);
-      console.log("Parse Job Description: ", data);
       handleNext();
     },
     onError: (error) => {
       console.error("Error Parsing Job Description:", error);
     },
   });
-  // Might convert to query
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:5000/api/GetUser/${user.userID}`,
-          {
-            credentials: "include", // include cookies
-          }
-        );
-
-        if (res.ok) {
-          const data = await res.json();
-          console.log("GetUser: ", data);
-          setIntialUser(data);
-        } else {
-          console.error("Failed to fetch User");
-        }
-      } catch (error) {
-        console.error("Error fetching User:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   const onSubmit = async (data, e) => {
     const isValid = await jobForm.trigger(); // Validate current step before proceeding
