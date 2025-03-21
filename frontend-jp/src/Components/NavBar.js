@@ -16,7 +16,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png"
+import defaultProfilePicture from "../Components/defaultProfilePicture.png";
 
 const navigation = [
   { name: "Feed", href: "/Feed", current: true },
@@ -31,7 +31,7 @@ function classNames(...classes) {
 
 function CustomLink({ to, children, className, ...props }) {
   const resolvedPath = useResolvedPath(to);
-  const isActive = useMatch({ path: resolvedPath.pathname, end: true });
+  const isActive = useMatch({ path: resolvedPath.pathname, end: false });
   return (
     <div className={isActive ? "active" : ""}>
       <Link
@@ -51,14 +51,11 @@ function CustomLink({ to, children, className, ...props }) {
   );
 }
 
-
-
 function NavBar() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
-  
+  const matchJobs = useMatch("/Jobs/*");
 
   const handleLogoutSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -88,11 +85,15 @@ function NavBar() {
   };
 
   if (user == null) {
-    return
+    return;
   }
 
-  const userPic = (user.profile_pic == null) ? defaultProfilePicture : "data:image/png;base64," + user.profile_pic.toString().toString('base64');
-  
+  const userPic =
+    user.profile_pic == null
+      ? defaultProfilePicture
+      : "data:image/png;base64," +
+        user.profile_pic.toString().toString("base64");
+
   return (
     <Disclosure as="nav" className="bg-[#4BA173] w-full padding">
       <div className="mx-auto w-full px-2">
@@ -124,11 +125,55 @@ function NavBar() {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4 justify-end">
-                {navigation.map((item) => (
-                  <CustomLink key={item.name} to={item.href}>
-                    {item.name}
-                  </CustomLink>
-                ))}
+                {navigation.map((item) => {
+                  if (item.name === "Jobs") {
+                    return (
+                      <div className="relative group">
+                        <span
+                          className={classNames(
+                            "block rounded-md px-3 py-2 text-base font-medium cursor-pointer",
+                            matchJobs
+                              ? "bg-[#085630] text-white"
+                              : "text-gray-300 group-hover:bg-[#0D7944] group-hover:text-white"
+                          )}
+                        >
+                          Jobs
+                        </span>
+
+                        {/* Dropdown panel */}
+                        <div
+                          className="absolute left-0 z-50 mt-1 w-48 origin-top-left rounded-md bg-white shadow-lg 
+               opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-opacity duration-200"
+                        >
+                          <Link
+                            to="/Jobs/JobBoard"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            Job Board
+                          </Link>
+                          <Link
+                            to="/Jobs/Manage"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            Manage Jobs
+                          </Link>
+                          <Link
+                            to="/Jobs/Bookmarked"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            Bookmarked Jobs
+                          </Link>
+                        </div>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <CustomLink key={item.name} to={item.href}>
+                        {item.name}
+                      </CustomLink>
+                    );
+                  }
+                })}
               </div>
             </div>
           </div>
@@ -180,7 +225,7 @@ function NavBar() {
                   <Link
                     to="/Login"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                    onClick = {handleLogoutSubmit}
+                    onClick={handleLogoutSubmit}
                   >
                     Sign out
                   </Link>
