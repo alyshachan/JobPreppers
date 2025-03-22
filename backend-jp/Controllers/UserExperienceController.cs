@@ -180,5 +180,23 @@ namespace JobPreppersDemo.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpDelete("DeleteExperience/{experienceID}")]
+        public async Task<IActionResult> DeleteExperience(int experienceID){
+            try{
+                var experience = await _context.UserExperiences.FindAsync(experienceID);
+                if (experience == null){
+                    return NotFound("Experience not found");
+                }
+
+                _context.UserExperiences.Remove(experience);
+                await _context.SaveChangesAsync();
+
+                return Ok(new {message = "Experience deleted sucessfully"});
+            }
+            catch(Exception ex){
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

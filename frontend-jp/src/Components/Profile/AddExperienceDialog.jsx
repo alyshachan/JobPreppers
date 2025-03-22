@@ -75,11 +75,11 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
     const start =
       startDate.toDateString === new Date().toDateString
         ? null
-        : moment(startDate).format("YYYY-MM-DD");
+        : moment(startDate).add(1, "days").format("YYYY-MM-DD");
     const end =
       endDate.toDateString === new Date().toDateString
         ? null
-        : moment(endDate).format("YYYY-MM-DD");
+        : moment(endDate).add(1, "days").format("YYYY-MM-DD");
 
     try {
       const url = experience
@@ -109,6 +109,28 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
       } else {
         const errorData = await response.json();
         window.alert("Your input has invalid characters, please try again.");
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+    try {
+      const response = await fetch(`http://localhost:5000/api/UserExperience/DeleteExperience/${experience.userExperienceID}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (response.ok){
+        onAdd();
+        onClose();
+        setError("");
+      } else {
+        const errorData = await response.json();
+        window.alert("Error whilst trying to delete experience");
         setError(errorData.message); // Show error message from the backend
       }
     } catch (err) {
@@ -217,11 +239,18 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
               </div>
             </div>
           </div>
-          <DialogActions>
-            <button type="submit">
-              {experience ? "Save Changes" : "Add Experience"}
-            </button>
-          </DialogActions>
+          {experience ? (
+            <DialogActions className="flex !justify-between w-full">
+              <button className="lightButton" onClick={handleDelete}>
+                Delete Experience
+              </button>
+              <button type="submit">Save Changes</button>
+            </DialogActions>
+          ) : (
+            <DialogActions>
+              <button type="submit">Add Experience</button>
+            </DialogActions>
+          )}
         </form>
       </DialogContent>
     </StyledDialog>

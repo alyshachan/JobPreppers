@@ -73,11 +73,11 @@ function AddEducationDialog({ open, onClose, onAdd, education }) {
     const start =
       startDate.toDateString === new Date().toDateString
         ? null
-        : moment(startDate).format("YYYY-MM-DD");
+        : moment(startDate).add(1, "days").format("YYYY-MM-DD");
     const end =
       endDate.toDateString === new Date().toDateString
         ? null
-        : moment(endDate).format("YYYY-MM-DD");
+        : moment(endDate).add(1, "days").format("YYYY-MM-DD");
 
     try {
       const url = education
