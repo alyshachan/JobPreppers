@@ -44,9 +44,9 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
 
   useEffect(() => {
     if (experience) {
-      setWork(experience.workName || "");
+      setWork(experience.work_name || "");
       setLocation(experience.location || "");
-      setTitle(experience.jobTitle || "");
+      setTitle(experience.job_title || "");
       setStartDate(
         experience.start_date
           ? moment(experience.start_date).format("YYYY-MM-DD")
