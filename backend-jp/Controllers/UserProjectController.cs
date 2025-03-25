@@ -47,6 +47,7 @@ namespace JobPreppersDemo.Controllers
                            .Where(up => up.userID == userID)
                            .Select(up => new
                            {
+                               UserProjectID = up.projectID,
                                ProjectTitle = up.project_title,
                                Description = up.description
                            })
@@ -75,8 +76,6 @@ namespace JobPreppersDemo.Controllers
             if (project == null)
             {
                 return BadRequest("Project Info not filled out");
-
-
             }
             try
             {
@@ -104,6 +103,46 @@ namespace JobPreppersDemo.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
 
+        }
+
+        [HttpPut("EditProject/{projectID}")]
+        public async Task<IActionResult> EditProject(int projectID, [FromBody] UserProjectDto userProjectDto)
+        {
+            if (userProjectDto == null)
+            {
+                return BadRequest("Project information not filled out");
+            }
+            try
+            {
+                var project = await _context.UserProjects.FindAsync(projectID);
+                if (project == null){
+                    return NotFound("Project not found");
+                }
+
+                // Check if the project already exists
+                var duplicateProject = await _context.UserProjects
+                    .AnyAsync(p =>
+                        p.userID == userProjectDto.userID &&
+                        p.project_title.ToLower() == userProjectDto.projectTitle.ToLower() &&
+                        p.projectID != projectID);
+
+                if (duplicateProject)
+                {
+                    return Conflict("A project with the same title already exists for this user.");
+                }
+
+                project.project_title = userProjectDto.projectTitle;
+                project.description = userProjectDto.description;
+
+                _context.UserProjects.Update(project);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Project updated successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

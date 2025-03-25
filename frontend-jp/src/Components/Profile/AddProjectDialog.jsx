@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -29,21 +29,34 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddProjectDialog({ open, onClose, onAdd }) {
+function AddProjectDialog({ open, onClose, onAdd, project }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
+
+  
+  useEffect(() => {
+    if (project) {
+      setTitle(project.project_title|| "");
+      setDescription(project.description || "");
+    } else {
+      setTitle("");
+      setDescription("");
+    }
+  }, [project]);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     onClose();
 
     try {
+      const url = project ? `EditProject/${project.userProjectID}`:"CreateProject"
+      const method = project ? "PUT" : "POST"
       const response = await fetch(
-        "http://localhost:5000/api/UserProject/CreateProject",
+        `http://localhost:5000/api/UserProject/${url}`,
         {
-          method: "POST",
+          method: method,
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userID: user.userID,
@@ -70,7 +83,7 @@ function AddProjectDialog({ open, onClose, onAdd }) {
   return (
     <StyledDialog onClose={onClose} open={open}>
       <DialogTitle className={styles.dialogTitle}>
-        <SectionHeader header="Add Project" />
+        <SectionHeader header={project ? "Edit Project" : "Add Project"} />
       </DialogTitle>
 
       <IconButton
@@ -114,7 +127,7 @@ function AddProjectDialog({ open, onClose, onAdd }) {
             </div>
           </div>
           <DialogActions>
-            <button type="submit">Add Project</button>
+            <button type="submit">{project ? "Save Changes" : "Add Project"}</button>
           </DialogActions>
         </form>
       </DialogContent>

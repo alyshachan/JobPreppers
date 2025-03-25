@@ -143,7 +143,7 @@ namespace JobPreppersDemo.Controllers
                 var experience = await _context.UserExperiences.FindAsync(experienceID);
                 if (experience == null)
                 {
-                    return NotFound("Education not found");
+                    return NotFound("Experience not found");
                 }
 
                 // Check if the work already exists by name and location

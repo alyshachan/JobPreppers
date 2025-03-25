@@ -120,7 +120,8 @@ function Profile() {
 
   const fetchProject = async () => {
     fetchData("UserProject", setProjectDict, (data) =>
-      data.map(({ projectTitle, description }) => ({
+      data.map(({ userProjectID, projectTitle, description }) => ({
+        userProjectID: userProjectID,
         project_title: projectTitle,
         description,
       }))
