@@ -13,6 +13,8 @@ public partial class Company
 
     public string? industry { get; set; }
 
+    public virtual ICollection<JobPost> JobPosts { get; set; } = new List<JobPost>();
+
     public virtual ICollection<Recruiter> Recruiters { get; set; } = new List<Recruiter>();
 
     public virtual User? user { get; set; }

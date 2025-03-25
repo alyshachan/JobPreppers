@@ -10,6 +10,4 @@ public partial class JobEmployer
     public int companyID { get; set; }
 
     public string? Department { get; set; }
-
-    public virtual ICollection<JobPost> JobPosts { get; set; } = new List<JobPost>();
 }

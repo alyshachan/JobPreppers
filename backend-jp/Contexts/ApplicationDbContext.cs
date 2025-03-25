@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using JobPreppersDemo.Models;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +17,10 @@ public partial class ApplicationDbContext : DbContext
     {
     }
 
+    public virtual DbSet<Bookmark> Bookmarks { get; set; }
+
     public virtual DbSet<Company> Companies { get; set; }
+
     public virtual DbSet<Degree> Degrees { get; set; }
 
     public virtual DbSet<Event> Events { get; set; }
@@ -25,8 +28,6 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<Friend> Friends { get; set; }
 
     public virtual DbSet<Interviewer> Interviewers { get; set; }
-
-    public virtual DbSet<Job> Jobs { get; set; }
 
     public virtual DbSet<JobEmployer> JobEmployers { get; set; }
 
@@ -37,6 +38,7 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<JobQualification> JobQualifications { get; set; }
 
     public virtual DbSet<Recruiter> Recruiters { get; set; }
+
     public virtual DbSet<Resume> Resumes { get; set; }
 
     public virtual DbSet<School> Schools { get; set; }
@@ -57,34 +59,35 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Work> Works { get; set; }
 
-
+    public virtual DbSet<__EFMigrationsHistory> __EFMigrationsHistories { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseMySql("name=ConnectionStrings:DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
-    public virtual DbSet<__EFMigrationsHistory> __EFMigrationsHistories { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
 
-        modelBuilder.Entity<Company>(entity =>
+        modelBuilder.Entity<Bookmark>(entity =>
         {
-            entity.HasKey(e => e.companyID).HasName("PRIMARY");
+            entity.HasKey(e => e.bookmarkID).HasName("PRIMARY");
 
-            entity.ToTable("Company");
+            entity.ToTable("Bookmark");
 
-            entity.HasIndex(e => e.Name, "Name").IsUnique();
+            entity.HasIndex(e => e.userID, "Bookmark_Users_userID_fk");
 
-            entity.HasIndex(e => e.userID, "userID");
+            entity.HasIndex(e => new { e.JobID, e.userID }, "Bookmark_pk").IsUnique();
 
-            entity.Property(e => e.Name).HasMaxLength(500);
-            entity.Property(e => e.industry).HasMaxLength(500);
-
-            entity.HasOne(d => d.user).WithMany(p => p.Companies)
-                .HasForeignKey(d => d.userID)
+            entity.HasOne(d => d.Job).WithMany(p => p.Bookmarks)
+                .HasForeignKey(d => d.JobID)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("Company_ibfk_1");
+                .HasConstraintName("Bookmark_JobPosts_postID_fk");
+
+            entity.HasOne(d => d.user).WithMany(p => p.Bookmarks)
+                .HasForeignKey(d => d.userID)
+                .HasConstraintName("Bookmark_Users_userID_fk");
         });
 
         modelBuilder.Entity<Company>(entity =>
@@ -113,20 +116,6 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("Degree");
 
             entity.Property(e => e.degree_name).HasMaxLength(255);
-        });
-
-        modelBuilder.Entity<Event>(entity =>
-        {
-            entity.HasKey(e => e.eventID).HasName("PRIMARY");
-
-            entity.ToTable("Event");
-
-            entity.Property(e => e.eventDetails).HasColumnType("text");
-            entity.Property(e => e.eventEndTime).HasColumnType("time");
-            entity.Property(e => e.eventLink).HasMaxLength(500);
-            entity.Property(e => e.eventName).HasMaxLength(500);
-            entity.Property(e => e.eventStartTime).HasColumnType("time");
-            entity.Property(e => e.participantID).HasColumnType("json");
         });
 
         modelBuilder.Entity<Event>(entity =>
@@ -185,40 +174,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasConstraintName("Interviewer_ibfk_1");
         });
 
-        modelBuilder.Entity<Interviewer>(entity =>
-        {
-            entity.HasKey(e => e.interviewerID).HasName("PRIMARY");
-
-            entity.ToTable("Interviewer");
-
-            entity.HasIndex(e => e.userID, "userID").IsUnique();
-
-            entity.Property(e => e.availability).HasMaxLength(500);
-            entity.Property(e => e.rating).HasPrecision(2, 1);
-            entity.Property(e => e.specialties).HasColumnType("json");
-
-            entity.HasOne(d => d.user).WithOne(p => p.Interviewer)
-                .HasForeignKey<Interviewer>(d => d.userID)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("Interviewer_ibfk_1");
-        });
-
-        modelBuilder.Entity<Job>(entity =>
-        {
-            entity.HasKey(e => e.jobID).HasName("PRIMARY");
-
-            entity.Property(e => e.benefits).HasColumnType("json");
-            entity.Property(e => e.bonus).HasColumnType("json");
-            entity.Property(e => e.company).HasMaxLength(100);
-            entity.Property(e => e.description).HasColumnType("text");
-            entity.Property(e => e.endDate).HasColumnType("datetime");
-            entity.Property(e => e.location).HasMaxLength(100);
-            entity.Property(e => e.perks).HasColumnType("json");
-            entity.Property(e => e.postDate).HasColumnType("datetime");
-            entity.Property(e => e.title).HasMaxLength(100);
-            entity.Property(e => e.type).HasMaxLength(50);
-        });
-
         modelBuilder.Entity<JobEmployer>(entity =>
         {
             entity.HasKey(e => e.companyID).HasName("PRIMARY");
@@ -244,11 +199,13 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.postID).HasName("PRIMARY");
 
-            entity.HasIndex(e => e.employerID, "JobPosts_Employers_companyID_fk");
+            entity.HasIndex(e => e.companyID, "JobPosts_Company_companyID_fk");
 
             entity.HasIndex(e => e.locationID, "JobPosts_JobLocation_locationID_fk");
 
             entity.HasIndex(e => e.qualificationID, "JobPosts_JobQualifications_qualID_fk");
+
+            entity.HasIndex(e => e.recruiterID, "JobPosts_Recruiters_recruiterID_fk");
 
             entity.Property(e => e.benefits).HasColumnType("json");
             entity.Property(e => e.bonus).HasColumnType("json");
@@ -262,9 +219,10 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.title).HasMaxLength(150);
             entity.Property(e => e.type).HasMaxLength(50);
 
-            entity.HasOne(d => d.employer).WithMany(p => p.JobPosts)
-                .HasForeignKey(d => d.employerID)
-                .HasConstraintName("JobPosts_Employers_companyID_fk");
+            entity.HasOne(d => d.company).WithMany(p => p.JobPosts)
+                .HasForeignKey(d => d.companyID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("JobPosts_Company_companyID_fk");
 
             entity.HasOne(d => d.location).WithMany(p => p.JobPosts)
                 .HasForeignKey(d => d.locationID)
@@ -273,8 +231,12 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.qualification).WithMany(p => p.JobPosts)
                 .HasForeignKey(d => d.qualificationID)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("JobPosts_JobQualifications_qualID_fk");
+
+            entity.HasOne(d => d.recruiter).WithMany(p => p.JobPosts)
+                .HasForeignKey(d => d.recruiterID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("JobPosts_Recruiters_recruiterID_fk");
         });
 
         modelBuilder.Entity<JobQualification>(entity =>
@@ -289,31 +251,12 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.recruiterID).HasName("PRIMARY");
 
-            entity.HasIndex(e => e.companyID, "companyID");
+            entity.HasIndex(e => e.companyID, "Recruiters_ibfk_2");
 
             entity.HasIndex(e => e.userID, "userID").IsUnique();
 
             entity.HasOne(d => d.company).WithMany(p => p.Recruiters)
                 .HasForeignKey(d => d.companyID)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("Recruiters_ibfk_2");
-
-            entity.HasOne(d => d.user).WithOne(p => p.Recruiter)
-                .HasForeignKey<Recruiter>(d => d.userID)
-                .HasConstraintName("Recruiters_ibfk_1");
-        });
-
-        modelBuilder.Entity<Recruiter>(entity =>
-        {
-            entity.HasKey(e => e.recruiterID).HasName("PRIMARY");
-
-            entity.HasIndex(e => e.companyID, "companyID");
-
-            entity.HasIndex(e => e.userID, "userID").IsUnique();
-
-            entity.HasOne(d => d.company).WithMany(p => p.Recruiters)
-                .HasForeignKey(d => d.companyID)
-                .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("Recruiters_ibfk_2");
 
             entity.HasOne(d => d.user).WithOne(p => p.Recruiter)
@@ -373,12 +316,10 @@ public partial class ApplicationDbContext : DbContext
             entity.HasIndex(e => e.email, "email").IsUnique();
 
             entity.HasIndex(e => e.username, "username").IsUnique();
-            
 
             entity.Property(e => e.description).HasColumnType("text");
             entity.Property(e => e.email).HasMaxLength(100);
             entity.Property(e => e.first_name).HasMaxLength(50);
-            // entity.Property(e => e.job_title).HasMaxLength(200);
             entity.Property(e => e.last_name).HasMaxLength(50);
             entity.Property(e => e.location).HasMaxLength(255);
             entity.Property(e => e.password).HasMaxLength(255);
@@ -487,8 +428,6 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.location).HasMaxLength(255);
             entity.Property(e => e.work_name).HasMaxLength(255);
         });
-
-      
 
         modelBuilder.Entity<__EFMigrationsHistory>(entity =>
         {
