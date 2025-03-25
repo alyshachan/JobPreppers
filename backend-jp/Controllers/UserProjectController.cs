@@ -144,5 +144,23 @@ namespace JobPreppersDemo.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpDelete("DeleteProject/{projectID}")]
+        public async Task<IActionResult> DeleteProject(int projectID){
+            try{
+                var project = await _context.UserProjects.FindAsync(projectID);
+                if (project == null){
+                    return NotFound("Project not found");
+                }
+
+                _context.UserProjects.Remove(project);
+                await _context.SaveChangesAsync();
+
+                return Ok(new {message = "Project deleted sucessfully"});
+            }
+            catch(Exception ex){
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

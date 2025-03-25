@@ -80,6 +80,28 @@ function AddProjectDialog({ open, onClose, onAdd, project }) {
     }
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+    try {
+      const response = await fetch(`http://localhost:5000/api/UserProject/DeleteProject/${project.userProjectID}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (response.ok){
+        onAdd();
+        onClose();
+        setError("");
+      } else {
+        const errorData = await response.json();
+        window.alert("Error whilst trying to delete project");
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
+
   return (
     <StyledDialog onClose={onClose} open={open}>
       <DialogTitle className={styles.dialogTitle}>
@@ -126,9 +148,18 @@ function AddProjectDialog({ open, onClose, onAdd, project }) {
               </div>
             </div>
           </div>
-          <DialogActions>
-            <button type="submit">{project ? "Save Changes" : "Add Project"}</button>
-          </DialogActions>
+          {project ? (
+            <DialogActions className="flex !justify-between w-full">
+              <button className="lightButton" onClick={handleDelete}>
+                Delete Project
+              </button>
+              <button type="submit">Save Changes</button>
+            </DialogActions>
+          ) : (
+            <DialogActions>
+              <button type="submit">Add Project</button>
+            </DialogActions>
+          )}
         </form>
       </DialogContent>
     </StyledDialog>
