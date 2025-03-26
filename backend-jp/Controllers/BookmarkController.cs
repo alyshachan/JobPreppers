@@ -57,6 +57,7 @@ namespace JobPreppersDemo.Controllers
                                     .Where(b => b.userID == userID)
                                     .Select(b => b.Job != null ? new
                                     {
+                                        jobID = b.JobID,
                                         company = b.Job.company.Name,
                                         minimumSalary = b.Job.minimumSalary,
                                         benefits = b.Job.benefits,
@@ -85,13 +86,14 @@ namespace JobPreppersDemo.Controllers
         {
             try
             {
-
                 var bookmarkedJob = await _context.Bookmarks
                 .FirstOrDefaultAsync(bj => bj.userID == request.userID && bj.JobID == request.JobID);
+                Console.WriteLine(bookmarkedJob);
 
                 // if doesn't exist, add
                 if (bookmarkedJob == null)
                 {
+                    Console.WriteLine("Went into add bookmark");
                     var newBookmark = new Bookmark
                     {
                         userID = request.userID,
@@ -104,6 +106,8 @@ namespace JobPreppersDemo.Controllers
                 // If exist, remove 
                 else
                 {
+                    Console.WriteLine("Went into remove bookmark");
+
                     _context.Bookmarks.Remove(bookmarkedJob);
 
                 }

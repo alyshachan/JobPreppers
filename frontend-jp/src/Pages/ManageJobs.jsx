@@ -4,10 +4,10 @@ import SearchColumn from "../Components/Jobs/SearchColumn";
 import "../Components/JobPreppers.css";
 import styles from "../Components/Jobs/Jobs.module.css";
 import FilterColumn from "../Components/Jobs/FilterColumn";
-import JobDescription from "../Components/Jobs/JobDescription";
 import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
 import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
 import { useAuth } from "../provider/authProvider";
+import ManageDescription from "../Components/Jobs/ManageDescription";
 function ManageJobs() {
   const { user } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -62,7 +62,7 @@ function ManageJobs() {
             </div>
             {jobs.length > 0 ? (
               <div className={styles.containerForCard}>
-                <JobDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
+                <ManageDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
               </div>
             ) : (
               <NoResultPage />

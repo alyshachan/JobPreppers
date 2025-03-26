@@ -21,7 +21,12 @@ import styles from "./Jobs.module.css";
 import "../JobPreppers.css";
 import Bookmark from "./Posting/Helper/Bookmark";
 import { useAuth } from "../../provider/authProvider";
-function JobDescription({ setDrawerOpen, jobs }) {
+function BookmarkDescription({
+  setDrawerOpen,
+  jobs,
+  bookmarkedJobs,
+  setBookmarkedJobs,
+}) {
   const [selectedJob, setSelectedJob] = useState(null); // Track the currently selected job
   const handleOpenDrawer = (job) => {
     setSelectedJob(job);
@@ -33,30 +38,7 @@ function JobDescription({ setDrawerOpen, jobs }) {
     setSelectedJob(null);
   };
 
-  const [bookmarkedJobs, setBookmarkedJobs] = useState([]);
   const { user } = useAuth();
-  useEffect(() => {
-    const fetchBookmarkedJobs = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:5000/api/Bookmark/getBookmark/?userID=${user.userID}`,
-          { credentials: "include" }
-        );
-
-        if (res.ok) {
-          const data = await res.json();
-          console.log("Bookmarked: ", data);
-          console.log("Current Jobs: ", jobs);
-          setBookmarkedJobs(data);
-        }
-      } catch (error) {
-        console.error("Error Getting Jobs:", error);
-      }
-    };
-    if (user?.userID) {
-      fetchBookmarkedJobs();
-    }
-  }, [user?.userID]);
 
   return (
     <>
@@ -78,9 +60,9 @@ function JobDescription({ setDrawerOpen, jobs }) {
                   setBookmarkedJobs={setBookmarkedJobs}
                   bookmarkedJobs={bookmarkedJobs}
                 />
-                <IconButton aria-label="highlight-off">
+                {/* <IconButton aria-label="highlight-off">
                   <HighlightOffIcon />
-                </IconButton>
+                </IconButton> */}
               </>
             }
           />
@@ -151,4 +133,4 @@ function JobDescription({ setDrawerOpen, jobs }) {
   );
 }
 
-export default JobDescription;
+export default BookmarkDescription;

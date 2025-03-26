@@ -7,6 +7,8 @@ const Bookmark = ({ jobID, setBookmarkedJobs, bookmarkedJobs }) => {
   const { user } = useAuth();
 
   const toggleBookmark = async (jobID) => {
+    console.log("Bookmarked Job in Helper Method: ", bookmarkedJobs);
+    console.log("JobID: ", jobID);
     try {
       const res = await fetch(
         "http://localhost:5000/api/Bookmark/ToggleBookmark",

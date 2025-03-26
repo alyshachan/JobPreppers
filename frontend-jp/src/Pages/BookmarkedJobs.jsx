@@ -4,7 +4,7 @@ import SearchColumn from "../Components/Jobs/SearchColumn";
 import "../Components/JobPreppers.css";
 import styles from "../Components/Jobs/Jobs.module.css";
 import FilterColumn from "../Components/Jobs/FilterColumn";
-import JobDescription from "../Components/Jobs/JobDescription";
+import BookmarkDescription from "../Components/Jobs/BookmarkDescription";
 import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
 import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
 import { useAuth } from "../provider/authProvider";
@@ -12,6 +12,8 @@ function BookmarkedJobs() {
   const { user } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [jobs, setJobs] = useState([]);
+  const [bookmarkedJobs, setBookmarkedJobs] = useState([]);
+
   useEffect(() => {
     if (!user?.userID) return;
 
@@ -24,8 +26,10 @@ function BookmarkedJobs() {
 
         if (res.ok) {
           const data = await res.json();
-          console.log("bookmark jobs: ", data.jobs);
           setJobs(data);
+          let jobIDList = [];
+          data.map((job) => jobIDList.push(job.jobID));
+          setBookmarkedJobs(jobIDList);
         }
       } catch (error) {
         console.error("Error Getting Jobs:", error);
@@ -34,6 +38,30 @@ function BookmarkedJobs() {
 
     fetchJobs();
   }, [user?.userID]);
+
+  // useEffect(() => {
+  //   const fetchBookmarkedJobs = async () => {
+  //     try {
+  //       const res = await fetch(
+  //         `http://localhost:5000/api/Bookmark/getBookmark/?userID=${user.userID}`,
+  //         { credentials: "include" }
+  //       );
+
+  //       if (res.ok) {
+  //         const data = await res.json();
+  //         console.log("Bookmarked: ", data);
+  //         console.log("Current Jobs: ", jobs);
+  //         setJobs(data.jobs);
+  //         setBookmarkedJobs(data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error Getting Jobs:", error);
+  //     }
+  //   };
+  //   if (user?.userID) {
+  //     fetchBookmarkedJobs();
+  //   }
+  // }, [user?.userID]);
 
   return (
     <>
@@ -61,7 +89,12 @@ function BookmarkedJobs() {
             </div>
             {jobs.length > 0 ? (
               <div className={styles.containerForCard}>
-                <JobDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
+                <BookmarkDescription
+                  setDrawerOpen={setDrawerOpen}
+                  jobs={jobs}
+                  bookmarkedJobs={bookmarkedJobs}
+                  setBookmarkedJobs={setBookmarkedJobs}
+                />
               </div>
             ) : (
               <NoResultPage />
