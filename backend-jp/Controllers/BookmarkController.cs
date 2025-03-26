@@ -31,12 +31,46 @@ namespace JobPreppersDemo.Controllers
             _context = context;
         }
 
-        [HttpGet("getBookmarkedJobs")]
-        public async Task<IActionResult> GetBookmarkedJobs([FromQuery] int userID)
+        [HttpGet("getBookmark")]
+        public async Task<IActionResult> GetBookmark([FromQuery] int userID)
         {
             var bookmarkedJobs = await _context.Bookmarks
                                       .Where(b => b.userID == userID)
                                       .Select(b => b.JobID)
+                                      .ToListAsync();
+
+            // var jobs = await _context.JobPosts
+            //                          .Where(job => bookmarkedJobs.Contains(job.postID))
+            //                          .ToListAsync();
+
+            return Ok(bookmarkedJobs);
+        }
+
+
+
+        [HttpGet("getBookmarkedJobs")]
+        public async Task<IActionResult> GetBookmarkedJobs([FromQuery] int userID)
+        {
+
+            var bookmarkedJobs = await _context.Bookmarks
+                                    .Include(book => book.Job)
+                                    .Where(b => b.userID == userID)
+                                    .Select(b => b.Job != null ? new
+                                    {
+                                        company = b.Job.company.Name,
+                                        minimumSalary = b.Job.minimumSalary,
+                                        benefits = b.Job.benefits,
+                                        postDate = b.Job.postDate,
+                                        endDate = b.Job.endDate,
+                                        description = b.Job.description,
+                                        title = b.Job.title,
+                                        type = b.Job.type,
+                                        link = b.Job.link,
+                                        location = b.Job.location.name,
+                                        bonues = b.Job.bonus,
+                                        perks = b.Job.perks,
+                                    } : null
+                                      )
                                       .ToListAsync();
 
             // var jobs = await _context.JobPosts

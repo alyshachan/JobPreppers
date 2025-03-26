@@ -18,13 +18,14 @@ function BookmarkedJobs() {
     const fetchJobs = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/Manage/?userID=${user.userID}`,
+          `http://localhost:5000/api/Bookmark/getBookmarkedJobs/?userID=${user.userID}`,
           { credentials: "include" }
         );
 
         if (res.ok) {
           const data = await res.json();
-          setJobs(data.jobs);
+          console.log("bookmark jobs: ", data.jobs);
+          setJobs(data);
         }
       } catch (error) {
         console.error("Error Getting Jobs:", error);
@@ -32,7 +33,7 @@ function BookmarkedJobs() {
     };
 
     fetchJobs();
-  }, []);
+  }, [user?.userID]);
 
   return (
     <>
@@ -57,8 +58,6 @@ function BookmarkedJobs() {
                   setFilters={setFilters}
                   userCoordinate={userCoordinate}
                 /> */}
-
-              {}
             </div>
             {jobs.length > 0 ? (
               <div className={styles.containerForCard}>

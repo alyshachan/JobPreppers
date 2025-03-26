@@ -39,7 +39,7 @@ function JobDescription({ setDrawerOpen, jobs }) {
     const fetchBookmarkedJobs = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/Bookmark/getBookmarkedJobs/?userID=${user.userID}`,
+          `http://localhost:5000/api/Bookmark/getBookmark/?userID=${user.userID}`,
           { credentials: "include" }
         );
 

@@ -32,7 +32,7 @@ function ManageJobs() {
     };
 
     fetchJobs();
-  }, []);
+  }, [user?.userID]);
 
   return (
     <>
