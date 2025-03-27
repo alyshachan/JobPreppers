@@ -14,6 +14,8 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
+    console.log("HERE");
+    console.log(apiURL);
     // reach login endpoint
     try {
       const response = await fetch(apiURL + "/api/Users/login", {
