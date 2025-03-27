@@ -6,7 +6,7 @@ import "@fontsource/roboto/700.css";
 
 import NavBar from "./Components/NavBar";
 import Messaging from "./Components/Messaging"
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Feed from "./Pages/Feed";
 import Jobs from "./Pages/Jobs";
 import Profile from "./Pages/Profile";
@@ -45,11 +45,13 @@ function App() {
   console.log("AuthProvider:", AuthProvider);
   // console.log("ConnectionProvider:", ConnectionProvider);
 
+  //End Point: 107.23.196.38
+
   return (
     <>
       <QueryClientProvider client={queryClient}>
       <AuthProvider>
-          <NavBar />
+      {!useLocation().pathname.includes("/VideoCall") && <NavBar />}
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/Login" element={<Login />} />

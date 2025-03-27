@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -33,7 +33,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
-function AddEducationDialog({ open, onClose }) {
+function AddEducationDialog({ open, onClose, onAdd, education }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [school, setSchool] = useState("");
   const [degree, setDegree] = useState("");
@@ -43,38 +43,66 @@ function AddEducationDialog({ open, onClose }) {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    if (education) {
+      setSchool(education.school_name || "");
+      setDegree(education.degree_name || "");
+      setStudy(education.study_name || "");
+      setStartDate(
+        education.start_date
+          ? moment(education.start_date).format("YYYY-MM-DD")
+          : new Date()
+      );
+      setEndDate(
+        education.end_date
+          ? moment(education.end_date).format("YYYY-MM-DD")
+          : new Date()
+      );
+      setDescription(education.description || "");
+    } else {
+      setSchool("");
+      setDegree("");
+      setStudy("");
+      setStartDate(new Date());
+      setEndDate(new Date());
+      setDescription("");
+    }
+  }, [education]);
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
-    onClose();
     const start =
       startDate.toDateString === new Date().toDateString
         ? null
-        : moment(startDate).format("YYYY-MM-DD");
+        : moment(startDate).add(1, "days").format("YYYY-MM-DD");
     const end =
       endDate.toDateString === new Date().toDateString
         ? null
-        : moment(endDate).format("YYYY-MM-DD");
+        : moment(endDate).add(1, "days").format("YYYY-MM-DD");
 
     try {
-      const response = await fetch(
-        apiURL + "/api/UserEducation/CreateEducation",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userID: user.userID,
-            schoolName: school,
-            degreeName: degree,
-            studyName: study,
-            start_date: start,
-            end_date: end,
-            description: description,
-          }),
-        }
-      );
-      window.location.reload();
+      const url = education
+        ? `EditEducation/${education.userEducationID}`
+        : "CreateEducation";
+      const method = education ? "PUT" : "POST";
+      const response = await fetch(apiURL + `/api/UserEducation/${url}`, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userID: user.userID,
+          schoolName: school,
+          degreeName: degree,
+          studyName: study,
+          start_date: start,
+          end_date: end,
+          description: description,
+        }),
+        credentials: "include",
+      });
+
       if (response.ok) {
-        const data = await response.json();
+        onAdd();
+        onClose();
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();
@@ -86,10 +114,38 @@ function AddEducationDialog({ open, onClose }) {
     }
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+    try {
+      const response = await fetch(
+        apiURL +
+          `/api/UserEducation/DeleteEducation/${education.userEducationID}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        onAdd();
+        onClose();
+        setError("");
+      } else {
+        const errorData = await response.json();
+        window.alert("Error whilst trying to delete education");
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
+
   return (
     <StyledDialog onClose={onClose} open={open}>
       <DialogTitle className={styles.dialogTitle}>
-        <SectionHeader header="Add Education" />
+        <SectionHeader
+          header={education ? "Edit Education" : "Add Education"}
+        />
       </DialogTitle>
 
       <IconButton
@@ -188,9 +244,18 @@ function AddEducationDialog({ open, onClose }) {
               </div>
             </div>
           </div>
-          <DialogActions>
-            <button type="submit">Add Education</button>
-          </DialogActions>
+          {education ? (
+            <DialogActions className="flex !justify-between w-full">
+              <button className="lightButton" onClick={handleDelete}>
+                Delete Education
+              </button>
+              <button type="submit">Save Changes</button>
+            </DialogActions>
+          ) : (
+            <DialogActions>
+              <button type="submit">Add Education</button>
+            </DialogActions>
+          )}
         </form>
       </DialogContent>
     </StyledDialog>

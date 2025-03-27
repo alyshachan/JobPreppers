@@ -7,10 +7,6 @@ import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png";
-import AddEducationDialog from "../Components/Profile/AddEducationDialog";
-import AddSkillDialog from "../Components/Profile/AddSkillDialog";
-import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
-import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 
 import EditIcon from "@mui/icons-material/Edit";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -44,34 +40,33 @@ function Profile() {
   };
 
   // test message box handler
+
   useEffect(() => {
     localStorage.setItem("editMode", edit);
   }, [edit]);
 
-  useEffect(() => {
-    if (!user) return;
+  const fetchData = async (endpoint, setter, transform) => {
+    try {
+      const response = await fetch(apiURL + `/api/${endpoint}/${user.userID}`, {
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
+      const data = await response.json();
+      setter((prevState) =>
+        JSON.stringify(prevState) !== JSON.stringify(data)
+          ? transform(data)
+          : prevState
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    const fetchData = async (endpoint, setter, transform) => {
-      try {
-        const response = await fetch(
-          apiURL + `/api/${endpoint}/${user.userID}`,
-          { credentials: "include" }
-        );
-        if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
-        const data = await response.json();
-        setter((prevState) =>
-          JSON.stringify(prevState) !== JSON.stringify(data)
-            ? transform(data)
-            : prevState
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
+  const fetchEducation = async () => {
     fetchData("UserEducation", setEducationDict, (data) =>
       data.map(
         ({
+          userEducationID,
           schoolName,
           degreeName,
           studyName,
@@ -79,6 +74,7 @@ function Profile() {
           endDate,
           description,
         }) => ({
+          userEducationID: userEducationID,
           school_name: schoolName,
           degree_name: degreeName,
           study_name: studyName,
@@ -88,20 +84,27 @@ function Profile() {
         })
       )
     );
+  };
 
+  const fetchSkills = async () => {
     fetchData("UserSkills", setSkillsDict, (data) => {
       const skills = {};
-      data.forEach(({ category, name }) => {
-        skills[category] = skills[category]
-          ? [...skills[category], name]
-          : [name];
+      data.forEach(({ category, name, userSkillID }) => {
+        if (!skills[category]) {
+          skills[category] = [];
+        }
+
+        skills[category].push({ name, userSkillID });
       });
       return skills;
     });
+  };
 
+  const fetchExperience = async () => {
     fetchData("UserExperience", setExperienceDict, (data) =>
       data.map(
         ({
+          userExperienceID,
           workName,
           workLocation,
           jobTitle,
@@ -109,6 +112,7 @@ function Profile() {
           endDate,
           description,
         }) => ({
+          userExperienceID: userExperienceID,
           work_name: workName,
           location: workLocation,
           job_title: jobTitle,
@@ -118,9 +122,12 @@ function Profile() {
         })
       )
     );
+  };
 
+  const fetchProject = async () => {
     fetchData("UserProject", setProjectDict, (data) =>
-      data.map(({ projectTitle, description }) => ({
+      data.map(({ userProjectID, projectTitle, description }) => ({
+        userProjectID: userProjectID,
         project_title: projectTitle,
         description,
       }))
@@ -151,6 +158,15 @@ function Profile() {
       }
     };
     fetchFriendCount();
+  };
+
+  useEffect(() => {
+    if (!user) return;
+
+    fetchEducation();
+    fetchSkills();
+    fetchExperience();
+    fetchProject();
   }, [user]);
 
   useEffect(() => {
@@ -206,6 +222,7 @@ function Profile() {
             >
               {friendCount} connections
             </a>
+            <p className="subtitle">{user.location}</p>
 
             <div className={styles.actionButtons}>
               <Button variant="contained" startIcon={<AddCircleOutlineIcon />}>
@@ -235,7 +252,11 @@ function Profile() {
           ) : (
             <div className={styles.highlightedInfo}>
               {educationDict.length > 0 ? (
-                <EducationSection educationDict={educationDict} edit={edit} />
+                <EducationSection
+                  educationDict={educationDict}
+                  edit={edit}
+                  onAdd={fetchEducation}
+                />
               ) : (
                 edit && (
                   <button
@@ -248,7 +269,11 @@ function Profile() {
               )}
 
               {Object.keys(skillsDict).length > 0 ? (
-                <SkillsSection skillsDict={skillsDict} edit={edit} />
+                <SkillsSection
+                  skillsDict={skillsDict}
+                  edit={edit}
+                  onAdd={fetchSkills}
+                />
               ) : (
                 edit && (
                   <button
@@ -264,7 +289,11 @@ function Profile() {
         </div>
 
         {experienceDict.length > 0 ? (
-          <ExperienceSection experienceDict={experienceDict} edit={edit} />
+          <ExperienceSection
+            experienceDict={experienceDict}
+            edit={edit}
+            onAdd={fetchExperience}
+          />
         ) : (
           edit && (
             <button
@@ -277,7 +306,11 @@ function Profile() {
         )}
 
         {projectDict.length > 0 ? (
-          <ProjectSection projectDict={projectDict} edit={edit} />
+          <ProjectSection
+            projectDict={projectDict}
+            edit={edit}
+            onAdd={fetchProject}
+          />
         ) : (
           edit && (
             <button
@@ -289,23 +322,6 @@ function Profile() {
           )
         )}
       </div>
-
-      <AddEducationDialog
-        open={openDialog.education}
-        onClose={() => toggleDialog("education", false)}
-      />
-      <AddSkillDialog
-        open={openDialog.skill}
-        onClose={() => toggleDialog("skill", false)}
-      />
-      <AddExperienceDialog
-        open={openDialog.experience}
-        onClose={() => toggleDialog("experience", false)}
-      />
-      <AddProjectDialog
-        open={openDialog.project}
-        onClose={() => toggleDialog("project", false)}
-      />
     </>
   );
 }

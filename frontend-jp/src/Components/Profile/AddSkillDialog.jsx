@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -32,30 +32,45 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
-function AddSkillDialog({ open, onClose }) {
+function AddSkillDialog({ open, onClose, onAdd, skill }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [category, setCategory] = useState("");
-  const [skill, setSkill] = useState("");
+  const [skillName, setSkillName] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (skill) {
+      setCategory(skill.category || "");
+      setSkillName(skill.name || "");
+    } else {
+      setCategory("");
+      setSkillName("");
+    }
+  }, [skill]);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     onClose();
     try {
-      const response = await fetch(apiURL + "/api/UserSkills/AddSkillToUser", {
-        method: "POST",
+      const url = skill ? `EditSkill/${skill.userSkillID}` : "AddSkillToUser";
+      const method = skill ? "PUT" : "POST";
+
+      const response = await fetch(apiURL + `/api/UserSkills/${url}`, {
+        method: method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userID: user.userID,
-          skillName: skill,
+          skillName: skillName,
           category: category,
         }),
       });
 
-      window.location.reload();
+      const responseData = await response.json();
+      console.log("Response Data:", responseData);
 
       if (response.ok) {
-        const data = await response.json();
+        onAdd();
+        onClose();
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();
@@ -67,10 +82,35 @@ function AddSkillDialog({ open, onClose }) {
     }
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+    try {
+      const response = await fetch(
+        apiURL + `/api/UserSkills/DeleteSkill/${skill.userSkillID}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        onAdd();
+        onClose();
+        setError("");
+      } else {
+        const errorData = await response.json();
+        window.alert("Error whilst trying to delete skill");
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
+
   return (
     <StyledDialog onClose={onClose} open={open}>
       <DialogTitle className={styles.dialogTitle}>
-        <SectionHeader header="Add Skill" />
+        <SectionHeader header={skill ? "Edit Skill" : "Add Skill"} />
       </DialogTitle>
 
       <IconButton
@@ -107,16 +147,25 @@ function AddSkillDialog({ open, onClose }) {
                     placeholder="e.g. Leadership"
                     className="w-full"
                     id="skill"
-                    value={skill}
-                    onChange={(e) => setSkill(e.target.value)}
+                    value={skillName}
+                    onChange={(e) => setSkillName(e.target.value)}
                   />
                 </div>
               </div>
             </div>
           </div>
-          <DialogActions>
-            <button type="submit">Add Skill</button>
-          </DialogActions>
+          {skill ? (
+            <DialogActions className="flex !justify-between w-full">
+              <button className="lightButton" onClick={handleDelete}>
+                Delete Skill
+              </button>
+              <button type="submit">Save Changes</button>
+            </DialogActions>
+          ) : (
+            <DialogActions>
+              <button type="submit">Add Skill</button>
+            </DialogActions>
+          )}
         </form>
       </DialogContent>
     </StyledDialog>

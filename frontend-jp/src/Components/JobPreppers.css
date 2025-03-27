@@ -178,3 +178,40 @@ button:hover{
   max-width: 100%;
 }
 
+.job-results {
+  margin-top: 20px;
+}
+
+
+.job-results ul {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0; /* Remove default padding */
+}
+
+
+.job-item {
+  background-color: #f1f1f1; /* Light gray background */
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 15px; /* Padding inside each job item */
+  margin-bottom: 10px; /* Space between items */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth transitions */
+}
+
+
+.job-item:hover {
+  background-color: #e1e1e1; /* Darker gray on hover */
+}
+
+
+.job-title {
+  font-weight: bold; /* Bold job title */
+  font-size: 18px; /* Larger font size */
+}
+
+
+.job-company {
+  color: #555; /* Dark gray for company name */
+  font-size: 14px; /* Slightly smaller font size */
+}

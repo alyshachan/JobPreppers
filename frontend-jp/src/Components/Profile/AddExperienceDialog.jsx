@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -32,7 +32,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddExperienceDialog({ open, onClose }) {
+function AddExperienceDialog({ open, onClose, onAdd, experience }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [work, setWork] = useState("");
   const [location, setLocation] = useState("");
@@ -43,6 +43,32 @@ function AddExperienceDialog({ open, onClose }) {
   const [error, setError] = useState("");
   const apiURL = process.env.REACT_APP_JP_API_URL;
 
+  useEffect(() => {
+    if (experience) {
+      setWork(experience.work_name || "");
+      setLocation(experience.location || "");
+      setTitle(experience.job_title || "");
+      setStartDate(
+        experience.start_date
+          ? moment(experience.start_date).format("YYYY-MM-DD")
+          : new Date()
+      );
+      setEndDate(
+        experience.end_date
+          ? moment(experience.end_date).format("YYYY-MM-DD")
+          : new Date()
+      );
+      setDescription(experience.description || "");
+    } else {
+      setWork("");
+      setLocation("");
+      setTitle("");
+      setStartDate(new Date());
+      setEndDate(new Date());
+      setDescription("");
+    }
+  }, [experience]);
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     onClose();
@@ -50,32 +76,33 @@ function AddExperienceDialog({ open, onClose }) {
     const start =
       startDate.toDateString === new Date().toDateString
         ? null
-        : moment(startDate).format("YYYY-MM-DD");
+        : moment(startDate).add(1, "days").format("YYYY-MM-DD");
     const end =
       endDate.toDateString === new Date().toDateString
         ? null
-        : moment(endDate).format("YYYY-MM-DD");
+        : moment(endDate).add(1, "days").format("YYYY-MM-DD");
 
     try {
-      const response = await fetch(
-        apiURL + "/api/UserExperience/CreateExperience",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userID: user.userID,
-            workName: work,
-            location: location,
-            jobTitle: title,
-            start_date: start,
-            end_date: end,
-            description: description,
-          }),
-        }
-      );
-      window.location.reload();
+      const url = experience
+        ? `EditExperience/${experience.userExperienceID}`
+        : "CreateExperience";
+      const method = experience ? "PUT" : "POST";
+      const response = await fetch(apiURL + `/api/UserExperience/${url}`, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userID: user.userID,
+          workName: work,
+          location: location,
+          jobTitle: title,
+          start_date: start,
+          end_date: end,
+          description: description,
+        }),
+      });
       if (response.ok) {
-        const data = await response.json();
+        onAdd();
+        onClose();
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();
@@ -87,10 +114,38 @@ function AddExperienceDialog({ open, onClose }) {
     }
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+    try {
+      const response = await fetch(
+        apiURL +
+          `/api/UserExperience/DeleteExperience/${experience.userExperienceID}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        onAdd();
+        onClose();
+        setError("");
+      } else {
+        const errorData = await response.json();
+        window.alert("Error whilst trying to delete experience");
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
+
   return (
     <StyledDialog onClose={onClose} open={open}>
       <DialogTitle className={styles.dialogTitle}>
-        <SectionHeader header="Add Experience" />
+        <SectionHeader
+          header={experience ? "Edit Experience" : "Add Experience"}
+        />
       </DialogTitle>
 
       <IconButton
@@ -186,9 +241,18 @@ function AddExperienceDialog({ open, onClose }) {
               </div>
             </div>
           </div>
-          <DialogActions>
-            <button type="submit">Add Experience</button>
-          </DialogActions>
+          {experience ? (
+            <DialogActions className="flex !justify-between w-full">
+              <button className="lightButton" onClick={handleDelete}>
+                Delete Experience
+              </button>
+              <button type="submit">Save Changes</button>
+            </DialogActions>
+          ) : (
+            <DialogActions>
+              <button type="submit">Add Experience</button>
+            </DialogActions>
+          )}
         </form>
       </DialogContent>
     </StyledDialog>
