@@ -174,7 +174,7 @@ app.UseAuthorization();
 // app.Urls.Add("http://localhost:5000");
 // app.Urls.Add("http://localhost:5000:5001");
 app.Urls.Add("http://localhost:5000");
-app.Urls.Add("http://localhost:5001");
+app.Urls.Add("https://localhost:5001");
 
 
 
