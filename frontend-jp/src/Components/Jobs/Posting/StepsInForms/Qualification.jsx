@@ -23,7 +23,8 @@ export default function Qualification({ jobDescriptionData }) {
     "Critical Thinking",
   ]);
   const [inputValue, setInputValue] = useState("");
-  // const [value, setValue] = useState("");
+  const [value, setValue] = useState("");
+  const jobAPIURL = process.env.REACT_APP_JOB_API_URL;
   let tokenTimeExpiration = null;
   let accessToken = null;
 
@@ -43,7 +44,7 @@ export default function Qualification({ jobDescriptionData }) {
       if (accessToken && tokenTimeExpiration > Date.now()) {
         return accessToken;
       } else {
-        const response = await fetch("http://localhost:8000/get-token");
+        const response = await fetch(jobAPIURL + "/get-token");
         const data = await response.json();
         tokenTimeExpiration = Date.now() + 3600 * 1000;
         accessToken = data.access_token;

@@ -41,6 +41,7 @@ function AddExperienceDialog({ open, onClose }) {
   const [endDate, setEndDate] = useState(new Date());
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
+  const apiURL = process.env.REACT_APP_JP_API_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -57,7 +58,7 @@ function AddExperienceDialog({ open, onClose }) {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/UserExperience/CreateExperience",
+        apiURL + "/api/UserExperience/CreateExperience",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
     const checkAuthStatus = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/Users/auth", {
+        const response = await fetch("http://localhost:5000/api/Users/auth", {
           method: "GET",
           credentials: "include", // include cookies
           headers: {

@@ -9,6 +9,8 @@ import { SvgIcon, IconButton, Typography } from "@mui/material";
 
 import { useEffect, useState, useRef } from "react";
 import styles from "./Jobs.module.css";
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
 export default function FilterColumn({
   setJobs,
   jobs,
@@ -25,15 +27,12 @@ export default function FilterColumn({
       // e.preventDefault(); // Prevent default form submission
       console.log("Filter: ", { filters });
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/jobpost/filter",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(filters),
-            credentials: "include",
-          }
-        );
+        const response = await fetch(apiURL + "/api/jobpost/filter", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(filters),
+          credentials: "include",
+        });
 
         if (response.ok) {
           const data = await response.json();

@@ -32,6 +32,9 @@ import {
 } from "./Validation";
 import PacmanLoader from "../../Pacman/Pacman";
 import { useAuth } from "../../../provider/authProvider";
+
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .css-10d30g3-MuiPaper-root-MuiDialog-paper": {
     borderRadius: "30px",
@@ -108,7 +111,7 @@ export default function AddJobForm({ setJobs, companyName }) {
   };
   const fetchJobs = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/jobpost");
+      const res = await fetch(apiURL + "/api/jobpost");
       if (res.ok) {
         const data = await res.json();
         console.log(data);
@@ -122,7 +125,7 @@ export default function AddJobForm({ setJobs, companyName }) {
   };
 
   const parseDescription = async () => {
-    const res = await fetch("http://localhost:5000/api/textanalytics", {
+    const res = await fetch(apiURL + "/api/textanalytics", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ description: jobForm.getValues("description") }),

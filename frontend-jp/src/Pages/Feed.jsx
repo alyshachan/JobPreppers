@@ -9,6 +9,7 @@ import {
   StatusUpdateForm,
   LikeButton,
 } from "react-activity-feed";
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Feed() {
   const { user, setAuthData } = useAuth();
@@ -18,7 +19,7 @@ function Feed() {
       try {
         console.log("requesting user token");
         const response = await fetch(
-          `http://localhost:5000/api/Feed/getFeedToken/${user.userID}`
+          apiURL + `/api/Feed/getFeedToken/${user.userID}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -32,7 +33,7 @@ function Feed() {
 
       try {
         const response = await fetch(
-          `http://localhost:5000/api/Stream/getOrCreate/${user.userID}`, // get streamUser
+          apiURL + `/api/Stream/getOrCreate/${user.userID}`, // get streamUser
           {
             method: "POST",
             headers: {
@@ -47,7 +48,7 @@ function Feed() {
 
           if (data.data.name == "Unknown") {
             await fetch(
-              `http://localhost:5000/api/Stream/update/${user.userID}`, // update if needed
+              apiURL + `/api/Stream/update/${user.userID}`, // update if needed
               {
                 method: "POST",
                 headers: {
