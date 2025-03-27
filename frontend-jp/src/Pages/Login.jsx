@@ -14,11 +14,9 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
-    console.log("HERE");
-    console.log(apiURL);
     // reach login endpoint
     try {
-      const response = await fetch("https://jobpreppers.co/api/Users/login", {
+      const response = await fetch(apiURL + "/api/Users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
