@@ -30,7 +30,9 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddSkillDialog({ open, onClose, onAdd, skill}) {
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
+function AddSkillDialog({ open, onClose, onAdd, skill }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [category, setCategory] = useState("");
   const [skillName, setSkillName] = useState("");
@@ -54,7 +56,7 @@ function AddSkillDialog({ open, onClose, onAdd, skill}) {
       const method = skill ? "PUT" : "POST"
 
       const response = await fetch(
-        `http://localhost:5000/api/UserSkills/${url}`,
+        apiURL + `/api/UserSkills/${url}`,
         {
           method: method,
           headers: { "Content-Type": "application/json" },
@@ -86,7 +88,7 @@ function AddSkillDialog({ open, onClose, onAdd, skill}) {
   const handleDelete = async (e) => {
     e.preventDefault(); // Prevent default form submission
     try {
-      const response = await fetch(`http://localhost:5000/api/UserSkills/DeleteSkill/${skill.userSkillID}`, {
+      const response = await fetch(apiURL + `/api/UserSkills/DeleteSkill/${skill.userSkillID}`, {
         method: "DELETE",
         credentials: "include",
       });

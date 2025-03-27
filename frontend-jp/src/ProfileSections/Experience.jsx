@@ -44,6 +44,7 @@ function calculateDate(startDate, endDate) {
 
   return message;
 }
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Experience() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
@@ -53,7 +54,7 @@ function Experience() {
     const requestExperience = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/UserExperience/${user.userID}`,
+          apiURL + `/api/UserExperience/${user.userID}`,
           {
             credentials: "include", // include cookies
           }

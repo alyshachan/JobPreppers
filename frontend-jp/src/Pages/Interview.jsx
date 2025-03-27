@@ -6,8 +6,9 @@ import Calendar from "../Components/Interview/Calendar";
 import AddEventDialog from "../Components/Interview/AddEventDialog";
 import UpcomingEvents from "../Components/Interview/UpcomingEvents";
 import InterviewerCard from "../Components/Interview/InterviewerCard";
-import "../Components/JobPreppers.css";
 import moment from "moment";
+const apiURL = process.env.REACT_APP_JP_API_URL;
+import "../Components/JobPreppers.css";
 
 function Interview() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
