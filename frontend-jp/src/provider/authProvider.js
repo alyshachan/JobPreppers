@@ -8,6 +8,7 @@ import React, {
 
 // Create context
 const AuthContext = createContext();
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 // Create AuthProvider to manage authentication state
 export const AuthProvider = ({ children }) => {
@@ -16,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch("https://jobpreppers.co/api/Users/auth", {
+        const response = await fetch(apiURL + "/api/Users/auth", {
           method: "GET",
           credentials: "include", // include cookies
           headers: {
