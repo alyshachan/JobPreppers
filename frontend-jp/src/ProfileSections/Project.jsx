@@ -3,25 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import "../Components/JobPreppers.css";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
-
-const testProjDict = [
-  {
-    project_title: "raspberry pi ring doorbell",
-    description: "blah blah blah",
-  },
-  {
-    project_title: "raspberry pi ring doorbell",
-    description: "blah blah blah",
-  },
-  {
-    project_title: "raspberry pi ring doorbell",
-    description: "blah blah blah",
-  },
-  {
-    project_title: "raspberry pi ring doorbell",
-    description: "blah blah blah",
-  },
-];
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Project() {
