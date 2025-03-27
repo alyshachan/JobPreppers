@@ -63,37 +63,40 @@ function Messaging() {
   // const messageListReference = React.createRef();
   // const inputReference = React.createRef();
 
-  const [chatToken, setChatToken] = useState(null);
-  const [chatClient, setChatClient] = useState(null);
-  // const client = StreamChat.getInstance(process.env.REACT_APP_STREAM_API_KEY, {
-  //     secret: process.env.REACT_APP_STREAM_SECRET
-  // });
+    const [chatToken, setChatToken] = useState(null);
+    const [chatClient, setChatClient] = useState(null);
+    // const client = StreamChat.getInstance(process.env.REACT_APP_STREAM_API_KEY, {
+    //     secret: process.env.REACT_APP_STREAM_SECRET
+    // });
 
-  useEffect(() => {
-    const fetchMessagingData = async () => {
-      // if (user && user.userID) {
-      try {
-        console.log(`retrieving chat token for ${user.userID}`);
-        const response = await fetch(
-          `http://localhost:5000/api/Chat/getChatToken/${user.userID}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setChatToken(data.token);
-          console.log("token set");
+    const apiURL = process.env.REACT_APP_JP_API_URL;
+
+
+    useEffect(() => {
+        const fetchMessagingData = async () => {
+            // if (user && user.userID) {
+            try {
+                console.log(`retrieving chat token for ${user.userID}`);
+                const response = await fetch(apiURL + `/api/Chat/getChatToken/${user.userID}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setChatToken(data.token)
+                    console.log("token set");
+                }
+            }
+            catch (e) {
+                console.error("Error connecting to Stream Chat API");
+                console.error(e);
+            }
+            // }
+            // if (user && user.userID){
+            // }
         }
-      } catch (e) {
-        console.error("Error connecting to Stream Chat API");
-        console.error(e);
-      }
-      // }
-      // if (user && user.userID){
-      // }
-    };
-    if (user && user.userID) {
-      fetchMessagingData();
-    }
-  }, [user]);
+        if (user && user.userID) {
+            fetchMessagingData();
+        }
+
+    }, [user]);
 
   useEffect(() => {
     if (chatToken && user) {

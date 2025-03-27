@@ -2,6 +2,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import moment from "moment";
 
 import {
   Disclosure,
@@ -13,10 +14,12 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png";
+import defaultProfilePicture from "../Components/defaultProfilePicture.png"
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
 
 const navigation = [
   { name: "Feed", href: "/Feed", current: true },
@@ -54,13 +57,109 @@ function CustomLink({ to, children, className, ...props }) {
 function NavBar() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [error, setError] = useState("");
+  const [notificationDict, setNotificationDict] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const requestPendingFriends = async () => {
+      try {
+        const response = await fetch(
+          apiURL + `/api/Friend/PendingRequests/${user.userID}`,
+          {
+            credentials: "include", // include cookies
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("fetched friends: ", data);
+          if (data) {
+            const newPendingFriendDict = data.map((pendingFriend) => ({
+              userID: pendingFriend.id,
+              username: pendingFriend.username,
+              name: pendingFriend.name,
+              profilePic:
+                pendingFriend.profilePicture == null
+                  ? defaultProfilePicture
+                  : "data:image/png;base64," +
+                    pendingFriend.profilePicture.toString().toString("base64"),
+              title: pendingFriend.title,
+              sentAt: new Date(pendingFriend.sentAt),
+            }));
+
+            setNotificationDict((prevState) => {
+              if (
+                JSON.stringify(prevState) !==
+                JSON.stringify(newPendingFriendDict)
+              ) {
+                return newPendingFriendDict;
+              }
+              return prevState;
+            });
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    requestPendingFriends();
+  }, [user]);
+
+  const handleAcceptFriend = async (friendID) => {
+    try {
+      const response = await fetch(
+        apiURL + `/api/Friend/AcceptFriendRequest/${user.userID}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: user.userID, friendId: friendID }),
+        }
+      );
+
+      if (response.ok) {
+        setNotificationDict(
+          notificationDict.filter((n) => n.userID !== friendID)
+        );
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
+
+  const handleDeclineFriend = async (friendID) => {
+    try {
+      const response = await fetch(
+        apiURL + `/api/Friend/DenyFriendRequest/${user.userID}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ userId: user.userID, friendId: friendID }),
+        }
+      );
+
+      if (response.ok) {
+        setNotificationDict(
+          notificationDict.filter((n) => n.userID !== friendID)
+        );
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
 
   const handleLogoutSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch("http://localhost:5000/api/Users/logout", {
+      const response = await fetch(apiURL + "/api/Users/logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -135,14 +234,58 @@ function NavBar() {
 
           {/* Profile dropdown and notification button */}
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button
-              type="button"
-              className="relative rounded-full bg-[#085630] p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-            >
-              <span className="absolute -inset-1.5" />
-              <span className="sr-only">View notifications</span>
-              <BellIcon aria-hidden="true" className="h-6 w-6" />
-            </button>
+            <Menu as="div" className="relative ml-3">
+              <MenuButton>
+                <button
+                  type="button"
+                  className="relative rounded-full bg-[#085630] p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                >
+                  <span className="absolute -inset-1.5" />
+                  <span className="sr-only">View notifications</span>
+                  <BellIcon aria-hidden="true" className="h-6 w-6" />
+                </button>
+              </MenuButton>
+
+              <MenuItems
+                transition
+                className="absolute right-0 z-10 mt-2 w-[30rem] overflow-y-auto origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+              >
+                {notificationDict.map((notification, index) => (
+                  <MenuItem>
+                    <div className="flex flex-col">
+                      <div
+                        className="flex p-2 gap-4"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <img
+                          className="rounded-full aspect-square w-20 h-20"
+                          alt={`${notification.name}'s Profile Picture`}
+                          src={notification.profilePic}
+                        />
+
+                        <div className="flex flex-col flex-grow">
+                          <p>
+                            <b>{notification.name}</b> sent a friend request
+                          </p>
+                          <p className="subtitle">
+                            Request sent on{" "}
+                            {notification.sentAt.toLocaleDateString()}
+                          </p>
+
+                          <div className="flex gap-2 pt-2 items-center justify-end flex-grow">
+                            <button onClick={() => handleAcceptFriend(notification.userID)}>Accept</button>
+                            <button className="lightButton" onClick={() => handleDeclineFriend(notification.userID)}>Decline</button>
+                          </div>
+                        </div>
+                      </div>
+                      {index < notificationDict.length - 1 && (
+                        <hr className="border-t border-gray-300 -ml-[3px] my-2" />
+                      )}
+                    </div>
+                  </MenuItem>
+                ))}
+              </MenuItems>
+            </Menu>
 
             <Menu as="div" className="relative ml-3">
               <div>

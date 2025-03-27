@@ -29,6 +29,8 @@ import {
   applicationProcessSchema,
 } from "./Validation";
 
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .css-10d30g3-MuiPaper-root-MuiDialog-paper": {
     borderRadius: "30px",
@@ -101,7 +103,7 @@ export default function AddJobForm({ setJobs }) {
   };
   const fetchJobs = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/jobpost");
+      const res = await fetch(apiURL + "/api/jobpost");
       if (res.ok) {
         const data = await res.json();
         console.log(data);
@@ -116,7 +118,7 @@ export default function AddJobForm({ setJobs }) {
 
   const parseDescription = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/textanalytics", {
+      const res = await fetch(apiURL + "/api/textanalytics", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ description: jobForm.getValues("description") }),
@@ -168,7 +170,7 @@ export default function AddJobForm({ setJobs }) {
           EducationLevel: data.EducationLevel,
         },
       };
-      const response = await fetch("http://localhost:5000/api/jobpost/add", {
+      const response = await fetch(apiURL + "/api/jobpost/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(transformedData),

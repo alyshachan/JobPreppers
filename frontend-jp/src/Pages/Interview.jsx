@@ -6,6 +6,8 @@ import Calendar from "../Components/Interview/Calendar";
 import AddEventDialog from "../Components/Interview/AddEventDialog";
 import UpcomingEvents from "../Components/Interview/UpcomingEvents";
 import InterviewerCard from "../Components/Interview/InterviewerCard";
+import "../Components/JobPreppers.css"
+const apiURL = process.env.REACT_APP_JP_API_URL;
 import "../Components/JobPreppers.css";
 
 function Interview() {
@@ -14,6 +16,48 @@ function Interview() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [openEventDialog, setOpenEventDialog] = useState(false);
 
+    useEffect(() => {
+      const requestEvents = async () => {
+        try {
+          const response = await fetch(
+            apiURL + `/api/Event/GetEventsByUserID/${user.userID}`,
+            {
+              credentials: "include", // include cookies
+            }
+          );
+  
+          if (response.ok) {
+            const data = await response.json();
+  
+            if (data) {
+              const newEvents = data.map((event) => ({
+                name: event.eventName,
+                date: event.eventDate == null ? null : new Date(event.eventDate),
+                start_time: event.eventStartTime ? event.eventStartTime.split(':').slice(0, 2).join(':') : null,
+                end_time: event.eventEndTime ? event.eventEndTime.split(':').slice(0, 2).join(':') : null,
+                host: event.hostID,
+                participants: event.participantID,
+                description: event.eventDetails,
+                link: event.eventLink
+              }));
+  
+              setEvents((prevState) => {
+                if (
+                  JSON.stringify(prevState) !== JSON.stringify(newEvents)
+                ) {
+                  return newEvents;
+                }
+                return prevState;
+              });
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+  
+      requestEvents();
+    }, [user]);
   useEffect(() => {
     const requestEvents = async () => {
       try {

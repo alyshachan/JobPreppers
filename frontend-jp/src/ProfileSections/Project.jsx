@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "../Components/JobPreppers.css";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Project() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
@@ -12,7 +13,7 @@ function Project() {
     const requestProjects = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/UserProject/${user.userID}`,
+          apiURL + `/api/UserProject/${user.userID}`,
           {
             credentials: "include", // include cookies
           }

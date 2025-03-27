@@ -41,6 +41,8 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
   const [endDate, setEndDate] = useState(new Date());
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
+  const apiURL = process.env.REACT_APP_JP_API_URL;
+
 
   useEffect(() => {
     if (experience) {
@@ -87,6 +89,7 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
         : "CreateExperience";
       const method = experience ? "PUT" : "POST";
       const response = await fetch(
+        apiURL + "/api/UserExperience/CreateExperience",
         `http://localhost:5000/api/UserExperience/${url}`,
         {
           method: method,

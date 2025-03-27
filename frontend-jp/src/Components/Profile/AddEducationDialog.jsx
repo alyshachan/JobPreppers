@@ -31,6 +31,8 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     minWidth: "800px",
   },
 }));
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
 
 function AddEducationDialog({ open, onClose, onAdd, education }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
@@ -85,7 +87,7 @@ function AddEducationDialog({ open, onClose, onAdd, education }) {
         : "CreateEducation";
       const method = education ? "PUT" : "POST";
       const response = await fetch(
-        `http://localhost:5000/api/UserEducation/${url}`,
+        apiURL + "/api/UserEducation/CreateEducation",
         {
           method: method,
           headers: { "Content-Type": "application/json" },

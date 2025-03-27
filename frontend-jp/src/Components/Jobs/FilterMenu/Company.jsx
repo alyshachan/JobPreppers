@@ -4,6 +4,7 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { Stack } from "@mui/material";
 import "./Menu.css";
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -25,7 +26,7 @@ export default function Company({ setFilters, jobs }) {
 
   useEffect(() => {
     const fetchCompanies = async () => {
-      const response = await fetch("http://localhost:5000/api/jobpost/company"); // Replace with your actual API
+      const response = await fetch(apiURL + "/api/jobpost/company"); // Replace with your actual API
       if (response.ok) {
         const data = await response.json();
 
