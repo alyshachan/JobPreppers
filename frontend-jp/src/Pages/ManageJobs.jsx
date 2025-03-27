@@ -1,31 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import SearchColumn from "../Components/Jobs/SearchColumn";
 import "../Components/JobPreppers.css";
 import styles from "../Components/Jobs/Jobs.module.css";
 import FilterColumn from "../Components/Jobs/FilterColumn";
-import JobDescription from "../Components/Jobs/JobDescription";
 import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
 import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
-function Jobs() {
+import { useAuth } from "../provider/authProvider";
+import ManageDescription from "../Components/Jobs/ManageDescription";
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
+function ManageJobs() {
+  const { user } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  const [filters, setFilters] = useState({
-    date: null,
-    type: [],
-    company: [],
-    min_salary: 0,
-    longitude: null,
-    latitude: null,
-    distance: 0,
-  });
-
   const [jobs, setJobs] = useState([]);
-  const [userCoordinate, setUserCoordinate] = useState({
-    latitude: null,
-    longitude: null,
-  });
+  useEffect(() => {
+    if (!user?.userID) return;
+
+    const fetchJobs = async () => {
+      try {
+        const res = await fetch(apiURL + `/api/Manage/?userID=${user.userID}`, {
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setJobs(data.jobs);
+        }
+      } catch (error) {
+        console.error("Error Getting Jobs:", error);
+      }
+    };
+
+    fetchJobs();
+  }, [user?.userID]);
 
   return (
     <>
@@ -38,7 +46,7 @@ function Jobs() {
         >
           <div className="content">
             <div className="panelTransparent !p-0 items-center">
-              <SearchColumn
+              {/* <SearchColumn
                 setUserCoordinate={setUserCoordinate}
                 setFilters={setFilters}
                 setJobs={setJobs}
@@ -49,13 +57,13 @@ function Jobs() {
                 filters={filters}
                 setFilters={setFilters}
                 userCoordinate={userCoordinate}
-              />
+              /> */}
 
               {}
             </div>
             {jobs.length > 0 ? (
               <div className={styles.containerForCard}>
-                <JobDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
+                <ManageDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
               </div>
             ) : (
               <NoResultPage />
@@ -74,4 +82,4 @@ function Jobs() {
   );
 }
 
-export default Jobs;
+export default ManageJobs;

@@ -12,7 +12,6 @@ export default function Signup() {
   const navigate = useNavigate();
   const apiURL = process.env.REACT_APP_JP_API_URL;
 
-
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 

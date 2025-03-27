@@ -27,15 +27,12 @@ export default function FilterColumn({
       // e.preventDefault(); // Prevent default form submission
       console.log("Filter: ", { filters });
       try {
-        const response = await fetch(
-          apiURL + "/api/jobpost/filter",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(filters),
-            credentials: "include",
-          }
-        );
+        const response = await fetch(apiURL + "/api/jobpost/filter", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(filters),
+          credentials: "include",
+        });
 
         if (response.ok) {
           const data = await response.json();

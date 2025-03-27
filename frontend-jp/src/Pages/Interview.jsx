@@ -10,7 +10,6 @@ import moment from "moment";
 import "../Components/JobPreppers.css";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
-
 function Interview() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [events, setEvents] = useState([]);
@@ -66,28 +65,25 @@ function Interview() {
     };
 
     const eventPayload = {
-        name: newEvent.name,
-        date: moment(newEvent.date).format("YYYY-MM-DD"),
-        startTime: formatTimeWithSeconds(newEvent.start),
-        endTime: formatTimeWithSeconds(newEvent.end),
-        host: user.userID,
-        participants: newEvent.participants,
-        details: newEvent.details,
-        link: "test",
+      name: newEvent.name,
+      date: moment(newEvent.date).format("YYYY-MM-DD"),
+      startTime: formatTimeWithSeconds(newEvent.start),
+      endTime: formatTimeWithSeconds(newEvent.end),
+      host: user.userID,
+      participants: newEvent.participants,
+      details: newEvent.details,
+      link: "test",
     };
 
     try {
-      const response = await fetch(
-        apiURL + `/api/Event/CreateEvent`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(eventPayload),
-        }
-      );
+      const response = await fetch(apiURL + `/api/Event/CreateEvent`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(eventPayload),
+      });
 
       if (response.ok) {
         await response.json();

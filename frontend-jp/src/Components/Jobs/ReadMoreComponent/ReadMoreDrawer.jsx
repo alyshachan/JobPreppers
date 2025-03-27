@@ -33,8 +33,8 @@ export default function ReadMoreDrawer({ open, job, onClose }) {
   const drawerWidth = isNarrow ? "100%" : "600px";
 
   const sanitizeDescription = (description) => {
-    console.log("Description:", job.description);
-    console.log("Type of description:", typeof job.description);
+    // console.log("Description:", job.description);
+    // console.log("Type of description:", typeof job.description);
 
     if (typeof description === "string") {
       try {
@@ -95,13 +95,19 @@ export default function ReadMoreDrawer({ open, job, onClose }) {
 
           <Divider className="custom-divider" />
         </Box>
-        {job.bonus !== undefined && job.bonus !== null ? (
+        {job.bonus != undefined && job.bonus != "" && job.bonus !== null ? (
           <Fragment>
             <Box>
               <Typography className="start-text"> Bonuses</Typography>
-              <Stack direction="row" spacing={1}>
+              <Stack direction="row" spacing={2}>
+                {/* <ul>
+                    <li>{bonuses}</li>
+                
+                </ul> */}
+
+                {/* // // <Chip key={index} label={benefit} variant="outlined" />*/}
+
                 {JSON.parse(job.bonus).map((bonuses, index) => (
-                  // <Chip key={index} label={benefit} variant="outlined" />
                   <Card className="cardCompensation">
                     <CardContent>
                       <Typography variant="p">{bonuses}</Typography>
@@ -114,25 +120,33 @@ export default function ReadMoreDrawer({ open, job, onClose }) {
           </Fragment>
         ) : null}
 
-        {job.benefits !== undefined && job.benefits !== null ? (
+        {job.benefits != undefined &&
+        job.benefits != "" &&
+        job.benefits !== null ? (
           <Fragment>
             <Box>
               <Typography className="start-text"> Benefits</Typography>
               <Stack direction="row" spacing={1}>
-                {JSON.parse(job.benefits).map((benefit, index) => (
+                {/* {JSON.parse(job.benefits).map((benefit, index) => (
                   // <Chip key={index} label={benefit} variant="outlined" />
                   <Card className="cardCompensation">
                     <CardContent>
                       <Typography variant="p">{benefit}</Typography>
                     </CardContent>
                   </Card>
-                ))}
+                ))} */}
+
+                <ul>
+                  {JSON.parse(job.benefits).map((benefit, index) => (
+                    <li>{benefit}</li>
+                  ))}
+                </ul>
               </Stack>
               <Divider className="custom-divider" />
             </Box>
           </Fragment>
         ) : null}
-        {job.perks !== undefined && job.perks !== null ? (
+        {job.perks != undefined && job.perks != "" && job.perks !== null ? (
           <Fragment>
             <Box>
               <Typography className="start-text"> Perks</Typography>

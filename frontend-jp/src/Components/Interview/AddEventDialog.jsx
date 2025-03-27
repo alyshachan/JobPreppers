@@ -33,7 +33,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
   const [eventName, setEventName] = useState("");
   const [eventDate, setEventDate] = useState(
-    moment(selectedDate).format("YYYY-MM-DD")
+    moment(selectedDate).add(1, "days").format("YYYY-MM-DD")
   );
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");

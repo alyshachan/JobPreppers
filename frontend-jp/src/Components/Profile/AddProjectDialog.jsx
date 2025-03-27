@@ -36,10 +36,9 @@ function AddProjectDialog({ open, onClose, onAdd, project }) {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
 
-  
   useEffect(() => {
     if (project) {
-      setTitle(project.project_title|| "");
+      setTitle(project.project_title || "");
       setDescription(project.description || "");
     } else {
       setTitle("");
@@ -52,20 +51,19 @@ function AddProjectDialog({ open, onClose, onAdd, project }) {
     onClose();
 
     try {
-      const url = project ? `EditProject/${project.userProjectID}`:"CreateProject"
-      const method = project ? "PUT" : "POST"
-      const response = await fetch(
-        apiURL + `/api/UserProject/${url}`,
-        {
-          method: method,
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userID: user.userID,
-            projectTitle: title,
-            description: description,
-          }),
-        }
-      );
+      const url = project
+        ? `EditProject/${project.userProjectID}`
+        : "CreateProject";
+      const method = project ? "PUT" : "POST";
+      const response = await fetch(apiURL + `/api/UserProject/${url}`, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userID: user.userID,
+          projectTitle: title,
+          description: description,
+        }),
+      });
 
       if (response.ok) {
         onAdd();
@@ -84,12 +82,15 @@ function AddProjectDialog({ open, onClose, onAdd, project }) {
   const handleDelete = async (e) => {
     e.preventDefault(); // Prevent default form submission
     try {
-      const response = await fetch(apiURL + `/api/UserProject/DeleteProject/${project.userProjectID}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const response = await fetch(
+        apiURL + `/api/UserProject/DeleteProject/${project.userProjectID}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
 
-      if (response.ok){
+      if (response.ok) {
         onAdd();
         onClose();
         setError("");

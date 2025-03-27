@@ -40,8 +40,8 @@ function AddSkillDialog({ open, onClose, onAdd, skill }) {
 
   useEffect(() => {
     if (skill) {
-      setCategory(skill.category||"");
-      setSkillName(skill.name||"");
+      setCategory(skill.category || "");
+      setSkillName(skill.name || "");
     } else {
       setCategory("");
       setSkillName("");
@@ -52,21 +52,18 @@ function AddSkillDialog({ open, onClose, onAdd, skill }) {
     e.preventDefault(); // Prevent default form submission
     onClose();
     try {
-      const url = skill ? `EditSkill/${skill.userSkillID}`:"AddSkillToUser"
-      const method = skill ? "PUT" : "POST"
+      const url = skill ? `EditSkill/${skill.userSkillID}` : "AddSkillToUser";
+      const method = skill ? "PUT" : "POST";
 
-      const response = await fetch(
-        apiURL + `/api/UserSkills/${url}`,
-        {
-          method: method,
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userID: user.userID,
-            skillName: skillName,
-            category: category,
-          }),
-        }
-      );
+      const response = await fetch(apiURL + `/api/UserSkills/${url}`, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userID: user.userID,
+          skillName: skillName,
+          category: category,
+        }),
+      });
 
       const responseData = await response.json();
       console.log("Response Data:", responseData);
@@ -88,12 +85,15 @@ function AddSkillDialog({ open, onClose, onAdd, skill }) {
   const handleDelete = async (e) => {
     e.preventDefault(); // Prevent default form submission
     try {
-      const response = await fetch(apiURL + `/api/UserSkills/DeleteSkill/${skill.userSkillID}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const response = await fetch(
+        apiURL + `/api/UserSkills/DeleteSkill/${skill.userSkillID}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
 
-      if (response.ok){
+      if (response.ok) {
         onAdd();
         onClose();
         setError("");

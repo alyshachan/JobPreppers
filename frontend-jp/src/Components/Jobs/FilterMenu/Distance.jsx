@@ -30,6 +30,7 @@ function valuetext(value) {
 export default function Distance({ setFilters, userCoordinate }) {
   const [sliderValue, setSliderValue] = useState(5);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selected, setSetlected] = useState(false);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -51,6 +52,7 @@ export default function Distance({ setFilters, userCoordinate }) {
         ...prev,
         distance: 0,
       };
+      setSetlected(false);
       return updatedFilters;
     });
   };
@@ -71,13 +73,13 @@ export default function Distance({ setFilters, userCoordinate }) {
         return updatedFilters;
       });
     }
-
+    setSetlected(true);
     return sliderValue;
   };
   return (
     <>
       <Button
-        className="filter-button"
+        className={selected ? "selected-filter-button" : "filter-button"}
         id="distance-button"
         variant="outlined"
         endIcon={<ArrowDropDownIcon />}
@@ -95,7 +97,7 @@ export default function Distance({ setFilters, userCoordinate }) {
         onClose={handleClose}
         MenuListProps={{
           "aria-labelledby": "location-button",
-        }} 
+        }}
       >
         <MenuItem>
           <Box className={styles.sliderBox}>
