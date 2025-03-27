@@ -8,6 +8,8 @@ import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
 import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
 import { useAuth } from "../provider/authProvider";
 import ManageDescription from "../Components/Jobs/ManageDescription";
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
 function ManageJobs() {
   const { user } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -17,10 +19,9 @@ function ManageJobs() {
 
     const fetchJobs = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:5000/api/Manage/?userID=${user.userID}`,
-          { credentials: "include" }
-        );
+        const res = await fetch(apiURL + `/api/Manage/?userID=${user.userID}`, {
+          credentials: "include",
+        });
 
         if (res.ok) {
           const data = await res.json();

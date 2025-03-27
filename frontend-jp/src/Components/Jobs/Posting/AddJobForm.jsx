@@ -182,7 +182,7 @@ export default function AddJobForm({ setJobs, companyName }) {
         EducationLevel: data.education,
       },
     };
-    const response = await fetch("http://localhost:5000/api/jobpost/add", {
+    const response = await fetch(apiURL + "/api/jobpost/add", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(transformedData),

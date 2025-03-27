@@ -8,6 +8,8 @@ import BookmarkDescription from "../Components/Jobs/BookmarkDescription";
 import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
 import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
 import { useAuth } from "../provider/authProvider";
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
 function BookmarkedJobs() {
   const { user } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -20,7 +22,7 @@ function BookmarkedJobs() {
     const fetchJobs = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/Bookmark/getBookmarkedJobs/?userID=${user.userID}`,
+          apiURL + `/api/Bookmark/getBookmarkedJobs/?userID=${user.userID}`,
           { credentials: "include" }
         );
 
