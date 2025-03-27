@@ -83,6 +83,28 @@ function AddSkillDialog({ open, onClose, onAdd, skill}) {
     }
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+    try {
+      const response = await fetch(`http://localhost:5000/api/UserSkills/DeleteSkill/${skill.userSkillID}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (response.ok){
+        onAdd();
+        onClose();
+        setError("");
+      } else {
+        const errorData = await response.json();
+        window.alert("Error whilst trying to delete skill");
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
+
   return (
     <StyledDialog onClose={onClose} open={open}>
       <DialogTitle className={styles.dialogTitle}>
@@ -132,7 +154,7 @@ function AddSkillDialog({ open, onClose, onAdd, skill}) {
           </div>
           {skill ? (
             <DialogActions className="flex !justify-between w-full">
-              <button className="lightButton">
+              <button className="lightButton" onClick={handleDelete}>
                 Delete Skill
               </button>
               <button type="submit">Save Changes</button>

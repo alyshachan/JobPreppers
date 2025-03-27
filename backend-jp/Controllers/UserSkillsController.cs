@@ -182,5 +182,23 @@ namespace JobPreppersDemo.Controllers
 
         }
 
+        [HttpDelete("DeleteSkill/{skillID}")]
+        public async Task<IActionResult> DeleteSkill(int skillID){
+            try{
+                var skill = await _context.UserSkills.FindAsync(skillID);
+                if (skill == null){
+                    return NotFound("Skill not found");
+                }
+
+                _context.UserSkills.Remove(skill);
+                await _context.SaveChangesAsync();
+
+                return Ok(new {message = "Skill deleted sucessfully"});
+            }
+            catch(Exception ex){
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }
