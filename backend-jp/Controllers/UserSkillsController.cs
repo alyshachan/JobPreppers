@@ -44,6 +44,7 @@ namespace JobPreppersDemo.Controllers
                            .Include(us => us.skill) // Include skill details
                            .Select(us => new
                            {
+                               us.userSkillID,
                                us.skill.skillID,
                                us.skill.Name,
                                us.skill.Category
@@ -78,7 +79,7 @@ namespace JobPreppersDemo.Controllers
             try
             {
                 //check if skill already exits
-                var skill = await _context.Skills.FirstOrDefaultAsync(s => s.Name == request.SkillName);
+                var skill = await _context.Skills.FirstOrDefaultAsync(s => s.Name == request.SkillName && s.Category == request.Category);
                 //if not create skill and add to skill table
                 if (skill == null)
                 {
@@ -111,8 +112,65 @@ namespace JobPreppersDemo.Controllers
                     return Ok(new
                     {
                         Message = "Skill successfully added to user.",
-                        Skill = skill,
-                        UserSkill = newSkill
+                        skillID = newSkill.userSkillID
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        [HttpPut("EditSkill/{skillID}")]
+        public async Task<IActionResult> EditUserSkill(int skillID, [FromBody] UserSkills request)
+        {
+
+            if (request == null || string.IsNullOrEmpty(request.SkillName) || string.IsNullOrEmpty(request.Category))
+            {
+                return BadRequest("SkillName and Category are required.");
+            }
+
+            try
+            {
+                var skill = await _context.UserSkills.FindAsync(skillID);
+                if (skill == null){
+                    return NotFound("Skill not found");
+                }
+                //check if skill already exits
+                var duplicateSkill = await _context.Skills.FirstOrDefaultAsync(s => s.Name == request.SkillName && s.Category == request.Category);
+                //if not create skill and add to skill table
+                if (duplicateSkill == null)
+                {
+                    duplicateSkill = new Skill
+                    {
+                        Name = request.SkillName,
+                        Category = request.Category
+                    };
+                    _context.Skills.Add(duplicateSkill);
+                    await _context.SaveChangesAsync();
+                }
+                //check if already in userskill table
+                var userSkillExits = await _context.UserSkills.AnyAsync(s => s.userID == request.UserID && s.skillID == duplicateSkill.skillID && s.userSkillID != skillID);
+                if (userSkillExits)
+                {
+                    return Conflict("User already has this skill");
+                }
+                //add to userSkill table
+                else
+                {
+
+                    skill.userID = request.UserID;
+                    skill.skillID = duplicateSkill.skillID;
+                    
+                    _context.UserSkills.Update(skill);
+                    await _context.SaveChangesAsync();
+
+                    return Ok(new
+                    {
+                        Message = "Skill updated successfully",
                     });
                 }
 

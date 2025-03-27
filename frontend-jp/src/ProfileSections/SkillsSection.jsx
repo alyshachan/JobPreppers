@@ -6,17 +6,20 @@ import SectionHeader from "../Components/Profile/SectionHeader";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import AddSkillDialog from "../Components/Profile/AddSkillDialog";
 
-function SkillsSection({ skillsDict, edit }) {
+function SkillsSection({ skillsDict, edit, onAdd }) {
   const [openSkillDialog, setOpenSkillDialog] = useState(false);
+  const [selectedSkill, setSelectedSkill] = useState(null);
   const [isNarrow, setIsNarrow] = useState(false);
   const containerRef = useRef(null);
 
-  const handleOpenSkillDialog = () => {
+  const handleOpenSkillDialog = (skill = null) => {
     setOpenSkillDialog(true);
+    setSelectedSkill(skill ? { ...skill} : null)
   };
 
   const handleCloseSkillDialog = () => {
     setOpenSkillDialog(false);
+    setSelectedSkill(null);
   };
 
   useEffect(() => {
@@ -40,7 +43,8 @@ function SkillsSection({ skillsDict, edit }) {
       <AddSkillDialog
         open={openSkillDialog}
         onClose={handleCloseSkillDialog}
-        existingCategories={Object.keys(skillsDict)}
+        onAdd={onAdd}
+        skill={selectedSkill ? { ...selectedSkill } : null}
       />
 
       <div className={styles.sectionContent}>
@@ -53,6 +57,7 @@ function SkillsSection({ skillsDict, edit }) {
               edit={edit}
               sliceItems={!edit}
               showAllItems={edit}
+              onEdit={handleOpenSkillDialog}
             />
           ))}
         </div>

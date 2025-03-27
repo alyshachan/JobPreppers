@@ -11,6 +11,7 @@ function ListBox({
   edit,
   sliceItems = true,
   showAllItems = false,
+  onEdit
 }) {
   const displayedItems = sliceItems ? list.slice(0, 4) : list;
   const hasMoreItems = list.length > 4 && !showAllItems;
@@ -20,24 +21,27 @@ function ListBox({
       <p className="title">{title}</p>
 
       <div className={styles.skillList}>
-        {displayedItems.map((item, index) => (
-          <React.Fragment key={index}>
+        {displayedItems.map((item, index) => {
+          const itemCategory = {...item, category: title};
+          return(
+          <React.Fragment key={item.userSkillID || index}>
             {edit ? (
               <div className="flex justify-between">
-                <p>{item}</p>
-                <IconButton onClick={handleOpenSkillDialog(skill)}>
+                <p>{item.name}</p>
+                <IconButton onClick={() => onEdit(itemCategory)}>
                   <EditIcon />
                 </IconButton>
               </div>
             ) : (
-              <p>{item}</p>
+              <p>{item.name}</p>
             )}
             {/* Only add <hr> if it's not the last item */}
             {index < displayedItems.length - 1 && (
               <hr className={styles.skillDivider} />
             )}
           </React.Fragment>
-        ))}
+          )
+})}
 
         {/* Show 'See more' button if there are more than 4 items and showAllItems is false */}
         {hasMoreItems && !showAllItems && (

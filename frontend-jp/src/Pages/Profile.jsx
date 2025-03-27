@@ -84,12 +84,13 @@ function Profile() {
   const fetchSkills = async () => {
     fetchData("UserSkills", setSkillsDict, (data) => {
       const skills = {};
-      data.forEach(({ category, name }) => {
-        skills[category] = skills[category]
-          ? [...skills[category], name]
-          : [name];
+      data.forEach(({ category, name, userSkillID }) => {
+        if (!skills[category]) {
+          skills[category] = [];
+        }
+  
+        skills[category].push({ name, userSkillID });
       });
-      console.log("user skills updated on the front");
       return skills;
     });
   };
@@ -233,7 +234,11 @@ function Profile() {
               )}
 
               {Object.keys(skillsDict).length > 0 ? (
-                <SkillsSection skillsDict={skillsDict} edit={edit} />
+                <SkillsSection
+                  skillsDict={skillsDict}
+                  edit={edit}
+                  onAdd={fetchSkills}
+                />
               ) : (
                 edit && (
                   <button

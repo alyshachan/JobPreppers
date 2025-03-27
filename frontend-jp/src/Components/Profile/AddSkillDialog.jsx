@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -30,24 +30,37 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddSkillDialog({ open, onClose, existingCategories = [] }) {
+function AddSkillDialog({ open, onClose, onAdd, skill}) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [category, setCategory] = useState("");
-  const [skill, setSkill] = useState("");
+  const [skillName, setSkillName] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (skill) {
+      setCategory(skill.category||"");
+      setSkillName(skill.name||"");
+    } else {
+      setCategory("");
+      setSkillName("");
+    }
+  }, [skill]);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     onClose();
     try {
+      const url = skill ? `EditSkill/${skill.userSkillID}`:"AddSkillToUser"
+      const method = skill ? "PUT" : "POST"
+
       const response = await fetch(
-        "http://localhost:5000/api/UserSkills/AddSkillToUser",
+        `http://localhost:5000/api/UserSkills/${url}`,
         {
-          method: "POST",
+          method: method,
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userID: user.userID,
-            skillName: skill,
+            skillName: skillName,
             category: category,
           }),
         }
@@ -57,7 +70,7 @@ function AddSkillDialog({ open, onClose, existingCategories = [] }) {
       console.log("Response Data:", responseData);
 
       if (response.ok) {
-        window.alert("it was added");
+        onAdd();
         onClose();
         setError(""); // Clear any previous error message
       } else {
@@ -73,7 +86,7 @@ function AddSkillDialog({ open, onClose, existingCategories = [] }) {
   return (
     <StyledDialog onClose={onClose} open={open}>
       <DialogTitle className={styles.dialogTitle}>
-        <SectionHeader header="Add Skill" />
+        <SectionHeader header={skill ? "Edit Skill" : "Add Skill"} />
       </DialogTitle>
 
       <IconButton
@@ -110,16 +123,25 @@ function AddSkillDialog({ open, onClose, existingCategories = [] }) {
                     placeholder="e.g. Leadership"
                     className="w-full"
                     id="skill"
-                    value={skill}
-                    onChange={(e) => setSkill(e.target.value)}
+                    value={skillName}
+                    onChange={(e) => setSkillName(e.target.value)}
                   />
                 </div>
               </div>
             </div>
           </div>
-          <DialogActions>
-            <button type="submit">Add Skill</button>
-          </DialogActions>
+          {skill ? (
+            <DialogActions className="flex !justify-between w-full">
+              <button className="lightButton">
+                Delete Skill
+              </button>
+              <button type="submit">Save Changes</button>
+            </DialogActions>
+          ) : (
+            <DialogActions>
+              <button type="submit">Add Skill</button>
+            </DialogActions>
+          )}
         </form>
       </DialogContent>
     </StyledDialog>
