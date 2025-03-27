@@ -1,8 +1,8 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React, { useState, useEffect, useRef } from "react";
 import ListBox from "./ListBox";
-import "../Components/JobPreppers.css"
-import styles from "../Components/Profile/ProfileSections.module.css"
+import "../Components/JobPreppers.css";
+import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
@@ -86,7 +86,9 @@ function Skills() {
         </a>
         <h1>Skills</h1>
         <div className={styles.sectionContent}>
-          <div className={`${styles.skills} ${styles.skillsNarrow} place-items-center`}>
+          <div
+            className={`${styles.skills} ${styles.skillsNarrow} place-items-center`}
+          >
             {Object.entries(skillsDict).map(([title, list], index) => (
               <ListBox
                 key={index}

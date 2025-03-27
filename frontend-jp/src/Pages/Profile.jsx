@@ -6,11 +6,7 @@ import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png"
-import AddEducationDialog from "../Components/Profile/AddEducationDialog";
-import AddSkillDialog from "../Components/Profile/AddSkillDialog";
-import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
-import AddProjectDialog from "../Components/Profile/AddProjectDialog";
+import defaultProfilePicture from "../Components/defaultProfilePicture.png";
 
 import EditIcon from "@mui/icons-material/Edit";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -45,12 +41,10 @@ function Profile() {
   };
 
   // test message box handler
+
   useEffect(() => {
     localStorage.setItem("editMode", edit);
   }, [edit]);
-
-  useEffect(() => {
-    if (!user) return;
 
     const fetchData = async (endpoint, setter, transform) => {
       try {
@@ -70,9 +64,11 @@ function Profile() {
       }
     };
 
+  const fetchEducation = async () => {
     fetchData("UserEducation", setEducationDict, (data) =>
       data.map(
         ({
+          userEducationID,
           schoolName,
           degreeName,
           studyName,
@@ -80,6 +76,7 @@ function Profile() {
           endDate,
           description,
         }) => ({
+          userEducationID: userEducationID,
           school_name: schoolName,
           degree_name: degreeName,
           study_name: studyName,
@@ -89,20 +86,27 @@ function Profile() {
         })
       )
     );
+  };
 
+  const fetchSkills = async () => {
     fetchData("UserSkills", setSkillsDict, (data) => {
       const skills = {};
-      data.forEach(({ category, name }) => {
-        skills[category] = skills[category]
-          ? [...skills[category], name]
-          : [name];
+      data.forEach(({ category, name, userSkillID }) => {
+        if (!skills[category]) {
+          skills[category] = [];
+        }
+  
+        skills[category].push({ name, userSkillID });
       });
       return skills;
     });
+  };
 
+  const fetchExperience = async () => {
     fetchData("UserExperience", setExperienceDict, (data) =>
       data.map(
         ({
+          userExperienceID,
           workName,
           workLocation,
           jobTitle,
@@ -110,6 +114,7 @@ function Profile() {
           endDate,
           description,
         }) => ({
+          userExperienceID: userExperienceID,
           work_name: workName,
           location: workLocation,
           job_title: jobTitle,
@@ -119,9 +124,12 @@ function Profile() {
         })
       )
     );
+  };
 
+  const fetchProject = async () => {
     fetchData("UserProject", setProjectDict, (data) =>
-      data.map(({ projectTitle, description }) => ({
+      data.map(({ userProjectID, projectTitle, description }) => ({
+        userProjectID: userProjectID,
         project_title: projectTitle,
         description,
       }))
@@ -150,6 +158,15 @@ function Profile() {
       }
     }
     fetchFriendCount()
+  };
+
+  useEffect(() => {
+    if (!user) return;
+
+    fetchEducation();
+    fetchSkills();
+    fetchExperience();
+    fetchProject();
   }, [user]);
 
   useEffect(() => {
@@ -176,12 +193,10 @@ function Profile() {
 
     fetchUser();
   }, [user]);
-    
 
   if (user == null) {
     return <div>Loading...</div>;
   }
-
 
   const userPic =
     user.profile_pic == null
@@ -207,6 +222,7 @@ function Profile() {
               {user.location}
             </p>
             <a href="/Friends"className="font-bold text-xl text-[#4ba173] hover:underline">{friendCount} connections</a>
+            <p className="subtitle">{user.location}</p>
 
             <div className={styles.actionButtons}>
               <Button variant="contained" startIcon={<AddCircleOutlineIcon />}>
@@ -223,11 +239,12 @@ function Profile() {
             </div>
           </div>
 
-          {!edit && (educationDict.length === 0 &&
+          {!edit &&
+          educationDict.length === 0 &&
           skillsDict &&
           Object.keys(skillsDict).length === 0 &&
           experienceDict.length === 0 &&
-          projectDict.length === 0) ? (
+          projectDict.length === 0 ? (
             <div className={styles.noProfileText}>
               {user.first_name} {user.last_name} hasn't added to their profile
               yet
@@ -235,7 +252,11 @@ function Profile() {
           ) : (
             <div className={styles.highlightedInfo}>
               {educationDict.length > 0 ? (
-                <EducationSection educationDict={educationDict} edit={edit} />
+                <EducationSection
+                  educationDict={educationDict}
+                  edit={edit}
+                  onAdd={fetchEducation}
+                />
               ) : (
                 edit && (
                   <button
@@ -248,7 +269,11 @@ function Profile() {
               )}
 
               {Object.keys(skillsDict).length > 0 ? (
-                <SkillsSection skillsDict={skillsDict} edit={edit} />
+                <SkillsSection
+                  skillsDict={skillsDict}
+                  edit={edit}
+                  onAdd={fetchSkills}
+                />
               ) : (
                 edit && (
                   <button
@@ -264,7 +289,11 @@ function Profile() {
         </div>
 
         {experienceDict.length > 0 ? (
-          <ExperienceSection experienceDict={experienceDict} edit={edit} />
+          <ExperienceSection
+            experienceDict={experienceDict}
+            edit={edit}
+            onAdd={fetchExperience}
+          />
         ) : (
           edit && (
             <button
@@ -277,7 +306,11 @@ function Profile() {
         )}
 
         {projectDict.length > 0 ? (
-          <ProjectSection projectDict={projectDict} edit={edit} />
+          <ProjectSection
+            projectDict={projectDict}
+            edit={edit}
+            onAdd={fetchProject}
+          />
         ) : (
           edit && (
             <button
@@ -289,23 +322,6 @@ function Profile() {
           )
         )}
       </div>
-
-      <AddEducationDialog
-        open={openDialog.education}
-        onClose={() => toggleDialog("education", false)}
-      />
-      <AddSkillDialog
-        open={openDialog.skill}
-        onClose={() => toggleDialog("skill", false)}
-      />
-      <AddExperienceDialog
-        open={openDialog.experience}
-        onClose={() => toggleDialog("experience", false)}
-      />
-      <AddProjectDialog
-        open={openDialog.project}
-        onClose={() => toggleDialog("project", false)}
-      />
     </>
   );
 }

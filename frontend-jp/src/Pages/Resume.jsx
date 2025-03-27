@@ -1,5 +1,3 @@
-
-
 import "../Components/JobPreppers.css";
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../provider/authProvider";
@@ -94,7 +92,7 @@ function Resume() {
      finally {
         setLoading(false); // Stop loading
     }
-    };
+  };
 
 
 

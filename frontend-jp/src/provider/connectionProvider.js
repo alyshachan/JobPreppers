@@ -53,12 +53,12 @@
 //                 })
 //                 .withAutomaticReconnect()
 //                 .build();
-    
+
 //             //configure the connection
 //             connection.onclose((error) => {
 //                 console.error('Something went horribly wrong');
 //             });
-    
+
 //             try {
 //                 console.log("Attempting to start connection");
 //                 await connection.start()
@@ -66,7 +66,7 @@
 //                         console.log('Connected to SignalR Hub');
 //                         setConnection(connection); // store the connection in a state
 //                     });
-    
+
 //             } catch (error) {
 //                 console.error('Connection failed or invoke error:', error);
 //             }
@@ -85,7 +85,6 @@
 //     const setSignalRConnection = (connection) => {
 //         setConnection(connection);
 //     };
-
 
 //     const contextValue = useMemo(() => ({ signalRConnection, setSignalRConnection, connectToHub, disconnectFromHub }), [signalRConnection]);
 
