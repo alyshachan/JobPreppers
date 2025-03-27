@@ -21,6 +21,8 @@ import styles from "./Jobs.module.css";
 import "../JobPreppers.css";
 import Bookmark from "./Posting/Helper/Bookmark";
 import { useAuth } from "../../provider/authProvider";
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
 function JobDescription({ setDrawerOpen, jobs }) {
   const [selectedJob, setSelectedJob] = useState(null); // Track the currently selected job
   const handleOpenDrawer = (job) => {
