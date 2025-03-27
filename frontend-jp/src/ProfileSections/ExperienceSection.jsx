@@ -7,15 +7,18 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {useState } from "react";
 import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
 
-function ExperienceSection({ experienceDict, edit }) {
+function ExperienceSection({ experienceDict, edit, onAdd }) {
   const [openExperienceDialog, setOpenExperienceDialog] = useState(false);
+  const [selectedExperience, setSelectedExperience] = useState(null);
 
-  const handleOpenExperienceDialog = () => {
+  const handleOpenExperienceDialog = (experience = null) => {
     setOpenExperienceDialog(true);
+    setSelectedExperience(experience ? { ...experience} : null)
   };
 
   const handleCloseExperienceDialog = () => {
     setOpenExperienceDialog(false);
+    setSelectedExperience(null)
   };
 
   const displayedItems =
@@ -68,11 +71,13 @@ function ExperienceSection({ experienceDict, edit }) {
         <SectionHeader
           header={"Experience"}
           edit={edit}
-          onAdd={handleOpenExperienceDialog}
+          onAdd={() => handleOpenExperienceDialog(null)}
         />
         <AddExperienceDialog
           open={openExperienceDialog}
           onClose={handleCloseExperienceDialog}
+          onAdd={onAdd}
+          experience={selectedExperience ? { ...selectedExperience } : null}
         />
 
         <div className={styles.sectionContent}>
@@ -98,13 +103,13 @@ function ExperienceSection({ experienceDict, edit }) {
                         ? `${
                             experience.start_date
                               ? `${
-                                  monthsOfYear[experience.start_date.getMonth() + 1]
+                                  monthsOfYear[experience.start_date.getMonth()]
                                 } ${experience.start_date.getFullYear()} - `
                               : ""
                           }${
                             experience.end_date
                               ? `${
-                                  monthsOfYear[experience.end_date.getMonth() + 1]
+                                  monthsOfYear[experience.end_date.getMonth()]
                                 } ${experience.end_date.getFullYear()}`
                               : "Present"
                           }`
@@ -121,7 +126,7 @@ function ExperienceSection({ experienceDict, edit }) {
                   </div>
                   {edit && (
                     <div className="ml-5">
-                      <IconButton>
+                      <IconButton  onClick={() => handleOpenExperienceDialog(experience)}>
                         <EditIcon />
                       </IconButton>
                     </div>

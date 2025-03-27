@@ -58,6 +58,7 @@ namespace JobPreppersDemo.Controllers
                            .ThenByDescending(ue => ue.start_date)
                            .Select(ue => new
                            {
+                               UserEducationID = ue.userEducationID,
                                SchoolName = ue.school.school_name,
                                DegreeName = ue.degree != null ? ue.degree.degree_name : null,
                                StudyName = ue.study != null ? ue.study.study_name : null,
@@ -145,10 +146,100 @@ namespace JobPreppersDemo.Controllers
                 await _context.UserEducations.AddAsync(newEducation);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(CreateEducation), new { id = newEducation.userEducationID }, newEducation);
+                return Ok(new { message = "Education added successfully", educationID = newEducation.userEducationID });
+
             }
             catch (Exception ex)
             {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPut("EditEducation/{educationID}")]
+        public async Task<IActionResult> EditEducation(int educationID, [FromBody] UserEducationDto userEducationDto)
+        {
+            if (userEducationDto == null)
+            {
+                return BadRequest("Education information not filled out.");
+            }
+
+            try
+            {
+                var education = await _context.UserEducations.FindAsync(educationID);
+                if (education == null){
+                    return NotFound("Education not found");
+                }
+
+                // Check or add School
+                var school = await _context.Schools
+                    .FirstOrDefaultAsync(s => s.school_name.ToLower() == userEducationDto.schoolName.ToLower());
+
+                if (school == null)
+                {
+                    school = new School { school_name = userEducationDto.schoolName };
+                    await _context.Schools.AddAsync(school);
+                    await _context.SaveChangesAsync();
+                }
+
+                // Check or add Degree
+                var degree = string.IsNullOrEmpty(userEducationDto.degreeName)
+                    ? null
+                    : await _context.Degrees
+                        .FirstOrDefaultAsync(d => d.degree_name.ToLower() == userEducationDto.degreeName.ToLower());
+
+                if (degree == null && !string.IsNullOrEmpty(userEducationDto.degreeName))
+                {
+                    degree = new Degree { degree_name = userEducationDto.degreeName };
+                    await _context.Degrees.AddAsync(degree);
+                    await _context.SaveChangesAsync();
+                }
+
+                // Check or add Study
+                var study = string.IsNullOrEmpty(userEducationDto.studyName)
+                    ? null
+                    : await _context.Studies
+                        .FirstOrDefaultAsync(st => st.study_name.ToLower() == userEducationDto.studyName.ToLower());
+
+                if (study == null && !string.IsNullOrEmpty(userEducationDto.studyName))
+                {
+                    study = new Study { study_name = userEducationDto.studyName };
+                    await _context.Studies.AddAsync(study);
+                    await _context.SaveChangesAsync();
+                }
+
+                education.schoolID = school.schoolID;
+                education.degreeID = degree?.degreeID;
+                education.studyID = study?.studyID;
+                education.start_date = userEducationDto.start_date;
+                education.end_date = userEducationDto.end_date;
+                education.description = userEducationDto.description;
+
+                _context.UserEducations.Update(education);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Education updated successfully" });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("DeleteEducation/{educationID}")]
+        public async Task<IActionResult> DeleteEducation(int educationID){
+            try{
+                var education = await _context.UserEducations.FindAsync(educationID);
+                if (education == null){
+                    return NotFound("Education not found");
+                }
+
+                _context.UserEducations.Remove(education);
+                await _context.SaveChangesAsync();
+
+                return Ok(new {message = "Education deleted sucessfully"});
+            }
+            catch(Exception ex){
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
