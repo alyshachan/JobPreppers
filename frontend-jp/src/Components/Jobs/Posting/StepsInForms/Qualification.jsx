@@ -23,7 +23,6 @@ export default function Qualification({ jobDescriptionData }) {
     "Critical Thinking",
   ]);
   const [inputValue, setInputValue] = useState("");
-  const [value, setValue] = useState("");
   const jobAPIURL = process.env.REACT_APP_JOB_API_URL;
   let tokenTimeExpiration = null;
   let accessToken = null;
