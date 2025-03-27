@@ -10,6 +10,8 @@ import styles from "./Jobs.module.css";
 import AddJobForm from "./Posting/AddJobForm";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../provider/authProvider";
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
 function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
   const [jobName, setJobName] = useState("");
   // Still need to cache but that for later
@@ -111,7 +113,7 @@ function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
     const checkRole = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/Recruiter/isRecruiter?userID=${user.userID}`,
+          apiURL + `/api/Recruiter/isRecruiter?userID=${user.userID}`,
           { credentials: "include" }
         );
 
