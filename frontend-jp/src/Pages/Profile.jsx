@@ -63,23 +63,6 @@ function Profile() {
         console.error(error);
       }
     };
-  const fetchData = async (endpoint, setter, transform) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/${endpoint}/${user.userID}`,
-        { credentials: "include" }
-      );
-      if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
-      const data = await response.json();
-      setter((prevState) =>
-        JSON.stringify(prevState) !== JSON.stringify(data)
-          ? transform(data)
-          : prevState
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const fetchEducation = async () => {
     fetchData("UserEducation", setEducationDict, (data) =>
@@ -191,7 +174,6 @@ function Profile() {
       try {
         const res = await fetch(
           apiURL + `/api/GetUser/${user.userID}`,
-          `http://localhost:5000/api/GetUser/${user.userID}`,
           {
             credentials: "include", // include cookies
           }

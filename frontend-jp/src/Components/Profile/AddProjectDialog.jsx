@@ -55,7 +55,7 @@ function AddProjectDialog({ open, onClose, onAdd, project }) {
       const url = project ? `EditProject/${project.userProjectID}`:"CreateProject"
       const method = project ? "PUT" : "POST"
       const response = await fetch(
-        apiURL + "/api/UserProject/CreateProject",
+        apiURL + `/api/UserProject/${url}`,
         {
           method: method,
           headers: { "Content-Type": "application/json" },
@@ -84,7 +84,7 @@ function AddProjectDialog({ open, onClose, onAdd, project }) {
   const handleDelete = async (e) => {
     e.preventDefault(); // Prevent default form submission
     try {
-      const response = await fetch(`http://localhost:5000/api/UserProject/DeleteProject/${project.userProjectID}`, {
+      const response = await fetch(apiURL + `/api/UserProject/DeleteProject/${project.userProjectID}`, {
         method: "DELETE",
         credentials: "include",
       });

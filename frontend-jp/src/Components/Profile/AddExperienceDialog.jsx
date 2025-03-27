@@ -89,8 +89,7 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
         : "CreateExperience";
       const method = experience ? "PUT" : "POST";
       const response = await fetch(
-        apiURL + "/api/UserExperience/CreateExperience",
-        `http://localhost:5000/api/UserExperience/${url}`,
+        apiURL + `/api/UserExperience/${url}`,
         {
           method: method,
           headers: { "Content-Type": "application/json" },
@@ -122,7 +121,7 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
   const handleDelete = async (e) => {
     e.preventDefault(); // Prevent default form submission
     try {
-      const response = await fetch(`http://localhost:5000/api/UserExperience/DeleteExperience/${experience.userExperienceID}`, {
+      const response = await fetch(apiURL + `/api/UserExperience/DeleteExperience/${experience.userExperienceID}`, {
         method: "DELETE",
         credentials: "include",
       });

@@ -87,7 +87,7 @@ function AddEducationDialog({ open, onClose, onAdd, education }) {
         : "CreateEducation";
       const method = education ? "PUT" : "POST";
       const response = await fetch(
-        apiURL + "/api/UserEducation/CreateEducation",
+        apiURL + `/api/UserEducation/${url}`,
         {
           method: method,
           headers: { "Content-Type": "application/json" },
@@ -122,7 +122,7 @@ function AddEducationDialog({ open, onClose, onAdd, education }) {
     e.preventDefault(); // Prevent default form submission
     try {
       const response = await fetch(
-        `http://localhost:5000/api/UserEducation/DeleteEducation/${education.userEducationID}`,
+         apiURL + `/api/UserEducation/DeleteEducation/${education.userEducationID}`,
         {
           method: "DELETE",
           credentials: "include",

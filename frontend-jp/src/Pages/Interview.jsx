@@ -8,7 +8,6 @@ import UpcomingEvents from "../Components/Interview/UpcomingEvents";
 import InterviewerCard from "../Components/Interview/InterviewerCard";
 import "../Components/JobPreppers.css"
 const apiURL = process.env.REACT_APP_JP_API_URL;
-import "../Components/JobPreppers.css";
 
 function Interview() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
@@ -62,7 +61,7 @@ function Interview() {
     const requestEvents = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/Event/GetEventsByUserID/${user.userID}`,
+          apiURL + `/api/Event/GetEventsByUserID/${user.userID}`,
           {
             credentials: "include", // include cookies
           }
