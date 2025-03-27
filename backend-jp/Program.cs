@@ -48,10 +48,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") // react url
+        policy.WithOrigins("https://jobpreppers.co") // react url
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowCredentials()
+              .SetIsOriginAllowed(origin => true) // Helps with some CORS issues
+              .WithExposedHeaders("Access-Control-Allow-Origin");
     });
 });
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -100,7 +102,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.SameSite = SameSiteMode.None;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.HttpOnly = true;
     options.Cookie.Domain = "localhost";
 });

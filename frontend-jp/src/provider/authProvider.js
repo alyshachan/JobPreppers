@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/Users/auth", {
+        const response = await fetch("https://jobpreppers.co/api/Users/auth", {
           method: "GET",
           credentials: "include", // include cookies
           headers: {
