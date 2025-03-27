@@ -2,6 +2,7 @@
 import "../Components/JobPreppers.css";
 import React, { useState } from "react";
 import { useAuth } from "../provider/authProvider";
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Resume() {
     const { user } = useAuth(); // Get the authenticated user's data
@@ -30,7 +31,7 @@ function Resume() {
         formData.append("userID", user.userID);
 
         try {
-            const response = await fetch("http://localhost:5000/api/Resume/PostFile", {
+            const response = await fetch(apiURL + "/api/Resume/PostFile", {
                 method: "POST",
                 body: formData,
             });
@@ -59,7 +60,7 @@ function Resume() {
         }
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:5000/api/Resume/generate-suggestions", {
+            const response = await fetch(apiURL + "/api/Resume/generate-suggestions", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

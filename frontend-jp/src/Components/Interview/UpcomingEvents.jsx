@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./UpcomingEvents.module.css";
-import "../JobPreppers.css"
+import "../JobPreppers.css";
 
 const monthsOfYear = [
   "JANUARY",
@@ -18,6 +18,12 @@ const monthsOfYear = [
 ];
 
 function UpcomingEvents({ events }) {
+  const handleJoinCall = (eventLink) => {
+    if (eventLink)
+      window.open(`/VideoCall?link=${encodeURIComponent(eventLink)}`, "_blank");
+    else alert("No link available for this event");
+  };
+
   return (
     <div className={styles.upcomingEvents}>
       {events.map((event, index) => (
@@ -30,23 +36,26 @@ function UpcomingEvents({ events }) {
 
           <div className={styles.eventTimeText}>
             <div className={styles.eventDateWrapper}>
-              <div className={styles.startTime}>{event.start}</div>
-              <div className={styles.endTime}>{event.end}</div>
+              <div className={styles.startTime}>{event.start_time}</div>
+              <div className={styles.endTime}>{event.end_time}</div>
             </div>
 
-            <div className={`${styles.eventText} ${index === 0 ? styles.firstEvent : ''}`}>
+            <div
+              className={`${styles.eventText} ${
+                index === 0 ? styles.firstEvent : ""
+              }`}
+            >
               <h2>{event.name}</h2>
 
-              <p
-                className={`${
-                  index === 0 ? "text-[#EEEEEE]" : "subtitle"
-                }`}
-              >
-                {event.details}
+              <p className={`${index === 0 ? "text-[#EEEEEE]" : "subtitle"}`}>
+                {event.description}
               </p>
 
               <div className={styles.joinCallButton}>
-                <button className={`${index === 0 ? styles.firstJoinCall : ''}`}>
+                <button
+                  className={`${index === 0 ? styles.firstJoinCall : ""}`}
+                  onClick={() => handleJoinCall(event.link)}
+                >
                   Join call
                 </button>
               </div>

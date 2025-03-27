@@ -30,6 +30,8 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
 function AddSkillDialog({ open, onClose }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [category, setCategory] = useState("");
@@ -41,7 +43,7 @@ function AddSkillDialog({ open, onClose }) {
     onClose();
     try {
       const response = await fetch(
-        "http://localhost:5000/api/UserSkills/AddSkillToUser",
+        apiURL + "/api/UserSkills/AddSkillToUser",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -90,7 +90,10 @@ namespace JobPreppersProto.Controllers
                 Expires = DateTime.UtcNow.AddDays(10)
             };
 
+            Console.WriteLine($"Generated a token: ${token}");
+
             Response.Cookies.Append("authToken", token, cookieOptions);
+            Console.WriteLine("Appending cookie authToken");
             return Ok(new { message = "Welcome to JobPreppers, " + user.username, user = user, token = token });
         }
 
@@ -154,7 +157,6 @@ namespace JobPreppersProto.Controllers
         {
             if (request == null ||
             string.IsNullOrEmpty(request.FirstName) ||
-            string.IsNullOrEmpty(request.LastName) ||
             string.IsNullOrEmpty(request.Username) ||
             string.IsNullOrEmpty(request.Email) ||
             string.IsNullOrEmpty(request.Password))

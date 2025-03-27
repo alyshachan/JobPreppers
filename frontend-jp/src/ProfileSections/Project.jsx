@@ -12,7 +12,7 @@ function Project() {
   const requestProjects = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/UserProject/${user.userID}`,
+        apiURL + `/api/UserProject/${user.userID}`,
         {
           credentials: "include", // include cookies
         }

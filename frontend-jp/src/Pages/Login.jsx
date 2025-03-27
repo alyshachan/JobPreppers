@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
-import {useConnection} from "../provider/connectionProvider";
 import styles from '../Components/Login/Login.module.css';
+
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,13 +11,12 @@ export default function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const {user, setAuthData } = useAuth(); // custom hook for authprovider
-  
-
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
   
+    // reach login endpoint
     try {
-      const response = await fetch("http://localhost:5000/api/Users/login", {
+      const response = await fetch(apiURL + "/api/Users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -26,6 +26,8 @@ export default function Login() {
       if (response.ok) {
         const data = await response.json();
         if (data.user) {
+
+          console.log("setting auth data");
           
           setAuthData({
             userID: data.user.userID,
@@ -37,6 +39,8 @@ export default function Login() {
             title: data.user.title,
             location: data.user.location
           })
+
+          console.log("auth data set");
           // Show a success popup
           navigate("/profile");
           window.alert(data.message); // Displays "Login successful."
@@ -47,8 +51,9 @@ export default function Login() {
         setError(errorData.message); // Show error message from the backend
       }
     } catch (err) {
-      setError("An error occurred. Please try again."); // Catch and display any request error
+      setError("An error occurred while logging in. Please try again."); // Catch and display any request error
     }
+
   };
 
 
