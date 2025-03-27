@@ -11,7 +11,7 @@ public partial class User
 
     public string password { get; set; } = null!;
 
-    public string first_name { get; set; } = null!;
+    public string? first_name { get; set; }
 
     public string? last_name { get; set; }
 
@@ -26,6 +26,8 @@ public partial class User
     public string? website { get; set; }
 
     public string? description { get; set; }
+
+    public virtual ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
 
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 
