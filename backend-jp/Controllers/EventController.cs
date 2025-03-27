@@ -44,6 +44,14 @@ namespace JobPreppersDemo.Controllers
             }
             try
             {
+        string GenerateRandomLink(int length = 10)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
                var newEvent = new Event 
                { 
                    eventName = eventDto.Name,
@@ -53,9 +61,7 @@ namespace JobPreppersDemo.Controllers
                    hostID = eventDto.host,
                    eventDetails = eventDto.details,
                    participantID = JsonSerializer.Serialize(eventDto.participants.Split(',').Select(p => p.Trim())),
-                   eventLink = eventDto.link,
-
-
+                   eventLink = GenerateRandomLink(),
                };
                 await _context.Events.AddAsync(newEvent);
                 await _context.SaveChangesAsync();
@@ -104,7 +110,7 @@ namespace JobPreppersDemo.Controllers
                 .Where(e => EF.Functions.JsonContains(e.participantID, userIdJson))
                 .ToListAsync();
 
-            var allEvents = hostEvents.Concat(participantEvents).ToList();
+            var allEvents = hostEvents.Concat(participantEvents).OrderByDescending(e => e.eventDate).ToList();
 
             if (!allEvents.Any())
                 return NotFound("No events found for this user.");

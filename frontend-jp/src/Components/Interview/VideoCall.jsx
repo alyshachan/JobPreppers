@@ -93,7 +93,7 @@ const CallLayout = () => {
   return (
     <StreamTheme>
       <SpeakerLayout />
-      <CallControls />
+      <CallControls onLeave={() => window.close()}/>
     </StreamTheme>
   );
 };
