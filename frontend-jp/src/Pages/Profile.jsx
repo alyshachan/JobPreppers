@@ -129,7 +129,7 @@ function Profile() {
 
     const fetchFriendCount = async() => {
       try {
-        const response = await fetch(`http://localhost:5000/api/Friend/GetFriends/${user.userID}`, {
+        const response = await fetch(apiURL + `/api/Friend/GetFriends/${user.userID}`, {
           credentials: "include",
         });
 

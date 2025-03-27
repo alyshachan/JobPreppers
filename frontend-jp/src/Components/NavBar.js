@@ -64,7 +64,7 @@ function NavBar() {
     const requestPendingFriends = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/Friend/PendingRequests/${user.userID}`,
+          apiURL + `/api/Friend/PendingRequests/${user.userID}`,
           {
             credentials: "include", // include cookies
           }
@@ -107,12 +107,9 @@ function NavBar() {
   }, [user]);
 
   const handleAcceptFriend = async (friendID) => {
-    console.log("printing the deets");
-    console.log("User ID:", user?.userID);
-    console.log("Friend ID:", friendID);
     try {
       const response = await fetch(
-        "http://localhost:5000/api/Friend/AcceptFriendRequest",
+        apiURL + `/api/Friend/AcceptFriendRequest/${user.userID}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -136,7 +133,7 @@ function NavBar() {
   const handleDeclineFriend = async (friendID) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/Friend/DenyFriendRequest",
+        apiURL + `/api/Friend/DenyFriendRequest/${user.userID}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -4,6 +4,7 @@ import "../Components/JobPreppers.css";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Friends() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
@@ -13,7 +14,7 @@ function Friends() {
     const requestFriends = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/Friend/GetFriends/${user.userID}`,
+          apiURL + `/api/Friend/GetFriends/${user.userID}`,
           {
             credentials: "include", // include cookies
           }
@@ -28,7 +29,7 @@ function Friends() {
               userID: friend.userID,
               username: friend.username,
               name: friend.name,
-              profilePic: "data:image/png;base64," + friend.profilePicture.toString().toString("base64"),
+              profilePic: friend.profilePicture ? "data:image/png;base64," + friend.profilePicture.toString().toString("base64") : defaultProfilePicture,
               title: friend.title,
             }));
 
