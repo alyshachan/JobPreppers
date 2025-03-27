@@ -19,7 +19,7 @@ function Interview() {
   const requestEvents = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/Event/GetEventsByUserID/${user.userID}`,
+        apiURL + `/api/Event/GetEventsByUserID/${user.userID}`,
         {
           credentials: "include",
         }
@@ -77,7 +77,7 @@ function Interview() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/Event/CreateEvent",
+        apiURL + `/api/Event/CreateEvent`,
         {
           method: "POST",
           headers: {
