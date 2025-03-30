@@ -268,6 +268,28 @@ namespace JobPreppersProto.Controllers
 
             return Ok(users);
         }
+        [HttpGet("profile/{username}")]
+        public async Task<IActionResult> GetUserProfile(string username)
+        {
+            var user = await _context.Users
+                .Where(u => u.username == username)
+                .Select(u => new {
+                    userId = u.userID,
+                    profile_pic = u.profile_pic,
+                    title = u.title,
+                    first_name = u.first_name,
+                    last_name = u.last_name,
+                    username = u.username
+                })
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            return Ok(user);
+        }
 
         // Define the request model
         public class LoginRequest
