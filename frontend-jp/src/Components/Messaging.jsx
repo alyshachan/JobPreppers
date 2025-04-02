@@ -50,18 +50,7 @@ import {
 function Messaging() {
   const { user, setAuthData } = useAuth();
   // /* div render booleans */
-  // const [chatListOpened, setChatListOpened] = useState(false);
-  // const [convoOpened, setConvoOpened] = useState(false);
-  // /* messaging react states */
-  // const [messages, setMessages] = useState([]);
-  // const [receiverID, setReceiverID] = useState("");
-  // // const [signalRConnection, setSignalRConnection] = useState(null);
-  // /* system message states */
-  // const [showSystemMessage, setShowSystemMessage] = useState(false);
-  // const [currentSystemMessage, setSystemMessage] = useState("");
-
-  // const messageListReference = React.createRef();
-  // const inputReference = React.createRef();
+  const [chatOpened, setChatOpened] = useState(false);
 
   const [chatToken, setChatToken] = useState(null);
   const [chatClient, setChatClient] = useState(null);
@@ -169,30 +158,80 @@ function Messaging() {
     connection_id: chatClient.wsConnection.connectionID,
   };
   return (
-    chatClient &&
-    chatClient.user &&
-    chatClient.wsConnection && (
-      <div>
-        <Chat client={chatClient}>
-          <ChannelList
-            filters={{
-              type: "messaging",
-              members: { $in: [user.userID.toString()] },
+    <div>
+      <button
+        onClick={() => setChatOpened(!chatOpened)}
+        style={{
+          padding: "10px",
+          backgroundColor: "#4ba173",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Messaging
+      </button>
+
+      {chatClient &&
+        chatClient.user &&
+        chatClient.wsConnection &&
+        chatOpened && (
+          <div
+            style={{
+              position: "fixed",
+              bottom: "20px",
+              right: "20px",
+              width: "400px", // Adjust width as needed
+              height: "600px", // Adjust height as needed
+              background: "white",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              borderRadius: "10px",
+              display: "flex",
+              flexDirection: "column"
             }}
-            options={options}
-            connectionID={chatClient.wsConnection.connectionID}
-          />
-          <Channel>
-            <Window>
-              <ChannelHeader />
-              <MessageList />
-              <MessageInput />
-            </Window>
-            <Thread />
-          </Channel>
-        </Chat>
-      </div>
-    )
+          >
+            <Chat client={chatClient} style={{ height: "100%" }}>
+              <ChannelList
+                filters={{
+                  type: "messaging",
+                  members: { $in: [user.userID.toString()] },
+                }}
+                options={options}
+                connectionID={chatClient.wsConnection.connectionID}
+                style={{
+                  flexShrink: 0, // Prevent ChannelList from shrinking
+                  height: "150px", // Adjust height for ChannelList
+                  overflowY: "auto", // Allow scrolling if there are many channels
+                }}
+              />
+              <Channel>
+                <Window
+                style={{
+                  display: "flex",
+                  flexDirection: "column", // Ensure children stack vertically
+                  flexGrow: 1, // Take up available space in the container
+                  height: "calc(100% - 150px)", // Ensure the window doesn’t overlap with ChannelList
+                }}>
+                  <ChannelHeader/>
+                    <MessageList 
+                    style={{
+                      overflowY: "auto", // Makes the message list scrollable
+                    }}
+                    />
+                  <MessageInput 
+                  style={{
+                    marginTop: "auto", // Keep MessageInput at the bottom
+                  }}
+                  />
+                </Window>
+                <Thread />
+              </Channel>
+            </Chat>
+          </div>
+        )
+      }
+    </div>
   );
   /*
     HANDLERS

@@ -116,16 +116,6 @@ function Feed() {
         <div className="flex w-full p-4 space-x-4">
           <div className="w-2/3">
             <StatusUpdateForm feedGroup="user" />
-            {/* <div className="flex w-full p-4 space-x-4"> */}
-            {/* <div className="w-1/2">
-                            <h1>Your posts</h1>
-                            <FlatFeed
-                                classname="flat-feed"
-                                feedGroup="user"
-                                options={{ limit: 10 }}
-                                Activity={(props) => <CustomActivity {...props} />}
-                            />
-                        </div> */}
             <div>
               <h1>Timeline</h1>
               <FlatFeed
@@ -136,9 +126,6 @@ function Feed() {
                   limit: 10,
                   reactions: { own: true, counts: true },
                 }}
-                //     Activity={(props) => <Activity {...props}
-                //         actor={(props.activity.actor_data?.name || "Unknown User")} />}
-                // />
                 Activity={(props) => <CustomActivity {...props} />}
               />
             </div>
