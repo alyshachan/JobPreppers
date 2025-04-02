@@ -17,6 +17,24 @@ function Feed() {
   useEffect(() => {
     const fetchFeedData = async () => {
       try {
+        const response = await fetch(
+          apiURL + `/api/Friend/SyncFriends/${user.userID}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+          }
+        );
+  
+        if (response.ok) {
+          console.log("Friends synced");
+        }
+
+      }
+      catch (err) {
+        console.error(err);
+      }
+
+      try {
         console.log("requesting user token");
         const response = await fetch(
           apiURL + `/api/Feed/getFeedToken/${user.userID}`
@@ -140,8 +158,7 @@ function Feed() {
             </div>
 
         </StreamApp>)
-    )
-  );
+    );
 }
 
 export default Feed;

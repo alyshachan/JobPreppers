@@ -107,8 +107,6 @@ builder
     });
 builder.Services.ConfigureApplicationCookie(options =>
 {
-builder.Services.ConfigureApplicationCookie(options =>
-{
     options.Cookie.SameSite = SameSiteMode.None;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.HttpOnly = true;
@@ -192,7 +190,6 @@ app.UseAuthorization();
 // app.Urls.Add("http://localhost:5000");
 // app.Urls.Add("http://localhost:5000:5001");
 app.Urls.Add("http://localhost:5000");
-app.Urls.Add("https://localhost:5001");
 app.Urls.Add("https://localhost:5001");
 
 app.MapControllers();
