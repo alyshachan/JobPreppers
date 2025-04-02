@@ -24,6 +24,8 @@ import { AuthProvider } from "./provider/authProvider";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import ManageJobs from "./Pages/ManageJobs";
 import BookmarkedJobs from "./Pages/BookmarkedJobs"; 
+import User from "./Pages/User"
+import ProfileDescription from "./ProfileSections/ProfileDescription";
 const queryClient = new QueryClient();
 
 
@@ -75,6 +77,7 @@ function App() {
             <Route path="/Skills" element={<Skills />} />
             <Route path="/VideoCall" element={<VideoCall />} />
           <Route path="/Friends" element={<Friends />} />
+          <Route path="/swag" element={<User />}/>
         </Routes>
       </AuthProvider>
       </QueryClientProvider>
