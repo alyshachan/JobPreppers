@@ -35,7 +35,8 @@ export default function Signup() {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch(apiURL + "/api/Users/signup", {
+      const url = accountType == "user" ? "User" : "Company";
+      const response = await fetch(apiURL + `/api/Users/Signup/${url}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -69,14 +70,22 @@ export default function Signup() {
             <h1 className={styles.heading}>Choose Account Type</h1>
             <div className="w-full flex justify-evenly mb-8">
               <button
-                className={accountType == "user" ? `${styles.activeButton}` : `${styles.lightButton}`}
+                className={
+                  accountType == "user"
+                    ? `${styles.activeButton}`
+                    : `${styles.lightButton}`
+                }
                 onClick={() => setAccountType("user")}
               >
                 <h2>User</h2>
               </button>
 
               <button
-                className={accountType == "company" ? `${styles.activeButton}` : `${styles.lightButton}`}
+                className={
+                  accountType == "company"
+                    ? `${styles.activeButton}`
+                    : `${styles.lightButton}`
+                }
                 onClick={() => setAccountType("company")}
               >
                 <h2>Company</h2>
