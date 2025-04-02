@@ -36,6 +36,8 @@ export default function Salary({ setFilters }) {
   const deafultSlider = 20000;
   const [sliderValue, setSliderValue] = useState(deafultSlider);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selected, setSetlected] = useState(false);
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -54,6 +56,8 @@ export default function Salary({ setFilters }) {
       const updatedFilters = { ...prev, min_salary: deafultSlider };
       return updatedFilters;
     });
+    setSetlected(false);
+
     handleClose();
   };
 
@@ -63,12 +67,14 @@ export default function Salary({ setFilters }) {
       const updatedFilters = { ...prev, min_salary: sliderValue };
       return updatedFilters;
     });
+    setSetlected(true);
+
     handleClose();
   };
   return (
     <>
       <Button
-        className="filter-button"
+        className={selected ? "selected-filter-button" : "filter-button"}
         id="salary-button"
         variant="outlined"
         endIcon={<ArrowDropDownIcon />}

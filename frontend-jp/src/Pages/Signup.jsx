@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import styles from '../Components/Login/Login.module.css';
+import styles from "../Components/Login/Login.module.css";
 
 export default function Signup() {
   const [firstName, setFirstName] = useState("");
@@ -12,7 +12,6 @@ export default function Signup() {
   const navigate = useNavigate();
   const apiURL = process.env.REACT_APP_JP_API_URL;
 
-
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
@@ -20,7 +19,13 @@ export default function Signup() {
       const response = await fetch(apiURL + "/api/Users/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, username, email, password}),
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          username,
+          email,
+          password,
+        }),
       });
 
       if (response.ok) {
@@ -39,84 +44,95 @@ export default function Signup() {
 
   return (
     <div className={styles.loginContainer}>
-    <div className={styles.loginFormContainer}>
-      <h1 className={styles.heading}>Create New Account</h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className={styles.inputGroup}>
-          <label htmlFor="firstName" className={styles.label}>First Name</label>
-          <input
-            className={styles.inputField}
-            id="firstName"
-            name="firstName"
-            type="text"
-            required
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-        </div>
+      <div className={styles.loginFormContainer}>
+        <h1 className={styles.heading}>Create New Account</h1>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className={styles.inputGroup}>
+            <label htmlFor="firstName" className={styles.label}>
+              First Name
+            </label>
+            <input
+              className={styles.inputField}
+              id="firstName"
+              name="firstName"
+              type="text"
+              required
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
 
-        <div className={styles.inputGroup}>
-          <label htmlFor="lastName" className={styles.label}>Last Name</label>
-          <input
-            className={styles.inputField}
-            id="lastName"
-            name="lastName"
-            type="text"
-            required
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-        </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="lastName" className={styles.label}>
+              Last Name
+            </label>
+            <input
+              className={styles.inputField}
+              id="lastName"
+              name="lastName"
+              type="text"
+              required
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
 
-        <div className={styles.inputGroup}>
-          <label htmlFor="username" className={styles.label}>Username</label>
-          <input
-            className={styles.inputField}
-            id="username"
-            name="username"
-            type="text"
-            required
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="username" className={styles.label}>
+              Username
+            </label>
+            <input
+              className={styles.inputField}
+              id="username"
+              name="username"
+              type="text"
+              required
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
 
-        <div className={styles.inputGroup}>
-          <label htmlFor="email" className={styles.label}>Email address</label>
-          <input
-            className={styles.inputField}
-            id="email"
-            name="email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
-          />
-        </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="email" className={styles.label}>
+              Email address
+            </label>
+            <input
+              className={styles.inputField}
+              id="email"
+              name="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+            />
+          </div>
 
-        <div className={styles.inputGroup}>
-          <label htmlFor="password" className={styles.label}>Password</label>
-          <input
-            className={styles.inputField}
-            id="password"
-            name="password"
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-          />
-        </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="password" className={styles.label}>
+              Password
+            </label>
+            <input
+              className={styles.inputField}
+              id="password"
+              name="password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+            />
+          </div>
 
-        {error && <p className={styles.errorMessage}>{error}</p>}
+          {error && <p className={styles.errorMessage}>{error}</p>}
 
-        <div>
-          <button type="submit" className={styles.submitButton}>Create New Account</button>
-        </div>
-      </form>
+          <div>
+            <button type="submit" className={styles.submitButton}>
+              Create New Account
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-  
   );
 }

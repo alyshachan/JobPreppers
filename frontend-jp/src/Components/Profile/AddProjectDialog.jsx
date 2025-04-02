@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -30,34 +30,44 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
-function AddProjectDialog({ open, onClose }) {
+function AddProjectDialog({ open, onClose, onAdd, project }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (project) {
+      setTitle(project.project_title || "");
+      setDescription(project.description || "");
+    } else {
+      setTitle("");
+      setDescription("");
+    }
+  }, [project]);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     onClose();
 
     try {
-      const response = await fetch(
-        apiURL + "/api/UserProject/CreateProject",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userID: user.userID,
-            projectTitle: title,
-            description: description,
-          }),
-        }
-      );
-      
-      window.location.reload();
+      const url = project
+        ? `EditProject/${project.userProjectID}`
+        : "CreateProject";
+      const method = project ? "PUT" : "POST";
+      const response = await fetch(apiURL + `/api/UserProject/${url}`, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userID: user.userID,
+          projectTitle: title,
+          description: description,
+        }),
+      });
 
       if (response.ok) {
-        const data = await response.json();
+        onAdd();
+        onClose();
         setError(""); // Clear any previous error message
       } else {
         const errorData = await response.json();
@@ -69,10 +79,35 @@ function AddProjectDialog({ open, onClose }) {
     }
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+    try {
+      const response = await fetch(
+        apiURL + `/api/UserProject/DeleteProject/${project.userProjectID}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        onAdd();
+        onClose();
+        setError("");
+      } else {
+        const errorData = await response.json();
+        window.alert("Error whilst trying to delete project");
+        setError(errorData.message); // Show error message from the backend
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again."); // Catch and display any request error
+    }
+  };
+
   return (
     <StyledDialog onClose={onClose} open={open}>
       <DialogTitle className={styles.dialogTitle}>
-        <SectionHeader header="Add Project" />
+        <SectionHeader header={project ? "Edit Project" : "Add Project"} />
       </DialogTitle>
 
       <IconButton
@@ -115,9 +150,18 @@ function AddProjectDialog({ open, onClose }) {
               </div>
             </div>
           </div>
-          <DialogActions>
-            <button type="submit">Add Project</button>
-          </DialogActions>
+          {project ? (
+            <DialogActions className="flex !justify-between w-full">
+              <button className="lightButton" onClick={handleDelete}>
+                Delete Project
+              </button>
+              <button type="submit">Save Changes</button>
+            </DialogActions>
+          ) : (
+            <DialogActions>
+              <button type="submit">Add Project</button>
+            </DialogActions>
+          )}
         </form>
       </DialogContent>
     </StyledDialog>

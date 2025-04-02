@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 //Test for TextAnalytics
 // Test.Experience();
 // Test.Salary();
+// Test.Skills();
 // Add services to the container.
 
 
@@ -106,10 +107,12 @@ builder
     });
 builder.Services.ConfigureApplicationCookie(options =>
 {
+builder.Services.ConfigureApplicationCookie(options =>
+{
     options.Cookie.SameSite = SameSiteMode.None;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.HttpOnly = true;
-    options.Cookie.Domain = "jobpreppers.co";
+    options.Cookie.Domain = "localhost";
 });
 
 // Azure Language SetUp
@@ -177,7 +180,7 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "JobPreppersDemo API");
 
-        c.RoutePrefix = string.Empty; // Set Swagger UI as the root (e.g., jobpreppers.co:5000)
+        c.RoutePrefix = string.Empty; // Set Swagger UI as the root (e.g., localhost:5000)
     });
 }
 
@@ -189,6 +192,7 @@ app.UseAuthorization();
 // app.Urls.Add("http://localhost:5000");
 // app.Urls.Add("http://localhost:5000:5001");
 app.Urls.Add("http://localhost:5000");
+app.Urls.Add("https://localhost:5001");
 app.Urls.Add("https://localhost:5001");
 
 app.MapControllers();

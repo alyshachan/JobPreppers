@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DialogActions,
   IconButton,
@@ -8,6 +8,7 @@ import {
   Stepper,
   Step,
   StepLabel,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormProvider, useForm } from "react-hook-form";
@@ -21,6 +22,7 @@ import { PostAdd } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import SectionHeader from "../../Profile/SectionHeader";
 import styles from "./Posting.module.css";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   parseJobSchema,
   describeJobSchema,
@@ -28,6 +30,8 @@ import {
   qualificationSchema,
   applicationProcessSchema,
 } from "./Validation";
+import PacmanLoader from "../../Pacman/Pacman";
+import { useAuth } from "../../../provider/authProvider";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
@@ -43,11 +47,11 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function AddJobForm({ setJobs }) {
+export default function AddJobForm({ setJobs, companyName }) {
   const [jobDescriptionData, setjobDescriptionData] = useState({
     benefits: [],
     companyName: null,
-    educationLevel: "",
+    educationLevel: null,
     location: null,
     maximumSalary: null,
     minimumExperience: null,
@@ -67,12 +71,17 @@ export default function AddJobForm({ setJobs }) {
   // State
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({});
-
+  const { company, setCompany } = useState(null);
+  const { user } = useAuth(); // custom hook for authprovider
   const [activeStep, setActiveStep] = useState(0);
-  const jobForm = useForm({ resolver: yupResolver(stepSchemas[activeStep]) });
+  const jobForm = useForm({
+    resolver: yupResolver(stepSchemas[activeStep]),
+    defaultValues: { currencies: "USD" },
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
+    jobForm.setValue("company", companyName);
   };
 
   const handleClose = () => {
@@ -91,7 +100,6 @@ export default function AddJobForm({ setJobs }) {
     "Application Process",
   ];
 
-  const lastStep = activeStep === steps.length - 1;
   const handleNext = async () => {
     const isValid = await jobForm.trigger(); // Validate current step before proceeding
     if (!isValid) return;
@@ -117,85 +125,87 @@ export default function AddJobForm({ setJobs }) {
   };
 
   const parseDescription = async () => {
-    try {
-      const res = await fetch(apiURL + "/api/textanalytics", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description: jobForm.getValues("description") }),
-        credentials: "include",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setjobDescriptionData(data);
-        console.log("Parse Job Description: ", data);
-        handleNext();
-      } else {
-        console.error("Failed to parse job description");
-      }
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
+    const res = await fetch(apiURL + "/api/textanalytics", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ description: jobForm.getValues("description") }),
+      credentials: "include",
+    });
+    if (!res.ok) {
+      throw new Error("Failed to Parse Job Description");
     }
+    return res.json();
   };
+
+  // Use Mutation for Post calls and anything involving user doing an action
+  const {
+    mutate,
+    isPending: isParseLoading,
+    isError,
+  } = useMutation({
+    mutationFn: parseDescription,
+    onSuccess: (data) => {
+      setjobDescriptionData(data);
+      handleNext();
+    },
+    onError: (error) => {
+      console.error("Error Parsing Job Description:", error);
+    },
+  });
 
   const onSubmit = async (data, e) => {
     const isValid = await jobForm.trigger(); // Validate current step before proceeding
     if (!isValid) return;
-    try {
-      const transformedData = {
-        title: data.title,
-        description: JSON.stringify(data.description),
-        employer: {
-          companyName: data.company,
-        },
-        location: {
-          name: data.location,
-          longitude: data.longitude,
-          latitude: data.latitude,
-        },
-        type: data.type.label,
-        minimumSalary: data.minimumSalary,
-        maximumSalary: data.maximumSalary ? data.maximumSalary : null,
-        paymentType: data.payType,
-        // location: data.location,
-        postDate: data.postDate,
-        endDate: data.endDate,
-        perks: JSON.stringify(data.perks),
-        benefits: JSON.stringify(data.benefits),
-        bonus: JSON.stringify(data.bonuses),
-        link: data.applicationLink,
-        qualification: {
-          // ✅ Nest skills inside jobQualification
-          Skills: JSON.stringify(data.skills),
-          MinimumExperience: data.MinimumExperience,
-          EducationLevel: data.EducationLevel,
-        },
-      };
-      const response = await fetch(apiURL + "/api/jobpost/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(transformedData),
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        fetchJobs();
-      } else {
-        const errorData = await response.json();
-        console.log("Hello: ", transformedData);
-        console.log("Error: ", { errorData });
-
-        // setError(errorData.message); // Show error message from the backend
-      }
-    } catch (err) {
-      console.log("Catch Error: ", err);
-      // Maybe put an alert
-    }
-    // console.log("Form Data Submitted: ", data);
-
-    setActiveStep(0);
-    jobForm.reset();
-    handleClose();
+    const transformedData = {
+      title: data.title,
+      description: JSON.stringify(data.description),
+      userID: user.userID,
+      location: {
+        name: data.location,
+        longitude: data.longitude,
+        latitude: data.latitude,
+      },
+      type: data.type.label,
+      minimumSalary: data.minimumSalary,
+      maximumSalary: data.maximumSalary ? data.maximumSalary : null,
+      paymentType: data.payType,
+      postDate: data.postDate,
+      endDate: data.endDate,
+      perks: JSON.stringify(data.perks),
+      benefits: JSON.stringify(data.benefits),
+      bonus: JSON.stringify(data.bonuses),
+      link: data.applicationLink,
+      qualification: {
+        Skills: JSON.stringify(data.skills),
+        MinimumExperience: data.minimumExperience,
+        MaximumExperience: data.maximumExperience,
+        EducationLevel: data.education,
+      },
+    };
+    const response = await fetch(apiURL + "/api/jobpost/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(transformedData),
+      credentials: "include",
+    });
   };
+
+  const {
+    mutate: submitMutate,
+    isPending: submitLoading,
+    isError: submitError,
+  } = useMutation({
+    mutationFn: (data) => onSubmit(data),
+    onSuccess: () => {
+      fetchJobs();
+      setActiveStep(0);
+      jobForm.reset();
+      handleClose();
+    },
+    onError: (error) => {
+      console.log("Error: ", { error });
+    },
+  });
 
   const pageDisplay = () => {
     switch (activeStep) {
@@ -256,7 +266,6 @@ export default function AddJobForm({ setJobs }) {
 
   return (
     <>
-      {/* <Fragment> */}
       <Button
         variant="filled"
         onClick={handleClickOpen}
@@ -264,14 +273,21 @@ export default function AddJobForm({ setJobs }) {
       >
         Add Job
       </Button>
-      {/* </Fragment> */}
 
       <form>
         <StyledDialog onClose={handleClose} open={open}>
+          {submitLoading && (
+            <div className={styles.greyOverlay}>
+              <div>
+                <h1 className="text-[3rem] text-[#ffffff]">Submitting...</h1>
+              </div>
+              <PacmanLoader size={100} />
+            </div>
+          )}
+
           <DialogTitle className={styles.addJobTitle}>
             <SectionHeader header="Add Job Posting" />
           </DialogTitle>
-
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -280,7 +296,7 @@ export default function AddJobForm({ setJobs }) {
             <CloseIcon />
           </IconButton>
 
-          <header>
+          <header className="mt-2">
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => {
                 const stepProps = {};
@@ -300,21 +316,40 @@ export default function AddJobForm({ setJobs }) {
               </h1>
             </DialogTitle>
           </header>
-
           <body className="bg-white overflow-y-auto">{pageDisplay()}</body>
 
           {activeStep === steps.length - 1 ? (
             <DialogActions>
               <footer className="flex flex-row gap-2">
                 <button onClick={handleBack}>Back</button>
-                <button form="jobForm">Submit</button>
+                <button
+                  disabled={submitLoading}
+                  onClick={handleSubmit((data) => submitMutate(data))}
+                  form="jobForm"
+                >
+                  Submit
+                </button>
               </footer>
             </DialogActions>
           ) : activeStep === 0 ? (
             <DialogActions>
-              <footer className="flex flex-row gap-2">
-                <button onClick={parseDescription}>Parse</button>
-                <button onClick={handleNext}>Skip</button>
+              <footer className="flex flex-row gap-2 items-center justify-center h-full">
+                {isParseLoading ? (
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <Typography> Loading:</Typography>
+                    </div>
+                    <PacmanLoader size={30} />
+                  </div>
+                ) : null}
+                <div className="grow-1">
+                  <button disabled={isParseLoading} onClick={() => mutate()}>
+                    Parse
+                  </button>
+                </div>
+                <div className="grow-1">
+                  <button onClick={handleNext}>Skip</button>
+                </div>
               </footer>
             </DialogActions>
           ) : (
