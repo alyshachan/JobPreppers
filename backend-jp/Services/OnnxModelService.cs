@@ -1,11 +1,5 @@
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
-using Qdrant.Client.Grpc;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Text.Json;
-using System.Diagnostics;
 using BERTTokenizers;
 namespace JobPreppersDemo.Services
 {
@@ -25,50 +19,6 @@ namespace JobPreppersDemo.Services
 
         }
 
-        // public float[] GetEmbeddingsAsync(string[] sentences)
-        // {
-        //     var inputTensor = new DenseTensor<string>(sentences, new[] { sentences.Length });
-
-        //     // Create input named "input" for the model
-        //     var inputs = new NamedOnnxValue[]
-        //     {
-        //         NamedOnnxValue.CreateFromTensor("input", inputTensor)
-
-        //     };
-        //     // Run inference (generate embeddings)
-        //     var results = _session.Run(inputs);
-        //     Console.WriteLine($"Result: {results}");
-
-        //     // Get the embeddings from the result
-        //     var output = results.FirstOrDefault()?.AsTensor<float>();
-        //     Console.WriteLine($"Output: {results}");
-
-
-        //     var embeddings = output?.ToArray() ?? Array.Empty<float>();
-
-        //     return embeddings;
-        // }
-
-        // public static Dictionary<string, int[][]> Tokenize(string text)
-        // {
-        //     var scriptPath = Path.Combine("..", "onnx_env", "Scripts", "tokenizer.py");
-
-        //     var psi = new ProcessStartInfo
-        //     {
-        //         FileName = "python",
-        //         Arguments = $"\"{scriptPath}\" \"{text}\"",
-        //         RedirectStandardOutput = true,
-        //         UseShellExecute = false,
-        //         CreateNoWindow = true
-        //     };
-
-        //     using var process = new Process { StartInfo = psi };
-        //     process.Start();
-        //     string result = process.StandardOutput.ReadToEnd();
-        //     process.WaitForExit();
-
-        //     return JsonSerializer.Deserialize<Dictionary<string, int[][]>>(result);
-        // }
 
         public float[] GetEmbeddingsForSentence(string sentence)
         {

@@ -51,6 +51,13 @@ namespace JobPreppersDemo.Services
             var combined = qualificationEmbedding.Concat(jobDescriptionEmbedding).ToArray();
             return combined; // Maybe average or weight 
         }
+
+        public float[] embeddedSentence(string sentence)
+        {
+            return _session.GetEmbeddingsForSentence(sentence);
+        }
+
+
         public async Task AddToJobVector(string description, int jobID)
         {
             float[] descriptionEmbedded = _session.GetEmbeddingsForSentence(description);
