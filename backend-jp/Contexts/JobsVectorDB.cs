@@ -54,11 +54,9 @@ namespace JobPreppersDemo.Services
         public async Task AddToJobVector(string description, int jobID)
         {
             float[] descriptionEmbedded = _session.GetEmbeddingsForSentence(description);
-            // float[] qualEmbedded = _session.GetEmbeddingsForSentence(qualification);
-            // float[] combined = CombineEmbeddings(qualEmbedded, descriptionEmbedded);
             Console.WriteLine($"Combined Vector:  {descriptionEmbedded}");
             await _client.UpsertAsync(
-                collectionName: "{collection_name}",
+                collectionName: $"{collection_name}",
                 points: new List<PointStruct>
                 {
                     new()

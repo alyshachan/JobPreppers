@@ -245,6 +245,7 @@ namespace JobPreppersDemo.Controllers
                 await _context.SaveChangesAsync();
                 if (!string.IsNullOrEmpty(request.description))
                 {
+                    Console.WriteLine("Its going into the to the right spot");
                     StringBuilder sb = new StringBuilder(request.description);
                     sb.Append(" ");
                     sb.Append(request.qualification.Skills);

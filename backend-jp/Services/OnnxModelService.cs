@@ -6,21 +6,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Diagnostics;
-using Tokenizers.DotNet;
-using iText.StyledXmlParser.Jsoup.Parser;
+using BERTTokenizers;
 namespace JobPreppersDemo.Services
 {
     public class OnnxModelService
     {
         private readonly InferenceSession _session;
-        // private readonly Tokenizer _tokenizer;
+
+        private readonly BertBaseTokenizer _tokenizer;
 
 
         // Constructor to load the ONNX model
         public OnnxModelService(string modelPath)
         {
             _session = new InferenceSession(modelPath);
-            // _tokenizer = new Tokenizer(vocabPath: tokenPath);
+            _tokenizer = new BertBaseTokenizer();
 
 
         }
@@ -49,61 +49,82 @@ namespace JobPreppersDemo.Services
         //     return embeddings;
         // }
 
-        public static Dictionary<string, int[][]> Tokenize(string text)
-        {
-            var scriptPath = Path.Combine("..", "onnx_env", "tokenizer", "tokenizer.py");
+        // public static Dictionary<string, int[][]> Tokenize(string text)
+        // {
+        //     var scriptPath = Path.Combine("..", "onnx_env", "Scripts", "tokenizer.py");
 
-            var psi = new ProcessStartInfo
-            {
-                FileName = "python",
-                Arguments = $"\"{scriptPath}\" \"{text}\"",
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
+        //     var psi = new ProcessStartInfo
+        //     {
+        //         FileName = "python",
+        //         Arguments = $"\"{scriptPath}\" \"{text}\"",
+        //         RedirectStandardOutput = true,
+        //         UseShellExecute = false,
+        //         CreateNoWindow = true
+        //     };
 
-            using var process = new Process { StartInfo = psi };
-            process.Start();
-            string result = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
+        //     using var process = new Process { StartInfo = psi };
+        //     process.Start();
+        //     string result = process.StandardOutput.ReadToEnd();
+        //     process.WaitForExit();
 
-            return JsonSerializer.Deserialize<Dictionary<string, int[][]>>(result);
-        }
+        //     return JsonSerializer.Deserialize<Dictionary<string, int[][]>>(result);
+        // }
 
         public float[] GetEmbeddingsForSentence(string sentence)
         {
-            var encodedDescription = Tokenize(sentence);
-            Console.WriteLine($"Encoded Description: {encodedDescription}");
+            // Create a tokenizer instance
+
+            var encoded = _tokenizer.Encode(384, sentence);
 
 
+            // Extract token IDs, attention mask, and token type IDs
+            var inputIds = encoded.Select(t => t.InputIds).ToArray();
+            var attentionMask = encoded.Select(t => t.AttentionMask).ToArray();
+            var typeIds = encoded.Select(t => t.TokenTypeIds).ToArray();
 
-            // Step 1: Create the input tensor for a single sentence
-            var inputTensor = new DenseTensor<string>(new[] { sentence }, new[] { 1 }); // Single sentence as input
 
-            foreach (var input in _session.InputMetadata)
+            // Create input tensors for ONNX model
+            var inputTensors = new List<NamedOnnxValue>
             {
-                Console.WriteLine($"Input Name: {input.Key}, Type: {input.Value.ElementType}");
-            }
-            // Step 2: Create input named "input" for the model
-            var inputs = new NamedOnnxValue[]
-            {
-                NamedOnnxValue.CreateFromTensor("input", inputTensor)
+                NamedOnnxValue.CreateFromTensor("input_ids", new DenseTensor<long>(inputIds, new[] { 1, inputIds.Length })),
+                NamedOnnxValue.CreateFromTensor("attention_mask", new DenseTensor<long>(attentionMask, new[] { 1, attentionMask.Length })),
+                NamedOnnxValue.CreateFromTensor("token_type_ids", new DenseTensor<long>(typeIds, new[] { 1, typeIds.Length }))
             };
 
-            // Step 3: Run inference (generate embeddings)
-            var results = _session.Run(inputs);
-            Console.WriteLine($"Result: {results}");
+            using var results = _session.Run(inputTensors);
 
+            // Get the embeddings from the results
+            var outputTensor = results.FirstOrDefault()?.AsTensor<float>();
+            if (outputTensor != null && outputTensor.Dimensions.Length == 3)
+            {
+                int tokenCount = outputTensor.Dimensions[1];  // 384 tokens
+                int embeddingSize = outputTensor.Dimensions[2];
 
-            // Step 4: Get the embeddings from the result
-            var output = results.FirstOrDefault()?.AsTensor<float>();
-            Console.WriteLine($"Output: {results}");
+                float[] meanEmbedding = new float[embeddingSize];
 
+                // Sum all token embeddings
+                for (int i = 0; i < tokenCount; i++)
+                {
+                    for (int j = 0; j < embeddingSize; j++)
+                    {
+                        meanEmbedding[j] += outputTensor[0, i, j];
+                    }
+                }
 
-            // Step 5: Convert tensor to array and handle null case
-            var embeddings = output?.ToArray() ?? Array.Empty<float>();
+                // Divide by token count to get average
+                for (int j = 0; j < embeddingSize; j++)
+                {
+                    meanEmbedding[j] /= tokenCount;
+                }
 
-            return embeddings;
+                return meanEmbedding;
+            }
+            else
+            {
+                Console.WriteLine("Unexpected tensor shape or empty output.");
+                return Array.Empty<float>();
+            }
+
         }
 
 
