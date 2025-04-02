@@ -118,7 +118,7 @@ function Feed() {
                     {/* </div> */}
                 </div>
                 <div className="w-1/3">
-                    <h1>Discover new connections</h1>
+                    <h1>Your connections</h1>
                     <div className="flex flex-col">
                         <hr />
                         <div className="panel">

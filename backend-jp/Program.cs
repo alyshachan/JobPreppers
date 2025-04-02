@@ -1,19 +1,16 @@
-
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using JobPreppersDemo.Models;
+using System.Text;
 using JobPreppersDemo.Contexts;
+using JobPreppersDemo.Models;
 using JobPreppersDemo.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen; 
-using System.Text;
-using JobPreppersDemo.Services;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 //Test for TextAnalytics
 // Test.Experience();
@@ -25,17 +22,20 @@ if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
 }
-var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString =
+    Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
-var gptKey = Environment.GetEnvironmentVariable("GPTKey")
-             ?? builder.Configuration["GPTKey"];
-
+var gptKey = Environment.GetEnvironmentVariable("GPTKey") ?? builder.Configuration["GPTKey"];
 
 builder.Services.AddSingleton<StreamService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql")));
+    options.UseMySql(
+        connectionString,
+        Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql")
+    )
+);
 
 builder.Services.AddControllers();
 builder.Services.AddLogging(options =>
@@ -45,15 +45,20 @@ builder.Services.AddLogging(options =>
 });
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", policy =>
-    {
-        policy.WithOrigins("http://localhost:3000") // react url
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
-    });
+    options.AddPolicy(
+        "AllowReactApp",
+        policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:3000") // react url
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        }
+    );
 });
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder
+    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -64,7 +69,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = "yourdomain.com",
             ValidAudience = "yourdomain.com",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("thisisuperlongbecauseitneedstobe256bits"))
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes("thisisuperlongbecauseitneedstobe256bits")
+            ),
         };
 
         options.Events = new JwtBearerEvents
@@ -88,7 +95,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             {
                 var token = context.HttpContext.Request.Cookies["authToken"];
 
-                if (!string.IsNullOrEmpty(token)) ;
+                if (!string.IsNullOrEmpty(token))
+                    ;
                 {
                     context.Token = token;
                 }
@@ -96,7 +104,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             },
         };
     });
-builder.Services.ConfigureApplicationCookie(options => { 
+builder.Services.ConfigureApplicationCookie(options =>
+{
     options.Cookie.SameSite = SameSiteMode.None;
     options.Cookie.SecurePolicy = CookieSecurePolicy.None;
     options.Cookie.HttpOnly = true;
@@ -107,7 +116,8 @@ builder.Services.ConfigureApplicationCookie(options => {
 var azureSettings = builder.Configuration.GetSection("AzureLanguage");
 
 var apiKey = azureSettings["APIKey"] ?? Environment.GetEnvironmentVariable("AzureLanguage__APIKey");
-var endpoint = azureSettings["Endpoint"] ?? Environment.GetEnvironmentVariable("AzureLanguage__Endpoint");
+var endpoint =
+    azureSettings["Endpoint"] ?? Environment.GetEnvironmentVariable("AzureLanguage__Endpoint");
 
 if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(endpoint))
 {
@@ -120,41 +130,45 @@ else
         endpoint
     ));
 }
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
- builder.Services.AddSwaggerGen(options =>
+builder.Services.AddSwaggerGen(options =>
+{
+    // Define the security schema for the API key in header
+    options.AddSecurityDefinition(
+        "ApiKey",
+        new OpenApiSecurityScheme
         {
-            // Define the security schema for the API key in header
-            options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
-            {
-                In = ParameterLocation.Header, // Where to send the key (header, query, etc.)
-                Name = "Authorization", // Name of the header
-                Type = SecuritySchemeType.ApiKey, // Type is API Key
-                Description = "API key needed to access the Stream API"
-            });
+            In = ParameterLocation.Header, // Where to send the key (header, query, etc.)
+            Name = "Authorization", // Name of the header
+            Type = SecuritySchemeType.ApiKey, // Type is API Key
+            Description = "API key needed to access the Stream API",
+        }
+    );
 
-            // Apply the security definition globally
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    // Apply the security definition globally
+    options.AddSecurityRequirement(
+        new OpenApiSecurityRequirement
+        {
             {
+                new OpenApiSecurityScheme
                 {
-                    new OpenApiSecurityScheme
+                    Reference = new OpenApiReference
                     {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "ApiKey"
-                        }
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "ApiKey",
                     },
-                    new string[] {}
-                }
-            });
-        });
+                },
+                new string[] { }
+            },
+        }
+    );
+});
 
 builder.Services.AddAuthorization();
 
-
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -171,13 +185,11 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowReactApp");
 app.UseAuthentication();
 app.UseAuthorization();
+
 // app.Urls.Add("http://localhost:5000");
 // app.Urls.Add("http://localhost:5000:5001");
 app.Urls.Add("http://localhost:5000");
-app.Urls.Add("http://localhost:5001");
-
-
-
+app.Urls.Add("https://localhost:5001");
 
 app.MapControllers();
 
