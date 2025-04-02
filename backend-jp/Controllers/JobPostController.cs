@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using JobPreppersDemo.Contexts;
 using JobPreppersDemo.Models;
+using JobPreppersDemo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ZstdSharp.Unsafe;
@@ -17,6 +19,9 @@ namespace JobPreppersDemo.Controllers
     public class JobPostController : Controller
     {
         private readonly ApplicationDbContext _context;
+
+        private readonly JobsVectorDB _vector;
+
         public class PostFilterRequest
         {
             public DateTime? Date { get; set; }
@@ -102,9 +107,10 @@ namespace JobPreppersDemo.Controllers
         }
 
 
-        public JobPostController(ApplicationDbContext context)
+        public JobPostController(ApplicationDbContext context, JobsVectorDB vector)
         {
             _context = context;
+            _vector = vector;
         }
 
         // // GET: api/jobpost
@@ -237,6 +243,16 @@ namespace JobPreppersDemo.Controllers
 
                 _context.JobPosts.Add(newJobPost);
                 await _context.SaveChangesAsync();
+                if (!string.IsNullOrEmpty(request.description))
+                {
+                    StringBuilder sb = new StringBuilder(request.description);
+                    sb.Append(" ");
+                    sb.Append(request.qualification.Skills);
+                    sb.Append(" ");
+                    sb.Append(request.qualification.EducationLevel);
+                    string combine = sb.ToString();
+                    await _vector.AddToJobVector(combine, newJobPost.postID);
+                }
 
                 return Ok(new { message = "Job added successfully", jobId = newJobPost.postID });
             }
@@ -340,7 +356,7 @@ namespace JobPreppersDemo.Controllers
 
 
                 var filteredJobs = await query.ToListAsync();
-
+                Console.WriteLine($"Jobs in Filters: {filteredJobs}");
 
                 if (filteredJobs == null || filteredJobs.Count == 0)
                 {
@@ -362,7 +378,6 @@ namespace JobPreppersDemo.Controllers
 
             try
             {
-
                 // var jobs = await _context.Jobs.ToListAsync();
                 var jobs = await _context.JobPosts
                                 .Include(job => job.company)
@@ -424,8 +439,7 @@ namespace JobPreppersDemo.Controllers
             {
                 company = companies.ContainsKey(job.companyID) ? companies[job.companyID] : string.Empty, // Get the company name
                 title = job.title,
-
-                description = job.description
+                description = job.description != null ? job.description : string.Empty
             }).ToList();
 
             return Ok(jobDtos);

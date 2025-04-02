@@ -198,8 +198,8 @@ export default function AddJobForm({ setJobs, companyName }) {
     mutationFn: (data) => onSubmit(data),
     onSuccess: () => {
       fetchJobs();
-      setActiveStep(0);
-      jobForm.reset();
+      // setActiveStep(0);
+      // jobForm.reset();
       handleClose();
     },
     onError: (error) => {
