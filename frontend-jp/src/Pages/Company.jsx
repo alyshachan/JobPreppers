@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
-import { Button } from "@mui/material";
+import { Button, Box } from "@mui/material";
 
 import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
@@ -11,10 +11,13 @@ import ProfileDescription from "../ProfileSections/ProfileDescription";
 import EditIcon from "@mui/icons-material/Edit";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import styles from "../Components/Profile/Profile.module.css";
+import styles from "../Components/Jobs/Jobs.module.css";
 import "../Components/JobPreppers.css";
 import JobDescription from "../Components/Jobs/JobDescription";
 import SectionHeader from "../Components/Profile/SectionHeader";
+import CompanyJobs from "../Components/Profile/CompanyJobs";
+import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
+import { ReadMore } from "@mui/icons-material";
 
 function User() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
@@ -35,6 +38,9 @@ function User() {
   });
   const [message, setMessage] = useState("");
   const [receiverID, setReceiverID] = useState("");
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const [jobs, setJobs] = useState([]);
   const apiURL = process.env.REACT_APP_JP_API_URL;
 
   const toggleDialog = (type, state) => {
@@ -193,6 +199,28 @@ function User() {
     fetchUser();
   }, [user]);
 
+  useEffect(() => {
+    if (!user?.userID) return;
+
+    const fetchJobs = async () => {
+      try {
+        const res = await fetch(
+          apiURL + `/api/Company/?userID=${user.userID}`,
+          { credentials: "include" }
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          setJobs(data);
+        }
+      } catch (error) {
+        console.error("Error Getting Jobs:", error);
+      }
+    };
+
+    fetchJobs();
+  }, [user?.userID]);
+
   return (
     <>
       <div className="panel !flex-row gap-[50px]">
@@ -202,9 +230,36 @@ function User() {
           setEdit={setEdit}
           friendCount={friendCount}
         />
-        <div>
+        <div className="flex-col justify-between">
           <SectionHeader header="Job Postings" />
-          HERE'S WHERE THE JOB BOARD GOES
+          {/* Where the job board section goes */}
+          <Box className={styles.jobs}>
+            {/* Main Content Area */}
+            <Box
+              className={`${styles.mainContentProfile} ${
+                drawerOpen ? styles.drawerOpen : ""
+              }`}
+            >
+              <div className="">
+                {jobs.length > 0 ? (
+                  <div className={styles.containerForCard}>
+                    <CompanyJobs setDrawerOpen={setDrawerOpen} jobs={jobs} />
+                  </div>
+                ) : (
+                  <NoResultPage />
+                )}
+              </div>
+            </Box>
+
+            {/* Drawer Area */}
+            <Box
+              className={`${styles.drawer} ${
+                drawerOpen ? styles.drawerOpen : ""
+              }`}
+            >
+              <ReadMore />
+            </Box>
+          </Box>
         </div>
       </div>
     </>
