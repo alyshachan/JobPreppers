@@ -10,7 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
-using JobPreppersDemo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
