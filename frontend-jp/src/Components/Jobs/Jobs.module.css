@@ -12,7 +12,6 @@
   transition: flex 0.3s ease-in-out;
   flex-direction: column;
   width: 100%;
-  background-color: black;
 }
 
 .mainContent.drawerOpen {

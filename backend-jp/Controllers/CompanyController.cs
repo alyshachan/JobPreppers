@@ -113,8 +113,10 @@ namespace JobPreppersDemo.Controllers
         {
             try
             {
+                Console.WriteLine("This went into the right function");
                 var company = await _context.Companies
                 .Where(c => c.userID == userID).AnyAsync();
+                Console.WriteLine($"Is this user a company: {company}");
 
                 var response = new IsCompanyResponseDto
                 {
