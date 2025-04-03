@@ -24,6 +24,7 @@ function User() {
   const [skillsDict, setSkillsDict] = useState({});
   const [experienceDict, setExperienceDict] = useState([]);
   const [projectDict, setProjectDict] = useState([]);
+  const [friendCount, setFriendCount] = useState(0);
   const [openDialog, setOpenDialog] = useState({
     education: false,
     skill: false,
@@ -132,7 +133,7 @@ function User() {
       }))
     );
   };
-  
+
   useEffect(() => {
     if (!user) return;
 
@@ -141,6 +142,32 @@ function User() {
     fetchExperience();
     fetchProject();
   }, [user]);
+
+  const fetchFriendCount = async () => {
+    try {
+      const response = await fetch(
+        apiURL + `/api/Friend/GetFriends/${user.userID}`,
+        {
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+
+        if (Array.isArray(data)) {
+          setFriendCount(data.length); // Count the number of friends
+        } else {
+          setFriendCount(0); // No friends found
+        }
+      } else {
+        throw new Error("Failed to fetch friends list");
+      }
+    } catch (error) {
+      console.error("Error fetching friend count:", error);
+    }
+  };
+  fetchFriendCount();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -164,59 +191,62 @@ function User() {
     fetchUser();
   }, [user]);
 
-  if (user == null) {
-    return <div>Loading...</div>;
-  }
-
-
   return (
     <>
-          {!edit &&
-          educationDict.length === 0 &&
-          skillsDict &&
-          Object.keys(skillsDict).length === 0 &&
-          experienceDict.length === 0 &&
-          projectDict.length === 0 ? (
-            <div className={styles.noProfileText}>
-              {user.first_name} {user.last_name} hasn't added to their profile yet
-            </div>
-          ) : (
-            <div className={styles.highlightedInfo}>
-              {educationDict.length > 0 ? (
-                <EducationSection
-                  educationDict={educationDict}
-                  edit={edit}
-                  onAdd={fetchEducation}
-                />
-              ) : (
-                edit && (
-                  <button
-                    className={styles.addNewSection}
-                    onClick={() => toggleDialog("education", true)}
-                  >
-                    Add Education section
-                  </button>
-                )
-              )}
+      <div className="panel !flex-row gap-[50px]">
+        <ProfileDescription
+          user={user}
+          edit={edit}
+          setEdit={setEdit}
+          friendCount={friendCount}
+        />
+        {!edit &&
+        educationDict.length === 0 &&
+        skillsDict &&
+        Object.keys(skillsDict).length === 0 &&
+        experienceDict.length === 0 &&
+        projectDict.length === 0 ? (
+          <div className={styles.noProfileText}>
+            {user.first_name} {user.last_name} hasn't added to their profile yet
+          </div>
+        ) : (
+          <div className={styles.highlightedInfo}>
+            {educationDict.length > 0 ? (
+              <EducationSection
+                educationDict={educationDict}
+                edit={edit}
+                onAdd={fetchEducation}
+              />
+            ) : (
+              edit && (
+                <button
+                  className={styles.addNewSection}
+                  onClick={() => toggleDialog("education", true)}
+                >
+                  Add Education section
+                </button>
+              )
+            )}
 
-              {Object.keys(skillsDict).length > 0 ? (
-                <SkillsSection
-                  skillsDict={skillsDict}
-                  edit={edit}
-                  onAdd={fetchSkills}
-                />
-              ) : (
-                edit && (
-                  <button
-                    className={styles.addNewSection}
-                    onClick={() => toggleDialog("skill", true)}
-                  >
-                    Add Skills section
-                  </button>
-                )
-              )}
-            </div>
-          )}
+            {Object.keys(skillsDict).length > 0 ? (
+              <SkillsSection
+                skillsDict={skillsDict}
+                edit={edit}
+                onAdd={fetchSkills}
+              />
+            ) : (
+              edit && (
+                <button
+                  className={styles.addNewSection}
+                  onClick={() => toggleDialog("skill", true)}
+                >
+                  Add Skills section
+                </button>
+              )
+            )}
+          </div>
+        )}
+      </div>
 
         {experienceDict.length > 0 ? (
           <ExperienceSection
