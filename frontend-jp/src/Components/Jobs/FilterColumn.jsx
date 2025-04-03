@@ -26,6 +26,9 @@ export default function FilterColumn({
     const handleSearch = async () => {
       // e.preventDefault(); // Prevent default form submission
       console.log("Filter: ", { filters });
+      if (filters.userID == null) {
+        return;
+      }
       try {
         const response = await fetch(apiURL + "/api/jobpost/filter", {
           method: "POST",

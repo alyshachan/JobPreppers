@@ -40,10 +40,12 @@
 
 /* Job Description */
 .card {
-  max-width: 500px;
-  width: 40%;
+  max-width: 800px;
+  width: 70%;
   margin: 1rem;
   border-radius: 15px !important;
+  display: flex;
+  flex-direction: row;
 }
 
 .cardIconDetails {

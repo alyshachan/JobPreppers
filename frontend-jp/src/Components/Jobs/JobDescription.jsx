@@ -21,6 +21,13 @@ import styles from "./Jobs.module.css";
 import "../JobPreppers.css";
 import Bookmark from "./Posting/Helper/Bookmark";
 import { useAuth } from "../../provider/authProvider";
+import {
+  CircularProgressbar,
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function JobDescription({ setDrawerOpen, jobs }) {
@@ -47,8 +54,6 @@ function JobDescription({ setDrawerOpen, jobs }) {
 
         if (res.ok) {
           const data = await res.json();
-          console.log("Bookmarked: ", data);
-          console.log("Current Jobs: ", jobs);
           setBookmarkedJobs(data);
         }
       } catch (error) {
@@ -59,87 +64,124 @@ function JobDescription({ setDrawerOpen, jobs }) {
       fetchBookmarkedJobs();
     }
   }, [user?.userID]);
+  const percentage = 55;
 
   return (
     <>
       {console.log(jobs)}
       {jobs.map((job, index) => (
         <Card key={job.jobID} className={styles.card}>
-          <CardHeader
-            avatar={
-              <Avatar src={amazonIcon} aria-label="recipe">
-                {job.company[0]}
-              </Avatar>
-            }
-            title={job.title}
-            subheader={job.company}
-            action={
-              <>
-                <Bookmark
-                  jobID={job.jobID}
-                  setBookmarkedJobs={setBookmarkedJobs}
-                  bookmarkedJobs={bookmarkedJobs}
-                />
-                <IconButton aria-label="highlight-off">
-                  <HighlightOffIcon />
-                </IconButton>
-              </>
-            }
-          />
-          <CardContent>
-            <Box className={styles.cardIconDetails}>
-              <Stack direction="column" spacing={2}>
-                {job.maximumSalary == null ? (
+          <Box className="flex-row justify-center align-middle w-2/3">
+            <CardHeader
+              avatar={
+                <Avatar src={amazonIcon} aria-label="recipe">
+                  {job.company[0]}
+                </Avatar>
+              }
+              title={job.title}
+              subheader={job.company}
+              action={
+                <>
+                  <Bookmark
+                    jobID={job.jobID}
+                    setBookmarkedJobs={setBookmarkedJobs}
+                    bookmarkedJobs={bookmarkedJobs}
+                  />
+                  <IconButton aria-label="highlight-off">
+                    <HighlightOffIcon />
+                  </IconButton>
+                </>
+              }
+            />
+            <CardContent>
+              <Box className={styles.cardIconDetails}>
+                <Stack direction="column" spacing={2}>
+                  {job.maximumSalary == null ? (
+                    <Box className={styles.descriptionBox}>
+                      <PaidIcon />
+                      <Typography
+                        variant="body"
+                        className={styles.descriptionText}
+                      >
+                        ${job.minimumSalary}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Box className={styles.descriptionBox}>
+                      <PaidIcon />
+                      <Typography
+                        variant="body"
+                        className={styles.descriptionText}
+                      >
+                        ${job.minimumSalary} - ${job.maximumSalary}
+                      </Typography>
+                    </Box>
+                  )}
                   <Box className={styles.descriptionBox}>
-                    <PaidIcon />
+                    <AccessTimeFilledIcon />
                     <Typography
                       variant="body"
                       className={styles.descriptionText}
                     >
-                      ${job.minimumSalary}
+                      {job.type}
                     </Typography>
                   </Box>
-                ) : (
                   <Box className={styles.descriptionBox}>
-                    <PaidIcon />
+                    <PlaceIcon />
                     <Typography
                       variant="body"
                       className={styles.descriptionText}
                     >
-                      ${job.minimumSalary} - ${job.maximumSalary}
+                      {job.location}
                     </Typography>
                   </Box>
-                )}
-                <Box className={styles.descriptionBox}>
-                  <AccessTimeFilledIcon />
-                  <Typography variant="body" className={styles.descriptionText}>
-                    {job.type}
-                  </Typography>
-                </Box>
-                <Box className={styles.descriptionBox}>
-                  <PlaceIcon />
-                  <Typography variant="body" className={styles.descriptionText}>
-                    {job.location}
-                  </Typography>
-                </Box>
-              </Stack>
-            </Box>
-          </CardContent>
+                </Stack>
+              </Box>
+            </CardContent>
 
-          <CardActions>
-            <Box className={styles.descriptionFooter}>
-              <Typography variant="body" className={styles.descriptionText}>
-                Apply by {new Date(job.endDate).toLocaleDateString()}
-              </Typography>
-              <button
-                onClick={() => handleOpenDrawer(job)}
-                variant="contained"
-                className="lightButton"
-              >
-                Learn More
-              </button>
-            </Box>
-          </CardActions>
+            <CardActions>
+              <Box className={styles.descriptionFooter}>
+                <Typography variant="body" className={styles.descriptionText}>
+                  Apply by {new Date(job.endDate).toLocaleDateString()}
+                </Typography>
+                <button
+                  onClick={() => handleOpenDrawer(job)}
+                  variant="contained"
+                  className="lightButton"
+                >
+                  Learn More
+                </button>
+              </Box>
+            </CardActions>
+          </Box>
+          <Box className="flex-col content-center justify-center w-1/3">
+            <CircularProgressbar
+              value={job.score}
+              text={`${job.score}%`}
+              styles={buildStyles({
+                // Rotation of path and trail, in number of turns (0-1)
+                rotation: 0.25,
+
+                // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+                strokeLinecap: "butt",
+
+                // Text size
+                textSize: "16px",
+
+                // How long animation takes to go from one percentage to another, in seconds
+                pathTransitionDuration: 0.5,
+
+                // Can specify path transition in more detail, or remove it entirely
+                // pathTransition: 'none',
+
+                // Colors
+                pathColor: `rgba(62, 152, 199, ${percentage / 100})`,
+                textColor: "#f88",
+                trailColor: "#d6d6d6",
+                backgroundColor: "#3e98c7",
+              })}
+            />
+          </Box>
         </Card>
       ))}
 

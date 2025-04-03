@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import SearchColumn from "../Components/Jobs/SearchColumn";
 import "../Components/JobPreppers.css";
@@ -7,10 +7,11 @@ import FilterColumn from "../Components/Jobs/FilterColumn";
 import JobDescription from "../Components/Jobs/JobDescription";
 import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
 import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
+import { useAuth } from "../provider/authProvider";
 function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
-
+  const { user, loading } = useAuth();
   const [filters, setFilters] = useState({
     date: null,
     type: [],
@@ -19,7 +20,14 @@ function Jobs() {
     longitude: null,
     latitude: null,
     distance: 0,
+    userID: user?.userID,
   });
+
+  useEffect(() => {
+    if (user?.userID) {
+      setFilters((prev) => ({ ...prev, userID: user.userID }));
+    }
+  }, [user]);
 
   const [jobs, setJobs] = useState([]);
   const [userCoordinate, setUserCoordinate] = useState({

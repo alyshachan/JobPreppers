@@ -1,11 +1,17 @@
-using System;
-using System.Drawing;
-using Microsoft.Extensions.Configuration;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
+using Tokens.Extensions;
+using ZstdSharp.Unsafe;
+using System.Text.Json;
+
 
 namespace JobPreppersDemo.Services
 {
+    public class SearchResult
+    {
+        public int Id { get; set; }
+        public int Score { get; set; }
+    }
     public class JobsVectorDB
     {
         private readonly QdrantClient _client;
@@ -17,6 +23,8 @@ namespace JobPreppersDemo.Services
             _client = client;
             _session = session;
         }
+
+
 
         // Just going to create the collection in the qdrant console itself
         // public async Task CreateJobDescriptionCollection()
@@ -46,21 +54,42 @@ namespace JobPreppersDemo.Services
         //     // );
         // }
 
+
         public float[] CombineEmbeddings(float[] qualificationEmbedding, float[] jobDescriptionEmbedding)
         {
             var combined = qualificationEmbedding.Concat(jobDescriptionEmbedding).ToArray();
             return combined; // Maybe average or weight 
         }
 
-        public float[] embeddedSentence(string sentence)
+        public async Task<float[]> embeddedSentence(string sentence)
         {
-            return _session.GetEmbeddingsForSentence(sentence);
+            return await _session.GetEmbeddingsForSentence(sentence);
+        }
+
+        public async Task<string> sematicSearch(float[] embeddedUser)
+        {
+            var results = await _client.QueryAsync(
+            collectionName: $"{collection_name}",
+            query: embeddedUser,
+            searchParams: new SearchParams { Exact = false, HnswEf = 128 },
+            limit: 10
+            );
+            var extractedResults = results.Select(r => new SearchResult
+            {
+                Id = (int)r.Id.Num,
+                Score = (int)Math.Round(r.Score * 100.0, 0),
+            }).ToList();
+
+            string jsonOutput = JsonSerializer.Serialize(extractedResults);
+            Console.WriteLine($"JSON Output: {jsonOutput}");
+
+            return jsonOutput;
         }
 
 
         public async Task AddToJobVector(string description, int jobID)
         {
-            float[] descriptionEmbedded = _session.GetEmbeddingsForSentence(description);
+            float[] descriptionEmbedded = await _session.GetEmbeddingsForSentence(description);
             Console.WriteLine($"Combined Vector:  {descriptionEmbedded}");
             await _client.UpsertAsync(
                 collectionName: $"{collection_name}",

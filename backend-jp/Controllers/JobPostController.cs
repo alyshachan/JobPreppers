@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using JobPreppersDemo.Contexts;
 using JobPreppersDemo.Models;
@@ -9,11 +10,19 @@ using JobPreppersDemo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ZstdSharp.Unsafe;
-
+using Newtonsoft.Json;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 
 
 namespace JobPreppersDemo.Controllers
 {
+
+    public class JobScoreDto
+    {
+        public int Id { get; set; }
+        public int Score { get; set; }
+    }
     [Route("api/[controller]")]
     [ApiController]
     public class JobPostController : Controller
@@ -37,6 +46,8 @@ namespace JobPreppersDemo.Controllers
 
             public int Distance { get; set; }
 
+            public int userID { get; set; }
+
 
         }
 
@@ -58,6 +69,7 @@ namespace JobPreppersDemo.Controllers
 
             public string bonues { get; set; } = string.Empty;
             public int jobID { get; set; }
+            public int score { get; set; }
 
         }
 
@@ -115,43 +127,72 @@ namespace JobPreppersDemo.Controllers
 
         // // GET: api/jobpost
         [HttpGet]
-        public async Task<IActionResult> GetAllJobs()
+        public async Task<IActionResult> GetAllJobs([FromQuery] int userID)
         {
 
             try
             {
-
-                // var jobs = await _context.Jobs.ToListAsync();
-                var jobs = await _context.JobPosts
-                                .Include(job => job.qualification)
-                                .Include(job => job.company)
-                                .Include(job => job.location)
-                                .Select(job => new
-                                {
-                                    company = job.company.Name,
-                                    minimumSalary = job.minimumSalary,
-                                    benefits = job.benefits,
-                                    postDate = job.postDate,
-                                    endDate = job.endDate,
-                                    description = job.description,
-                                    title = job.title,
-                                    type = job.type,
-                                    link = job.link,
-                                    location = job.location.name,
-                                    bonues = job.bonus,
-                                    perks = job.perks,
-                                    jobID = job.postID
-
-
-                                }
-                                )
-                                .ToListAsync();
-
-                if (jobs == null)
+                Dictionary<int, int>? jobSearch = new Dictionary<int, int>();
+                if (userID != 0)
                 {
-                    return NotFound("No jobs found.");
+                    var user = _context.UserEmbeddings.FirstOrDefault(ub => ub.userID == userID);
+                    if (user != null)
+                    {
+                        float[]? embedded = JsonConvert.DeserializeObject<float[]>(user.embedding);
+                        Console.WriteLine($"Embedded: {embedded}");
+                        if (embedded != null)
+                        {
+                            var response = await _vector.sematicSearch(embedded);
+                            jobSearch = JsonConvert.DeserializeObject<List<JobScoreDto>>(response)!.ToDictionary(j => j.Id, j => j.Score);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("User was null");
+                    }
+                    // Maybe call addEmbedded
+                    if (jobSearch.IsNullOrEmpty())
+                    {
+                        Console.WriteLine("Was not found");
+                        return StatusCode(500, new { message = $"Internal server error: user not in the embedded table" });
+                    }
+                    var jobPostIds = jobSearch.Keys.ToList();
+
+                    // var jobs = await _context.Jobs.ToListAsync();
+                    var jobs = await _context.JobPosts
+                                    .Include(job => job.qualification)
+                                    .Include(job => job.company)
+                                    .Include(job => job.location)
+                                    .Where(job => jobPostIds.Contains(job.postID))
+                                    .Select(job => new
+                                    {
+                                        company = job.company.Name,
+                                        minimumSalary = job.minimumSalary,
+                                        benefits = job.benefits,
+                                        postDate = job.postDate,
+                                        endDate = job.endDate,
+                                        description = job.description,
+                                        title = job.title,
+                                        type = job.type,
+                                        link = job.link,
+                                        location = job.location.name,
+                                        bonues = job.bonus,
+                                        perks = job.perks,
+                                        jobID = job.postID,
+                                        score = jobSearch[job.postID]
+
+
+                                    }
+                                    )
+                                    .ToListAsync();
+
+                    if (jobs == null)
+                    {
+                        return NotFound("No jobs found.");
+                    }
+                    return Ok(new { jobs });
                 }
-                return Ok(new { jobs });
+                return StatusCode(500, new { message = $"Internal server error: UserID not found" });
 
             }
             catch (Exception ex)
@@ -245,7 +286,6 @@ namespace JobPreppersDemo.Controllers
                 await _context.SaveChangesAsync();
                 if (!string.IsNullOrEmpty(request.description))
                 {
-                    Console.WriteLine("Its going into the to the right spot");
                     StringBuilder sb = new StringBuilder(request.description);
                     sb.Append(" ");
                     sb.Append(request.qualification.Skills);
@@ -271,14 +311,37 @@ namespace JobPreppersDemo.Controllers
 
         }
 
-
         [HttpPost("filter")]
         public async Task<IActionResult> FilterJobs([FromBody] PostFilterRequest request)
         {
             IQueryable<JobPostDto> query;
             try
             {
-
+                // Section for user maybe helper method: 
+                // Check Cache - should be there  --- maybe call other: 
+                Dictionary<int, int>? jobSearch = new Dictionary<int, int>();
+                var user = _context.UserEmbeddings.FirstOrDefault(ub => ub.userID == request.userID);
+                if (user != null)
+                {
+                    float[]? embedded = JsonConvert.DeserializeObject<float[]>(user.embedding);
+                    Console.WriteLine($"Embedded: {embedded}");
+                    if (embedded != null)
+                    {
+                        var response = await _vector.sematicSearch(embedded);
+                        jobSearch = JsonConvert.DeserializeObject<List<JobScoreDto>>(response)!.ToDictionary(j => j.Id, j => j.Score);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("User was null");
+                }
+                // Maybe call addEmbedded
+                if (jobSearch.IsNullOrEmpty())
+                {
+                    Console.WriteLine("Was not found");
+                    return StatusCode(500, new { message = $"Internal server error: user not in the embedded table" });
+                }
+                var jobPostIds = jobSearch.Keys.ToList();
 
                 if (request.Latitude != null && request.Longitude != null && request.Distance != 0)
                 {
@@ -290,30 +353,7 @@ namespace JobPreppersDemo.Controllers
                     WHERE LOWER(l.name) REGEXP 'remote' OR ST_Distance_Sphere(Point({request.Longitude}, {request.Latitude}), Point(l.longitude, l.latitude)) <= {distance}"
                     ).Include(job => job.company)
                     .Include(job => job.location)
-                    .Select(job => new JobPostDto
-                    {
-                        company = job.company.Name,
-                        minimumSalary = job.minimumSalary,
-                        postDate = job.postDate,
-                        endDate = job.endDate,
-                        title = job.title,
-                        type = job.type,
-                        location = job.location.name,
-                        description = job.description ?? "",
-                        benefits = job.benefits ?? "",
-                        bonues = job.bonus ?? "",
-                        perks = job.perks ?? "",
-                        jobID = job.postID
-
-                    });
-
-                }
-
-                else
-                {
-                    query = _context.JobPosts
-                    .Include(job => job.company)
-                    .Include(job => job.location)
+                    .Where(job => jobPostIds.Contains(job.postID))
                     .Select(job => new JobPostDto
                     {
                         company = job.company.Name,
@@ -328,6 +368,34 @@ namespace JobPreppersDemo.Controllers
                         bonues = job.bonus ?? "",
                         perks = job.perks ?? "",
                         jobID = job.postID,
+                        score = jobSearch[job.postID],
+
+                    });
+
+                }
+
+                else
+                {
+                    query = _context.JobPosts
+                    .Include(job => job.company)
+                    .Include(job => job.location)
+                    .Where(job => jobPostIds.Contains(job.postID))
+                    .Select(job => new JobPostDto
+                    {
+                        company = job.company.Name,
+                        minimumSalary = job.minimumSalary,
+                        postDate = job.postDate,
+                        endDate = job.endDate,
+                        title = job.title,
+                        type = job.type,
+                        location = job.location.name,
+                        description = job.description ?? "",
+                        benefits = job.benefits ?? "",
+                        bonues = job.bonus ?? "",
+                        perks = job.perks ?? "",
+                        jobID = job.postID,
+                        score = jobSearch[job.postID]
+
 
                     });
 

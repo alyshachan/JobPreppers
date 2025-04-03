@@ -34,6 +34,8 @@ namespace JobPreppersDemo.Controllers
         [HttpGet("getBookmark")]
         public async Task<IActionResult> GetBookmark([FromQuery] int userID)
         {
+            //Grab the user from the embedded table --> Need to scaffold first
+
             var bookmarkedJobs = await _context.Bookmarks
                                       .Where(b => b.userID == userID)
                                       .Select(b => b.JobID)

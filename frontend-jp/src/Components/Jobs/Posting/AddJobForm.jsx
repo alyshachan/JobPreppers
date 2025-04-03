@@ -111,7 +111,7 @@ export default function AddJobForm({ setJobs, companyName }) {
   };
   const fetchJobs = async () => {
     try {
-      const res = await fetch(apiURL + "/api/jobpost");
+      const res = await fetch(apiURL + `/api/jobpost/?userID=${user.userID}`);
       if (res.ok) {
         const data = await res.json();
         console.log(data);
