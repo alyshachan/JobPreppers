@@ -45,6 +45,15 @@
   margin: 1rem;
   border-radius: 15px !important;
   display: flex;
+  flex-direction: column;
+}
+
+.mainCard {
+  max-width: 800px;
+  width: 70%;
+  margin: 1rem;
+  border-radius: 15px !important;
+  display: flex;
   flex-direction: row;
 }
 

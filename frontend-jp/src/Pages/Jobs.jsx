@@ -13,20 +13,6 @@ import CompanyViewJobDescription from "../Components/Jobs/CompanyViewJobDescript
 import { use } from "react";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
-async function fetchCompanyStatus(userID) {
-  console.log("user id in fetchStatus: ", userID);
-  const res = await fetch(apiURL + `/api/Company/isCompany/?userID=${userID}`, {
-    credentials: "include",
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch company status");
-  }
-  let result = await res.json();
-  setIsUserCompany(result.isCompany);
-  return result.isCompany;
-}
-
 function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -47,6 +33,24 @@ function Jobs() {
     latitude: null,
     longitude: null,
   });
+
+  async function fetchCompanyStatus(userID) {
+    console.log("user id in fetchStatus: ", userID);
+    const res = await fetch(
+      apiURL + `/api/Company/isCompany/?userID=${userID}`,
+      {
+        credentials: "include",
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch company status");
+    }
+    let result = await res.json();
+    setIsUserCompany(result.isCompany);
+    return result.isCompany;
+  }
+
   useEffect(() => {
     if (user?.userID) {
       setFilters((prev) => ({ ...prev, userID: user.userID }));
@@ -77,7 +81,7 @@ function Jobs() {
           }`}
         >
           <div className="content">
-            <div className="panelTransparent !p-0 items-center">
+            <div className="panelTransparent !p-0 items-center w-full">
               <SearchColumn
                 setUserCoordinate={setUserCoordinate}
                 setFilters={setFilters}

@@ -125,6 +125,7 @@ namespace JobPreppersDemo.Controllers
         {
             _context = context;
             _vector = vector;
+            _embeddedUser = new EmbeddedUser(context, vector);
         }
 
         // // Might not need because only add job use getAllJob

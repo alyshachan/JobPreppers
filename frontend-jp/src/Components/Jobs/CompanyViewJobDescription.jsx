@@ -39,77 +39,69 @@ function CompanyViewJobDescription({ setDrawerOpen, jobs }) {
       {console.log(jobs)}
       {jobs.map((job, index) => (
         <Card key={job.jobID} className={styles.card}>
-          <Box className="flex-row justify-center align-middle w-2/3">
-            <CardHeader
-              avatar={
-                <Avatar src={amazonIcon} aria-label="recipe">
-                  {job.company[0]}
-                </Avatar>
-              }
-              title={job.title}
-              subheader={job.company}
-            />
-            <CardContent>
-              <Box className={styles.cardIconDetails}>
-                <Stack direction="column" spacing={2}>
-                  {job.maximumSalary == null ? (
-                    <Box className={styles.descriptionBox}>
-                      <PaidIcon />
-                      <Typography
-                        variant="body"
-                        className={styles.descriptionText}
-                      >
-                        ${job.minimumSalary}
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <Box className={styles.descriptionBox}>
-                      <PaidIcon />
-                      <Typography
-                        variant="body"
-                        className={styles.descriptionText}
-                      >
-                        ${job.minimumSalary} - ${job.maximumSalary}
-                      </Typography>
-                    </Box>
-                  )}
+          <CardHeader
+            avatar={
+              <Avatar src={amazonIcon} aria-label="Company Icon">
+                {job.company[0]}
+              </Avatar>
+            }
+            title={job.title}
+            subheader={job.company}
+          />
+          <CardContent>
+            <Box className={styles.cardIconDetails}>
+              <Stack direction="column" spacing={2}>
+                {job.maximumSalary == null ? (
                   <Box className={styles.descriptionBox}>
-                    <AccessTimeFilledIcon />
+                    <PaidIcon />
                     <Typography
                       variant="body"
                       className={styles.descriptionText}
                     >
-                      {job.type}
+                      ${job.minimumSalary}
                     </Typography>
                   </Box>
+                ) : (
                   <Box className={styles.descriptionBox}>
-                    <PlaceIcon />
+                    <PaidIcon />
                     <Typography
                       variant="body"
                       className={styles.descriptionText}
                     >
-                      {job.location}
+                      ${job.minimumSalary} - ${job.maximumSalary}
                     </Typography>
                   </Box>
-                </Stack>
-              </Box>
-            </CardContent>
+                )}
+                <Box className={styles.descriptionBox}>
+                  <AccessTimeFilledIcon />
+                  <Typography variant="body" className={styles.descriptionText}>
+                    {job.type}
+                  </Typography>
+                </Box>
+                <Box className={styles.descriptionBox}>
+                  <PlaceIcon />
+                  <Typography variant="body" className={styles.descriptionText}>
+                    {job.location}
+                  </Typography>
+                </Box>
+              </Stack>
+            </Box>
+          </CardContent>
 
-            <CardActions>
-              <Box className={styles.descriptionFooter}>
-                <Typography variant="body" className={styles.descriptionText}>
-                  Apply by {new Date(job.endDate).toLocaleDateString()}
-                </Typography>
-                <button
-                  onClick={() => handleOpenDrawer(job)}
-                  variant="contained"
-                  className="lightButton"
-                >
-                  Learn More
-                </button>
-              </Box>
-            </CardActions>
-          </Box>
+          <CardActions>
+            <Box className={styles.descriptionFooter}>
+              <Typography variant="body" className={styles.descriptionText}>
+                Apply by {new Date(job.endDate).toLocaleDateString()}
+              </Typography>
+              <button
+                onClick={() => handleOpenDrawer(job)}
+                variant="contained"
+                className="lightButton"
+              >
+                Learn More
+              </button>
+            </Box>
+          </CardActions>
         </Card>
       ))}
 

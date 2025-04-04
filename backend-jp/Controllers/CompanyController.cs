@@ -15,10 +15,15 @@ namespace JobPreppersDemo.Controllers
 {
     public class CompanyDTO
     {
-       public int userID { get; set; }
-       public string Name { get; set; }
-       public string industry { get; set; } 
+        public int userID { get; set; }
+        public string Name { get; set; }
+        public string industry { get; set; }
 
+    }
+
+    public class IsCompanyResponseDto
+    {
+        public bool isCompany { get; set; }
     }
     [Route("api/[controller]")]
     [ApiController]
@@ -33,7 +38,7 @@ namespace JobPreppersDemo.Controllers
         [HttpPost("CreateCompany")]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyDTO companyDto)
         {
-           if(companyDto == null) 
+            if (companyDto == null)
             {
 
                 return BadRequest("Company info not filled out");
@@ -55,6 +60,29 @@ namespace JobPreppersDemo.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
 
+        }
+
+        [HttpGet("isCompany")]
+        public async Task<ActionResult<IsCompanyResponseDto>> isCompany([FromQuery] int userID)
+        {
+            try
+            {
+                Console.WriteLine("This went into the right function");
+                var company = await _context.Companies
+                .Where(c => c.userID == userID).AnyAsync();
+                Console.WriteLine($"Is this user a company: {company}");
+
+                var response = new IsCompanyResponseDto
+                {
+                    isCompany = company,
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

@@ -94,7 +94,6 @@ namespace JobPreppersDemo.Controllers
                     };
                     _context.Skills.Add(skill);
                     await _context.SaveChangesAsync();
-
                 }
                 //check if already in userskill table
                 var userSkillExits = await _context.UserSkills.AnyAsync(s => s.userID == request.UserID && s.skillID == skill.skillID);
@@ -113,7 +112,6 @@ namespace JobPreppersDemo.Controllers
 
                     _context.UserSkills.Add(newSkill);
                     await _context.SaveChangesAsync();
-                    await _embeddedUser.AddEmbeddedUser(request.UserID);
 
                     return Ok(new
                     {

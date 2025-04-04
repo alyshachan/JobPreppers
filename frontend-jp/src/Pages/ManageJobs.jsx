@@ -45,8 +45,8 @@ function ManageJobs() {
           }`}
         >
           <div className="content">
-            <div className="panelTransparent !p-0 items-center">
-              {/* <SearchColumn
+            {/* <div className="panelTransparent !p-0 items-center"> */}
+            {/* <SearchColumn
                 setUserCoordinate={setUserCoordinate}
                 setFilters={setFilters}
                 setJobs={setJobs}
@@ -59,8 +59,8 @@ function ManageJobs() {
                 userCoordinate={userCoordinate}
               /> */}
 
-              {}
-            </div>
+            {/* {} */}
+            {/* </div> */}
             {jobs.length > 0 ? (
               <div className={styles.containerForCard}>
                 <ManageDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />

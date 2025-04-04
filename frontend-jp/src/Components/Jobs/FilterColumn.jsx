@@ -27,13 +27,13 @@ export default function FilterColumn({
     const handleSearch = async () => {
       // e.preventDefault(); // Prevent default form submission
       console.log("Filter: ", { filters });
-      if (filters.userID == null) {
+      if (filters.userID == null || IsUserCompany == null) {
         return;
       }
       try {
         const endpoint = IsUserCompany
-          ? "/api/jobpost/filter"
-          : "/api/jobpost/filterCompanyView";
+          ? "/api/jobpost/filterCompanyView"
+          : "/api/jobpost/filter";
         const response = await fetch(apiURL + endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },

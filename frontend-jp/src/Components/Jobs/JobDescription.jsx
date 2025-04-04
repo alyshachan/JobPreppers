@@ -70,8 +70,8 @@ function JobDescription({ setDrawerOpen, jobs }) {
     <>
       {console.log(jobs)}
       {jobs.map((job, index) => (
-        <Card key={job.jobID} className={styles.card}>
-          <Box className="flex-row justify-center align-middle w-2/3">
+        <Card key={job.jobID} className={styles.mainCard}>
+          <Box className="flex-row w-2/3 max-h-full">
             <CardHeader
               avatar={
                 <Avatar src={amazonIcon} aria-label="recipe">
@@ -80,18 +80,6 @@ function JobDescription({ setDrawerOpen, jobs }) {
               }
               title={job.title}
               subheader={job.company}
-              action={
-                <>
-                  <Bookmark
-                    jobID={job.jobID}
-                    setBookmarkedJobs={setBookmarkedJobs}
-                    bookmarkedJobs={bookmarkedJobs}
-                  />
-                  <IconButton aria-label="highlight-off">
-                    <HighlightOffIcon />
-                  </IconButton>
-                </>
-              }
             />
             <CardContent>
               <Box className={styles.cardIconDetails}>
@@ -154,7 +142,17 @@ function JobDescription({ setDrawerOpen, jobs }) {
               </Box>
             </CardActions>
           </Box>
-          <Box className="flex-col content-center justify-center w-1/3">
+          <Box className="flex-col p-2 justify-center w-1/3 h-full">
+            <div className="flex justify-end">
+              <Bookmark
+                jobID={job.jobID}
+                setBookmarkedJobs={setBookmarkedJobs}
+                bookmarkedJobs={bookmarkedJobs}
+              />
+              <IconButton aria-label="highlight-off " className="p-0 m-0">
+                <HighlightOffIcon />
+              </IconButton>
+            </div>
             <CircularProgressbar
               value={job.score}
               text={`${job.score}%`}
