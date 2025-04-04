@@ -127,59 +127,59 @@ namespace JobPreppersDemo.Controllers
             _vector = vector;
         }
 
-        // // GET: api/jobpost
-        [HttpGet("companyView")]
-        public async Task<IActionResult> GetAllJobsCompany([FromQuery] int userID)
-        {
+        // // Might not need because only add job use getAllJob
+        // [HttpGet("companyView")]
+        // public async Task<IActionResult> GetAllJobsCompany([FromQuery] int userID)
+        // {
 
-            try
-            {
+        //     try
+        //     {
 
-                var jobs = await _context.JobPosts
-                              .Include(job => job.qualification)
-                              .Include(job => job.company)
-                              .Include(job => job.location)
-                              .Select(job => new
-                              {
-                                  company = job.company.Name,
-                                  minimumSalary = job.minimumSalary,
-                                  benefits = job.benefits,
-                                  postDate = job.postDate,
-                                  endDate = job.endDate,
-                                  description = job.description,
-                                  title = job.title,
-                                  type = job.type,
-                                  link = job.link,
-                                  location = job.location.name,
-                                  bonues = job.bonus,
-                                  perks = job.perks,
-                                  jobID = job.postID,
-
-
-                              }
-                              )
-                              .ToListAsync();
-
-                if (jobs == null)
-                {
-                    return NotFound("No jobs found.");
-                }
-                return Ok(new { jobs });
-
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
-                    Console.WriteLine($"Inner Exception StackTrace: {ex.InnerException.StackTrace}");
-                }
-                return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
+        //         var jobs = await _context.JobPosts
+        //                       .Include(job => job.qualification)
+        //                       .Include(job => job.company)
+        //                       .Include(job => job.location)
+        //                       .Select(job => new
+        //                       {
+        //                           company = job.company.Name,
+        //                           minimumSalary = job.minimumSalary,
+        //                           benefits = job.benefits,
+        //                           postDate = job.postDate,
+        //                           endDate = job.endDate,
+        //                           description = job.description,
+        //                           title = job.title,
+        //                           type = job.type,
+        //                           link = job.link,
+        //                           location = job.location.name,
+        //                           bonues = job.bonus,
+        //                           perks = job.perks,
+        //                           jobID = job.postID,
 
 
-            }
+        //                       }
+        //                       )
+        //                       .ToListAsync();
 
-        }
+        //         if (jobs == null)
+        //         {
+        //             return NotFound("No jobs found.");
+        //         }
+        //         return Ok(new { jobs });
+
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         if (ex.InnerException != null)
+        //         {
+        //             Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+        //             Console.WriteLine($"Inner Exception StackTrace: {ex.InnerException.StackTrace}");
+        //         }
+        //         return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
+
+
+        //     }
+
+        // }
 
 
         [HttpGet]

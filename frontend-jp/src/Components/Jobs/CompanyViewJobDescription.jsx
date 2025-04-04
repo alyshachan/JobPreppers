@@ -19,11 +19,10 @@ import amazonIcon from "./Img/amazon-icon.png";
 import ReadMoreDrawer from "./ReadMoreComponent/ReadMoreDrawer";
 import styles from "./Jobs.module.css";
 import "../JobPreppers.css";
-import { useAuth } from "../../provider/authProvider";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
-function JobDescription({ setDrawerOpen, jobs }) {
+function CompanyViewJobDescription({ setDrawerOpen, jobs }) {
   const [selectedJob, setSelectedJob] = useState(null); // Track the currently selected job
   const handleOpenDrawer = (job) => {
     setSelectedJob(job);
@@ -34,8 +33,6 @@ function JobDescription({ setDrawerOpen, jobs }) {
     setDrawerOpen(false); // Close the drawer
     setSelectedJob(null);
   };
-
-  const { user } = useAuth();
 
   return (
     <>
@@ -126,4 +123,4 @@ function JobDescription({ setDrawerOpen, jobs }) {
   );
 }
 
-export default JobDescription;
+export default CompanyViewJobDescription;

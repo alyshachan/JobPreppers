@@ -17,6 +17,7 @@ export default function FilterColumn({
   filters,
   setFilters,
   userCoordinate,
+  IsUserCompany,
 }) {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const containerRef = useRef(null);
@@ -30,7 +31,10 @@ export default function FilterColumn({
         return;
       }
       try {
-        const response = await fetch(apiURL + "/api/jobpost/filter", {
+        const endpoint = IsUserCompany
+          ? "/api/jobpost/filter"
+          : "/api/jobpost/filterCompanyView";
+        const response = await fetch(apiURL + endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(filters),
