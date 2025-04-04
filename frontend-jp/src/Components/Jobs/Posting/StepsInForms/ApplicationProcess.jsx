@@ -40,20 +40,18 @@ export default function ApplicationProcess() {
     "Job Prepper Profile",
   ];
 
-  const newTheme = (theme) =>
-    createTheme({
-      ...theme,
-      components: {
-        MuiDayCalendar: {
-          styleOverrides: {
-            root: {
-              maxHeight: 200,
-              overflow: "auto",
-            },
+  const newTheme = createTheme({
+    components: {
+      MuiDayCalendar: {
+        styleOverrides: {
+          root: {
+            maxHeight: 200,
+            overflow: "auto",
           },
         },
       },
-    });
+    },
+  });
 
   return (
     <>
@@ -85,14 +83,6 @@ export default function ApplicationProcess() {
                         {...field}
                         label="Apply By Day"
                         value={field.value ? dayjs(field.value) : null} // Ensure it's in Dayjs format
-                        // slotProps={{
-                        //   layout: {
-                        //     sx: {
-                        //       maxHeight: 200,
-                        //       overflow: "auto",
-                        //     },
-                        //   },
-                        // }}
                       />
                     )}
                   />

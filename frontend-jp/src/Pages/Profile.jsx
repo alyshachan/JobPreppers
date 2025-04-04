@@ -40,7 +40,6 @@ function Profile() {
   const [user, setUser] = useState(null);
   const apiURL = process.env.REACT_APP_JP_API_URL;
 
-
   const toggleDialog = (type, state) => {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
   };
@@ -82,8 +81,6 @@ function Profile() {
 
     const fetchData = async (endpoint, setter, transform) => {
       try {
-        var id =  apiURL + `/api/GetIdFromUserName/${username}`
-     
         const response = await fetch(
           apiURL + `/api/${endpoint}/${user.userID}`,
           { credentials: "include" }
@@ -131,7 +128,7 @@ function Profile() {
         if (!skills[category]) {
           skills[category] = [];
         }
-  
+
         skills[category].push({ name, userSkillID });
       });
       return skills;
@@ -171,29 +168,31 @@ function Profile() {
       }))
     );
 
-    const fetchFriendCount = async() => {
+    const fetchFriendCount = async () => {
       try {
-        const response = await fetch(apiURL + `/api/Friend/GetFriends/${user.userID}`, {
-          credentials: "include",
-        });
+        const response = await fetch(
+          apiURL + `/api/Friend/GetFriends/${user.userID}`,
+          {
+            credentials: "include",
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
-        
+
           if (Array.isArray(data)) {
             setFriendCount(data.length); // Count the number of friends
           } else {
             setFriendCount(0); // No friends found
           }
-        }else {
+        } else {
           throw new Error("Failed to fetch friends list");
         }
-        
       } catch (error) {
         console.error("Error fetching friend count:", error);
       }
-    }
-    fetchFriendCount()
+    };
+    fetchFriendCount();
   };
 
   useEffect(() => {
@@ -256,10 +255,13 @@ function Profile() {
               {user.first_name} {user.last_name}
             </p>
             <p>{user.title}</p>
-            <p className="subtitle">
-              {user.location}
-            </p>
-            <a href="/Friends"className="font-bold text-xl text-[#4ba173] hover:underline">{friendCount} connections</a>
+            <p className="subtitle">{user.location}</p>
+            <a
+              href="/Friends"
+              className="font-bold text-xl text-[#4ba173] hover:underline"
+            >
+              {friendCount} connections
+            </a>
             <p className="subtitle">{user.location}</p>
 
             <div className={styles.actionButtons}>

@@ -8,7 +8,7 @@ using JobPreppersDemo.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen; 
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
 using JobPreppersDemo.Services;
 
@@ -18,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 //Test for TextAnalytics
 // Test.Experience();
 // Test.Salary();
+// Test.Skills();
 // Add services to the container.
 
 
@@ -47,10 +48,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") // react url
+        policy.WithOrigins("https://jobpreppers.co") // react url
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowCredentials()
+              .SetIsOriginAllowed(origin => true) // Helps with some CORS issues
+              .WithExposedHeaders("Access-Control-Allow-Origin");
     });
 });
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -96,11 +99,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             },
         };
     });
-builder.Services.ConfigureApplicationCookie(options => { 
+builder.Services.ConfigureApplicationCookie(options =>
+{
     options.Cookie.SameSite = SameSiteMode.None;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.HttpOnly = true;
-    options.Cookie.Domain = "jobpreppers.co";
+    options.Cookie.Domain = "localhost";
 });
 
 // Azure Language SetUp
@@ -122,20 +126,20 @@ else
 }
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
- builder.Services.AddSwaggerGen(options =>
-        {
-            // Define the security schema for the API key in header
-            options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
-            {
-                In = ParameterLocation.Header, // Where to send the key (header, query, etc.)
-                Name = "Authorization", // Name of the header
-                Type = SecuritySchemeType.ApiKey, // Type is API Key
-                Description = "API key needed to access the Stream API"
-            });
+builder.Services.AddSwaggerGen(options =>
+       {
+           // Define the security schema for the API key in header
+           options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+           {
+               In = ParameterLocation.Header, // Where to send the key (header, query, etc.)
+               Name = "Authorization", // Name of the header
+               Type = SecuritySchemeType.ApiKey, // Type is API Key
+               Description = "API key needed to access the Stream API"
+           });
 
-            // Apply the security definition globally
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
+           // Apply the security definition globally
+           options.AddSecurityRequirement(new OpenApiSecurityRequirement
+           {
                 {
                     new OpenApiSecurityScheme
                     {
@@ -147,8 +151,8 @@ builder.Services.AddEndpointsApiExplorer();
                     },
                     new string[] {}
                 }
-            });
-        });
+           });
+       });
 
 builder.Services.AddAuthorization();
 
@@ -163,7 +167,7 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "JobPreppersDemo API");
 
-        c.RoutePrefix = string.Empty; // Set Swagger UI as the root (e.g., jobpreppers.co:5000)
+        c.RoutePrefix = string.Empty; // Set Swagger UI as the root (e.g., localhost:5000)
     });
 }
 

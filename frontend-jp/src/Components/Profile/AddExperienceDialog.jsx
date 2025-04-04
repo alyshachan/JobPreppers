@@ -43,7 +43,6 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
   const [error, setError] = useState("");
   const apiURL = process.env.REACT_APP_JP_API_URL;
 
-
   useEffect(() => {
     if (experience) {
       setWork(experience.work_name || "");
@@ -88,22 +87,19 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
         ? `EditExperience/${experience.userExperienceID}`
         : "CreateExperience";
       const method = experience ? "PUT" : "POST";
-      const response = await fetch(
-        apiURL + `/api/UserExperience/${url}`,
-        {
-          method: method,
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userID: user.userID,
-            workName: work,
-            location: location,
-            jobTitle: title,
-            start_date: start,
-            end_date: end,
-            description: description,
-          }),
-        }
-      );
+      const response = await fetch(apiURL + `/api/UserExperience/${url}`, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userID: user.userID,
+          workName: work,
+          location: location,
+          jobTitle: title,
+          start_date: start,
+          end_date: end,
+          description: description,
+        }),
+      });
       if (response.ok) {
         onAdd();
         onClose();
@@ -121,12 +117,16 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
   const handleDelete = async (e) => {
     e.preventDefault(); // Prevent default form submission
     try {
-      const response = await fetch(apiURL + `/api/UserExperience/DeleteExperience/${experience.userExperienceID}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const response = await fetch(
+        apiURL +
+          `/api/UserExperience/DeleteExperience/${experience.userExperienceID}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
 
-      if (response.ok){
+      if (response.ok) {
         onAdd();
         onClose();
         setError("");

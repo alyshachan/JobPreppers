@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
 using JobPreppersDemo.Services;
 using System.Text.Json;
+using Newtonsoft.Json;
 
 public class JobDescriptionRequest
 {
@@ -41,9 +42,9 @@ namespace JobPreppersDemo.Controllers
             }
             try
             {
-                Console.WriteLine($"Job Description sent from the frontend:  {jobDescription.Description}");
-                Console.WriteLine(" ");
-                var result = await _textAnalyticsService.EntityEntryRecognition(jobDescription.Description);
+                var json = JsonConvert.SerializeObject(jobDescription);
+                Console.WriteLine($"Json: {json} ");
+                var result = await _textAnalyticsService.EntityEntryRecognition(json);
 
                 return Ok(result);
 

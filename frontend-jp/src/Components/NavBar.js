@@ -37,7 +37,7 @@ function classNames(...classes) {
 
 function CustomLink({ to, children, className, ...props }) {
   const resolvedPath = useResolvedPath(to);
-  const isActive = useMatch({ path: resolvedPath.pathname, end: true });
+  const isActive = useMatch({ path: resolvedPath.pathname, end: false });
   return (
     <div className={isActive ? "active" : ""}>
       <Link
@@ -198,6 +198,7 @@ function NavBar() {
       setError("An error occurred. Please try again."); // Catch and display any request error
     }
   };
+  const matchJobs = useMatch("/Jobs/*");
 
   const handleLogoutSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -267,11 +268,55 @@ function NavBar() {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4 justify-end">
-                {navigation.map((item) => (
-                  <CustomLink key={item.name} to={item.href}>
-                    {item.name}
-                  </CustomLink>
-                ))}
+                {navigation.map((item) => {
+                  if (item.name === "Jobs") {
+                    return (
+                      <div className="relative group">
+                        <span
+                          className={classNames(
+                            "block rounded-md px-3 py-2 text-base font-medium cursor-pointer",
+                            matchJobs
+                              ? "bg-[#085630] text-white"
+                              : "text-gray-300 group-hover:bg-[#0D7944] group-hover:text-white"
+                          )}
+                        >
+                          Jobs
+                        </span>
+
+                        {/* Dropdown panel */}
+                        <div
+                          className="absolute left-0 z-50 mt-1 w-48 origin-top-left rounded-md bg-white shadow-lg 
+               opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-opacity duration-200"
+                        >
+                          <Link
+                            to="/Jobs"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            Job Board
+                          </Link>
+                          <Link
+                            to="/Jobs/ManageJobs"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            Manage Jobs
+                          </Link>
+                          <Link
+                            to="/Jobs/BookmarkedJobs"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            Bookmarked Jobs
+                          </Link>
+                        </div>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <CustomLink key={item.name} to={item.href}>
+                        {item.name}
+                      </CustomLink>
+                    );
+                  }
+                })}
               </div>
             </div>
           </div>

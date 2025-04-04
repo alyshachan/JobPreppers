@@ -1,65 +1,73 @@
 import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
-import 'react-activity-feed/dist/index.css';
-import { StreamApp, FlatFeed, Activity, StatusUpdateForm, LikeButton } from 'react-activity-feed';
+import "react-activity-feed/dist/index.css";
+import {
+  StreamApp,
+  FlatFeed,
+  Activity,
+  StatusUpdateForm,
+  LikeButton,
+} from "react-activity-feed";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Feed() {
-    const { user, setAuthData } = useAuth();
-    const [streamToken, setStreamToken] = useState('');
-    useEffect(() => {
-        const fetchFeedData = async () => {
-            try {
-                console.log("requesting user token")
-                const response = await fetch(apiURL + `/api/Feed/getFeedToken/${user.userID}`);
-                if (response.ok) {
-                    const data = await response.json()
-                    const token = data.token;
-                    setStreamToken(token);
-                    console.log("stream client authorized")
-                }
-            }
-            catch (e) {
-                console.error(e);
-            }
+  const { user, setAuthData } = useAuth();
+  const [streamToken, setStreamToken] = useState("");
+  useEffect(() => {
+    const fetchFeedData = async () => {
+      try {
+        console.log("requesting user token");
+        const response = await fetch(
+          apiURL + `/api/Feed/getFeedToken/${user.userID}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          const token = data.token;
+          setStreamToken(token);
+          console.log("stream client authorized");
+        }
+      } catch (e) {
+        console.error(e);
+      }
 
-            try {
-                const response = await fetch(apiURL + `/api/Stream/getOrCreate/${user.userID}`, // get streamUser
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ userID: user.userID })
-                    });
+      try {
+        const response = await fetch(
+          apiURL + `/api/Stream/getOrCreate/${user.userID}`, // get streamUser
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userID: user.userID }),
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
 
-                    if (data.data.name == "Unknown") {
-                        await fetch(apiURL + `/api/Stream/update/${user.userID}`, // update if needed
-                            {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({ userID: user.userID })
-                            });
-                    }
-                    console.log("stream user acquired :)")
-                }
-                else {
-                    console.error("Error getting/creating stream user");
-                }
-            }
-            catch (error) {
-                console.error(error);
-            }
+          if (data.data.name == "Unknown") {
+            await fetch(
+              apiURL + `/api/Stream/update/${user.userID}`, // update if needed
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ userID: user.userID }),
+              }
+            );
+          }
+          console.log("stream user acquired :)");
+        } else {
+          console.error("Error getting/creating stream user");
         }
-        fetchFeedData();
-    }, [user])
-
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchFeedData();
+  }, [user]);
 
   const CustomActivity = ({ activity }) => {
     return (

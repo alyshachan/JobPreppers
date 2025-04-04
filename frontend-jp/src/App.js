@@ -21,6 +21,10 @@ import Skills from "./ProfileSections/Skills";
 import VideoCall from "./Components/Interview/VideoCall";
 import Friends from "./ProfileSections/Friends"
 import { AuthProvider } from "./provider/authProvider";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import ManageJobs from "./Pages/ManageJobs";
+import BookmarkedJobs from "./Pages/BookmarkedJobs"; 
+const queryClient = new QueryClient();
 
 
 function App() {
@@ -45,6 +49,7 @@ function App() {
 
   return (
     <>
+      <QueryClientProvider client={queryClient}>
       <AuthProvider>
       {!useLocation().pathname.includes("/VideoCall") && <NavBar />}
           <Routes>
@@ -60,6 +65,8 @@ function App() {
                 <Messaging />
               </div>} />
             <Route path="/Jobs" element={<Jobs />} />
+            <Route path="/Jobs/ManageJobs" element={<ManageJobs/>}/>
+            <Route path="/Jobs/BookmarkedJobs" element={<BookmarkedJobs/>}/>
             <Route path="/Interview" element={<Interview />} />
             <Route path="/Resume" element={<Resume />} />
 
@@ -71,6 +78,7 @@ function App() {
           <Route path="/Friends" element={<Friends />} />
         </Routes>
       </AuthProvider>
+      </QueryClientProvider>
     </>
   );
 }

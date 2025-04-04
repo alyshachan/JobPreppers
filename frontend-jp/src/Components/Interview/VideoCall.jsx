@@ -15,7 +15,7 @@ import {
   CallControls,
 } from "@stream-io/video-react-sdk";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
-import { useSearchParams} from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function VideoCall() {
@@ -94,7 +94,7 @@ const CallLayout = () => {
   return (
     <StreamTheme>
       <SpeakerLayout />
-      <CallControls onLeave={() => window.close()}/>
+      <CallControls onLeave={() => window.close()} />
     </StreamTheme>
   );
 };

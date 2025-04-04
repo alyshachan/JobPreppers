@@ -33,7 +33,6 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
-
 function AddEducationDialog({ open, onClose, onAdd, education }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [school, setSchool] = useState("");
@@ -86,23 +85,20 @@ function AddEducationDialog({ open, onClose, onAdd, education }) {
         ? `EditEducation/${education.userEducationID}`
         : "CreateEducation";
       const method = education ? "PUT" : "POST";
-      const response = await fetch(
-        apiURL + `/api/UserEducation/${url}`,
-        {
-          method: method,
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userID: user.userID,
-            schoolName: school,
-            degreeName: degree,
-            studyName: study,
-            start_date: start,
-            end_date: end,
-            description: description,
-          }),
-          credentials: "include",
-        }
-      );
+      const response = await fetch(apiURL + `/api/UserEducation/${url}`, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userID: user.userID,
+          schoolName: school,
+          degreeName: degree,
+          studyName: study,
+          start_date: start,
+          end_date: end,
+          description: description,
+        }),
+        credentials: "include",
+      });
 
       if (response.ok) {
         onAdd();
@@ -122,7 +118,8 @@ function AddEducationDialog({ open, onClose, onAdd, education }) {
     e.preventDefault(); // Prevent default form submission
     try {
       const response = await fetch(
-         apiURL + `/api/UserEducation/DeleteEducation/${education.userEducationID}`,
+        apiURL +
+          `/api/UserEducation/DeleteEducation/${education.userEducationID}`,
         {
           method: "DELETE",
           credentials: "include",

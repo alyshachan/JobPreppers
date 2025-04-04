@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
-import styles from '../Components/Login/Login.module.css';
+import styles from "../Components/Login/Login.module.css";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
@@ -10,7 +10,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const {user, setAuthData } = useAuth(); // custom hook for authprovider
+  const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
