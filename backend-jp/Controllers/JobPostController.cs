@@ -28,6 +28,8 @@ namespace JobPreppersDemo.Controllers
     public class JobPostController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly EmbeddedUser _embeddedUser;
+
 
         private readonly JobsVectorDB _vector;
 
@@ -126,30 +128,89 @@ namespace JobPreppersDemo.Controllers
         }
 
         // // GET: api/jobpost
+        [HttpGet("companyView")]
+        public async Task<IActionResult> GetAllJobsCompany([FromQuery] int userID)
+        {
+
+            try
+            {
+
+                var jobs = await _context.JobPosts
+                              .Include(job => job.qualification)
+                              .Include(job => job.company)
+                              .Include(job => job.location)
+                              .Select(job => new
+                              {
+                                  company = job.company.Name,
+                                  minimumSalary = job.minimumSalary,
+                                  benefits = job.benefits,
+                                  postDate = job.postDate,
+                                  endDate = job.endDate,
+                                  description = job.description,
+                                  title = job.title,
+                                  type = job.type,
+                                  link = job.link,
+                                  location = job.location.name,
+                                  bonues = job.bonus,
+                                  perks = job.perks,
+                                  jobID = job.postID,
+
+
+                              }
+                              )
+                              .ToListAsync();
+
+                if (jobs == null)
+                {
+                    return NotFound("No jobs found.");
+                }
+                return Ok(new { jobs });
+
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                    Console.WriteLine($"Inner Exception StackTrace: {ex.InnerException.StackTrace}");
+                }
+                return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
+
+
+            }
+
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> GetAllJobs([FromQuery] int userID)
         {
 
             try
             {
+                // Company get their own jobs 
+
                 Dictionary<int, int>? jobSearch = new Dictionary<int, int>();
                 if (userID != 0)
                 {
                     var user = _context.UserEmbeddings.FirstOrDefault(ub => ub.userID == userID);
-                    if (user != null)
+                    if (user == null)
                     {
-                        float[]? embedded = JsonConvert.DeserializeObject<float[]>(user.embedding);
-                        Console.WriteLine($"Embedded: {embedded}");
-                        if (embedded != null)
-                        {
-                            var response = await _vector.sematicSearch(embedded);
-                            jobSearch = JsonConvert.DeserializeObject<List<JobScoreDto>>(response)!.ToDictionary(j => j.Id, j => j.Score);
-                        }
+                        // Nothing in cache need to 
+                        await _embeddedUser.AddEmbeddedUser(userID);
+                        user = _context.UserEmbeddings.FirstOrDefault(ub => ub.userID == userID);
+                        Console.WriteLine("User was null but it should be added");
                     }
-                    else
+
+                    float[]? embedded = JsonConvert.DeserializeObject<float[]>(user!.embedding);
+                    Console.WriteLine($"Embedded: {embedded}");
+                    if (embedded != null)
                     {
-                        Console.WriteLine("User was null");
+                        var response = await _vector.sematicSearch(embedded);
+                        jobSearch = JsonConvert.DeserializeObject<List<JobScoreDto>>(response)!.ToDictionary(j => j.Id, j => j.Score);
                     }
+
+
                     // Maybe call addEmbedded
                     if (jobSearch.IsNullOrEmpty())
                     {
@@ -208,6 +269,7 @@ namespace JobPreppersDemo.Controllers
             }
 
         }
+
 
         // GET: api/jobpost/add
         [HttpPost("add")]
@@ -321,19 +383,20 @@ namespace JobPreppersDemo.Controllers
                 // Check Cache - should be there  --- maybe call other: 
                 Dictionary<int, int>? jobSearch = new Dictionary<int, int>();
                 var user = _context.UserEmbeddings.FirstOrDefault(ub => ub.userID == request.userID);
-                if (user != null)
+                if (user == null)
                 {
-                    float[]? embedded = JsonConvert.DeserializeObject<float[]>(user.embedding);
-                    Console.WriteLine($"Embedded: {embedded}");
-                    if (embedded != null)
-                    {
-                        var response = await _vector.sematicSearch(embedded);
-                        jobSearch = JsonConvert.DeserializeObject<List<JobScoreDto>>(response)!.ToDictionary(j => j.Id, j => j.Score);
-                    }
+                    // Nothing in cache need to add first 
+                    await _embeddedUser.AddEmbeddedUser(request.userID);
+                    user = _context.UserEmbeddings.FirstOrDefault(ub => ub.userID == request.userID);
+                    Console.WriteLine("User was null but it should be added");
                 }
-                else
+                float[]? embedded = JsonConvert.DeserializeObject<float[]>(user!.embedding);
+                Console.WriteLine($"Embedded: {embedded}");
+                if (embedded != null)
                 {
-                    Console.WriteLine("User was null");
+                    var response = await _vector.sematicSearch(embedded);
+                    jobSearch = JsonConvert.DeserializeObject<List<JobScoreDto>>(response)!.ToDictionary(j => j.Id, j => j.Score);
+
                 }
                 // Maybe call addEmbedded
                 if (jobSearch.IsNullOrEmpty())
@@ -439,6 +502,110 @@ namespace JobPreppersDemo.Controllers
                 return StatusCode(500, new { message = $"Internal server error: {error.Message}" });
             }
         }
+
+
+
+        [HttpPost("filterCompanyView")]
+        public async Task<IActionResult> FilterCompanyJobs([FromBody] PostFilterRequest request)
+        {
+            IQueryable<JobPostDto> query;
+            try
+            {
+
+
+                if (request.Latitude != null && request.Longitude != null && request.Distance != 0)
+                {
+                    var distance = request.Distance * 1609.34;
+                    query = _context.JobPosts.FromSqlInterpolated(
+                        $@"
+                    SELECT jp.* FROM JobPosts jp
+                    JOIN JobLocations l on jp.locationID = l.locationID
+                    WHERE LOWER(l.name) REGEXP 'remote' OR ST_Distance_Sphere(Point({request.Longitude}, {request.Latitude}), Point(l.longitude, l.latitude)) <= {distance}"
+                    ).Include(job => job.company)
+                    .Include(job => job.location)
+                    .Select(job => new JobPostDto
+                    {
+                        company = job.company.Name,
+                        minimumSalary = job.minimumSalary,
+                        postDate = job.postDate,
+                        endDate = job.endDate,
+                        title = job.title,
+                        type = job.type,
+                        location = job.location.name,
+                        description = job.description ?? "",
+                        benefits = job.benefits ?? "",
+                        bonues = job.bonus ?? "",
+                        perks = job.perks ?? "",
+                        jobID = job.postID,
+
+                    });
+
+                }
+
+                else
+                {
+                    query = _context.JobPosts
+                    .Include(job => job.company)
+                    .Include(job => job.location)
+                    .Select(job => new JobPostDto
+                    {
+                        company = job.company.Name,
+                        minimumSalary = job.minimumSalary,
+                        postDate = job.postDate,
+                        endDate = job.endDate,
+                        title = job.title,
+                        type = job.type,
+                        location = job.location.name,
+                        description = job.description ?? "",
+                        benefits = job.benefits ?? "",
+                        bonues = job.bonus ?? "",
+                        perks = job.perks ?? "",
+                        jobID = job.postID,
+
+
+                    });
+
+                }
+
+                if (request.Date != null)
+                {
+                    var filterDate = request.Date.Value.Date;
+                    query = query.Where(job => job.endDate >= filterDate);
+                }
+
+                if (request.Type != null && request.Type.Any())
+                {
+
+                    query = query.Where(job => request.Type.Contains(job.type));
+                }
+
+                if (request.Company != null && request.Company.Any())
+                {
+                    query = query.Where(job => request.Company.Contains(job.company));
+                }
+
+                if (request.Min_Salary != 0)
+                {
+                    query = query.Where(job => job.minimumSalary >= request.Min_Salary);
+                }
+
+
+                var filteredJobs = await query.ToListAsync();
+                Console.WriteLine($"Jobs in Filters: {filteredJobs}");
+
+                if (filteredJobs == null || filteredJobs.Count == 0)
+                {
+                    return Ok(new List<Job>()); // Return an empty list with HTTP 200
+                }
+
+                return Ok(filteredJobs);
+            }
+            catch (Exception error)
+            {
+                return StatusCode(500, new { message = $"Internal server error: {error.Message}" });
+            }
+        }
+
 
 
         [HttpGet("company")]

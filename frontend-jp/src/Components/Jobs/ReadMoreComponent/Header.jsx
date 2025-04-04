@@ -32,10 +32,10 @@ export default function Header({ job, onClose }) {
           &nbsp; Apply by {new Date(job.endDate).toLocaleDateString()}
           &nbsp; at {new Date(job.postDate).toLocaleTimeString()}
         </Typography>
-        <button className={`${styles.drawerButton} lightButton`}>
+        {/* <button className={`${styles.drawerButton} lightButton`}>
           <BookmarkBorderIcon />
           Bookmark
-        </button>
+        </button> */}
         <button
           onClick={(e) => {
             e.preventDefault();

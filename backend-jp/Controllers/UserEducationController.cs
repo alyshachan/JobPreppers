@@ -31,13 +31,11 @@ namespace JobPreppersDemo.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly EmbeddedUser _embeddedUser;
-        private readonly JobsVectorDB _vector;
 
         public UserEducationController(ApplicationDbContext context, JobsVectorDB vector)
         {
             _context = context;
             _embeddedUser = new EmbeddedUser(context, vector);
-            _vector = vector;
         }
 
         [HttpGet("{userID}")]
@@ -244,7 +242,6 @@ namespace JobPreppersDemo.Controllers
                 {
                     return NotFound("Education not found");
                 }
-
                 _context.UserEducations.Remove(education);
                 await _context.SaveChangesAsync();
                 await _embeddedUser.AddEmbeddedUser(education.userID);
