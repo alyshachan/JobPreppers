@@ -279,7 +279,10 @@ namespace JobPreppersProto.Controllers
                     title = u.title,
                     first_name = u.first_name,
                     last_name = u.last_name,
-                    username = u.username
+                    username = u.username,
+                    location = u.location,
+                    description = u.description,
+                    website = u.website
                 })
                 .FirstOrDefaultAsync();
 
@@ -289,6 +292,27 @@ namespace JobPreppersProto.Controllers
             }
 
             return Ok(user);
+        }
+
+        [HttpGet("GetUserFromUsername/{username}")]
+        public async Task<IActionResult> GetUserFromUsername(string username)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.username == username);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            return Ok(new
+            {
+                userID = user.userID,
+                username = user.username,
+                first_name = user.first_name,
+                last_name = user.last_name,
+                email = user.email,
+                profile_pic = user.profile_pic
+            });
         }
 
         // Define the request model
