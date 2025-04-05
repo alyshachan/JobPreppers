@@ -17,40 +17,42 @@ public static class DocumentIntelligenceService
     private static readonly string key = "3a4457bb5ba641c9ab49f8f848bc3c4f";
     private static readonly string modelId = "Resume4";
 
-public static async Task<object> AnalyzeResume(Uri fileUri)
-{
-    var credential = new AzureKeyCredential(key);
-    var client = new DocumentIntelligenceClient(new Uri(endpoint), credential);
-
-    Operation<AnalyzeResult> operation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, modelId, fileUri);
-    AnalyzeResult result = operation.Value;
-
-    var extracted = new
+    public static async Task<object> AnalyzeResume(Uri fileUri)
     {
-        ModelId = result.ModelId,
-        Documents = result.Documents.Select(doc => new
+        var credential = new AzureKeyCredential(key);
+        var client = new DocumentIntelligenceClient(new Uri(endpoint), credential);
+
+        Operation<AnalyzeResult> operation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, modelId, fileUri);
+        AnalyzeResult result = operation.Value;
+
+        var extracted = new
         {
-            DocumentType = doc.DocumentType,
+            ModelId = result.ModelId,
+            Documents = result.Documents.Select(doc => new
+            {
+                DocumentType = doc.DocumentType,
 Fields = doc.Fields.ToDictionary(
     kvp => kvp.Key,
-    kvp => {
+    kvp =>
+    {
         var field = kvp.Value;
 
-        if (field.ValueList != null)
+        bool isTable = field.ValueList != null &&
+                       field.ValueList.Count > 0 &&
+                       field.ValueList.All(i => i.ValueDictionary != null && i.ValueDictionary.Count > 0);
+
+        if (isTable)
         {
             var rows = new List<Dictionary<string, string>>();
 
             foreach (var item in field.ValueList)
             {
-                if (item.ValueDictionary != null)
+                var row = new Dictionary<string, string>();
+                foreach (var col in item.ValueDictionary)
                 {
-                    var row = new Dictionary<string, string>();
-                    foreach (var col in item.ValueDictionary)
-                    {
-                        row[col.Key] = col.Value?.Content ?? col.Value?.ValueString ?? "";
-                    }
-                    rows.Add(row);
+                    row[col.Key] = col.Value?.Content ?? col.Value?.ValueString ?? "";
                 }
+                rows.Add(row);
             }
 
             return (object)new
@@ -65,18 +67,18 @@ Fields = doc.Fields.ToDictionary(
             return (object)new
             {
                 Type = "field",
-                Content = field.Content ?? field.ValueString,
+                Content = field.Content ?? field.ValueString ?? "",
                 Confidence = field.Confidence
             };
         }
+    })
+
+
+            })
+        };
+
+        return extracted;
     }
-)
-
-        })
-    };
-
-    return extracted;
-}
 
 
 
