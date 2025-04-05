@@ -14,7 +14,39 @@ function ParseResume() {
     setFile(e.target.files[0]);
   };
 
-  const uploadResume = async () => {
+  // const uploadResume = async () => {
+  //   if (!file) {
+  //     setMessage("Please select a file.");
+  //     return;
+  //   }
+
+  //   if (!user?.userID) {
+  //     setMessage("User authentication error. Please log in again.");
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+  //   formData.append("userID", user.userID);
+
+  //   try {
+  //     const response = await fetch(apiURL + `/api/Resume/PostFile`, {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorText = await response.text();
+  //       setMessage(`Error: ${errorText}`);
+  //     } else {
+  //       setMessage("Resume uploaded successfully!");
+  //     }
+  //   } catch (error) {
+  //     setMessage(`Error: ${error.message}`);
+  //   }
+  // };
+
+  const fetchParsedResume = async () => {
     if (!file) {
       setMessage("Please select a file.");
       return;
@@ -30,36 +62,39 @@ function ParseResume() {
     formData.append("userID", user.userID);
 
     try {
-      const response = await fetch(apiURL + `/api/Resume/PostFile`, {
+      const response = await fetch(apiURL + `/api/DocumentIntelligence/PostFile`, {
         method: "POST",
         body: formData,
       });
+      setMessage("loading yay")
 
       if (!response.ok) {
         const errorText = await response.text();
         setMessage(`Error: ${errorText}`);
       } else {
-        setMessage("Resume uploaded successfully!");
+        const data = await response.json();
+        setMessage("Resume parsed successfully!");
+        setParsedData(data); // This is the object with userID and parsedResult
+        console.log("Parsed Resume:", data)
       }
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
-  };
+    // try {
+    //   const response = await fetch(`${apiURL}/api/DocumentIntelligenceController/PostFile`);
+    //   if (!response.ok) {
+    //     throw new Error(await response.text());
+    //   }
 
-  const fetchParsedResume = async () => {
-    try {
-      const response = await fetch(`${apiURL}/api/Resume/ParseResume/${user.userID}`);
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
-
-      const data = await response.json();
-      setParsedData(data);
-      console.log("Parsed Resume:", data);
-    } catch (error) {
-      console.error("Error:", error);
-      setMessage("Failed to parse resume.");
-    }
+    //   const data = await response.json();
+    //   const successMessage = await response.text();
+    //   setMessage(successMessage);
+    //   setParsedData(data);
+    //   console.log("Parsed Resume:", data);
+    // } catch (error) {
+    //   console.error("Error:", error);
+    //   setMessage("Failed to parse resume.");
+    // }
   };
 
   return (
@@ -79,9 +114,6 @@ function ParseResume() {
         </label>
         {file && <p className="file-name">Selected File: {file.name}</p>}
         <br />
-        <button className="button" onClick={uploadResume}>
-          Upload Resume
-        </button>
 
         <button className="button" onClick={fetchParsedResume}>
           Parse Resume
@@ -90,11 +122,14 @@ function ParseResume() {
         {message && <p className="message">{message}</p>}
 
         {parsedData && (
-          <div className="parsed-data">
-            <h2>Extracted Information</h2>
-            <pre>{JSON.stringify(parsedData, null, 2)}</pre>
-          </div>
-        )}
+        <div className="parsed-data">
+          <h2>Extracted Information</h2>
+          <p>User ID: {parsedData.userID}</p>
+
+          <h3>Parsed Fields</h3>
+          <pre>{JSON.stringify(parsedData.parsedResult, null, 2)}</pre>
+        </div>
+      )}
       </div>
     </div>
   );

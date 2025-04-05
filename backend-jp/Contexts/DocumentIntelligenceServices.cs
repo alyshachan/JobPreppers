@@ -7,56 +7,77 @@ using System.IO;
 using System.Threading.Tasks;
 using JobPreppersDemo.Contexts;
 using JobPreppersDemo.Models;
-using Microsoft.WindowsAzure.Storage.Blob;   
+using Azure.Storage.Blobs;
+using Azure.Storage.Sas;
+using System.Linq;
 
-public class DocumentIntelligenceService
+public static class DocumentIntelligenceService
 {
-    private readonly ApplicationDbContext _context;
-    private readonly DocumentIntelligenceClient _client;
-    private const string modelId = "Resume4";
+    private static readonly string endpoint = "https://jobpreppersresumeparser.cognitiveservices.azure.com/";
+    private static readonly string key = "3a4457bb5ba641c9ab49f8f848bc3c4f";
+    private static readonly string modelId = "Resume4";
 
-    public DocumentIntelligenceService(ApplicationDbContext context)
+public static async Task<object> AnalyzeResume(Uri fileUri)
+{
+    var credential = new AzureKeyCredential(key);
+    var client = new DocumentIntelligenceClient(new Uri(endpoint), credential);
+
+    Operation<AnalyzeResult> operation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, modelId, fileUri);
+    AnalyzeResult result = operation.Value;
+
+    var extracted = new
     {
-        _context = context;
-
-        string endpoint = "https://jobpreppersresumeparser.cognitiveservices.azure.com/";
-        string key = "3a4457bb5ba641c9ab49f8f848bc3c4f";
-        var credential = new AzureKeyCredential(key);
-
-        _client = new DocumentIntelligenceClient(new Uri(endpoint), credential);
-    }
-
-    public async Task<Dictionary<string, object>> ParseResume(int userID)
-    {
-        var userResume = await _context.Resumes
-            .Where(r => r.userID == userID)
-            .Select(r => r.resume_pdf)
-            .FirstOrDefaultAsync();
-
-        if (userResume == null || userResume.Length == 0)
+        ModelId = result.ModelId,
+        Documents = result.Documents.Select(doc => new
         {
-            throw new Exception("No resume found for this user.");
-        }
+            DocumentType = doc.DocumentType,
+Fields = doc.Fields.ToDictionary(
+    kvp => kvp.Key,
+    kvp => {
+        var field = kvp.Value;
 
-        string resumeUri = await UploadToBlobStorage(userResume);
-
-        var operation = await _client.AnalyzeDocumentAsync(
-            WaitUntil.Completed, 
-            modelId,
-            new Uri(resumeUri)
-        );
-        var result = operation.Value;
-
-        var extractedData = new Dictionary<string, object> { { "ModelID", result.ModelId } };
-
-        foreach (var document in result.Documents)
+        if (field.ValueList != null)
         {
-            foreach (var field in document.Fields)
+            var rows = new List<Dictionary<string, string>>();
+
+            foreach (var item in field.ValueList)
             {
-                extractedData[field.Key] = field.Value.Content;
+                if (item.ValueDictionary != null)
+                {
+                    var row = new Dictionary<string, string>();
+                    foreach (var col in item.ValueDictionary)
+                    {
+                        row[col.Key] = col.Value?.Content ?? col.Value?.ValueString ?? "";
+                    }
+                    rows.Add(row);
+                }
             }
-        }
 
-        return extractedData;
+            return (object)new
+            {
+                Type = "table",
+                Content = rows,
+                Confidence = field.Confidence
+            };
+        }
+        else
+        {
+            return (object)new
+            {
+                Type = "field",
+                Content = field.Content ?? field.ValueString,
+                Confidence = field.Confidence
+            };
+        }
     }
+)
+
+        })
+    };
+
+    return extracted;
+}
+
+
+
 }
