@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
+using JobPreppersDemo.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -123,6 +124,10 @@ else
         endpoint
     ));
 }
+
+builder.Services.AddSingleton<DocumentIntelligenceService>();
+builder.Services.AddSingleton<BlobStorageService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

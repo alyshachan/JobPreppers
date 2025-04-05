@@ -36,16 +36,14 @@ function ParseResume() {
         method: "POST",
         body: formData,
       });
-      setMessage("loading yay")
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        setMessage(`Error: ${errorText}`);
-      } else {
+      if (response.ok) {
         const data = await response.json();
         setMessage("Resume parsed successfully!");
         setParsedData(data); // This is the object with userID and parsedResult
         console.log("Parsed Resume:", data)
+      } else {
+        const errorText = await response.text();
+        setMessage(`Error: ${errorText}`);
       }
     } catch (error) {
       setMessage(`Error: ${error.message}`);
