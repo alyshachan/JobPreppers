@@ -43,6 +43,8 @@ public partial class JobPost
 
     public int companyID { get; set; }
 
+    public virtual ICollection<Application> Applications { get; set; } = new List<Application>();
+
     public virtual ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
 
     public virtual Company company { get; set; } = null!;
@@ -52,4 +54,6 @@ public partial class JobPost
     public virtual JobQualification qualification { get; set; } = null!;
 
     public virtual Recruiter recruiter { get; set; } = null!;
+
+    public virtual ICollection<User> users { get; set; } = new List<User>();
 }
