@@ -118,6 +118,20 @@ function Feed() {
             <StatusUpdateForm feedGroup="user" />
             <div>
               <h1>Timeline</h1>
+
+              <select
+                  // value={selectedOption}
+                  // onChange={handleDropdownChange}
+                  className="ml-4 p-2 border rounded-md"
+                >
+                  <option value="Option1">Option 1</option>
+                  <option value="Option2">Option 2</option>
+                  <option value="Option3">Option 3</option>
+                </select>
+
+              
+
+
               <FlatFeed
                 classname="flat-feed"
                 feedGroup="timeline"
