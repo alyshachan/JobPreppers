@@ -14,6 +14,7 @@ const apiURL = process.env.REACT_APP_JP_API_URL;
 function Feed() {
   const { user, setAuthData } = useAuth();
   const [streamToken, setStreamToken] = useState("");
+  const [selectedFeed, setSelectedFeed] = useState("timeline");
   useEffect(() => {
     const fetchFeedData = async () => {
       try {
@@ -24,7 +25,7 @@ function Feed() {
             headers: { "Content-Type": "application/json" }
           }
         );
-  
+
         if (response.ok) {
           console.log("Friends synced");
         }
@@ -115,26 +116,23 @@ function Feed() {
       >
         <div className="flex w-full p-4 space-x-4">
           <div className="w-2/3">
-            <StatusUpdateForm feedGroup="user" />
+            <StatusUpdateForm feedGroup={selectedFeed} />
             <div>
-              <h1>Timeline</h1>
-
-              <select
+              <div className="flex items-center justify-between mb-4">
+                <h1>{selectedFeed.charAt(0).toUpperCase() + selectedFeed.slice(1)}</h1>
+                <select
                   // value={selectedOption}
-                  // onChange={handleDropdownChange}
-                  className="ml-4 p-2 border rounded-md"
+                  onChange={(e) => setSelectedFeed(e.target.value)}
+                  className="ml-4 p-2 border rounded-md w-32"
                 >
-                  <option value="Option1">Option 1</option>
-                  <option value="Option2">Option 2</option>
-                  <option value="Option3">Option 3</option>
+                  <option value="timeline">Timeline</option>
+                  <option value="global">Global</option>
+                  <option value="recruiter">Recruiter</option>
                 </select>
-
-              
-
-
+              </div>
               <FlatFeed
                 classname="flat-feed"
-                feedGroup="timeline"
+                feedGroup={selectedFeed}
                 options={{
                   enrich: true,
                   limit: 10,
@@ -144,22 +142,22 @@ function Feed() {
               />
             </div>
 
-                    {/* </div> */}
-                </div>
-                <div className="w-1/3">
-                    <h1>Your connections</h1>
-                    <div className="flex flex-col">
-                        <hr />
-                        <div className="panel">
-                            <hr />
-                            <button className="lightButton">Load more</button>
-                        </div>
-                    </div>
-                </div>
+            {/* </div> */}
+          </div>
+          <div className="w-1/3">
+            <h1>Your connections</h1>
+            <div className="flex flex-col">
+              <hr />
+              <div className="panel">
+                <hr />
+                <button className="lightButton">Load more</button>
+              </div>
             </div>
+          </div>
+        </div>
 
-        </StreamApp>)
-    );
+      </StreamApp>)
+  );
 }
 
 export default Feed;
