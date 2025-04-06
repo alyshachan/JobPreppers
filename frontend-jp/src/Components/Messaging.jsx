@@ -162,6 +162,11 @@ function Messaging() {
       <button
         onClick={() => setChatOpened(!chatOpened)}
         style={{
+          // position: "fixed", // Fixes the button in place
+          position: "fixed", // Always fixed
+          top: "auto",
+          bottom: chatOpened ? "calc(20px + 400px)" : "20px",
+          right: "20px", // Places the button on the right
           padding: "10px",
           backgroundColor: "#4ba173",
           color: "white",
@@ -182,13 +187,13 @@ function Messaging() {
               position: "fixed",
               bottom: "20px",
               right: "20px",
-              width: "400px", // Adjust width as needed
-              height: "600px", // Adjust height as needed
+              width: "700px", // Adjust width as needed
+              height: "400px", // Adjust height as needed
               background: "white",
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
               borderRadius: "10px",
               display: "flex",
-              flexDirection: "column"
+              flexDirection: "row"
             }}
           >
             <Chat client={chatClient} style={{ height: "100%" }}>
@@ -200,38 +205,46 @@ function Messaging() {
                 options={options}
                 connectionID={chatClient.wsConnection.connectionID}
                 style={{
-                  flexShrink: 0, // Prevent ChannelList from shrinking
-                  height: "150px", // Adjust height for ChannelList
+                  // flexShrink: 0, // Prevent ChannelList from shrinking
+                  height: "250px", // Adjust height for ChannelList
+                  width: "600px",
                   overflowY: "auto", // Allow scrolling if there are many channels
                 }}
               />
-              <Channel>
-                <Window
+              <div
                 style={{
-                  display: "flex",
-                  flexDirection: "column", // Ensure children stack vertically
-                  flexGrow: 1, // Take up available space in the container
-                  height: "calc(100% - 150px)", // Ensure the window doesn’t overlap with ChannelList
+                  // height: "300px",
+                  // width: "300px",
+                  flexDirection: "row",
+                  borderRadius: "10px",
+                  flexGrow: 1,
                 }}>
-                  <ChannelHeader/>
-                    <MessageList 
-                    style={{
-                      overflowY: "auto", // Makes the message list scrollable
-                    }}
+                <Channel>
+                  <Window>
+                    <ChannelHeader />
+                    <MessageList
+                      style={{
+                        height: "150px",
+                        position: "fixed",
+                        overflowY: "auto", // Makes the message list scrollable
+                      }}
                     />
-                  <MessageInput 
-                  style={{
-                    marginTop: "auto", // Keep MessageInput at the bottom
-                  }}
-                  />
-                </Window>
-                <Thread />
-              </Channel>
+                    <MessageInput
+                      style={{
+                        marginTop: "auto", // Keep MessageInput at the bottom
+                      }}
+                    />
+                  </Window>
+                  <Thread />
+                </Channel>
+              </div>
+
             </Chat>
           </div>
+
         )
       }
-    </div>
+    </div >
   );
   /*
     HANDLERS
