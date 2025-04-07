@@ -254,6 +254,38 @@ namespace JobPreppersProto.Controllers
                 pfp = user.profile_pic
             });
         }
+        [HttpPost("UploadProfilePic/{userID}")]
+        public async Task<IActionResult> UploadProfilePic(int userID, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.userID == userID);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Optional: check for file type
+            var allowedTypes = new[] { "image/jpeg", "image/png" };
+            if (!allowedTypes.Contains(file.ContentType))
+            {
+                return BadRequest("Only PNG and JPEG files are allowed.");
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                user.profile_pic = memoryStream.ToArray(); // store as byte[]
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Profile picture uploaded successfully." });
+        }
+
 
         // Define the request model
         public class LoginRequest
