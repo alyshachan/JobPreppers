@@ -12,7 +12,7 @@
     "@microsoft/signalr": "^8.0.7",
     "@mui/base": "^5.0.0-beta.62",
     "@mui/icons-material": "^6.1.7",
-    "@mui/material": "^6.1.6",
+    "@mui/material": "^6.4.10",
     "@mui/styled-engine-sc": "^6.1.6",
     "@mui/x-date-pickers": "^7.22.2",
     "@progress/kendo-react-dateinputs": "^9.4.1",

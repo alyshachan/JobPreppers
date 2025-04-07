@@ -236,7 +236,24 @@ namespace JobPreppersProto.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpGet("GetUserInfo/{id}")]
+        public async Task<IActionResult> GetMinalUserInfo(int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.userID == id);
+            if (user == null)
+            {
+                return NotFound(new { message = "Invalid User" });
+            }
 
+
+            return Ok(new
+            {
+                first_name = user.first_name,
+                last_name = user.last_name,
+                title = user.title,
+                pfp = user.profile_pic
+            });
+        }
 
         // Define the request model
         public class LoginRequest

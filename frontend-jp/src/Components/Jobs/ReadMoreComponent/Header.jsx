@@ -8,11 +8,33 @@ import { useAuth } from "../../../provider/authProvider";
 import React, { useState, useEffect } from 'react'; // Import useState and useEffect
 import axios from 'axios'; // Import axios
 
+import { Modal, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
+
 export default function Header({ job, onClose }) {
   const { user } = useAuth();
   const userID = user?.id;
   const [applyCount, setApplyCount] = useState(0);
+  const [showApplicants, setShowApplicants] = useState(false);
+  const [applicants, setApplicants] = useState([]);
   const apiURL = process.env.REACT_APP_JP_API_URL;
+
+
+  useEffect(() => {
+    if (showApplicants) {
+      axios.get(`${apiURL}/api/Application/applicants/${job.jobID}`)
+        .then((res) => {
+          console.log("Applicants:", applicants);
+          setApplicants(res.data);
+        })
+        .catch((err) => console.error("Failed to fetch applicants", err));
+    }
+  }, [showApplicants]);
+  
+
+
+
+
+
 
   useEffect(() => {
     const fetchApplyCount = async () => {
@@ -113,9 +135,52 @@ export default function Header({ job, onClose }) {
           >
             Apply
         </button>
+
+        <Modal open={showApplicants} onClose={() => setShowApplicants(false)}>
+    <Box
+      sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+        maxHeight: '70vh',
+        overflowY: 'auto',
+      }}
+    >
+      <Typography variant="h6" gutterBottom>
+        Applicants
+      </Typography>
+      <List>
+        {applicants.map((applicant) => (
+          <ListItem key={applicant.userID}>
+            <ListItemAvatar>
+                <Avatar src={`data:image/jpeg;base64,${applicant.pfp}`} />
+            </ListItemAvatar>
+            <ListItemText
+            
+              primary={`${applicant.first_name} ${applicant.last_name}`}
+              secondary={applicant.title}
+            />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  </Modal>
           {/* Display the number of applicants */}
           <Typography sx={{ mt: 1, ml: 1 }} variant="body2">
           People who have clicked Apply: <strong>{applyCount}</strong>
+          <Button
+              sx={{ mt: 1 }}
+              variant="outlined"
+              onClick={() => setShowApplicants(true)}
+            >
+              View Applicants
+            </Button>
         </Typography>
       </Box>
     </>
