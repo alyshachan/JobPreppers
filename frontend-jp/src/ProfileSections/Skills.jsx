@@ -49,12 +49,17 @@ function Skills() {
           if (data) {
             let newSkillsDict = {};
             for (var userSkillID in data) {
-              var skills = data[userSkillID];
-
-              if (!newSkillsDict[skills.category]) {
-                newSkillsDict[skills.category] = [skills.name];
+              var skill = data[userSkillID];
+            
+              const skillObj = {
+                name: skill.name,
+                userSkillID: skill.userSkillID,
+              };
+            
+              if (!newSkillsDict[skill.category]) {
+                newSkillsDict[skill.category] = [skillObj];
               } else {
-                newSkillsDict[skills.category].push(skills.name);
+                newSkillsDict[skill.category].push(skillObj);
               }
             }
             setSkillsDict((prevState) => {
