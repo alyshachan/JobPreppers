@@ -158,20 +158,6 @@ function ParseResume() {
 
       {message && <p className="message">{message}</p>}
 
-      <div className="panel">
-        <h3>Projects</h3>
-        {resumeFields.projects.map((proj, index) => (
-          <div key={index} className="section">
-            <p>
-              <strong>Title:</strong> {proj.title}
-            </p>
-            <p>
-              <strong>Description:</strong> {proj.description}
-            </p>
-          </div>
-        ))}
-      </div>
-
       {parsedData && resumeFields && (
         <>
           <div className="panel">
@@ -222,7 +208,7 @@ function ParseResume() {
               />
             </div>
 
-            <h1>Education</h1>
+            {resumeFields.education.length > 0 ? <h1>Education</h1> : ""}
             {resumeFields.education.map((edu, index) => (
               <div className={styles.dialogContent}>
                 <div className={styles.dialogContentLeft}>
@@ -420,7 +406,7 @@ function ParseResume() {
                 </div>
               </div>
             ))}
-            <h1>Skills</h1>
+            {resumeFields.skills.length > 0 ? <h1>Skills</h1> : ""}
             {resumeFields.skills.map((skill, index) => {
               const skillList = skill.skillName
                 ? skill.skillName
@@ -501,7 +487,7 @@ function ParseResume() {
               );
             })}
 
-            <h1>Experience</h1>
+            {resumeFields.experience.length > 0 ? <h1>Experience</h1> : ""}
             {resumeFields.experience.map((exp, index) => (
               <div>
                 <div className={styles.dialogContent}>
@@ -713,7 +699,7 @@ function ParseResume() {
               </div>
             ))}
 
-            <h1>Projects</h1>
+            {resumeFields.projects.length > 0 ? <h1>Projects</h1> : ""}
             {resumeFields.projects.map((proj, index) => (
               <div>
                 <div className={styles.dialogContent}>
