@@ -112,8 +112,10 @@ function Feed() {
             const newRecDict = data.recommendations.map((friend) => ({
               userID: friend.userID,
               name: friend.name,
-              profilePic: friend.profilePicture ? "data:image/png;base64," + friend.profilePicture.toString().toString("base64") : defaultProfilePicture,
-              // title: friend.title,
+              profilePic: friend.profilePic==null ? defaultProfilePicture
+                    : "data:image/png;base64," +
+                      friend.profilePic.toString().toString("base64"),
+              title: friend.title,
             }));
 
             setRecDict((prevState) => {
@@ -199,7 +201,7 @@ function Feed() {
                 <button className="lightButton">Load more</button>
               </div>
             </div> */}
-            <div className="panel justify-right flex-grow w-full overflow-y-auto">
+            <div className="panel justify-left !px-[20px] flex-grow !w-full overflow-y-auto">
               {recommendationDict.length === 0 ? (
                 <p className="text-gray-500 italic">No recommendations found</p>
               ) : (
@@ -215,6 +217,7 @@ function Feed() {
 
                       <div className="flex flex-col flex-grow">
                         <b className="text-xl">{rec.name}</b>
+                        <p className="subtitle"> {rec.title}</p>
 
                       </div>
                     </div>
