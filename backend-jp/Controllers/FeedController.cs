@@ -1,8 +1,8 @@
-using JobPreppersDemo.Services;
 using JobPreppersDemo.Contexts;
 using JobPreppersDemo.Models;
-using Microsoft.EntityFrameworkCore;
+using JobPreppersDemo.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Stream;
 using Stream.Models;
 
@@ -32,7 +32,9 @@ namespace JobPreppersDemo.Controllers
         [HttpGet("getTimeline/{userID}")]
         public async Task<IActionResult> GetOrUpdateFeedTimeline(string userID)
         {
-            var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
+            var jpUser = await _context.Users.FirstOrDefaultAsync(u =>
+                u.userID == int.Parse(userID)
+            );
             // string jpUsername = jpUser.first_name + " " + jpUser.last_name;
             // api calls go here
             var client = _streamService.Client;
@@ -54,7 +56,9 @@ namespace JobPreppersDemo.Controllers
         [HttpPost("timeline/followFriend/{userID}")]
         public async Task<IActionResult> AddFriendToTimeline(string userID, string friendID)
         {
-            var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
+            var jpUser = await _context.Users.FirstOrDefaultAsync(u =>
+                u.userID == int.Parse(userID)
+            );
             // api calls go here
             var client = _streamService.Client;
             var timelineFeed = client.Feed("timeline", userID);
@@ -69,20 +73,25 @@ namespace JobPreppersDemo.Controllers
         }
 
         [HttpPost("timeline/followFriendMany/{userID}")]
-        public async Task<IActionResult> AddFriendsToTimeline(string userID, [FromBody] List<string> friendIDs)
+        public async Task<IActionResult> AddFriendsToTimeline(
+            string userID,
+            [FromBody] List<string> friendIDs
+        )
         {
-            var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
+            var jpUser = await _context.Users.FirstOrDefaultAsync(u =>
+                u.userID == int.Parse(userID)
+            );
             // api calls go here
             var client = _streamService.Client;
             var userUserFeed = client.Feed("user", userID);
             var userTimelineFeed = client.Feed("timeline", userID);
 
-            foreach (string friendID in friendIDs) {
+            foreach (string friendID in friendIDs)
+            {
                 var friendTimelineFeed = client.Feed("timeline", friendID);
                 await userTimelineFeed.FollowFeedAsync("user", friendID);
                 await friendTimelineFeed.FollowFeedAsync("user", userID);
             }
-
 
             string joinedIDs = string.Join(",", friendIDs);
             string OkMsg = $"{userID} now follows users {joinedIDs} and vice versa";
@@ -93,7 +102,9 @@ namespace JobPreppersDemo.Controllers
         [HttpGet("getUserFeed/{userID}")]
         public async Task<IActionResult> GetUserFeed(string userID)
         {
-            var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
+            var jpUser = await _context.Users.FirstOrDefaultAsync(u =>
+                u.userID == int.Parse(userID)
+            );
             string jpUsername = jpUser.first_name + " " + jpUser.last_name;
             // api calls go here
             var client = _streamService.Client;
@@ -101,7 +112,7 @@ namespace JobPreppersDemo.Controllers
             var userFeed = client.Feed("user", userID);
 
             var activities = await userFeed.GetActivitiesAsync();
-            
+
             // var userData = new Dictionary<string, object>
             // {
             //     {"name", jpUsername}
@@ -120,16 +131,43 @@ namespace JobPreppersDemo.Controllers
             var activities = client.Feed("timeline", likedUserID).GetActivitiesAsync();
 
             var firstActivityID = activities.Result.Results[1].Id;
-            var reactions = await client.Reactions.FilterAsync(ReactionFiltering.Default, ReactionPagination.By.ActivityId(firstActivityID));
-
+            var reactions = await client.Reactions.FilterAsync(
+                ReactionFiltering.Default,
+                ReactionPagination.By.ActivityId(firstActivityID)
+            );
 
             // await client.Reactions.AddAsync(null, "like", firstActivityID, likedUserID);
 
             // string OkMsg = $"added a like";
             string OkMsg = $"testing";
 
-
             return Ok(new { firstActivityID, reactions });
+        }
+
+        [HttpGet("recommend/{userID}")]
+        public async Task<IActionResult> GetRecommendedUsers(string userID)
+        {
+            int userId = int.Parse(userID);
+            // var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
+            // api calls go here
+            var friends = await _context
+                .Friends.Where(f => (f.userID == userId || f.friendID == userId))
+                .Select(f => f.userID == userId ? f.friendID : f.userID)
+                .ToListAsync();
+
+            var recommendations = await _context
+                .Users.Where(u => u.userID != userId && !friends.Contains(u.userID))
+                .Select(u => new
+                {
+                    Id = u.userID,
+                    Name = u.first_name + " " + u.last_name,
+                    Email = u.email,
+                    ProfilePic = u.profile_pic,
+                })
+                .Take(5)
+                .ToListAsync();
+
+            return Ok(new { recommendations });
         }
 
         // [HttpGet("token/{userID}")]

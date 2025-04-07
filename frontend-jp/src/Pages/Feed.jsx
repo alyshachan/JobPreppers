@@ -2,6 +2,7 @@ import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import "react-activity-feed/dist/index.css";
+import defaultProfilePicture from "../Components/defaultProfilePicture.png"
 import {
   StreamApp,
   FlatFeed,
@@ -14,6 +15,7 @@ const apiURL = process.env.REACT_APP_JP_API_URL;
 function Feed() {
   const { user, setAuthData } = useAuth();
   const [streamToken, setStreamToken] = useState("");
+  const [recommendationDict, setRecDict] = useState([]);
   const [selectedFeed, setSelectedFeed] = useState("timeline");
   useEffect(() => {
     const fetchFeedData = async () => {
@@ -62,6 +64,8 @@ function Feed() {
           }
         );
 
+        console.log("HELP");
+
         if (response.ok) {
           const data = await response.json();
 
@@ -87,6 +91,48 @@ function Feed() {
     };
     fetchFeedData();
   }, [user]);
+
+
+  useEffect(() => {
+    const requestRecommendations = async () => {
+      console.log("fetching")
+      try {
+        const response = await fetch(
+          apiURL + `/api/Feed/recommend/${user.userID}`,
+          {
+            credentials: "include", // include cookies
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+
+          if (data) {
+            console.log(data);
+            const newRecDict = data.recommendations.map((friend) => ({
+              userID: friend.userID,
+              name: friend.name,
+              profilePic: friend.profilePicture ? "data:image/png;base64," + friend.profilePicture.toString().toString("base64") : defaultProfilePicture,
+              // title: friend.title,
+            }));
+
+            setRecDict((prevState) => {
+              if (
+                JSON.stringify(prevState) !== JSON.stringify(newRecDict)
+              ) {
+                return newRecDict;
+              }
+              return prevState;
+            });
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    requestRecommendations();
+  }, [user, recommendationDict]);
 
   const CustomActivity = ({ activity }) => {
     return (
@@ -144,14 +190,41 @@ function Feed() {
 
             {/* </div> */}
           </div>
-          <div className="w-1/3">
-            <h1>Your connections</h1>
-            <div className="flex flex-col">
+          <div className="flex flex-col h-screen">
+            <h1>Discover connections</h1>
+            {/* <div className="flex flex-col">
               <hr />
               <div className="panel">
                 <hr />
                 <button className="lightButton">Load more</button>
               </div>
+            </div> */}
+            <div className="panel justify-right flex-grow w-full overflow-y-auto">
+              {recommendationDict.length === 0 ? (
+                <p className="text-gray-500 italic">No recommendations found</p>
+              ) : (
+                recommendationDict.map((rec, index) => (
+                  <div key={index}>
+                  <div className="flex flex-col flex-grow">
+                    <div className="flex p-2 gap-4">
+                      <img
+                        className="rounded-full aspect-square w-20 h-20"
+                        alt={`${rec.name}'s Profile Picture`}
+                        src={rec.profilePic}
+                      />
+
+                      <div className="flex flex-col flex-grow">
+                        <b className="text-xl">{rec.name}</b>
+
+                      </div>
+                    </div>
+                    {index < recommendationDict.length - 1 && (
+                      <hr className="border-t border-gray-300 -ml-[3px] my-2" />
+                    )}
+                  </div>
+                </div>
+                ))
+              )}
             </div>
           </div>
         </div>
