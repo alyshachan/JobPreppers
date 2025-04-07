@@ -24,37 +24,6 @@ namespace JobPreppersDemo.Services
             _session = session;
         }
 
-
-
-        // Just going to create the collection in the qdrant console itself
-        // public async Task CreateJobDescriptionCollection()
-        // {
-        //     var collectionExists = await _client.GetCollectionInfoAsync("job_description");
-        //     if (collectionExists != null)
-        //     {
-        //         Console.WriteLine("Collection Exist");
-        //         return;
-        //     }
-
-        //     await _client.CreateCollectionAsync(
-        //         collectionName: "{collection_name}",
-        //         vectorsConfig: new VectorParams { Size = 384, Distance = Distance.Cosine }
-        //     );
-        //     return;
-
-        //     //     await _client.CreateCollectionAsync(
-        //     //     collectionName: "job_qualication",
-        //     //     vectorsConfig: new VectorParamsMap
-        //     //     {
-        //     //         Map = {
-        //     //                 ["qualification"] = new VectorParams{Size = 384, Distance = Distance.Cosine},
-        //     //                 ["job_description"] = new VectorParams{Size = 384, Distance = Distance.Cosine}
-        //     //         },
-        //     //     }
-        //     // );
-        // }
-
-
         public float[] CombineEmbeddings(float[] qualificationEmbedding, float[] jobDescriptionEmbedding)
         {
             var combined = qualificationEmbedding.Concat(jobDescriptionEmbedding).ToArray();
@@ -102,6 +71,15 @@ namespace JobPreppersDemo.Services
                     }
                 }
             );
+        }
+
+        public async Task deleteFromJobVector(int jobID)
+        {
+            await _client.DeleteAsync(
+                collectionName: $"{collection_name}",
+                id: (ulong)jobID
+            );
+            Console.WriteLine("Sucessfully deleted");
         }
 
 

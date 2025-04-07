@@ -27,6 +27,7 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import defaultProfilePicture from "../defaultProfilePicture.png";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
@@ -44,6 +45,7 @@ function JobDescription({ setDrawerOpen, jobs }) {
 
   const [bookmarkedJobs, setBookmarkedJobs] = useState([]);
   const { user } = useAuth();
+
   useEffect(() => {
     const fetchBookmarkedJobs = async () => {
       try {
@@ -66,6 +68,13 @@ function JobDescription({ setDrawerOpen, jobs }) {
   }, [user?.userID]);
   const percentage = 55;
 
+  const userPicture = (job) => {
+    return job.profile_pic == null
+      ? defaultProfilePicture
+      : "data:image/png;base64," +
+          job.profile_pic.toString().toString("base64");
+  };
+
   return (
     <>
       {console.log(jobs)}
@@ -74,7 +83,7 @@ function JobDescription({ setDrawerOpen, jobs }) {
           <Box className="flex-row w-2/3 max-h-full">
             <CardHeader
               avatar={
-                <Avatar src={amazonIcon} aria-label="recipe">
+                <Avatar src={userPicture(job)} aria-label="Company Picture">
                   {job.company[0]}
                 </Avatar>
               }

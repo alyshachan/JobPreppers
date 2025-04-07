@@ -19,6 +19,7 @@ import amazonIcon from "./Img/amazon-icon.png";
 import ReadMoreDrawer from "./ReadMoreComponent/ReadMoreDrawer";
 import styles from "./Jobs.module.css";
 import "../JobPreppers.css";
+import defaultProfilePicture from "../defaultProfilePicture.png";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
@@ -34,6 +35,13 @@ function CompanyViewJobDescription({ setDrawerOpen, jobs }) {
     setSelectedJob(null);
   };
 
+  const userPicture = (job) => {
+    return job.profile_pic == null
+      ? defaultProfilePicture
+      : "data:image/png;base64," +
+          job.profile_pic.toString().toString("base64");
+  };
+
   return (
     <>
       {console.log(jobs)}
@@ -41,7 +49,7 @@ function CompanyViewJobDescription({ setDrawerOpen, jobs }) {
         <Card key={job.jobID} className={styles.card}>
           <CardHeader
             avatar={
-              <Avatar src={amazonIcon} aria-label="Company Icon">
+              <Avatar src={userPicture(job)} aria-label="Company Icon">
                 {job.company[0]}
               </Avatar>
             }

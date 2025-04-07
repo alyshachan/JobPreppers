@@ -4,13 +4,19 @@ import CloseIcon from "@mui/icons-material/Close";
 import amazonIcon from "../Img/amazon-icon.png";
 import moment from "moment";
 import styles from "../Jobs.module.css";
+import defaultProfilePicture from "../../defaultProfilePicture.png";
 
 export default function Header({ job, onClose }) {
+  const userPic =
+    job.profile_pic == null
+      ? defaultProfilePicture
+      : "data:image/png;base64," +
+        job.profile_pic.toString().toString("base64");
   return (
     <>
       {/* Header Section */}
       <Box className={styles.drawerHeader}>
-        <Avatar src={amazonIcon} aria-label="amazon">
+        <Avatar src={userPic} aria-label="Company Picture">
           {job.company[0]}
         </Avatar>
         <Typography variant="h4" sx={{ ml: 2 }}>

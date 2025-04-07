@@ -17,7 +17,6 @@ using Microsoft.Net.Http.Headers;
 
 namespace JobPreppersDemo.Controllers
 {
-
     public class JobScoreDto
     {
         public int Id { get; set; }
@@ -54,6 +53,7 @@ namespace JobPreppersDemo.Controllers
         }
 
 
+
         public class JobPostDto
         {
             public string company { get; set; } = string.Empty;
@@ -72,6 +72,8 @@ namespace JobPreppersDemo.Controllers
             public string bonues { get; set; } = string.Empty;
             public int jobID { get; set; }
             public int score { get; set; }
+
+            public byte[]? profilePic { get; set; }
 
         }
 
@@ -128,68 +130,13 @@ namespace JobPreppersDemo.Controllers
             _embeddedUser = new EmbeddedUser(context, vector);
         }
 
-        // // Might not need because only add job use getAllJob
-        // [HttpGet("companyView")]
-        // public async Task<IActionResult> GetAllJobsCompany([FromQuery] int userID)
-        // {
-
-        //     try
-        //     {
-
-        //         var jobs = await _context.JobPosts
-        //                       .Include(job => job.qualification)
-        //                       .Include(job => job.company)
-        //                       .Include(job => job.location)
-        //                       .Select(job => new
-        //                       {
-        //                           company = job.company.Name,
-        //                           minimumSalary = job.minimumSalary,
-        //                           benefits = job.benefits,
-        //                           postDate = job.postDate,
-        //                           endDate = job.endDate,
-        //                           description = job.description,
-        //                           title = job.title,
-        //                           type = job.type,
-        //                           link = job.link,
-        //                           location = job.location.name,
-        //                           bonues = job.bonus,
-        //                           perks = job.perks,
-        //                           jobID = job.postID,
-
-
-        //                       }
-        //                       )
-        //                       .ToListAsync();
-
-        //         if (jobs == null)
-        //         {
-        //             return NotFound("No jobs found.");
-        //         }
-        //         return Ok(new { jobs });
-
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         if (ex.InnerException != null)
-        //         {
-        //             Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
-        //             Console.WriteLine($"Inner Exception StackTrace: {ex.InnerException.StackTrace}");
-        //         }
-        //         return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
-
-
-        //     }
-
-        // }
-
-
         [HttpGet]
         public async Task<IActionResult> GetAllJobs([FromQuery] int userID)
         {
 
             try
             {
-                // Company get their own jobs 
+                // Company get their own jobs -- might not this code here 
 
                 Dictionary<int, int>? jobSearch = new Dictionary<int, int>();
                 if (userID != 0)
@@ -225,6 +172,7 @@ namespace JobPreppersDemo.Controllers
                                     .Include(job => job.qualification)
                                     .Include(job => job.company)
                                     .Include(job => job.location)
+                                    .Include(job => job.users)
                                     .Where(job => jobPostIds.Contains(job.postID))
                                     .Select(job => new
                                     {
@@ -241,7 +189,8 @@ namespace JobPreppersDemo.Controllers
                                         bonues = job.bonus,
                                         perks = job.perks,
                                         jobID = job.postID,
-                                        score = jobSearch[job.postID]
+                                        score = jobSearch[job.postID],
+                                        profilePic = job.company != null && job.company.user != null ? job.company.user.profile_pic : null
 
 
                                     }
@@ -380,6 +329,8 @@ namespace JobPreppersDemo.Controllers
             IQueryable<JobPostDto> query;
             try
             {
+
+
                 // Section for user maybe helper method: 
                 // Check Cache - should be there  --- maybe call other: 
                 Dictionary<int, int>? jobSearch = new Dictionary<int, int>();
@@ -433,6 +384,7 @@ namespace JobPreppersDemo.Controllers
                         perks = job.perks ?? "",
                         jobID = job.postID,
                         score = jobSearch[job.postID],
+                        profilePic = job.company != null && job.company.user != null ? job.company.user.profile_pic : null
 
                     });
 
@@ -458,7 +410,9 @@ namespace JobPreppersDemo.Controllers
                         bonues = job.bonus ?? "",
                         perks = job.perks ?? "",
                         jobID = job.postID,
-                        score = jobSearch[job.postID]
+                        score = jobSearch[job.postID],
+                        profilePic = job.company != null && job.company.user != null ? job.company.user.profile_pic : null
+
 
 
                     });
@@ -523,6 +477,7 @@ namespace JobPreppersDemo.Controllers
                     JOIN JobLocations l on jp.locationID = l.locationID
                     WHERE LOWER(l.name) REGEXP 'remote' OR ST_Distance_Sphere(Point({request.Longitude}, {request.Latitude}), Point(l.longitude, l.latitude)) <= {distance}"
                     ).Include(job => job.company)
+                    .ThenInclude(company => company.user)
                     .Include(job => job.location)
                     .Select(job => new JobPostDto
                     {
@@ -538,6 +493,8 @@ namespace JobPreppersDemo.Controllers
                         bonues = job.bonus ?? "",
                         perks = job.perks ?? "",
                         jobID = job.postID,
+                        profilePic = job.company != null && job.company.user != null ? job.company.user.profile_pic : null
+
 
                     });
 
@@ -547,6 +504,7 @@ namespace JobPreppersDemo.Controllers
                 {
                     query = _context.JobPosts
                     .Include(job => job.company)
+                    .ThenInclude(company => company.user)
                     .Include(job => job.location)
                     .Select(job => new JobPostDto
                     {
@@ -562,6 +520,8 @@ namespace JobPreppersDemo.Controllers
                         bonues = job.bonus ?? "",
                         perks = job.perks ?? "",
                         jobID = job.postID,
+                        profilePic = job.company != null && job.company.user != null ? job.company.user.profile_pic : null
+
 
 
                     });
@@ -681,6 +641,8 @@ namespace JobPreppersDemo.Controllers
 
             return Ok(jobDtos);
         }
+
+
 
     }
 

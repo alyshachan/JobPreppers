@@ -112,6 +112,7 @@ namespace JobPreppersDemo.Controllers
 
                     _context.UserSkills.Add(newSkill);
                     await _context.SaveChangesAsync();
+                    await _embeddedUser.AddEmbeddedUser(request.UserID);
 
                     return Ok(new
                     {
