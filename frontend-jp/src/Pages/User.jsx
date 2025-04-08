@@ -11,7 +11,6 @@ import { useParams } from "react-router-dom";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function User() {
-  const { currentUser, setAuthData } = useAuth(); // custom hook for authprovider
   const { username } = useParams();
   const [user, setUser] = useState(null);
   const { initialUser, setIntialUser } = useState(null);
@@ -34,34 +33,32 @@ function User() {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
   };
 
-    useEffect(() => {
-      const fetchUser = async () => {
-        try {
-          console.log(username)
-          const response = await fetch(
-            apiURL + `/api/Users/GetUserFromUsername/${username}`,
-            { credentials: "include" }
-          );
-    
-          if (response.ok) {
-            const data = await response.json();
-            console.log("Fetched user:", data);
-            setUser(data);
-            setFriendCount(0);
-            setEducationDict([]);
-            setSkillsDict({});
-            setExperienceDict([]);
-            setProjectDict([]); 
-          } else {
-            throw new Error("Failed to fetch user");
-          }
-        } catch (error) {
-          console.error("Error fetching user:", error);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(
+          apiURL + `/api/Users/GetUserFromUsername/${username}`,
+          { credentials: "include" }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+          setFriendCount(0);
+          setEducationDict([]);
+          setSkillsDict({});
+          setExperienceDict([]);
+          setProjectDict([]);
+        } else {
+          throw new Error("Failed to fetch user");
         }
-      };
-    
-      fetchUser(); 
-    }, [username, apiURL]);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
+  }, [username, apiURL]);
 
   useEffect(() => {
     localStorage.setItem("editMode", edit);
@@ -200,7 +197,6 @@ function User() {
 
         if (res.ok) {
           const data = await res.json();
-          console.log("GetUser: ", data);
           setIntialUser(data);
         } else {
           console.error("Failed to fetch User");
@@ -219,7 +215,7 @@ function User() {
     <>
       <div className="panel !flex-row gap-[50px]">
         <ProfileDescription
-          user={user}
+          visitingUser={user}
           edit={edit}
           setEdit={setEdit}
           friendCount={friendCount}
@@ -272,39 +268,39 @@ function User() {
         )}
       </div>
 
-        {experienceDict.length > 0 ? (
-          <ExperienceSection
-            experienceDict={experienceDict}
-            edit={edit}
-            onAdd={fetchExperience}
-          />
-        ) : (
-          edit && (
-            <button
-              className={styles.addNewSection}
-              onClick={() => toggleDialog("experience", true)}
-            >
-              Add Experience section
-            </button>
-          )
-        )}
+      {experienceDict.length > 0 ? (
+        <ExperienceSection
+          experienceDict={experienceDict}
+          edit={edit}
+          onAdd={fetchExperience}
+        />
+      ) : (
+        edit && (
+          <button
+            className={styles.addNewSection}
+            onClick={() => toggleDialog("experience", true)}
+          >
+            Add Experience section
+          </button>
+        )
+      )}
 
-        {projectDict.length > 0 ? (
-          <ProjectSection
-            projectDict={projectDict}
-            edit={edit}
-            onAdd={fetchProject}
-          />
-        ) : (
-          edit && (
-            <button
-              className={styles.addNewSection}
-              onClick={() => toggleDialog("project", true)}
-            >
-              Add Project section
-            </button>
-          )
-        )}
+      {projectDict.length > 0 ? (
+        <ProjectSection
+          projectDict={projectDict}
+          edit={edit}
+          onAdd={fetchProject}
+        />
+      ) : (
+        edit && (
+          <button
+            className={styles.addNewSection}
+            onClick={() => toggleDialog("project", true)}
+          >
+            Add Project section
+          </button>
+        )
+      )}
     </>
   );
 }

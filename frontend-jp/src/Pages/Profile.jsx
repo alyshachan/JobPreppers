@@ -21,7 +21,6 @@ async function fetchCompanyStatus(userID) {
 }
 
 function Profile() {
-  const { currentUser, setAuthData } = useAuth(); // custom hook for authprovider
   const { username } = useParams();
   const [user, setUser] = useState(null);
 
@@ -38,7 +37,6 @@ function Profile() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        console.log(username)
         const response = await fetch(
           apiURL + `/api/Users/GetUserFromUsername/${username}`,
           { credentials: "include" }

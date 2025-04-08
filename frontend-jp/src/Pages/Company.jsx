@@ -3,15 +3,7 @@ import { useAuth } from "../provider/authProvider";
 import { Button, Box } from "@mui/material";
 import { useParams } from "react-router-dom";
 
-import EducationSection from "../ProfileSections/EducationSection";
-import SkillsSection from "../ProfileSections/SkillsSection";
-import ExperienceSection from "../ProfileSections/ExperienceSection";
-import ProjectSection from "../ProfileSections/ProjectSection";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png";
 import ProfileDescription from "../ProfileSections/ProfileDescription";
-import EditIcon from "@mui/icons-material/Edit";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import styles from "../Components/Jobs/Jobs.module.css";
 import "../Components/JobPreppers.css";
 import JobDescription from "../Components/Jobs/JobDescription";
@@ -21,7 +13,6 @@ import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
 import ReadMoreDrawer from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
 
 function User() {
-  const { currentUser, setAuthData } = useAuth(); // custom hook for authprovider
   const { username } = useParams();
   const [user, setUser] = useState(null);
   const { initialUser, setIntialUser } = useState(null);
@@ -53,7 +44,6 @@ function User() {
     useEffect(() => {
       const fetchUser = async () => {
         try {
-          console.log(username)
           const response = await fetch(
             apiURL + `/api/Users/GetUserFromUsername/${username}`,
             { credentials: "include" }
@@ -61,7 +51,6 @@ function User() {
     
           if (response.ok) {
             const data = await response.json();
-            console.log("Fetched user:", data);
             setUser(data); 
           } else {
             throw new Error("Failed to fetch user");
@@ -128,7 +117,7 @@ function User() {
     <>
       <div className="panel !flex-row gap-[50px]">
         <ProfileDescription
-          user={user}
+          visitingUser={user}
           edit={edit}
           setEdit={setEdit}
           friendCount={friendCount}
