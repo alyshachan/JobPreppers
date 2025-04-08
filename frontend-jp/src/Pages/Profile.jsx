@@ -251,6 +251,14 @@ function Profile() {
             </div>
           ) : (
             <div className={styles.highlightedInfo}>
+              {edit && (
+                <a href="/ParseResume">
+                  <button className={styles.parseResume}>
+                    Parse resume to Profile
+                    <p className="text-white !text-base">Using this parse option will clear your current profile</p>
+                  </button>
+                </a>
+              )}
               {educationDict.length > 0 ? (
                 <EducationSection
                   educationDict={educationDict}

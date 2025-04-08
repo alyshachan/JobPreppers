@@ -88,6 +88,82 @@ function ParseResume() {
     return message;
   }
 
+  const handleFieldChange = (section, index, key, value) => {
+    setResumeFields((prev) => {
+      const updated = [...prev[section]];
+      updated[index] = { ...updated[index], [key]: value };
+      return { ...prev, [section]: updated };
+    });
+  };
+
+  const DateInputGroup = ({ section, index, start, end, onChange }) => (
+    <div className={styles.input}>
+      <CalendarTodayIcon className={styles.icon} />
+      <div className={styles.inputField}>
+        <label htmlFor="start">Start Date</label>
+        <TextField
+          type="date"
+          id="start"
+          value={moment(new Date(parseMonthYear(start))).format("YYYY-MM-DD")}
+          onChange={(e) => onChange(section, index, "start", e.target.value)}
+        />
+      </div>
+      <div className={styles.inputField}>
+        <label htmlFor="end">End Date</label>
+        <TextField
+          type="date"
+          id="end"
+          value={moment(new Date(parseMonthYear(end))).format("YYYY-MM-DD")}
+          onChange={(e) => onChange(section, index, "end", e.target.value)}
+        />
+      </div>
+    </div>
+  );
+
+  const educationFields = [
+    {
+      label: "School",
+      key: "school",
+      icon: <SchoolIcon className={styles.icon} />,
+      required: true,
+      placeholder: "e.g. Harvard University",
+    },
+    {
+      label: "Degree",
+      key: "degree",
+      icon: <HistoryEduIcon className={styles.icon} />,
+      placeholder: "e.g. Bachelors of Arts",
+    },
+    {
+      label: "Field of Study",
+      key: "study",
+      icon: <MenuBookIcon className={styles.icon} />,
+      placeholder: "e.g. Business",
+    },
+  ];
+
+  const experienceFields = [
+    {
+      label: "Job Title",
+      key: "jobTitle",
+      icon: <WorkIcon className={styles.icon} />,
+      placeholder: "e.g. Software Engineer",
+    },
+    {
+      label: "Company",
+      key: "companyName",
+      icon: <BusinessIcon className={styles.icon} />,
+      required: true,
+      placeholder: "e.g. Google",
+    },
+    {
+      label: "Location",
+      key: "location",
+      icon: <PlaceIcon className={styles.icon} />,
+      placeholder: "e.g. Los Angeles, California",
+    },
+  ];
+
   const fetchParsedResume = async () => {
     if (!file) {
       setMessage("Please select a file.");
@@ -214,119 +290,45 @@ function ParseResume() {
               <div>
                 <div className={`${styles.dialogContent} my-6`}>
                   <div className={styles.dialogContentLeft}>
-                    <div className={styles.input}>
-                      <SchoolIcon className={styles.icon} />
-                      <div className={styles.inputField}>
-                        <label for="school" className={styles.required}>
-                          School
-                        </label>
-                        <TextField
-                          required
-                          placeholder="e.g. Harvard University"
-                          className="w-full"
-                          id="school"
-                          value={edu.school}
-                          onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedEducation = [...prev.education];
-                              updatedEducation[index] = {
-                                ...updatedEducation[index],
-                                school: e.target.value,
-                              };
-                              return { ...prev, education: updatedEducation };
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
+                    {educationFields.map(
+                      ({ label, key, icon, required, placeholder }) => (
+                        <div className={styles.input} key={key}>
+                          {icon}
+                          <div className={styles.inputField}>
+                            <label
+                              htmlFor={key}
+                              className={required ? styles.required : ""}
+                            >
+                              {label}
+                            </label>
+                            <TextField
+                              id={key}
+                              required={required}
+                              placeholder={placeholder}
+                              className="w-full"
+                              value={edu[key] || ""}
+                              onChange={(e) =>
+                                handleFieldChange(
+                                  "education",
+                                  index,
+                                  key,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                        </div>
+                      )
+                    )}
 
-                    <div className={styles.input}>
-                      <HistoryEduIcon className={styles.icon} />
-                      <div className={styles.inputField}>
-                        <label for="degree">Degree</label>
-                        <TextField
-                          placeholder="e.g. Bachelors of Arts"
-                          className="w-full"
-                          id="degree"
-                          value={edu.degree}
-                          onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedEducation = [...prev.education];
-                              updatedEducation[index] = {
-                                ...updatedEducation[index],
-                                degree: e.target.value,
-                              };
-                              return { ...prev, education: updatedEducation };
-                            })
-                          }
-                        />
-                      </div>
+                    <DateInputGroup
+                      section="education"
+                      index={index}
+                      start={edu.start}
+                      end={edu.end}
+                      onChange={handleFieldChange}
+                    />
 
-                      <MenuBookIcon className={styles.icon} />
-                      <div className={styles.inputField}>
-                        <label for="study">Field of Study</label>
-                        <TextField
-                          placeholder="e.g. Business"
-                          className="w-full"
-                          id="study"
-                          value={edu.study}
-                          onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedEducation = [...prev.education];
-                              updatedEducation[index] = {
-                                ...updatedEducation[index],
-                                study: e.target.value,
-                              };
-                              return { ...prev, education: updatedEducation };
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-
-                    <div className={styles.input}>
-                      <CalendarTodayIcon className={styles.icon} />
-                      <div className={styles.inputField}>
-                        <label for="start">Start Date</label>
-                        <TextField
-                          type="date"
-                          id="start"
-                          value={moment(
-                            new Date(parseMonthYear(edu.start))
-                          ).format("YYYY-MM-DD")}
-                          onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedEducation = [...prev.education];
-                              updatedEducation[index] = {
-                                ...updatedEducation[index],
-                                start: e.target.value,
-                              };
-                              return { ...prev, education: updatedEducation };
-                            })
-                          }
-                        />
-                      </div>
-                      <div className={styles.inputField}>
-                        <label for="end">End Date</label>
-                        <TextField
-                          type="date"
-                          id="end"
-                          value={moment(
-                            new Date(parseMonthYear(edu.end))
-                          ).format("YYYY-MM-DD")}
-                          onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedEducation = [...prev.education];
-                              updatedEducation[index] = {
-                                ...updatedEducation[index],
-                                end: e.target.value,
-                              };
-                              return { ...prev, education: updatedEducation };
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
                     <div className={styles.input}>
                       <EditNoteIcon className={`${styles.icon} mt-[-100px]`} />
                       <div className={styles.inputField}>
@@ -336,14 +338,12 @@ function ParseResume() {
                           id="description"
                           value={edu.description}
                           onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedEducation = [...prev.education];
-                              updatedEducation[index] = {
-                                ...updatedEducation[index],
-                                description: e.target.value,
-                              };
-                              return { ...prev, education: updatedEducation };
-                            })
+                            handleFieldChange(
+                              "education",
+                              index,
+                              "description",
+                              e.target.value
+                            )
                           }
                         />
                       </div>
@@ -405,7 +405,14 @@ function ParseResume() {
                 )}
               </div>
             ))}
-            {resumeFields.skills.length > 0 ? <h1>Skills</h1> : ""}
+            {resumeFields.skills.length > 0 ? (
+              <>
+                <h1>Skills</h1>
+                <p className="subtitle">Separate each skill with a comma</p>
+              </>
+            ) : (
+              ""
+            )}
             {resumeFields.skills.map((skill, index) => {
               const skillList = skill.skillName
                 ? skill.skillName
@@ -431,14 +438,12 @@ function ParseResume() {
                           id="category"
                           value={skill.category}
                           onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedSkills = [...prev.skills];
-                              updatedSkills[index] = {
-                                ...updatedSkills[index],
-                                category: e.target.value,
-                              };
-                              return { ...prev, skills: updatedSkills };
-                            })
+                            handleFieldChange(
+                              "skills",
+                              index,
+                              "category",
+                              e.target.value
+                            )
                           }
                         />
                       </div>
@@ -455,14 +460,12 @@ function ParseResume() {
                           id="description"
                           value={skill.skillName}
                           onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedSkills = [...prev.skills];
-                              updatedSkills[index] = {
-                                ...updatedSkills[index],
-                                skillName: e.target.value,
-                              };
-                              return { ...prev, skills: updatedSkills };
-                            })
+                            handleFieldChange(
+                              "skills",
+                              index,
+                              "skillName",
+                              e.target.value
+                            )
                           }
                         />
                       </div>
@@ -491,119 +494,44 @@ function ParseResume() {
               <div>
                 <div className={`${styles.dialogContent} my-6`}>
                   <div className={styles.dialogContentLeft}>
-                    <div className={styles.input}>
-                      <WorkIcon className={styles.icon} />
-                      <div className={styles.inputField}>
-                        <label for="title">Job Title</label>
-                        <TextField
-                          placeholder="e.g. Software Engineer"
-                          className="w-full"
-                          id="title"
-                          value={exp.jobTitle}
-                          onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedExperience = [...prev.experience];
-                              updatedExperience[index] = {
-                                ...updatedExperience[index],
-                                jobTitle: e.target.value,
-                              };
-                              return { ...prev, experience: updatedExperience };
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
+                    {experienceFields.map(
+                      ({ label, key, icon, required, placeholder }) => (
+                        <div className={styles.input} key={key}>
+                          {icon}
+                          <div className={styles.inputField}>
+                            <label
+                              htmlFor={key}
+                              className={required ? styles.required : ""}
+                            >
+                              {label}
+                            </label>
+                            <TextField
+                              id={key}
+                              required={required}
+                              placeholder={placeholder}
+                              className="w-full"
+                              value={exp[key] || ""}
+                              onChange={(e) =>
+                                handleFieldChange(
+                                  "experience",
+                                  index,
+                                  key,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                        </div>
+                      )
+                    )}
 
-                    <div className={styles.input}>
-                      <BusinessIcon className={styles.icon} />
-                      <div className={styles.inputField}>
-                        <label for="work" className={styles.required}>
-                          Company
-                        </label>
-                        <TextField
-                          required
-                          placeholder="e.g. Google"
-                          className="w-full"
-                          id="work"
-                          value={exp.companyName}
-                          onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedExperience = [...prev.experience];
-                              updatedExperience[index] = {
-                                ...updatedExperience[index],
-                                companyName: e.target.value,
-                              };
-                              return { ...prev, experience: updatedExperience };
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-
-                    <div className={styles.input}>
-                      <PlaceIcon className={styles.icon} />
-                      <div className={styles.inputField}>
-                        <label for="location">Location</label>
-                        <TextField
-                          placeholder="e.g. Los Angeles, California"
-                          className="w-full"
-                          id="location"
-                          value={exp.location}
-                          onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedExperience = [...prev.experience];
-                              updatedExperience[index] = {
-                                ...updatedExperience[index],
-                                location: e.target.value,
-                              };
-                              return { ...prev, experience: updatedExperience };
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-
-                    <div className={styles.input}>
-                      <CalendarTodayIcon className={styles.icon} />
-                      <div className={styles.inputField}>
-                        <label for="start">Start Date</label>
-                        <TextField
-                          type="date"
-                          value={moment(
-                            new Date(parseMonthYear(exp.start))
-                          ).format("YYYY-MM-DD")}
-                          onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedExperience = [...prev.experience];
-                              updatedExperience[index] = {
-                                ...updatedExperience[index],
-                                start: e.target.value,
-                              };
-                              return { ...prev, experience: updatedExperience };
-                            })
-                          }
-                        />
-                      </div>
-                      <div className={styles.inputField}>
-                        <label for="end">End Date</label>
-                        <TextField
-                          type="date"
-                          value={moment(
-                            new Date(parseMonthYear(exp.end))
-                          ).format("YYYY-MM-DD")}
-                          onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedExperience = [...prev.experience];
-                              updatedExperience[index] = {
-                                ...updatedExperience[index],
-                                end: e.target.value,
-                              };
-                              return { ...prev, experience: updatedExperience };
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
+                    <DateInputGroup
+                      section="experience"
+                      index={index}
+                      start={exp.start}
+                      end={exp.end}
+                      onChange={handleFieldChange}
+                    />
 
                     <div className={styles.input}>
                       <EditNoteIcon className={`${styles.icon} mt-[-100px]`} />
@@ -613,14 +541,12 @@ function ParseResume() {
                           placeholder="Enter skills, accomplishments, achievements"
                           value={exp.description}
                           onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedExperience = [...prev.experience];
-                              updatedExperience[index] = {
-                                ...updatedExperience[index],
-                                description: e.target.value,
-                              };
-                              return { ...prev, experience: updatedExperience };
-                            })
+                            handleFieldChange(
+                              "experience",
+                              index,
+                              "description",
+                              e.target.value
+                            )
                           }
                         />
                       </div>
@@ -713,14 +639,12 @@ function ParseResume() {
                           id="title"
                           value={proj.title}
                           onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedProject = [...prev.project];
-                              updatedProject[index] = {
-                                ...updatedProject[index],
-                                title: e.target.value,
-                              };
-                              return { ...prev, project: updatedProject };
-                            })
+                            handleFieldChange(
+                              "projects",
+                              index,
+                              "title",
+                              e.target.value
+                            )
                           }
                         />
                       </div>
@@ -735,14 +659,12 @@ function ParseResume() {
                           id="description"
                           value={proj.description}
                           onChange={(e) =>
-                            setResumeFields((prev) => {
-                              const updatedProject = [...prev.project];
-                              updatedProject[index] = {
-                                ...updatedProject[index],
-                                description: e.target.value,
-                              };
-                              return { ...prev, project: updatedProject };
-                            })
+                            handleFieldChange(
+                              "projects",
+                              index,
+                              "description",
+                              e.target.value
+                            )
                           }
                         />
                       </div>
@@ -770,14 +692,6 @@ function ParseResume() {
               </div>
             ))}
           </div>
-
-          {/* <div className="parsed-data">
-            <h2>Extracted Information</h2>
-            <p>User ID: {parsedData.userID}</p>
-
-            <h3>Parsed Fields</h3>
-            <pre>{JSON.stringify(parsedData.parsedResult, null, 2)}</pre>
-          </div> */}
         </>
       )}
     </div>
