@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import { TextField } from "@mui/material";
 import styles from "../Components/Profile/AddSectionDialog.module.css";
+import profileStyles from "../Components/Profile/ProfileSections.module.css";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import SchoolIcon from "@mui/icons-material/School";
@@ -210,154 +211,154 @@ function ParseResume() {
 
             {resumeFields.education.length > 0 ? <h1>Education</h1> : ""}
             {resumeFields.education.map((edu, index) => (
-              <div className={styles.dialogContent}>
-                <div className={styles.dialogContentLeft}>
-                  <div className={styles.input}>
-                    <SchoolIcon className={styles.icon} />
-                    <div className={styles.inputField}>
-                      <label for="school" className={styles.required}>
-                        School
-                      </label>
-                      <TextField
-                        required
-                        placeholder="e.g. Harvard University"
-                        className="w-full"
-                        id="school"
-                        value={edu.school}
-                        onChange={(e) =>
-                          setResumeFields((prev) => {
-                            const updatedEducation = [...prev.education];
-                            updatedEducation[index] = {
-                              ...updatedEducation[index],
-                              school: e.target.value,
-                            };
-                            return { ...prev, education: updatedEducation };
-                          })
-                        }
-                      />
+              <div>
+                <div className={`${styles.dialogContent} my-6`}>
+                  <div className={styles.dialogContentLeft}>
+                    <div className={styles.input}>
+                      <SchoolIcon className={styles.icon} />
+                      <div className={styles.inputField}>
+                        <label for="school" className={styles.required}>
+                          School
+                        </label>
+                        <TextField
+                          required
+                          placeholder="e.g. Harvard University"
+                          className="w-full"
+                          id="school"
+                          value={edu.school}
+                          onChange={(e) =>
+                            setResumeFields((prev) => {
+                              const updatedEducation = [...prev.education];
+                              updatedEducation[index] = {
+                                ...updatedEducation[index],
+                                school: e.target.value,
+                              };
+                              return { ...prev, education: updatedEducation };
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <div className={styles.input}>
+                      <HistoryEduIcon className={styles.icon} />
+                      <div className={styles.inputField}>
+                        <label for="degree">Degree</label>
+                        <TextField
+                          placeholder="e.g. Bachelors of Arts"
+                          className="w-full"
+                          id="degree"
+                          value={edu.degree}
+                          onChange={(e) =>
+                            setResumeFields((prev) => {
+                              const updatedEducation = [...prev.education];
+                              updatedEducation[index] = {
+                                ...updatedEducation[index],
+                                degree: e.target.value,
+                              };
+                              return { ...prev, education: updatedEducation };
+                            })
+                          }
+                        />
+                      </div>
+
+                      <MenuBookIcon className={styles.icon} />
+                      <div className={styles.inputField}>
+                        <label for="study">Field of Study</label>
+                        <TextField
+                          placeholder="e.g. Business"
+                          className="w-full"
+                          id="study"
+                          value={edu.study}
+                          onChange={(e) =>
+                            setResumeFields((prev) => {
+                              const updatedEducation = [...prev.education];
+                              updatedEducation[index] = {
+                                ...updatedEducation[index],
+                                study: e.target.value,
+                              };
+                              return { ...prev, education: updatedEducation };
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <div className={styles.input}>
+                      <CalendarTodayIcon className={styles.icon} />
+                      <div className={styles.inputField}>
+                        <label for="start">Start Date</label>
+                        <TextField
+                          type="date"
+                          id="start"
+                          value={moment(
+                            new Date(parseMonthYear(edu.start))
+                          ).format("YYYY-MM-DD")}
+                          onChange={(e) =>
+                            setResumeFields((prev) => {
+                              const updatedEducation = [...prev.education];
+                              updatedEducation[index] = {
+                                ...updatedEducation[index],
+                                start: e.target.value,
+                              };
+                              return { ...prev, education: updatedEducation };
+                            })
+                          }
+                        />
+                      </div>
+                      <div className={styles.inputField}>
+                        <label for="end">End Date</label>
+                        <TextField
+                          type="date"
+                          id="end"
+                          value={moment(
+                            new Date(parseMonthYear(edu.end))
+                          ).format("YYYY-MM-DD")}
+                          onChange={(e) =>
+                            setResumeFields((prev) => {
+                              const updatedEducation = [...prev.education];
+                              updatedEducation[index] = {
+                                ...updatedEducation[index],
+                                end: e.target.value,
+                              };
+                              return { ...prev, education: updatedEducation };
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className={styles.input}>
+                      <EditNoteIcon className={`${styles.icon} mt-[-100px]`} />
+                      <div className={styles.inputField}>
+                        <label for="description">Description</label>
+                        <TextareaAutosize
+                          placeholder="Enter grades, activities, awards"
+                          id="description"
+                          value={edu.description}
+                          onChange={(e) =>
+                            setResumeFields((prev) => {
+                              const updatedEducation = [...prev.education];
+                              updatedEducation[index] = {
+                                ...updatedEducation[index],
+                                description: e.target.value,
+                              };
+                              return { ...prev, education: updatedEducation };
+                            })
+                          }
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <div className={styles.input}>
-                    <HistoryEduIcon className={styles.icon} />
-                    <div className={styles.inputField}>
-                      <label for="degree">Degree</label>
-                      <TextField
-                        placeholder="e.g. Bachelors of Arts"
-                        className="w-full"
-                        id="degree"
-                        value={edu.degree}
-                        onChange={(e) =>
-                          setResumeFields((prev) => {
-                            const updatedEducation = [...prev.education];
-                            updatedEducation[index] = {
-                              ...updatedEducation[index],
-                              degree: e.target.value,
-                            };
-                            return { ...prev, education: updatedEducation };
-                          })
-                        }
-                      />
-                    </div>
-
-                    <MenuBookIcon className={styles.icon} />
-                    <div className={styles.inputField}>
-                      <label for="study">Field of Study</label>
-                      <TextField
-                        placeholder="e.g. Business"
-                        className="w-full"
-                        id="study"
-                        value={edu.study}
-                        onChange={(e) =>
-                          setResumeFields((prev) => {
-                            const updatedEducation = [...prev.education];
-                            updatedEducation[index] = {
-                              ...updatedEducation[index],
-                              study: e.target.value,
-                            };
-                            return { ...prev, education: updatedEducation };
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  <div className={styles.input}>
-                    <CalendarTodayIcon className={styles.icon} />
-                    <div className={styles.inputField}>
-                      <label for="start">Start Date</label>
-                      <TextField
-                        type="date"
-                        id="start"
-                        value={moment(
-                          new Date(parseMonthYear(edu.start))
-                        ).format("YYYY-MM-DD")}
-                        onChange={(e) =>
-                          setResumeFields((prev) => {
-                            const updatedEducation = [...prev.education];
-                            updatedEducation[index] = {
-                              ...updatedEducation[index],
-                              start: e.target.value,
-                            };
-                            return { ...prev, education: updatedEducation };
-                          })
-                        }
-                      />
-                    </div>
-                    <div className={styles.inputField}>
-                      <label for="end">End Date</label>
-                      <TextField
-                        type="date"
-                        id="end"
-                        value={moment(new Date(parseMonthYear(edu.end))).format(
-                          "YYYY-MM-DD"
-                        )}
-                        onChange={(e) =>
-                          setResumeFields((prev) => {
-                            const updatedEducation = [...prev.education];
-                            updatedEducation[index] = {
-                              ...updatedEducation[index],
-                              end: e.target.value,
-                            };
-                            return { ...prev, education: updatedEducation };
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className={styles.input}>
-                    <EditNoteIcon className={`${styles.icon} mt-[-100px]`} />
-                    <div className={styles.inputField}>
-                      <label for="description">Description</label>
-                      <TextareaAutosize
-                        placeholder="Enter grades, activities, awards"
-                        id="description"
-                        value={edu.description}
-                        onChange={(e) =>
-                          setResumeFields((prev) => {
-                            const updatedEducation = [...prev.education];
-                            updatedEducation[index] = {
-                              ...updatedEducation[index],
-                              description: e.target.value,
-                            };
-                            return { ...prev, education: updatedEducation };
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className={styles.dialogContentRight}>
-                  {resumeFields.education.map((edu, index) => (
+                  <div className={styles.dialogContentRight}>
                     <div key={index}>
-                      <div className={styles.education}>
+                      <div className={profileStyles.education}>
                         <img
                           className="companyPicture"
                           src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
                         />
 
-                        <div className={styles.sectionPictureContent}>
+                        <div className={profileStyles.sectionPictureContent}>
                           <p className="title">{edu.school}</p>
                           <p className="subtitle">
                             {edu.degree}
@@ -393,17 +394,15 @@ function ParseResume() {
                                 }`
                               : ""}
                           </p>
-                          <p className={styles.educationContent}>
-                            {edu.description}
-                          </p>
                         </div>
                       </div>
-                      {index < resumeFields.education.length - 1 && (
-                        <hr className={styles.divider} />
-                      )}
+                      <p className="whitespace-pre-line">{edu.description}</p>
                     </div>
-                  ))}
+                  </div>
                 </div>
+                {index < resumeFields.education.length - 1 && (
+                  <hr className={profileStyles.divider} />
+                )}
               </div>
             ))}
             {resumeFields.skills.length > 0 ? <h1>Skills</h1> : ""}
@@ -490,7 +489,7 @@ function ParseResume() {
             {resumeFields.experience.length > 0 ? <h1>Experience</h1> : ""}
             {resumeFields.experience.map((exp, index) => (
               <div>
-                <div className={styles.dialogContent}>
+                <div className={`${styles.dialogContent} my-6`}>
                   <div className={styles.dialogContentLeft}>
                     <div className={styles.input}>
                       <WorkIcon className={styles.icon} />
@@ -629,14 +628,14 @@ function ParseResume() {
                   </div>
 
                   <div className={styles.dialogContentRight}>
-                    <div className={styles.sectionPictureContent}>
-                      <div className={styles.experience}>
+                    <div className={profileStyles.sectionPictureContent}>
+                      <div className={profileStyles.experience}>
                         <img
                           className="companyPicture"
                           src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
                         />
 
-                        <div className={styles.experienceContentLeft}>
+                        <div className={profileStyles.experienceContentLeft}>
                           <p className="title">{exp.jobTitle}</p>
                           {exp.location ? (
                             <p className="subtitle">
@@ -647,7 +646,7 @@ function ParseResume() {
                           )}
                         </div>
 
-                        <div className={styles.experienceContentRight}>
+                        <div className={profileStyles.experienceContentRight}>
                           <p className="title">
                             {exp.start || exp.end
                               ? `${
@@ -687,14 +686,14 @@ function ParseResume() {
                           </p>
                         </div>
                       </div>
-                      <div className={styles.experienceContent}>
+                      <div className="whitespace-pre-line">
                         {exp.description}
                       </div>
                     </div>
                   </div>
                 </div>
                 {index < resumeFields.experience.length - 1 && (
-                  <hr className={styles.divider} />
+                  <hr className={profileStyles.divider} />
                 )}
               </div>
             ))}
@@ -702,7 +701,7 @@ function ParseResume() {
             {resumeFields.projects.length > 0 ? <h1>Projects</h1> : ""}
             {resumeFields.projects.map((proj, index) => (
               <div>
-                <div className={styles.dialogContent}>
+                <div className={`${styles.dialogContent} my-6`}>
                   <div className={styles.dialogContentLeft}>
                     <div className={styles.input}>
                       <LightbulbIcon className={styles.icon} />
@@ -752,13 +751,13 @@ function ParseResume() {
 
                   <div className={styles.dialogContentRight}>
                     <div key={index}>
-                      <div className={styles.project}>
-                        <div className={styles.projectHeader}>
-                          <div className={styles.project}>
+                      <div className={profileStyles.project}>
+                        <div className={profileStyles.projectHeader}>
+                          <div className={profileStyles.project}>
                             <p className="title">{proj.title}</p>
                           </div>
                         </div>
-                        <div className={styles.projectContent}>
+                        <div className="whitespace-pre-line">
                           {proj.description}
                         </div>
                       </div>
@@ -766,7 +765,7 @@ function ParseResume() {
                   </div>
                 </div>
                 {index < resumeFields.projects.length - 1 && (
-                  <hr className={styles.divider} />
+                  <hr className={profileStyles.divider} />
                 )}
               </div>
             ))}
