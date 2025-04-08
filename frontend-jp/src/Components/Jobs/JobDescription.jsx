@@ -28,10 +28,11 @@ import {
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import defaultProfilePicture from "../defaultProfilePicture.png";
+import { useMutation } from "@tanstack/react-query";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
-function JobDescription({ setDrawerOpen, jobs }) {
+function JobDescription({ setDrawerOpen, jobs, setJobs }) {
   const [selectedJob, setSelectedJob] = useState(null); // Track the currently selected job
   const handleOpenDrawer = (job) => {
     setSelectedJob(job);
@@ -50,7 +51,7 @@ function JobDescription({ setDrawerOpen, jobs }) {
     const fetchBookmarkedJobs = async () => {
       try {
         const res = await fetch(
-          apiURL + `/api/Bookmark/getBookmark/?userID=${user.userID}`,
+          apiURL + `/api/set/getBookmark/?userID=${user.userID}`,
           { credentials: "include" }
         );
 
@@ -66,7 +67,6 @@ function JobDescription({ setDrawerOpen, jobs }) {
       fetchBookmarkedJobs();
     }
   }, [user?.userID]);
-  const percentage = 55;
 
   const userPicture = (job) => {
     return job.profile_pic == null
@@ -75,6 +75,57 @@ function JobDescription({ setDrawerOpen, jobs }) {
           job.profile_pic.toString().toString("base64");
   };
 
+  const deleteJob = async (job) => {
+    const res = await fetch(apiURL + "/api/jobpost/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        jobID: job.jobID,
+        userID: user.userID,
+      }),
+      credentials: "include",
+    });
+    if (!res.ok) {
+      throw new Error("Failed to Delete Job");
+    }
+    return res.json();
+  };
+
+  const fetchJobs = async () => {
+    try {
+      const res = await fetch(apiURL + `/api/jobpost/?userID=${user.userID}`, {
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setJobs(data.jobs);
+      }
+    } catch (error) {
+      console.error("Error Getting Jobs:", error);
+    }
+  };
+
+  // Use Mutation for Post calls and anything involving user doing an action
+  const {
+    mutate: deleteMutation,
+    isPending: isParseLoading,
+    isError,
+  } = useMutation({
+    mutationFn: (data) => {
+      if (!user?.userID) {
+        throw new Error("Invalid job or user data");
+      }
+      return deleteJob(data);
+    },
+    onSuccess: (data) => {
+      console.log("Sucessful");
+      fetchJobs();
+    },
+    onError: (error) => {
+      console.error("Error Deleting Job:", error);
+    },
+  });
   return (
     <>
       {console.log(jobs)}
@@ -158,7 +209,11 @@ function JobDescription({ setDrawerOpen, jobs }) {
                 setBookmarkedJobs={setBookmarkedJobs}
                 bookmarkedJobs={bookmarkedJobs}
               />
-              <IconButton aria-label="highlight-off " className="p-0 m-0">
+              <IconButton
+                aria-label="highlight-off "
+                className="p-0 m-0"
+                onClick={() => deleteMutation(job)}
+              >
                 <HighlightOffIcon />
               </IconButton>
             </div>
@@ -182,7 +237,7 @@ function JobDescription({ setDrawerOpen, jobs }) {
                 // pathTransition: 'none',
 
                 // Colors
-                pathColor: `rgba(62, 152, 199, ${percentage / 100})`,
+                pathColor: `rgba(62, 152, 199, ${job.score / 100})`,
                 textColor: "#f88",
                 trailColor: "#d6d6d6",
                 backgroundColor: "#3e98c7",

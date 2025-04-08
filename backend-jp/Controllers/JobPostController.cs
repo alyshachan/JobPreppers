@@ -52,7 +52,11 @@ namespace JobPreppersDemo.Controllers
 
         }
 
-
+        public class DeleteJobRequest
+        {
+            public int jobID { get; set; }
+            public int userID { get; set; }
+        }
 
         public class JobPostDto
         {
@@ -76,7 +80,6 @@ namespace JobPreppersDemo.Controllers
             public byte[]? profilePic { get; set; }
 
         }
-
 
         public class AddJobDto
         {
@@ -136,7 +139,6 @@ namespace JobPreppersDemo.Controllers
 
             try
             {
-                // Company get their own jobs -- might not this code here 
 
                 Dictionary<int, int>? jobSearch = new Dictionary<int, int>();
                 if (userID != 0)
@@ -172,8 +174,8 @@ namespace JobPreppersDemo.Controllers
                                     .Include(job => job.qualification)
                                     .Include(job => job.company)
                                     .Include(job => job.location)
-                                    .Include(job => job.users)
-                                    .Where(job => jobPostIds.Contains(job.postID))
+                                    .Where(job => !_context.DeleteJobs
+                                    .Any(deleteJob => deleteJob.jobID == job.postID && deleteJob.userID == userID)).Where(job => jobPostIds.Contains(job.postID))
                                     .Select(job => new
                                     {
                                         company = job.company.Name,
@@ -357,9 +359,9 @@ namespace JobPreppersDemo.Controllers
                     return StatusCode(500, new { message = $"Internal server error: user not in the embedded table" });
                 }
                 var jobPostIds = jobSearch.Keys.ToList();
-
                 if (request.Latitude != null && request.Longitude != null && request.Distance != 0)
                 {
+
                     var distance = request.Distance * 1609.34;
                     query = _context.JobPosts.FromSqlInterpolated(
                         $@"
@@ -368,6 +370,8 @@ namespace JobPreppersDemo.Controllers
                     WHERE LOWER(l.name) REGEXP 'remote' OR ST_Distance_Sphere(Point({request.Longitude}, {request.Latitude}), Point(l.longitude, l.latitude)) <= {distance}"
                     ).Include(job => job.company)
                     .Include(job => job.location)
+                    .Where(job => !_context.DeleteJobs
+                    .Any(deleteJob => deleteJob.jobID == job.postID && deleteJob.userID == request.userID))
                     .Where(job => jobPostIds.Contains(job.postID))
                     .Select(job => new JobPostDto
                     {
@@ -395,6 +399,8 @@ namespace JobPreppersDemo.Controllers
                     query = _context.JobPosts
                     .Include(job => job.company)
                     .Include(job => job.location)
+                    .Where(job => !_context.DeleteJobs
+                    .Any(deleteJob => deleteJob.jobID == job.postID && deleteJob.userID == request.userID))
                     .Where(job => jobPostIds.Contains(job.postID))
                     .Select(job => new JobPostDto
                     {
@@ -642,6 +648,51 @@ namespace JobPreppersDemo.Controllers
             return Ok(jobDtos);
         }
 
+
+        [HttpPost("delete")]
+        public async Task<IActionResult> deleteJobPost([FromBody] DeleteJobRequest request)
+        {
+
+            try
+            {
+                // Add to the Delete Table from the database 
+                var selectedJob = await _context.JobPosts.Where(job => job.postID == request.jobID).FirstOrDefaultAsync();
+                if (selectedJob != null)
+                {
+                    var newDeleteJob = new DeleteJob
+                    {
+                        jobID = selectedJob.postID,
+                        userID = request.userID
+
+                    };
+                    await _context.DeleteJobs.AddAsync(newDeleteJob);
+                    await _context.SaveChangesAsync();
+
+                }
+                else
+                {
+                    return StatusCode(500, new { message = $"Couldn't find the job post" });
+
+                }
+
+                return Ok(new { message = "Job deleted for user successfully", jobId = request.jobID });
+            }
+
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                    Console.WriteLine($"Inner Exception StackTrace: {ex.InnerException.StackTrace}");
+                }
+                return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
+
+
+            }
+
+
+
+        }
 
 
     }

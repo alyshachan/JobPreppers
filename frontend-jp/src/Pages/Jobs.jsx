@@ -48,14 +48,9 @@ function Jobs() {
     }
     let result = await res.json();
     setIsUserCompany(result.isCompany);
+    setFilters((prev) => ({ ...prev, userID: user.userID }));
     return result.isCompany;
   }
-
-  useEffect(() => {
-    if (user?.userID) {
-      setFilters((prev) => ({ ...prev, userID: user.userID }));
-    }
-  }, [user]);
 
   const {
     data: isCompany,
@@ -111,7 +106,11 @@ function Jobs() {
               )
             ) : jobs.length > 0 ? (
               <div className={styles.containerForCard}>
-                <JobDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
+                <JobDescription
+                  setDrawerOpen={setDrawerOpen}
+                  jobs={jobs}
+                  setJobs={setJobs}
+                />
               </div>
             ) : (
               <NoResultPage />

@@ -27,9 +27,13 @@ public partial class User
 
     public string? description { get; set; }
 
+    public virtual ICollection<Application> Applications { get; set; } = new List<Application>();
+
     public virtual ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
 
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
+
+    public virtual ICollection<DeleteJob> DeleteJobs { get; set; } = new List<DeleteJob>();
 
     public virtual ICollection<Friend> Friendfriends { get; set; } = new List<Friend>();
 
@@ -50,6 +54,4 @@ public partial class User
     public virtual ICollection<UserProject> UserProjects { get; set; } = new List<UserProject>();
 
     public virtual ICollection<UserSkill> UserSkills { get; set; } = new List<UserSkill>();
-
-    public virtual ICollection<JobPost> jobs { get; set; } = new List<JobPost>();
 }
