@@ -135,7 +135,7 @@ function Messaging() {
   }, [chatToken, user, chatClient]);
 
   if (!user || !chatClient) {
-    return <div>Loading user data...</div>;
+    return <div></div>;
   }
 
   if (
