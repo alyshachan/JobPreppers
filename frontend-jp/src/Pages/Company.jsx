@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import { Button, Box } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
@@ -20,7 +21,9 @@ import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
 import ReadMoreDrawer from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
 
 function User() {
-  const { user, setAuthData } = useAuth(); // custom hook for authprovider
+  const { currentUser, setAuthData } = useAuth(); // custom hook for authprovider
+  const { username } = useParams();
+  const [user, setUser] = useState(null);
   const { initialUser, setIntialUser } = useState(null);
   const [edit, setEdit] = useState(() => {
     return localStorage.getItem("editMode") === "true";
@@ -46,6 +49,30 @@ function User() {
   useEffect(() => {
     localStorage.setItem("editMode", edit);
   }, [edit]);
+
+    useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          console.log(username)
+          const response = await fetch(
+            apiURL + `/api/Users/GetUserFromUsername/${username}`,
+            { credentials: "include" }
+          );
+    
+          if (response.ok) {
+            const data = await response.json();
+            console.log("Fetched user:", data);
+            setUser(data); 
+          } else {
+            throw new Error("Failed to fetch user");
+          }
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        }
+      };
+    
+      fetchUser(); 
+    }, [username, apiURL]);
 
   const fetchFriendCount = async () => {
     try {
@@ -94,6 +121,8 @@ function User() {
 
     fetchJobs();
   }, [user?.userID]);
+
+  if (!user) return <div>Loading user...</div>;
 
   return (
     <>

@@ -41,7 +41,7 @@ export default function Login() {
 
           console.log("auth data set");
           // Show a success popup
-          navigate("/profile");
+          navigate(`/profile/${data.user.username}`);
           window.alert(data.message); // Displays "Login successful."
           setError(""); // Clear any previous error message
         }

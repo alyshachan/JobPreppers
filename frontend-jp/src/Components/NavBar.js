@@ -350,7 +350,7 @@ function NavBar() {
             className="w-10 h-10 rounded-full mr-2"
           />
           <div className="flex flex-col">
-            <span className="font-semibold">{`${user.first_name} ${user.last_name}`}</span>
+            <span className="font-semibold">{`${user.first_name} ${user.last_name ? user.last_name : ""}`}</span>
             <span className="text-sm text-gray-500">{user.title}</span>
           </div>
         </Link>

@@ -9,7 +9,6 @@ import { useQuery } from "@tanstack/react-query";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 async function fetchCompanyStatus(userID) {
-  console.log("user id in fetchStatus: ", userID);
   const res = await fetch(apiURL + `/api/Company/isCompany/?userID=${userID}`, {
     credentials: "include",
   });
@@ -23,6 +22,8 @@ async function fetchCompanyStatus(userID) {
 
 function Profile() {
   const { currentUser, setAuthData } = useAuth(); // custom hook for authprovider
+  const { username } = useParams();
+  const [user, setUser] = useState(null);
 
   const {
     data: isCompany,
@@ -33,15 +34,6 @@ function Profile() {
     queryFn: () => fetchCompanyStatus(user.userID),
     enabled: !!user?.userID, // Only run if userID exists
   });
-
-  if (!user) return <div>Loading user...</div>;
-  if (isLoading) return <div>Loading profile...</div>;
-  if (isError) return <div>Error loading profile. Try again later.</div>;
-
-  const { username } = useParams();
-  const [user, setUser] = useState(null);
-  const apiURL = process.env.REACT_APP_JP_API_URL;
-
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -54,13 +46,7 @@ function Profile() {
   
         if (response.ok) {
           const data = await response.json();
-          console.log("Fetched user:", data);
           setUser(data);
-          setFriendCount(0);
-          setEducationDict([]);
-          setSkillsDict({});
-          setExperienceDict([]);
-          setProjectDict([]); 
         } else {
           throw new Error("Failed to fetch user");
         }
@@ -71,10 +57,11 @@ function Profile() {
   
     fetchUser(); 
   }, [username, apiURL]);
+  
+  if (!user) return <div>Loading user...</div>;
+  if (isLoading) return <div>Loading profile...</div>;
+  if (isError) return <div>Error loading profile. Try again later.</div>;
     
-
-
-
   return (
     <>
       <div className="content !mt-[175px]">

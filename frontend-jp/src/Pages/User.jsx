@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
-import { Button } from "@mui/material";
-
 import EducationSection from "../ProfileSections/EducationSection";
 import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png";
 import ProfileDescription from "../ProfileSections/ProfileDescription";
-import EditIcon from "@mui/icons-material/Edit";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import styles from "../Components/Profile/Profile.module.css";
 import "../Components/JobPreppers.css";
+import { useParams } from "react-router-dom";
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function User() {
-  const { user, setAuthData } = useAuth(); // custom hook for authprovider
+  const { currentUser, setAuthData } = useAuth(); // custom hook for authprovider
+  const { username } = useParams();
+  const [user, setUser] = useState(null);
   const { initialUser, setIntialUser } = useState(null);
   const [edit, setEdit] = useState(() => {
     return localStorage.getItem("editMode") === "true";
@@ -31,15 +29,39 @@ function User() {
     experience: false,
     project: false,
   });
-  const [message, setMessage] = useState("");
-  const [receiverID, setReceiverID] = useState("");
-  const apiURL = process.env.REACT_APP_JP_API_URL;
 
   const toggleDialog = (type, state) => {
     setOpenDialog((prev) => ({ ...prev, [type]: state }));
   };
 
-  // test message box handler
+    useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          console.log(username)
+          const response = await fetch(
+            apiURL + `/api/Users/GetUserFromUsername/${username}`,
+            { credentials: "include" }
+          );
+    
+          if (response.ok) {
+            const data = await response.json();
+            console.log("Fetched user:", data);
+            setUser(data);
+            setFriendCount(0);
+            setEducationDict([]);
+            setSkillsDict({});
+            setExperienceDict([]);
+            setProjectDict([]); 
+          } else {
+            throw new Error("Failed to fetch user");
+          }
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        }
+      };
+    
+      fetchUser(); 
+    }, [username, apiURL]);
 
   useEffect(() => {
     localStorage.setItem("editMode", edit);
@@ -190,6 +212,8 @@ function User() {
 
     fetchUser();
   }, [user]);
+
+  if (!user) return <div>Loading user...</div>;
 
   return (
     <>
