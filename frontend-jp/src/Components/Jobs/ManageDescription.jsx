@@ -21,8 +21,7 @@ import styles from "./Jobs.module.css";
 import "../JobPreppers.css";
 import { useAuth } from "../../provider/authProvider";
 import { useMutation } from "@tanstack/react-query";
-import EditIcon from "@mui/icons-material/Edit";
-
+import AddJobForm from "./Posting/AddJobForm";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function ManageDescription({ setDrawerOpen, jobs, setJobs }) {
@@ -94,7 +93,7 @@ function ManageDescription({ setDrawerOpen, jobs, setJobs }) {
 
   return (
     <>
-      {console.log(jobs)}
+      {console.log("jobs: ", jobs)}
       {jobs.map((job, index) => (
         <Card key={job.jobID} className={styles.card}>
           <CardHeader
@@ -106,17 +105,22 @@ function ManageDescription({ setDrawerOpen, jobs, setJobs }) {
             title={job.title}
             subheader={job.company}
             action={
-              <>
-                <IconButton aria-label="edit button">
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                {/* <IconButton aria-label="edit button">
                   <EditIcon />
-                </IconButton>
+                  </IconButton> */}
+                <AddJobForm
+                  setJobs={setJobs}
+                  companyName={job.company}
+                  jobToEdit={job}
+                />
                 <IconButton
                   aria-label="highlight-off"
                   onClick={() => deleteMutation(job)}
                 >
                   <HighlightOffIcon />
                 </IconButton>
-              </>
+              </div>
             }
           />
           <CardContent>

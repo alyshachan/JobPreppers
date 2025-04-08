@@ -69,7 +69,13 @@ namespace JobPreppersDemo.Controllers
                                     location = job.location.name,
                                     bonues = job.bonus,
                                     perks = job.perks,
-                                    jobID = job.postID
+                                    jobID = job.postID,
+                                    skills = job.qualification.Skills,
+                                    educationLevel = job.qualification.EducationLevel,
+                                    minimumExperience = job.qualification.MinimumExperience,
+                                    maximumExperience = job.qualification.MaximumExperience,
+
+
 
 
                                 }

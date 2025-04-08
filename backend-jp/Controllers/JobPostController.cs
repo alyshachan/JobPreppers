@@ -126,6 +126,50 @@ namespace JobPreppersDemo.Controllers
         }
 
 
+
+        public class UpdateJobDto
+        {
+
+            public DateTime postDate { get; set; }
+
+            public DateTime endDate { get; set; }
+
+            public string title { get; set; } = null!;
+
+            public string type { get; set; } = null!;
+
+            public string? benefits { get; set; }
+
+            public string? perks { get; set; }
+
+            public string? bonus { get; set; }
+
+            public int minimumSalary { get; set; }
+
+            public int? maximumSalary { get; set; }
+
+            public string? description { get; set; }
+
+            public string paymentType { get; set; } = null!;
+
+            public int qualificationID { get; set; }
+
+            public string? link { get; set; }
+
+            public int locationID { get; set; }
+
+            public int userID { get; set; }
+
+            public int jobID { get; set; }
+
+            public virtual JobLocation location { get; set; } = null!;
+
+            public virtual JobQualification qualification { get; set; } = null!;
+
+
+        }
+
+
         public JobPostController(ApplicationDbContext context, JobsVectorDB vector)
         {
             _context = context;
@@ -324,6 +368,89 @@ namespace JobPreppersDemo.Controllers
             }
 
         }
+
+        [HttpPut("update")]
+        public async Task<ActionResult> UpdateJob([FromBody] UpdateJobDto request)
+        {
+            try
+            {
+                var job = _context.JobPosts.Where(job => job.postID == request.jobID).FirstOrDefault();
+                var location = _context.JobLocations.Where(l => l.name == request.location.name).FirstOrDefault();
+
+
+                if (location == null)
+                {
+                    location = new JobLocation
+                    {
+                        name = request.location.name,
+                        longitude = request.location.longitude,
+                        latitude = request.location.latitude,
+                    };
+                    _context.JobLocations.Add(location);
+                    await _context.SaveChangesAsync();
+                    //Add
+                }
+                int locationID = location.locationID;
+                // If job doesn't exist -- return bad request-- shouldn't be possible otherwise
+                if (job == null)
+                {
+                    return BadRequest("No job to update");
+                }
+                // if does exist then update
+                var qualification = _context.JobQualifications.Where(jq => jq.qualID == job.qualificationID).FirstOrDefault();
+                if (qualification != null)
+                {
+                    qualification.Skills = request.qualification.Skills;
+                    qualification.MinimumExperience = request.qualification.MinimumExperience;
+                    qualification.EducationLevel = request.qualification.EducationLevel;
+                    qualification.MaximumExperience = request.qualification.MaximumExperience;
+                    _context.JobQualifications.Update(qualification);
+                }
+                // Shouldn't need to change recruiter id or company id
+                job.title = request.title;
+                job.description = request.description;
+                job.minimumSalary = request.minimumSalary;
+                job.postDate = request.postDate;
+                job.endDate = request.endDate;
+                job.type = request.type;
+                job.benefits = request.benefits;
+                job.bonus = request.bonus;
+                job.perks = request.perks;
+                job.paymentType = request.paymentType;
+                job.link = request.link;
+                job.locationID = locationID;
+                _context.JobPosts.Update(job);
+                await _context.SaveChangesAsync();
+
+                // Could sent something that states the job description changed or not
+                if (!string.IsNullOrEmpty(request.description))
+                {
+                    StringBuilder sb = new StringBuilder(request.description);
+                    sb.Append(" ");
+                    sb.Append(request.qualification.Skills);
+                    sb.Append(" ");
+                    sb.Append(request.qualification.EducationLevel);
+                    string combine = sb.ToString();
+                    await _vector.AddToJobVector(combine, job.postID);
+                }
+
+                return Ok("Succesful Updating Job");
+
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                    Console.WriteLine($"Inner Exception StackTrace: {ex.InnerException.StackTrace}");
+                }
+                return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
+
+
+            }
+
+        }
+
 
         [HttpPost("filter")]
         public async Task<IActionResult> FilterJobs([FromBody] PostFilterRequest request)

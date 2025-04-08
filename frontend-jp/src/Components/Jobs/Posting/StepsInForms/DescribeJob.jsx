@@ -94,7 +94,6 @@ export default function DescribeJob({
     if (jobDescriptionData.type) {
       for (let option of employementTypeOptions) {
         const label = option.label;
-        // console.log("Type Label: ", option.label);
         if (
           label.toLowerCase().includes(jobDescriptionData.type.toLowerCase())
         ) {

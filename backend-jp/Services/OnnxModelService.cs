@@ -46,19 +46,39 @@ namespace JobPreppersDemo.Services
             string chunk = string.Join(" ", words.Skip(i).Take(maxWords));
             sentenceChunks.Add(chunk);
         }
+        Console.WriteLine("Pass the chunking ");
+        int count = 0;
 
         var inputIds = new List<long[]>();
         var attentionMasks = new List<long[]>();
         var tokenTypeIds = new List<long[]>();
         foreach (var chunk in sentenceChunks)
         {
+
+            if (string.IsNullOrWhiteSpace(chunk)) continue;
+
             var encoded = _tokenizer.Encode(384, chunk);
+            if (encoded.Count == 0) continue;
 
 
             inputIds.Add(encoded.Select(t => t.InputIds).ToArray());
             attentionMasks.Add(encoded.Select(t => t.AttentionMask).ToArray());
             tokenTypeIds.Add(encoded.Select(t => t.TokenTypeIds).ToArray());
+
+            count++;
+            if (count > 10) break;
         }
+
+        Console.WriteLine("Pass the encoding ");
+
+
+
+        if (inputIds.Count == 0 || inputIds[0].Length == 0)
+        {
+            Console.WriteLine("inputIds is empty or invalid.");
+            throw new ArgumentException("Tokenized input is empty. Check the input sentence or tokenizer.");
+        }
+
 
         Console.WriteLine("Encoded Finished");
         // Extract token IDs, attention mask, and token type IDs

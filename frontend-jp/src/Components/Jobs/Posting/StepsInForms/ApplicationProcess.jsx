@@ -103,7 +103,7 @@ export default function ApplicationProcess() {
             </div>
           </div>
 
-          <div className={styles.inputField}>
+          {/* <div className={styles.inputField}>
             <h2>Number of Hires</h2>
             <TextField
               id="hires"
@@ -112,7 +112,7 @@ export default function ApplicationProcess() {
               {...register("numberOfHires", { valueAsNumber: true })}
             />
             {errorMessage(errors.numberOfHires)}
-          </div>
+          </div> */}
 
           {/* <div>
         <ToggleButtonForm
@@ -136,6 +136,8 @@ export default function ApplicationProcess() {
             <Fragment>
               <h2>Required Documents</h2> */}
           <div className={styles.inputField}>
+            <h2>Application Link</h2>
+
             <InputLabel htmlFor="applyLink"> Enter External Link</InputLabel>
             <Input
               idlabel="applyLink"

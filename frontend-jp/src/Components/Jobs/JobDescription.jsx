@@ -51,7 +51,7 @@ function JobDescription({ setDrawerOpen, jobs, setJobs }) {
     const fetchBookmarkedJobs = async () => {
       try {
         const res = await fetch(
-          apiURL + `/api/set/getBookmark/?userID=${user.userID}`,
+          apiURL + `/api/Bookmark/getBookmark/?userID=${user.userID}`,
           { credentials: "include" }
         );
 
@@ -126,6 +126,7 @@ function JobDescription({ setDrawerOpen, jobs, setJobs }) {
       console.error("Error Deleting Job:", error);
     },
   });
+
   return (
     <>
       {console.log(jobs)}
