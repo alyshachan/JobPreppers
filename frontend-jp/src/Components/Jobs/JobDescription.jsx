@@ -131,120 +131,122 @@ function JobDescription({ setDrawerOpen, jobs, setJobs }) {
     <>
       {console.log(jobs)}
       {jobs.map((job, index) => (
-        <Card key={job.jobID} className={styles.mainCard}>
-          <Box className="flex-row w-2/3 max-h-full">
-            <CardHeader
-              avatar={
-                <Avatar src={userPicture(job)} aria-label="Company Picture">
-                  {job.company[0]}
-                </Avatar>
-              }
-              title={job.title}
-              subheader={job.company}
-            />
-            <CardContent>
-              <Box className={styles.cardIconDetails}>
-                <Stack direction="column" spacing={2}>
-                  {job.maximumSalary == null ? (
-                    <Box className={styles.descriptionBox}>
-                      <PaidIcon />
-                      <Typography
-                        variant="body"
-                        className={styles.descriptionText}
-                      >
-                        ${job.minimumSalary}
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <Box className={styles.descriptionBox}>
-                      <PaidIcon />
-                      <Typography
-                        variant="body"
-                        className={styles.descriptionText}
-                      >
-                        ${job.minimumSalary} - ${job.maximumSalary}
-                      </Typography>
-                    </Box>
-                  )}
-                  <Box className={styles.descriptionBox}>
-                    <AccessTimeFilledIcon />
-                    <Typography
-                      variant="body"
-                      className={styles.descriptionText}
-                    >
-                      {job.type}
-                    </Typography>
-                  </Box>
-                  <Box className={styles.descriptionBox}>
-                    <PlaceIcon />
-                    <Typography
-                      variant="body"
-                      className={styles.descriptionText}
-                    >
-                      {job.location}
-                    </Typography>
-                  </Box>
-                </Stack>
-              </Box>
-            </CardContent>
-
-            <CardActions>
-              <Box className={styles.descriptionFooter}>
-                <Typography variant="body" className={styles.descriptionText}>
-                  Apply by {new Date(job.endDate).toLocaleDateString()}
-                </Typography>
-                <button
-                  onClick={() => handleOpenDrawer(job)}
-                  variant="contained"
-                  className="lightButton"
-                >
-                  Learn More
-                </button>
-              </Box>
-            </CardActions>
-          </Box>
-          <Box className="flex-col p-2 justify-center w-1/3 h-full">
-            <div className="flex justify-end">
-              <Bookmark
-                jobID={job.jobID}
-                setBookmarkedJobs={setBookmarkedJobs}
-                bookmarkedJobs={bookmarkedJobs}
+        <Card key={job.jobID} className={styles.card}>
+          <Box className="flex w-full">
+            <Box className="flex-row w-2/3 max-h-full border-r-2">
+              <CardHeader
+                avatar={
+                  <Avatar src={userPicture(job)} aria-label="Company Picture">
+                    {job.company[0]}
+                  </Avatar>
+                }
+                title={job.title}
+                subheader={job.company}
               />
-              <IconButton
-                aria-label="highlight-off "
-                className="p-0 m-0"
-                onClick={() => deleteMutation(job)}
-              >
-                <HighlightOffIcon />
-              </IconButton>
-            </div>
-            <CircularProgressbar
-              value={job.score}
-              text={`${job.score}%`}
-              styles={buildStyles({
-                // Rotation of path and trail, in number of turns (0-1)
-                rotation: 0.25,
+              <CardContent>
+                <Box className={styles.cardIconDetails}>
+                  <Stack direction="column" spacing={2}>
+                    {job.maximumSalary == null ? (
+                      <Box className={styles.descriptionBox}>
+                        <PaidIcon />
+                        <Typography
+                          variant="body"
+                          className={styles.descriptionText}
+                        >
+                          ${job.minimumSalary}
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <Box className={styles.descriptionBox}>
+                        <PaidIcon />
+                        <Typography
+                          variant="body"
+                          className={styles.descriptionText}
+                        >
+                          ${job.minimumSalary} - ${job.maximumSalary}
+                        </Typography>
+                      </Box>
+                    )}
+                    <Box className={styles.descriptionBox}>
+                      <AccessTimeFilledIcon />
+                      <Typography
+                        variant="body"
+                        className={styles.descriptionText}
+                      >
+                        {job.type}
+                      </Typography>
+                    </Box>
+                    <Box className={styles.descriptionBox}>
+                      <PlaceIcon />
+                      <Typography
+                        variant="body"
+                        className={styles.descriptionText}
+                      >
+                        {job.location}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Box>
+              </CardContent>
+            </Box>
+            <Box className="flex-col p-2 justify-center w-1/3 h-full">
+              <div className="flex justify-end">
+                <Bookmark
+                  jobID={job.jobID}
+                  setBookmarkedJobs={setBookmarkedJobs}
+                  bookmarkedJobs={bookmarkedJobs}
+                />
+                <IconButton
+                  aria-label="highlight-off "
+                  className="p-0 m-0"
+                  onClick={() => deleteMutation(job)}
+                >
+                  <HighlightOffIcon />
+                </IconButton>
+              </div>
+              <CircularProgressbar
+                value={job.score}
+                text={`${job.score}%`}
+                styles={buildStyles({
+                  // Rotation of path and trail, in number of turns (0-1)
+                  rotation: 0.25,
 
-                // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
-                strokeLinecap: "butt",
+                  // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+                  strokeLinecap: "butt",
 
-                // Text size
-                textSize: "16px",
+                  // Text size
+                  textSize: "16px",
 
-                // How long animation takes to go from one percentage to another, in seconds
-                pathTransitionDuration: 0.5,
+                  // How long animation takes to go from one percentage to another, in seconds
+                  pathTransitionDuration: 0.5,
 
-                // Can specify path transition in more detail, or remove it entirely
-                // pathTransition: 'none',
+                  // Can specify path transition in more detail, or remove it entirely
+                  // pathTransition: 'none',
 
-                // Colors
-                pathColor: `rgba(62, 152, 199, ${job.score / 100})`,
-                textColor: "#f88",
-                trailColor: "#d6d6d6",
-                backgroundColor: "#3e98c7",
-              })}
-            />
+                  // Colors
+                  pathColor: `rgba(62, 152, 199, ${job.score / 100})`,
+                  textColor: "#f88",
+                  trailColor: "#d6d6d6",
+                  backgroundColor: "#3e98c7",
+                })}
+              />
+            </Box>
           </Box>
+
+          <CardActions className="flex content-between ">
+            <Box className={styles.descriptionFooter}>
+              <Typography variant="body" className={styles.descriptionText}>
+                Apply by {new Date(job.endDate).toLocaleDateString()}
+              </Typography>
+              <button
+                onClick={() => handleOpenDrawer(job)}
+                variant="contained"
+                className="lightButton"
+              >
+                Learn More
+              </button>
+            </Box>
+          </CardActions>
         </Card>
       ))}
 

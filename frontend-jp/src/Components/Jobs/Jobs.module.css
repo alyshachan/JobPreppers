@@ -54,7 +54,7 @@
   margin: 1rem;
   border-radius: 15px !important;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .cardIconDetails {

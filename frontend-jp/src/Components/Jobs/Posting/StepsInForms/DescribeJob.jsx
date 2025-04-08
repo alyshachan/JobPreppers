@@ -1,5 +1,5 @@
 import { useFormContext } from "react-hook-form";
-import { DialogContent, TextField, IconButton } from "@mui/material";
+import { DialogContent, TextField } from "@mui/material";
 import AutoCompleteForm from "../Helper/AutoCompleteForm";
 import styles from "../Posting.module.css";
 import { errorMessage } from "../Helper/ErrorMessage";
@@ -82,10 +82,6 @@ export default function DescribeJob({
 
   useEffect(() => {
     console.log("Set Job Description Value: ", jobDescriptionData);
-
-    // if (jobDescriptionData.companyName) {
-    //   setValue("company", jobDescriptionData.companyName);
-    // }
 
     if (jobDescriptionData.title) {
       setValue("title", jobDescriptionData.title);

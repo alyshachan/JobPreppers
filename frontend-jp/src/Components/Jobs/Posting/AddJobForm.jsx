@@ -76,7 +76,6 @@ export default function AddJobForm({ setJobs, companyName, jobToEdit }) {
   } = useJobForm({ setJobs, companyName, jobToEdit, setOpen });
 
   const handleClickOpen = () => {
-    console.log("Job To Edit: ", jobToEdit);
     setOpen(true);
     if (jobToEdit) {
       setActiveStep(1);
