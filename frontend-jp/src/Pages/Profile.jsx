@@ -7,7 +7,10 @@ import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png";
-
+import AddEducationDialog from "../Components/Profile/AddEducationDialog";
+import AddSkillDialog from "../Components/Profile/AddSkillDialog";
+import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
+import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 import EditIcon from "@mui/icons-material/Edit";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -255,7 +258,9 @@ function Profile() {
                 <a href="/ParseResume">
                   <button className={styles.parseResume}>
                     Parse resume to Profile
-                    <p className="text-white !text-base">Using this parse option will clear your current profile</p>
+                    <p className="text-white !text-base">
+                      Using this parse option will clear your current profile
+                    </p>
                   </button>
                 </a>
               )}
@@ -330,6 +335,26 @@ function Profile() {
           )
         )}
       </div>
+      <AddEducationDialog
+        open={openDialog.education}
+        onClose={() => toggleDialog("education", false)}
+        onAdd={fetchEducation}
+      />
+      <AddSkillDialog
+        open={openDialog.skill}
+        onClose={() => toggleDialog("skill", false)}
+        onAdd={fetchSkills}
+      />
+      <AddExperienceDialog
+        open={openDialog.experience}
+        onClose={() => toggleDialog("experience", false)}
+        onAdd={fetchExperience}
+      />
+      <AddProjectDialog
+        open={openDialog.project}
+        onClose={() => toggleDialog("project", false)}
+        onAdd={fetchProject}
+      />
     </>
   );
 }

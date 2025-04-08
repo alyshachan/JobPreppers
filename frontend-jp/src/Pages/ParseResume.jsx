@@ -18,6 +18,8 @@ import WorkIcon from "@mui/icons-material/Work";
 import BusinessIcon from "@mui/icons-material/Business";
 import PlaceIcon from "@mui/icons-material/Place";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useNavigate } from "react-router-dom";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 const monthsOfYear = [
@@ -36,7 +38,8 @@ const monthsOfYear = [
 ];
 
 function ParseResume() {
-  const { user } = useAuth(); // Get the authenticated user
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const [parsedData, setParsedData] = useState(null);
@@ -56,7 +59,12 @@ function ParseResume() {
   };
 
   const parseMonthYear = (text) => {
-    if (!text || text.toLowerCase().includes("present")) return new Date();
+    if (!text) return "";
+    if (
+      text.toLowerCase().includes("present") ||
+      text.toLowerCase().includes("current")
+    )
+      return new Date();
     const date = new Date(text);
     if (isNaN(date.getTime())) return "";
     return moment(date).add(1, "days").format("YYYY-MM-DD");
@@ -212,6 +220,117 @@ function ParseResume() {
     }
   };
 
+  const uploadResumeToProfile = async () => {
+    const confirm = window.confirm(
+      "Uploading this resume will clear your current profile. Do you want to continue?"
+    );
+
+    if (!confirm) return;
+
+    try {
+      const deleteResponse = await fetch(
+        apiURL + `/api/Users/DeleteAllUserProfile/${user.userID}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!deleteResponse.ok) {
+        const errText = await deleteResponse.text();
+        window.alert("Failed to delete profile details");
+        setMessage(`Failed to clear profile: ${errText}`);
+        return;
+      }
+
+      // Loop through resumeFields to add to profile
+      for (const edu of resumeFields.education) {
+        const parsedStart = parseMonthYear(edu.start);
+        const parsedEnd = parseMonthYear(edu.end);
+        await fetch(apiURL + `/api/UserEducation/CreateEducation`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userID: user.userID,
+            schoolName: edu.school,
+            degreeName: edu.degree,
+            studyName: edu.study,
+            start_date:
+              !parsedStart ||
+              parsedStart.toDateString === new Date().toDateString
+                ? null
+                : moment(parsedStart).format("YYYY-MM-DD"),
+            end_date:
+              !parsedEnd || parsedEnd.toDateString === new Date().toDateString
+                ? null
+                : moment(parsedEnd).format("YYYY-MM-DD"),
+            description: edu.description || "",
+          }),
+        });
+      }
+
+      for (const skill of resumeFields.skills) {
+        const skillNames = (skill.skillName || "")
+          .split(",")
+          .map((name) => name.trim())
+          .filter(Boolean);
+
+        for (const name of skillNames) {
+          await fetch(apiURL + `/api/UserSkills/AddSkillToUser`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              UserID: user.userID,
+              Category: skill.category || "Skills",
+              SkillName: name,
+            }),
+          });
+        }
+      }
+
+      for (const exp of resumeFields.experience) {
+        const parsedStart = parseMonthYear(exp.start);
+        const parsedEnd = parseMonthYear(exp.end);
+        await fetch(apiURL + `/api/UserExperience/CreateExperience`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userID: user.userID,
+            jobTitle: exp.jobTitle,
+            workName: exp.companyName,
+            location: exp.location,
+            start_date:
+              !parsedStart ||
+              parsedStart.toDateString === new Date().toDateString
+                ? null
+                : moment(parsedStart).format("YYYY-MM-DD"),
+            end_date:
+              !parsedEnd || parsedEnd.toDateString === new Date().toDateString
+                ? null
+                : moment(parsedEnd).format("YYYY-MM-DD"),
+            description: exp.description || "",
+          }),
+        });
+      }
+
+      for (const project of resumeFields.projects) {
+        await fetch(apiURL + `/api/UserProject/CreateProject`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userID: user.userID,
+            projectTitle: project.title,
+            description: project.description || "",
+          }),
+        });
+      }
+
+      setMessage("Profile successfully updated from resume.");
+      navigate("/Profile");
+    } catch (error) {
+      setMessage(`Error: ${error.message}`);
+    }
+  };
+
   return (
     <div className="content">
       <h1>Upload and Parse Your Resume</h1>
@@ -238,6 +357,7 @@ function ParseResume() {
       {parsedData && resumeFields && (
         <>
           <div className="panel">
+            {/* General Profile Info */}
             <div className="flex justify-evenly">
               <TextField
                 type="text"
@@ -285,6 +405,7 @@ function ParseResume() {
               />
             </div>
 
+            {/* Education Inputs */}
             {resumeFields.education.length > 0 ? <h1>Education</h1> : ""}
             {resumeFields.education.map((edu, index) => (
               <div>
@@ -350,6 +471,7 @@ function ParseResume() {
                     </div>
                   </div>
 
+                  {/* Education Frontend Preview*/}
                   <div className={styles.dialogContentRight}>
                     <div key={index}>
                       <div className={profileStyles.education}>
@@ -405,6 +527,8 @@ function ParseResume() {
                 )}
               </div>
             ))}
+
+            {/* Skill Inputs */}
             {resumeFields.skills.length > 0 ? (
               <>
                 <h1>Skills</h1>
@@ -472,6 +596,7 @@ function ParseResume() {
                     </div>
                   </div>
 
+                  {/* Skills Frontend Preview*/}
                   <div className={styles.dialogContentRight}>
                     <div
                       className={`${styles.skills} ${styles.skillsNarrow} place-items-center`}
@@ -489,6 +614,7 @@ function ParseResume() {
               );
             })}
 
+            {/* Experience Inputs */}
             {resumeFields.experience.length > 0 ? <h1>Experience</h1> : ""}
             {resumeFields.experience.map((exp, index) => (
               <div>
@@ -553,6 +679,7 @@ function ParseResume() {
                     </div>
                   </div>
 
+                  {/* Experience Frontend Preview*/}
                   <div className={styles.dialogContentRight}>
                     <div className={profileStyles.sectionPictureContent}>
                       <div className={profileStyles.experience}>
@@ -624,6 +751,7 @@ function ParseResume() {
               </div>
             ))}
 
+            {/* Project Inputs */}
             {resumeFields.projects.length > 0 ? <h1>Projects</h1> : ""}
             {resumeFields.projects.map((proj, index) => (
               <div>
@@ -671,6 +799,7 @@ function ParseResume() {
                     </div>
                   </div>
 
+                  {/* Project Frontend Preview*/}
                   <div className={styles.dialogContentRight}>
                     <div key={index}>
                       <div className={profileStyles.project}>
@@ -691,6 +820,13 @@ function ParseResume() {
                 )}
               </div>
             ))}
+
+            <div className="flex justify-end">
+              <button onClick={uploadResumeToProfile}>
+                Upload to Profile
+                <ArrowForwardIcon className="mt-1 ml-1" />
+              </button>
+            </div>
           </div>
         </>
       )}
