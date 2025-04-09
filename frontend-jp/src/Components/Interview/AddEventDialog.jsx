@@ -125,21 +125,8 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
 
           <div className={styles.eventFormRight}>
             {/* Right-side content */}
-            <div className={styles.input}>
-              <PermIdentityOutlinedIcon className={styles.icon} />
-              <div className={styles.inputField}>
-                Participants
-                <TextField
-                  placeholder="Enter Participant Name(s)"
-                  className="w-full"
-                  value={eventParticipants}
-                  onChange={(e) => setEventParticipants(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className={styles.input}>
-              <PermIdentityOutlinedIcon className={`${styles.icon} mt-[-100px]`} />
+            <div className={`${styles.input} !justify-start !items-start`}>
+              <PermIdentityOutlinedIcon className={`${styles.icon} mt-[20px]`} />
               <div className={styles.inputField}>
                 Participants
                 <SearchParticipants />

@@ -68,7 +68,7 @@ function SearchParticipants() {
 
   return (
     <>
-      <div className="relative w-full">
+      <div className="relative w-full z-10">
         <TextField
           type="text"
           placeholder="Enter Participant Name(s)"
@@ -103,28 +103,28 @@ function SearchParticipants() {
             ))}
           </div>
         )}
-        {/* Chip display */}
-        <Box className="mb-2 flex flex-wrap gap-1 w-full">
-          {participants.map((user) => (
-            <Chip
-              key={user.userId}
-              label={`${user.first_name} ${user.last_name ?? ""}`}
-              onDelete={() => handleDeleteParticipant(user.userId)}
-              avatar={
-                <img
-                  src={
-                    user.profile_pic
-                      ? `data:image/png;base64,${user.profile_pic}`
-                      : defaultProfilePicture
-                  }
-                  alt={`${user.first_name} ${user.last_name ?? ""}`}
-                  style={{ width: 24, height: 24, borderRadius: "50%" }}
-                />
-              }
-            />
-          ))}
-        </Box>
       </div>
+      {/* Chip display */}
+      <Box className="mb-2 flex flex-wrap gap-1 w-full max-h-16 z-0 overflow-y-scroll">
+        {participants.map((user) => (
+          <Chip
+            key={user.userId}
+            label={`${user.first_name} ${user.last_name ?? ""}`}
+            onDelete={() => handleDeleteParticipant(user.userId)}
+            avatar={
+              <img
+                src={
+                  user.profile_pic
+                    ? `data:image/png;base64,${user.profile_pic}`
+                    : defaultProfilePicture
+                }
+                alt={`${user.first_name} ${user.last_name ?? ""}`}
+                style={{ width: 24, height: 24, borderRadius: "50%" }}
+              />
+            }
+          />
+        ))}
+      </Box>
     </>
   );
 }
