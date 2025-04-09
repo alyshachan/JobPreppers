@@ -15,10 +15,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import styles from "../Components/Profile/Profile.module.css";
+import { useParams } from "react-router-dom";
 import "../Components/JobPreppers.css";
 
 function Profile() {
-  const { user, setAuthData } = useAuth(); // custom hook for authprovider
+  //const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const { initialUser, setIntialUser } = useState(null);
   const [edit, setEdit] = useState(() => {
     return localStorage.getItem("editMode") === "true";
@@ -36,6 +37,10 @@ function Profile() {
   });
   const [message, setMessage] = useState("");
   const [receiverID, setReceiverID] = useState("");
+
+  const { currentUser } = useAuth();
+  const { username } = useParams();
+  const [user, setUser] = useState(null);
   const apiURL = process.env.REACT_APP_JP_API_URL;
 
   const toggleDialog = (type, state) => {
@@ -47,23 +52,53 @@ function Profile() {
   useEffect(() => {
     localStorage.setItem("editMode", edit);
   }, [edit]);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        console.log(username)
+        const response = await fetch(
+          apiURL + `/api/Users/GetUserFromUsername/${username}`,
+          { credentials: "include" }
+        );
+  
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Fetched user:", data);
+          setUser(data);
+          setFriendCount(0);
+          setEducationDict([]);
+          setSkillsDict({});
+          setExperienceDict([]);
+          setProjectDict([]); 
+        } else {
+          throw new Error("Failed to fetch user");
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+  
+    fetchUser(); 
+  }, [username, apiURL]);
+    
 
-  const fetchData = async (endpoint, setter, transform) => {
-    try {
-      const response = await fetch(apiURL + `/api/${endpoint}/${user.userID}`, {
-        credentials: "include",
-      });
-      if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
-      const data = await response.json();
-      setter((prevState) =>
-        JSON.stringify(prevState) !== JSON.stringify(data)
-          ? transform(data)
-          : prevState
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    const fetchData = async (endpoint, setter, transform) => {
+      try {
+        const response = await fetch(
+          apiURL + `/api/${endpoint}/${user.userID}`,
+          { credentials: "include" }
+        );
+        if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
+        const data = await response.json();
+        setter((prevState) =>
+          JSON.stringify(prevState) !== JSON.stringify(data)
+            ? transform(data)
+            : prevState
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
   const fetchEducation = async () => {
     fetchData("UserEducation", setEducationDict, (data) =>
@@ -172,27 +207,32 @@ function Profile() {
     fetchProject();
   }, [user]);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch(apiURL + `/api/GetUser/${user.userID}`, {
-          credentials: "include", // include cookies
-        });
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+       
+       
+  //       const res = await fetch(
+  //         apiURL + `/api/GetUser/${user.userID}`,
+  //         {
+  //           credentials: "include", // include cookies
+  //         }
+  //       );
 
-        if (res.ok) {
-          const data = await res.json();
-          console.log("GetUser: ", data);
-          setIntialUser(data);
-        } else {
-          console.error("Failed to fetch User");
-        }
-      } catch (error) {
-        console.error("Error fetching User:", error);
-      }
-    };
+  //       if (res.ok) {
+  //         const data = await res.json();
+  //         console.log("GetUser: ", data);
+  //         setIntialUser(data);
+  //       } else {
+  //         console.error("Failed to fetch User");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching User:", error);
+  //     }
+  //   };
 
-    fetchUser();
-  }, [user]);
+  //   fetchUser();
+  // }, [user]);
 
   if (user == null) {
     return <div>Loading...</div>;
