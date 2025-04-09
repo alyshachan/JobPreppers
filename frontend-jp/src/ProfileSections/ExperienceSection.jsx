@@ -4,7 +4,7 @@ import styles from "../Components/Profile/ProfileSections.module.css";
 import "../Components/JobPreppers.css";
 import { IconButton } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import {useState } from "react";
+import { useState } from "react";
 import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
 
 function ExperienceSection({ experienceDict, edit, onAdd }) {
@@ -13,12 +13,12 @@ function ExperienceSection({ experienceDict, edit, onAdd }) {
 
   const handleOpenExperienceDialog = (experience = null) => {
     setOpenExperienceDialog(true);
-    setSelectedExperience(experience ? { ...experience} : null)
+    setSelectedExperience(experience ? { ...experience } : null);
   };
 
   const handleCloseExperienceDialog = () => {
     setOpenExperienceDialog(false);
-    setSelectedExperience(null)
+    setSelectedExperience(null);
   };
 
   const displayedItems =
@@ -94,7 +94,13 @@ function ExperienceSection({ experienceDict, edit, onAdd }) {
 
                   <div className={styles.experienceContentLeft}>
                     <p className="title">{experience.job_title}</p>
-                    <p className="subtitle">{experience.work_name}</p>
+                    {experience.location ? (
+                      <p className="subtitle">
+                        {experience.work_name}, {experience.location}
+                      </p>
+                    ) : (
+                      <p className="subtitle">{experience.work_name}</p>
+                    )}
                   </div>
 
                   <div className={styles.experienceContentRight}>
@@ -126,7 +132,9 @@ function ExperienceSection({ experienceDict, edit, onAdd }) {
                   </div>
                   {edit && (
                     <div className="ml-5">
-                      <IconButton  onClick={() => handleOpenExperienceDialog(experience)}>
+                      <IconButton
+                        onClick={() => handleOpenExperienceDialog(experience)}
+                      >
                         <EditIcon />
                       </IconButton>
                     </div>

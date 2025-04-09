@@ -365,6 +365,48 @@ namespace JobPreppersProto.Controllers
             });
         }
 
+        [HttpDelete("DeleteAllUserProfile/{userID}")]
+        public async Task<IActionResult> DeleteAllUserProfile(int userID)
+        {
+            try
+            {
+                var userExists = await _context.Users.AnyAsync(u => u.userID == userID);
+                if (!userExists)
+                {
+                    return NotFound("User not found");
+                }
+
+                var userEducations = await _context.UserEducations
+                    .Where(ue => ue.userID == userID)
+                    .ToListAsync();
+                var userSkills = await _context.UserSkills
+                    .Where(us => us.userID == userID)
+                    .ToListAsync();
+                var userExperiences = await _context.UserExperiences
+                    .Where(ue => ue.userID == userID)
+                    .ToListAsync();
+                var userProjects = await _context.UserProjects
+                    .Where(ue => ue.userID == userID)
+                    .ToListAsync();
+
+                if (userEducations.Any())
+                    _context.UserEducations.RemoveRange(userEducations);
+                if (userSkills.Any())
+                    _context.UserSkills.RemoveRange(userSkills);
+                if (userExperiences.Any())
+                    _context.UserExperiences.RemoveRange(userExperiences);
+                if (userProjects.Any())
+                    _context.UserProjects.RemoveRange(userProjects);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "All records deleted successfully for the user." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         // Define the request model
         public class LoginRequest
         {
@@ -381,10 +423,11 @@ namespace JobPreppersProto.Controllers
             public string Password { get; set; }
         }
 
-        public class DetailsRequest{
-            public int userID {get; set;}
-            public string title {get; set;}
-            public string location {get; set;}
+        public class DetailsRequest
+        {
+            public int userID { get; set; }
+            public string title { get; set; }
+            public string location { get; set; }
         }
 
     }

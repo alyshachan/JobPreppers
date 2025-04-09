@@ -13,6 +13,7 @@ using System.Text;
 using Qdrant.Client;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
+using JobPreppersDemo.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -152,7 +153,8 @@ builder.Services.AddSingleton<OnnxModelService>(provider =>
 });
 
 builder.Services.AddSingleton<JobsVectorDB>();
-
+builder.Services.AddSingleton<DocumentIntelligenceService>();
+builder.Services.AddSingleton<BlobStorageService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

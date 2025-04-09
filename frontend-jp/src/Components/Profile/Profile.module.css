@@ -56,6 +56,23 @@
   color: #757575;
 }
 
+.parseResume {
+  background-color: #4ba173;
+  border-radius: 15px;
+  width: 70%;
+  display: flex;
+  box-sizing: border-box;
+  padding: 30px 50px;
+  margin: 20px;
+  flex-direction: column;
+  align-items: center;
+
+  border-width: 4px;
+  font-weight: bold;
+  font-size: xx-large;
+  color: white;
+}
+
 .addNewSection {
   background-color: white;
   border-radius: 15px;
@@ -75,7 +92,9 @@
   color: #4ba173;
 }
 
-.highlightedInfo .addNewSection {
+.highlightedInfo .addNewSection,
+.highlightedInfo .parseResume
+{
   width: 100%;
 }
 

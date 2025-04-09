@@ -52,10 +52,8 @@ function AddSkillDialog({ open, onClose, onAdd, skill }) {
     e.preventDefault(); // Prevent default form submission
     onClose();
     try {
-      const url = skill.userSkillID
-        ? `EditSkill/${skill.userSkillID}`
-        : "AddSkillToUser";
-      const method = skill ? "PUT" : "POST";
+      const url = skill && skill.userSkillID ? `EditSkill/${skill.userSkillID}` : "AddSkillToUser";
+      const method = skill && skill.userSkillID ? "PUT" : "POST";
 
       const response = await fetch(apiURL + `/api/UserSkills/${url}`, {
         method: method,
