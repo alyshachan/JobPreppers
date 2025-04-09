@@ -25,7 +25,7 @@ namespace JobPreppersDemo.Controllers
             var pendingRequests = await _context.Friends
                 .Where(f => f.friendID == userId && f.status == FriendStatus.Pending)
                 .Join(_context.Users,
-                      f => f.userID,  
+                      f => f.userID,
                       user => user.userID,
                       (f, user) => new
                       {
@@ -50,15 +50,15 @@ namespace JobPreppersDemo.Controllers
         {
             var friends = await _context.Friends
        .Where(f => (f.userID == userId || f.friendID == userId) && f.status == FriendStatus.Accepted)
-       .Select(f => f.userID == userId ? f.friendID : f.userID) 
+       .Select(f => f.userID == userId ? f.friendID : f.userID)
        .Join(_context.Users,
              friendId => friendId,
-             user => user.userID, 
+             user => user.userID,
              (friendId, user) => new
              {
                  Id = user.userID,
                  Username = user.username,
-                 Name = user.first_name + " " + user.last_name, 
+                 Name = user.first_name + " " + user.last_name,
                  Email = user.email,
                  ProfilePicture = user.profile_pic,
                  Title = user.title
@@ -75,14 +75,14 @@ namespace JobPreppersDemo.Controllers
         [HttpPost("FriendRequest")]
         public async Task<IActionResult> SendFriendRequest([FromBody] FriendRequestDto request)
         {
-            if(request.UserId == request.FriendId) 
+            if (request.UserId == request.FriendId)
             {
                 return BadRequest("Invalid Friend Request. Cannot request yourself");
             }
 
             var existingrequst = await _context.Friends.FirstOrDefaultAsync(f => (f.userID == request.UserId && f.friendID == request.FriendId) || (f.userID == request.FriendId && f.friendID == request.UserId));
 
-            if (existingrequst != null) 
+            if (existingrequst != null)
             {
                 return BadRequest("Invalid Friend Request. Friend request already sent or are already friends");
             }
@@ -132,11 +132,28 @@ namespace JobPreppersDemo.Controllers
 
             return Ok(new { Message = "Friend request rejected." });
         }
+        [HttpGet("GetFriendStatus")]
+        public async Task<IActionResult> GetFriendStatus([FromQuery] int userId, [FromQuery] int friendId)
+        {
+            if (userId == friendId)
+                return Ok("This is you");
+
+            var status = await _context.Friends.FirstOrDefaultAsync(f =>
+                (f.userID == userId && f.friendID == friendId) ||
+                (f.userID == friendId && f.friendID == userId));
+
+            if (status == null) return Ok("None");
+
+            if (status.status == FriendStatus.Accepted) return Ok("Friends");
+            if (status.status == FriendStatus.Pending) return Ok("Pending");
+
+            return Ok("None");
+        }
     }
     public class FriendRequestDto
     {
-        public int UserId { get; set; }    
-        public int FriendId { get; set; }  
+        public int UserId { get; set; }
+        public int FriendId { get; set; }
     }
     public static class FriendStatus
     {

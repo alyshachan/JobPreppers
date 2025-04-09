@@ -153,7 +153,7 @@ function NavBar() {
   const handleAcceptFriend = async (friendID) => {
     try {
       const response = await fetch(
-        apiURL + `/api/Friend/AcceptFriendRequest/${user.userID}`,
+        apiURL + `/api/Friend/AcceptFriendRequest`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -177,7 +177,7 @@ function NavBar() {
   const handleDeclineFriend = async (friendID) => {
     try {
       const response = await fetch(
-        apiURL + `/api/Friend/DenyFriendRequest/${user.userID}`,
+        apiURL + `/api/Friend/DenyFriendRequest`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

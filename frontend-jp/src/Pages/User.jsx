@@ -11,8 +11,9 @@ import { useParams } from "react-router-dom";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function User() {
+  const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const { username } = useParams();
-  const [user, setUser] = useState(null);
+  const [visitingUser, setUser] = useState(null);
   const { initialUser, setIntialUser } = useState(null);
   const [edit, setEdit] = useState(() => {
     return localStorage.getItem("editMode") === "true";
@@ -61,12 +62,19 @@ function User() {
   }, [username, apiURL]);
 
   useEffect(() => {
+    if (visitingUser && user && visitingUser.userID !== user.userID) {
+      setEdit(false);
+      localStorage.setItem("editMode", "false"); // keep localStorage in sync
+    }
+  }, [visitingUser, user]);
+
+  useEffect(() => {
     localStorage.setItem("editMode", edit);
   }, [edit]);
 
   const fetchData = async (endpoint, setter, transform) => {
     try {
-      const response = await fetch(apiURL + `/api/${endpoint}/${user.userID}`, {
+      const response = await fetch(apiURL + `/api/${endpoint}/${visitingUser.userID}`, {
         credentials: "include",
       });
       if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
@@ -154,18 +162,18 @@ function User() {
   };
 
   useEffect(() => {
-    if (!user) return;
+    if (!visitingUser) return;
 
     fetchEducation();
     fetchSkills();
     fetchExperience();
     fetchProject();
-  }, [user]);
+  }, [visitingUser]);
 
   const fetchFriendCount = async () => {
     try {
       const response = await fetch(
-        apiURL + `/api/Friend/GetFriends/${user.userID}`,
+        apiURL + `/api/Friend/GetFriends/${visitingUser.userID}`,
         {
           credentials: "include",
         }
@@ -191,7 +199,7 @@ function User() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch(apiURL + `/api/GetUser/${user.userID}`, {
+        const res = await fetch(apiURL + `/api/GetUser/${visitingUser.userID}`, {
           credentials: "include", // include cookies
         });
 
@@ -207,15 +215,15 @@ function User() {
     };
 
     fetchUser();
-  }, [user]);
+  }, [visitingUser]);
 
-  if (!user) return <div>Loading user...</div>;
+  if (!visitingUser) return <div>Loading user...</div>;
 
   return (
     <>
       <div className="panel !flex-row gap-[50px]">
         <ProfileDescription
-          visitingUser={user}
+          visitingUser={visitingUser}
           edit={edit}
           setEdit={setEdit}
           friendCount={friendCount}
@@ -227,7 +235,7 @@ function User() {
         experienceDict.length === 0 &&
         projectDict.length === 0 ? (
           <div className={styles.noProfileText}>
-            {user.first_name} {user.last_name} hasn't added to their profile yet
+            {visitingUser.first_name} {visitingUser.last_name} hasn't added to their profile yet
           </div>
         ) : (
           <div className={styles.highlightedInfo}>

@@ -7,52 +7,117 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import "../Components/JobPreppers.css";
+import BadgeIcon from "@mui/icons-material/Badge";
 import styles from "../Components/Profile/Profile.module.css";
+import Tooltip from "@mui/material/Tooltip";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 async function fetchCompanyStatus(userID) {
-  const res = await fetch(apiURL + `/api/Company/isCompany/?userID=${userID}`, {
-    credentials: "include",
-  });
-
-  if (!res.ok) {
+  const response = await fetch(
+    apiURL + `/api/Company/isCompany/?userID=${userID}`,
+    {
+      credentials: "include",
+    }
+  );
+  if (response.ok) {
+    let result = await response.json();
+    return result.isCompany;
+  } else {
     throw new Error("Failed to fetch company status");
   }
-  let result = await res.json();
-  return result.isCompany;
 }
 
 async function fetchRecruiterStatus(userID) {
-  const res = await fetch(apiURL + `/api/Recruiter/isRecruiter/?userID=${userID}`, {
-    credentials: "include",
-  });
+  const response = await fetch(
+    apiURL + `/api/Recruiter/isRecruiter/?userID=${userID}`,
+    {
+      credentials: "include",
+    }
+  );
 
-  if (!res.ok) {
+  if (response.ok) {
+    let result = await response.json();
+    return result.isRecruiter;
+  } else {
     throw new Error("Failed to fetch recruiter status");
   }
-  let result = await res.json();
-  return result.isRecruiter;
+}
+
+async function fetchFriendStatus(userId, friendId) {
+  const response = await fetch(
+    apiURL +
+      `/api/Friend/GetFriendStatus?userId=${userId}&friendId=${friendId}`,
+    { credentials: "include" }
+  );
+  if (response.ok) return await response.text();
+  else throw new Error("Failed to fetch friend status");
 }
 
 function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
+  const [friendStatus, setFriendStatus] = useState("None");
 
-  const {
-    data: isCompany,
-  } = useQuery({
+  useEffect(() => {
+    if (
+      user?.userID &&
+      visitingUser?.userID &&
+      user.userID !== visitingUser.userID
+    ) {
+      fetchFriendStatus(user.userID, visitingUser.userID)
+        .then(setFriendStatus)
+        .catch(console.error);
+    }
+  }, [user, visitingUser]);
+
+  const handleSendFriendRequest = async () => {
+    try {
+      const response = await fetch(apiURL + `/api/Friend/FriendRequest`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.userID,
+          friendId: visitingUser.userID,
+        }),
+      });
+
+      if (response.ok) {
+        setFriendStatus("Pending");
+      } else {
+        const errMsg = await response.text();
+        console.error("Error sending request:", errMsg);
+      }
+    } catch (err) {
+      console.error("Friend request error:", err);
+    }
+  };
+
+  const { data: isRecruiter } = useQuery({
+    queryKey: ["isRecruiter", user?.userID],
+    queryFn: () => fetchRecruiterStatus(user.userID),
+    enabled: !!user?.userID,
+  });
+
+  const { data: isCompany } = useQuery({
     queryKey: ["isCompany", user?.userID],
     queryFn: () => fetchCompanyStatus(user.userID),
-    enabled: !!user?.userID, // Only run if userID exists
+    enabled: !!user?.userID,
   });
 
-  const {
-    data: isVisitingRecruiter,
-  } = useQuery({
-    queryKey: ["isRecruiter", visitingUser?.userID],
+  const { data: isVisitingRecruiter } = useQuery({
+    queryKey: ["isVisitingRecruiter", visitingUser?.userID],
     queryFn: () => fetchRecruiterStatus(visitingUser.userID),
-    enabled: !!visitingUser?.userID, // Only run if userID exists
+    enabled: !!visitingUser?.userID, 
   });
 
+  const { data: isVisitingCompany } = useQuery({
+    queryKey: ["isVisitingCompany", visitingUser?.userID],
+    queryFn: () => fetchCompanyStatus(visitingUser.userID),
+    enabled: !!visitingUser?.userID,
+  });
 
   const userPic =
     visitingUser.profile_pic == null
@@ -65,6 +130,12 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
       <img className="profilePicture" alt="Profile Picture" src={userPic} />
       <p className={styles.name}>
         {visitingUser.first_name} {visitingUser.last_name}
+        {isRecruiter ||
+          (isVisitingRecruiter && (
+            <Tooltip title="Recruiter" placement="top" arrow>
+              <BadgeIcon className={styles.icon} />
+            </Tooltip>
+          ))}
       </p>
       <p>{visitingUser.title}</p>
       <p className="subtitle">{visitingUser.location}</p>
@@ -87,20 +158,47 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
             {edit ? "View Profile" : "Edit Profile"}
           </Button>
         ) : (
-          <Button variant="contained" startIcon={<AddCircleOutlineIcon />}>
-            Connect
-          </Button>
-        )}
-        {isCompany && isVisitingRecruiter && user.username != visitingUser.username && (
           <Button
-            className={styles.editProfileButton}
             variant="contained"
-            startIcon={edit ? <VisibilityIcon /> : <EditIcon />}
-            onClick={() => setEdit(!edit)}
+            startIcon={
+              friendStatus === "Friends" ? (
+                <PeopleAltIcon />
+              ) : (
+                <AddCircleOutlineIcon />
+              )
+            }
+            onClick={
+              friendStatus === "None" ? handleSendFriendRequest : undefined
+            }
+            disabled={friendStatus === "Pending"}
+            style={
+              friendStatus === "Friends"
+                ? {
+                    pointerEvents: "none",
+                    opacity: 1,
+                  }
+                : {}
+            }
           >
-            {edit ? "Add as Recruiter" : "Remove recruiter"}
+            {friendStatus === "Friends"
+              ? "Friends"
+              : friendStatus === "Pending"
+              ? "Pending"
+              : "Connect"}
           </Button>
         )}
+        {isCompany &&
+          !isVisitingCompany &&
+          !isVisitingRecruiter&&
+          user.username != visitingUser.username && (
+            <Button
+              className={styles.editProfileButton}
+              variant="contained"
+              startIcon={<BadgeIcon />}
+            >
+              Add Recruiter
+            </Button>
+          )}
       </div>
     </div>
   );
