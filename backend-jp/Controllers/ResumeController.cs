@@ -223,7 +223,7 @@ Additionally, recommend projects or skills the user can work on to align with th
                 new { role = "system", content = "You are a helpful assistant." },
                 new { role = "user", content = prompt }
             },
-                    max_tokens = 500 // Adjust token limit as needed
+                    max_tokens = 2000 // Adjust token limit as needed
                 };
 
                 var response = await httpClient.PostAsync(
