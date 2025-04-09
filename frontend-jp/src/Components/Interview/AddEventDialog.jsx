@@ -38,7 +38,7 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
   );
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [eventParticipants, setEventParticipants] = useState("");
+  const [eventParticipants, setEventParticipants] = useState([]);
   const [eventDetails, setEventDetails] = useState("");
 
   const isFormValid = eventName && eventDate;
@@ -50,7 +50,7 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
         date: new Date(eventDate),
         start: startTime,
         end: endTime,
-        participants: eventParticipants,
+        participants: eventParticipants.map((p) => p.userId).join(","),
         details: eventDetails,
       };
       onCreateEvent(newEvent);
@@ -129,7 +129,8 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
               <PermIdentityOutlinedIcon className={`${styles.icon} mt-[20px]`} />
               <div className={styles.inputField}>
                 Participants
-                <SearchParticipants />
+                <SearchParticipants   participants={eventParticipants}
+  setParticipants={setEventParticipants}/>
               </div>
             </div>
 

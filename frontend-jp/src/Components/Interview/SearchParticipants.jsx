@@ -4,12 +4,11 @@ import { TextField, Chip, Box } from "@mui/material";
 import defaultProfilePicture from "../defaultProfilePicture.png";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
-function SearchParticipants() {
+function SearchParticipants({participants, setParticipants}) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
-  const [participants, setParticipants] = useState([]);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
