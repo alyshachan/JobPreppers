@@ -83,8 +83,6 @@ function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
             };
             return updatedFilters;
           });
-
-          console.log("Got search address:", { latitude: lat, longitude: lon });
         } else {
           console.log("No results found for the location");
         }
@@ -99,6 +97,10 @@ function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
     if (jobName) {
       setJobName("");
     }
+    setFilters((prev) => ({
+      ...prev,
+      search_query: "",
+    }));
   };
 
   const clearLocation = (e) => {
@@ -132,6 +134,14 @@ function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
     checkRole();
   }, [user?.userID]);
 
+  const search = (input) => {
+    setJobName(input);
+    setFilters((prev) => ({
+      ...prev,
+      search_query: input,
+    }));
+  };
+
   return (
     <>
       <div className={styles.searchContent}>
@@ -141,7 +151,7 @@ function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
           className={styles.searchTextField}
           type="text"
           value={jobName}
-          onChange={(e) => setJobName(e.target.value)}
+          onChange={(e) => search(e.target.value)}
           slotProps={{
             input: {
               startAdornment: <SearchIcon position="start" />,
@@ -187,6 +197,7 @@ function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
             setJobs={setJobs}
             companyName={companyName}
             jobToEdit={false}
+            setFilters={setFilters}
           />
         ) : null}
       </div>

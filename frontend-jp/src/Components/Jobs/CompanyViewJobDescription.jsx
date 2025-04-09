@@ -37,7 +37,6 @@ function CompanyViewJobDescription({ setDrawerOpen, jobs }) {
 
   return (
     <>
-      {console.log(jobs)}
       {jobs.map((job, index) => (
         <Card key={job.jobID} className={styles.card}>
           <CardHeader

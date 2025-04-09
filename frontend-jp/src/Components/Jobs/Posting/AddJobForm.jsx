@@ -39,7 +39,12 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function AddJobForm({ setJobs, companyName, jobToEdit }) {
+export default function AddJobForm({
+  setJobs,
+  companyName,
+  jobToEdit,
+  setFilters,
+}) {
   const formSteps = [
     { label: "Parse Job Description", component: ParseJobDescription },
     { label: "Describe Job", component: DescribeJob },
@@ -73,7 +78,7 @@ export default function AddJobForm({ setJobs, companyName, jobToEdit }) {
     isUpdate,
     onSubmit,
     setActiveStep,
-  } = useJobForm({ setJobs, companyName, jobToEdit, setOpen });
+  } = useJobForm({ setJobs, companyName, jobToEdit, setOpen, setFilters });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -262,7 +267,9 @@ export default function AddJobForm({ setJobs, companyName, jobToEdit }) {
                   </button>
                 </div>
                 <div className="grow-1">
-                  <button onClick={handleNext}>Skip</button>
+                  <button onClick={handleNext} disabled={isParseLoading}>
+                    Skip
+                  </button>
                 </div>
               </footer>
             </DialogActions>

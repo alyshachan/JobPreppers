@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Pagination } from "@mui/material";
 import SearchColumn from "../Components/Jobs/SearchColumn";
 import "../Components/JobPreppers.css";
 import styles from "../Components/Jobs/Jobs.module.css";
@@ -17,6 +17,9 @@ function Jobs() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [IsUserCompany, setIsUserCompany] = useState(false);
+  const [page, setPage] = React.useState(1);
+  const NumberPerPage = 5;
+
   const { user } = useAuth();
   const [filters, setFilters] = useState({
     date: null,
@@ -26,13 +29,24 @@ function Jobs() {
     longitude: null,
     latitude: null,
     distance: 0,
+    search_query: "",
     userID: user?.userID,
+    page: page,
+    number_per_page: NumberPerPage,
   });
+  const handleChange = (event, value) => {
+    setPage(value);
+    setFilters((prev) => ({
+      ...prev,
+      page: value,
+    }));
+  };
   const [jobs, setJobs] = useState([]);
   const [userCoordinate, setUserCoordinate] = useState({
     latitude: null,
     longitude: null,
   });
+  const [pageSize, setPageSize] = useState(1);
 
   async function fetchCompanyStatus(userID) {
     console.log("user id in fetchStatus: ", userID);
@@ -89,6 +103,8 @@ function Jobs() {
                 setFilters={setFilters}
                 IsUserCompany={IsUserCompany}
                 userCoordinate={userCoordinate}
+                setPageSize={setPageSize}
+                NumberPerPage={NumberPerPage}
               />
 
               {}
@@ -100,6 +116,13 @@ function Jobs() {
                     setDrawerOpen={setDrawerOpen}
                     jobs={jobs}
                   />
+                  <div className="flex justify-center gap-10 pb-5">
+                    <Pagination
+                      count={pageSize}
+                      page={page}
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
               ) : (
                 <NoResultPage />
@@ -110,7 +133,15 @@ function Jobs() {
                   setDrawerOpen={setDrawerOpen}
                   jobs={jobs}
                   setJobs={setJobs}
+                  setFilters={setFilters}
                 />
+                <div className="flex justify-center gap-10 pb-5">
+                  <Pagination
+                    count={pageSize}
+                    page={page}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
             ) : (
               <NoResultPage />

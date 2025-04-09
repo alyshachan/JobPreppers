@@ -41,27 +41,27 @@ function User() {
     localStorage.setItem("editMode", edit);
   }, [edit]);
 
-    useEffect(() => {
-      const fetchUser = async () => {
-        try {
-          const response = await fetch(
-            apiURL + `/api/Users/GetUserFromUsername/${username}`,
-            { credentials: "include" }
-          );
-    
-          if (response.ok) {
-            const data = await response.json();
-            setUser(data); 
-          } else {
-            throw new Error("Failed to fetch user");
-          }
-        } catch (error) {
-          console.error("Error fetching user:", error);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(
+          apiURL + `/api/Users/GetUserFromUsername/${username}`,
+          { credentials: "include" }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+        } else {
+          throw new Error("Failed to fetch user");
         }
-      };
-    
-      fetchUser(); 
-    }, [username, apiURL]);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
+  }, [username, apiURL]);
 
   const fetchFriendCount = async () => {
     try {
@@ -123,7 +123,7 @@ function User() {
           friendCount={friendCount}
         />
         <div className="flex-col justify-between w-full">
-          <SectionHeader header="Job Postings"/>
+          <SectionHeader header="Job Postings" />
           {/* Where the job board section goes */}
           <Box className={styles.jobs}>
             {/* Main Content Area */}

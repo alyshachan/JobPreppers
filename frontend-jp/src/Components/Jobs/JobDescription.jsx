@@ -32,8 +32,9 @@ import { useMutation } from "@tanstack/react-query";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
-function JobDescription({ setDrawerOpen, jobs, setJobs }) {
+function JobDescription({ setDrawerOpen, jobs, setJobs, setFilters }) {
   const [selectedJob, setSelectedJob] = useState(null); // Track the currently selected job
+
   const handleOpenDrawer = (job) => {
     setSelectedJob(job);
     setDrawerOpen(true); // Open the drawer when "Learn More" is clicked
@@ -84,21 +85,6 @@ function JobDescription({ setDrawerOpen, jobs, setJobs }) {
     return res.json();
   };
 
-  const fetchJobs = async () => {
-    try {
-      const res = await fetch(apiURL + `/api/jobpost/?userID=${user.userID}`, {
-        credentials: "include",
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setJobs(data.jobs);
-      }
-    } catch (error) {
-      console.error("Error Getting Jobs:", error);
-    }
-  };
-
   // Use Mutation for Post calls and anything involving user doing an action
   const {
     mutate: deleteMutation,
@@ -113,18 +99,17 @@ function JobDescription({ setDrawerOpen, jobs, setJobs }) {
     },
     onSuccess: (data) => {
       console.log("Sucessful");
-      fetchJobs();
+      setFilters((prev) => ({
+        ...prev,
+      }));
     },
     onError: (error) => {
       console.error("Error Deleting Job:", error);
     },
   });
-  {
-    jobs.map((job, index) => console.log("Profile Picture", job.profile_pic));
-  }
+
   return (
     <>
-      {console.log(jobs)}
       {jobs.map((job, index) => (
         <Card key={job.jobID} className={styles.card}>
           <Box className="flex w-full">
