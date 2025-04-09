@@ -86,10 +86,10 @@ namespace JobPreppersDemo.Controllers
         public async Task<IActionResult> SendFriendRequest([FromBody] FriendRequestDto request)
         {
             if (request.UserId == request.FriendId)
-            if (request.UserId == request.FriendId)
-            {
-                return BadRequest("Invalid Friend Request. Cannot request yourself");
-            }
+                if (request.UserId == request.FriendId)
+                {
+                    return BadRequest("Invalid Friend Request. Cannot request yourself");
+                }
 
             var existingrequst = await _context.Friends.FirstOrDefaultAsync(f =>
                 (f.userID == request.UserId && f.friendID == request.FriendId)
@@ -97,12 +97,12 @@ namespace JobPreppersDemo.Controllers
             );
 
             if (existingrequst != null)
-            if (existingrequst != null)
-            {
-                return BadRequest(
-                    "Invalid Friend Request. Friend request already sent or are already friends"
-                );
-            }
+                if (existingrequst != null)
+                {
+                    return BadRequest(
+                        "Invalid Friend Request. Friend request already sent or are already friends"
+                    );
+                }
             var newRequest = new Friend
             {
                 userID = request.UserId,
@@ -174,18 +174,6 @@ namespace JobPreppersDemo.Controllers
 
             return Ok("None");
         }
-    }
-    public class FriendRequestDto
-    {
-        public int UserId { get; set; }
-        public int FriendId { get; set; }
-    }
-    public static class FriendStatus
-    {
-        public const string Pending = "pending";
-        public const string Accepted = "accepted";
-        public const string Rejected = "rejected";
-
         // syncs getstream friends and jp friends
         [HttpPost("SyncFriends/{userId}")]
         public async Task<IActionResult> SyncFriends(int userId)
@@ -233,18 +221,23 @@ namespace JobPreppersDemo.Controllers
             }
             return Ok("Friends synced");
         }
-
         public class FriendRequestDto
         {
             public int UserId { get; set; }
             public int FriendId { get; set; }
         }
-
         public static class FriendStatus
         {
             public const string Pending = "pending";
             public const string Accepted = "accepted";
             public const string Rejected = "rejected";
+
+
+            public class FriendRequestDto
+            {
+                public int UserId { get; set; }
+                public int FriendId { get; set; }
+            }
         }
     }
 }
