@@ -5,6 +5,10 @@ import SkillsSection from "../ProfileSections/SkillsSection";
 import ExperienceSection from "../ProfileSections/ExperienceSection";
 import ProjectSection from "../ProfileSections/ProjectSection";
 import ProfileDescription from "../ProfileSections/ProfileDescription";
+import AddEducationDialog from "../Components/Profile/AddEducationDialog"
+import AddSkillDialog from "../Components/Profile/AddSkillDialog"
+import AddExperienceDialog from "../Components/Profile/AddExperienceDialog"
+import AddProjectDialog from "../Components/Profile/AddProjectDialog"
 import styles from "../Components/Profile/Profile.module.css";
 import "../Components/JobPreppers.css";
 import { useParams } from "react-router-dom";
@@ -74,9 +78,12 @@ function User() {
 
   const fetchData = async (endpoint, setter, transform) => {
     try {
-      const response = await fetch(apiURL + `/api/${endpoint}/${visitingUser.userID}`, {
-        credentials: "include",
-      });
+      const response = await fetch(
+        apiURL + `/api/${endpoint}/${visitingUser.userID}`,
+        {
+          credentials: "include",
+        }
+      );
       if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
       const data = await response.json();
       setter((prevState) =>
@@ -199,9 +206,12 @@ function User() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch(apiURL + `/api/GetUser/${visitingUser.userID}`, {
-          credentials: "include", // include cookies
-        });
+        const res = await fetch(
+          apiURL + `/api/GetUser/${visitingUser.userID}`,
+          {
+            credentials: "include", // include cookies
+          }
+        );
 
         if (res.ok) {
           const data = await res.json();
@@ -235,10 +245,22 @@ function User() {
         experienceDict.length === 0 &&
         projectDict.length === 0 ? (
           <div className={styles.noProfileText}>
-            {visitingUser.first_name} {visitingUser.last_name} hasn't added to their profile yet
+            {visitingUser.first_name} {visitingUser.last_name} hasn't added to
+            their profile yet
           </div>
         ) : (
           <div className={styles.highlightedInfo}>
+            {edit && (
+                <a href="/ParseResume">
+                  <button className={styles.parseResume}>
+                    Parse resume to Profile
+                    <p className="text-white !text-base">
+                      Using this parse option will clear your current profile
+                    </p>
+                  </button>
+                </a>
+              )}
+
             {educationDict.length > 0 ? (
               <EducationSection
                 educationDict={educationDict}
@@ -309,6 +331,27 @@ function User() {
           </button>
         )
       )}
+
+      <AddEducationDialog
+        open={openDialog.education}
+        onClose={() => toggleDialog("education", false)}
+        onAdd={fetchEducation}
+      />
+      <AddSkillDialog
+        open={openDialog.skill}
+        onClose={() => toggleDialog("skill", false)}
+        onAdd={fetchSkills}
+      />
+      <AddExperienceDialog
+        open={openDialog.experience}
+        onClose={() => toggleDialog("experience", false)}
+        onAdd={fetchExperience}
+      />
+      <AddProjectDialog
+        open={openDialog.project}
+        onClose={() => toggleDialog("project", false)}
+        onAdd={fetchProject}
+      />
     </>
   );
 }
