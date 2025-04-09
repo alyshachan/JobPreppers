@@ -29,6 +29,27 @@ namespace JobPreppersDemo.Controllers
             return Ok(new { token });
         }
 
+        [HttpPost("followGlobal/{userID}")]
+        public async Task<IActionResult> FollowGlobalFeed(string userID)
+        {
+            var client = _streamService.Client;
+            var userGlobalFeed = client.Feed("global", userID);
+            var globalFeed = client.Feed("global", "global_feed");
+
+            await globalFeed.AddActivityAsync(
+                new Activity("global", "post", "global_post_1")
+                {
+                    Actor = "User:global",
+                    Verb = "post",
+                    Object = "post:1",
+                    ForeignId = "post:1",
+                    Time = DateTime.UtcNow,
+                }
+            );
+            await userGlobalFeed.FollowFeedAsync("global", "global_feed");
+            return Ok("Global feed followed");
+        }
+
         [HttpGet("getTimeline/{userID}")]
         public async Task<IActionResult> GetOrUpdateFeedTimeline(string userID)
         {
@@ -39,8 +60,6 @@ namespace JobPreppersDemo.Controllers
             // api calls go here
             var client = _streamService.Client;
 
-            // will dev note 2/21: when a friends list frontend is completed, add a controller that
-            // will call .FollowFeed() on new friends
             var timelineFeed = client.Feed("timeline", userID);
 
             var activities = await timelineFeed.GetActivitiesAsync();
@@ -110,6 +129,28 @@ namespace JobPreppersDemo.Controllers
             var client = _streamService.Client;
 
             var userFeed = client.Feed("user", userID);
+
+            var activities = await userFeed.GetActivitiesAsync();
+
+            // var userData = new Dictionary<string, object>
+            // {
+            //     {"name", jpUsername}
+            // };
+
+            return Ok(new { activities });
+        }
+
+        [HttpGet("getGlobalFeed/{userID}")]
+        public async Task<IActionResult> GetGlobalFeed(string userID)
+        {
+            var jpUser = await _context.Users.FirstOrDefaultAsync(u =>
+                u.userID == int.Parse(userID)
+            );
+            string jpUsername = jpUser.first_name + " " + jpUser.last_name;
+            // api calls go here
+            var client = _streamService.Client;
+
+            var userFeed = client.Feed("global", userID);
 
             var activities = await userFeed.GetActivitiesAsync();
 

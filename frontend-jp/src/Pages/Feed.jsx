@@ -18,6 +18,7 @@ function Feed() {
   const [recommendationDict, setRecDict] = useState([]);
   const [selectedFeed, setSelectedFeed] = useState("timeline");
   useEffect(() => {
+    
     const fetchFeedData = async () => {
       try {
         const response = await fetch(
@@ -164,7 +165,10 @@ function Feed() {
       >
         <div className="flex w-full p-4 space-x-4">
           <div className="w-2/3">
-            <StatusUpdateForm feedGroup={selectedFeed} />
+            <StatusUpdateForm 
+            feedGroup={selectedFeed} 
+            userID={selectedFeed === "global" ? "global_feed" : user.userID.toString()} 
+            />
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h1>{selectedFeed.charAt(0).toUpperCase() + selectedFeed.slice(1)}</h1>
@@ -180,7 +184,7 @@ function Feed() {
               </div>
               <FlatFeed
                 classname="flat-feed"
-                feedGroup={selectedFeed}
+                feedGroup={selectedFeed === "global" ? "global" : selectedFeed}
                 options={{
                   enrich: true,
                   limit: 10,
