@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Org.BouncyCastle.Asn1.Ocsp;
 using static JobPreppersDemo.Controllers.SkillsController;
+using JobPreppersDemo.Services;
 
 namespace JobPreppersDemo.Controllers
 {
@@ -14,6 +15,8 @@ namespace JobPreppersDemo.Controllers
     public class UserSkillsController : Controller
     {
         private readonly ApplicationDbContext _context;
+
+        private readonly EmbeddedUser _embeddedUser;
         public class UserSkills
         {
             public int UserID { get; set; }
@@ -21,9 +24,10 @@ namespace JobPreppersDemo.Controllers
             public string Category { get; set; } = null!;
         }
 
-        public UserSkillsController(ApplicationDbContext context)
+        public UserSkillsController(ApplicationDbContext context, JobsVectorDB vector)
         {
             _context = context;
+            _embeddedUser = new EmbeddedUser(context, vector);
         }
         [HttpGet("{userID}")]
         public async Task<IActionResult> GetAllUserSKills(int userID)
@@ -108,6 +112,7 @@ namespace JobPreppersDemo.Controllers
 
                     _context.UserSkills.Add(newSkill);
                     await _context.SaveChangesAsync();
+                    await _embeddedUser.AddEmbeddedUser(request.UserID);
 
                     return Ok(new
                     {
@@ -136,7 +141,8 @@ namespace JobPreppersDemo.Controllers
             try
             {
                 var skill = await _context.UserSkills.FindAsync(skillID);
-                if (skill == null){
+                if (skill == null)
+                {
                     return NotFound("Skill not found");
                 }
                 //check if skill already exits
@@ -164,9 +170,10 @@ namespace JobPreppersDemo.Controllers
 
                     skill.userID = request.UserID;
                     skill.skillID = duplicateSkill.skillID;
-                    
+
                     _context.UserSkills.Update(skill);
                     await _context.SaveChangesAsync();
+                    await _embeddedUser.AddEmbeddedUser(request.UserID);
 
                     return Ok(new
                     {
@@ -183,19 +190,24 @@ namespace JobPreppersDemo.Controllers
         }
 
         [HttpDelete("DeleteSkill/{skillID}")]
-        public async Task<IActionResult> DeleteSkill(int skillID){
-            try{
+        public async Task<IActionResult> DeleteSkill(int skillID)
+        {
+            try
+            {
                 var skill = await _context.UserSkills.FindAsync(skillID);
-                if (skill == null){
+                if (skill == null)
+                {
                     return NotFound("Skill not found");
                 }
 
                 _context.UserSkills.Remove(skill);
                 await _context.SaveChangesAsync();
+                await _embeddedUser.AddEmbeddedUser(skill.userID);
 
-                return Ok(new {message = "Skill deleted sucessfully"});
+                return Ok(new { message = "Skill deleted sucessfully" });
             }
-            catch(Exception ex){
+            catch (Exception ex)
+            {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

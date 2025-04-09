@@ -34,6 +34,8 @@ namespace JobPreppersDemo.Controllers
         [HttpGet("getBookmark")]
         public async Task<IActionResult> GetBookmark([FromQuery] int userID)
         {
+            //Grab the user from the embedded table --> Need to scaffold first
+
             var bookmarkedJobs = await _context.Bookmarks
                                       .Where(b => b.userID == userID)
                                       .Select(b => b.JobID)
@@ -70,6 +72,9 @@ namespace JobPreppersDemo.Controllers
                                         location = b.Job.location.name,
                                         bonues = b.Job.bonus,
                                         perks = b.Job.perks,
+                                        profilePic = b.Job!.company!.user!.profile_pic != null
+    ? "data:image/png;base64," + Convert.ToBase64String(b.Job.company.user.profile_pic)
+    : null
                                     } : null
                                       )
                                       .ToListAsync();

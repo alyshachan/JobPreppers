@@ -47,6 +47,8 @@ public partial class JobPost
 
     public virtual ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
 
+    public virtual ICollection<DeleteJob> DeleteJobs { get; set; } = new List<DeleteJob>();
+
     public virtual Company company { get; set; } = null!;
 
     public virtual JobLocation location { get; set; } = null!;

@@ -33,6 +33,8 @@ public partial class User
 
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 
+    public virtual ICollection<DeleteJob> DeleteJobs { get; set; } = new List<DeleteJob>();
+
     public virtual ICollection<Friend> Friendfriends { get; set; } = new List<Friend>();
 
     public virtual ICollection<Friend> Friendusers { get; set; } = new List<Friend>();

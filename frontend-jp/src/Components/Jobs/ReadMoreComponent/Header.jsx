@@ -9,6 +9,7 @@ import React, { useState, useEffect } from 'react'; // Import useState and useEf
 import axios from 'axios'; // Import axios
 
 import { Modal, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
+import defaultProfilePicture from "../../defaultProfilePicture.png";
 
 export default function Header({ job, onClose }) {
   const { user } = useAuth();
@@ -87,11 +88,16 @@ export default function Header({ job, onClose }) {
   };
 
   
+  const userPic =
+    job.profile_pic == null
+      ? defaultProfilePicture
+      : "data:image/png;base64," +
+        job.profile_pic.toString().toString("base64");
   return (
     <>
       {/* Header Section */}
       <Box className={styles.drawerHeader}>
-        <Avatar src={amazonIcon} aria-label="amazon">
+        <Avatar src={userPic} aria-label="Company Picture">
           {job.company[0]}
         </Avatar>
         <Typography variant="h4" sx={{ ml: 2 }}>
@@ -113,10 +119,10 @@ export default function Header({ job, onClose }) {
           &nbsp; Apply by {new Date(job.endDate).toLocaleDateString()}
           &nbsp; at {new Date(job.postDate).toLocaleTimeString()}
         </Typography>
-        <button className={`${styles.drawerButton} lightButton`}>
+        {/* <button className={`${styles.drawerButton} lightButton`}>
           <BookmarkBorderIcon />
           Bookmark
-        </button>
+        </button> */}
         <button
             onClick={async (e) => {
               e.preventDefault();

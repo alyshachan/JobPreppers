@@ -25,6 +25,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Degree> Degrees { get; set; }
 
+    public virtual DbSet<DeleteJob> DeleteJobs { get; set; }
+
     public virtual DbSet<Event> Events { get; set; }
 
     public virtual DbSet<Friend> Friends { get; set; }
@@ -64,9 +66,6 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<Work> Works { get; set; }
 
     public virtual DbSet<__EFMigrationsHistory> __EFMigrationsHistories { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("name=DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -143,6 +142,26 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("Degree");
 
             entity.Property(e => e.degree_name).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<DeleteJob>(entity =>
+        {
+            entity.HasKey(e => e.deleteID).HasName("PRIMARY");
+
+            entity.HasIndex(e => e.userID, "DeleteJobs_Users_fk");
+
+            entity.HasIndex(e => new { e.jobID, e.userID }, "DeleteJobs_pk_2").IsUnique();
+
+            entity.Property(e => e.deleteID).ValueGeneratedNever();
+
+            entity.HasOne(d => d.job).WithMany(p => p.DeleteJobs)
+                .HasForeignKey(d => d.jobID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("DeleteJobs_JobPosts_fk");
+
+            entity.HasOne(d => d.user).WithMany(p => p.DeleteJobs)
+                .HasForeignKey(d => d.userID)
+                .HasConstraintName("DeleteJobs_Users_fk");
         });
 
         modelBuilder.Entity<Event>(entity =>

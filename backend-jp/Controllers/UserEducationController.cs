@@ -8,6 +8,7 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
+using JobPreppersDemo.Services;
 
 namespace JobPreppersDemo.Controllers
 {
@@ -29,9 +30,12 @@ namespace JobPreppersDemo.Controllers
     public class UserEducationController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public UserEducationController(ApplicationDbContext context)
+        private readonly EmbeddedUser _embeddedUser;
+
+        public UserEducationController(ApplicationDbContext context, JobsVectorDB vector)
         {
             _context = context;
+            _embeddedUser = new EmbeddedUser(context, vector);
         }
 
         [HttpGet("{userID}")]
@@ -145,6 +149,7 @@ namespace JobPreppersDemo.Controllers
 
                 await _context.UserEducations.AddAsync(newEducation);
                 await _context.SaveChangesAsync();
+                await _embeddedUser.AddEmbeddedUser(userEducationDto.userID);
 
                 return Ok(new { message = "Education added successfully", educationID = newEducation.userEducationID });
 
@@ -166,7 +171,8 @@ namespace JobPreppersDemo.Controllers
             try
             {
                 var education = await _context.UserEducations.FindAsync(educationID);
-                if (education == null){
+                if (education == null)
+                {
                     return NotFound("Education not found");
                 }
 
@@ -216,7 +222,7 @@ namespace JobPreppersDemo.Controllers
 
                 _context.UserEducations.Update(education);
                 await _context.SaveChangesAsync();
-
+                await _embeddedUser.AddEmbeddedUser(education.userID);
                 return Ok(new { message = "Education updated successfully" });
 
             }
@@ -227,19 +233,23 @@ namespace JobPreppersDemo.Controllers
         }
 
         [HttpDelete("DeleteEducation/{educationID}")]
-        public async Task<IActionResult> DeleteEducation(int educationID){
-            try{
+        public async Task<IActionResult> DeleteEducation(int educationID)
+        {
+            try
+            {
                 var education = await _context.UserEducations.FindAsync(educationID);
-                if (education == null){
+                if (education == null)
+                {
                     return NotFound("Education not found");
                 }
-
                 _context.UserEducations.Remove(education);
                 await _context.SaveChangesAsync();
+                await _embeddedUser.AddEmbeddedUser(education.userID);
 
-                return Ok(new {message = "Education deleted sucessfully"});
+                return Ok(new { message = "Education deleted sucessfully" });
             }
-            catch(Exception ex){
+            catch (Exception ex)
+            {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
