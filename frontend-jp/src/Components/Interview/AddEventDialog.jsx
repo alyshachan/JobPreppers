@@ -14,6 +14,7 @@ import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { styled } from "@mui/material/styles";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
+import SearchParticipants from "./SearchParticipants";
 import moment from "moment";
 import styles from "./AddEventDialog.module.css";
 
@@ -59,7 +60,7 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
 
   return (
     <StyledDialog onClose={onClose} open={open}>
-    <DialogTitle className={styles.addEventTitle}>
+      <DialogTitle className={styles.addEventTitle}>
         <SectionHeader header="Add Event" />
       </DialogTitle>
 
@@ -134,6 +135,14 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
                   value={eventParticipants}
                   onChange={(e) => setEventParticipants(e.target.value)}
                 />
+              </div>
+            </div>
+
+            <div className={styles.input}>
+              <PermIdentityOutlinedIcon className={styles.icon} />
+              <div className={styles.inputField}>
+                Participants
+                <SearchParticipants />
               </div>
             </div>
 
