@@ -236,7 +236,6 @@ namespace JobPreppersProto.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-<<<<<<< HEAD
         [HttpGet("GetUserInfo/{id}")]
         public async Task<IActionResult> GetMinalUserInfo(int id)
         {
@@ -286,12 +285,11 @@ namespace JobPreppersProto.Controllers
 
             return Ok(new { message = "Profile picture uploaded successfully." });
         }
-=======
+
         [HttpGet("search")]
         public async Task<IActionResult> SearchUsers([FromQuery] string? title, [FromQuery] string? name)
         {
             var query = _context.Users.AsQueryable();
->>>>>>> f0179805d36a812fc2518354f29e065a3ceda8df
 
             if (!string.IsNullOrEmpty(title))
             {
