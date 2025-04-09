@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import { Button } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png";
 import EditIcon from "@mui/icons-material/Edit";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -57,6 +57,7 @@ async function fetchFriendStatus(userId, friendId) {
 function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [friendStatus, setFriendStatus] = useState("None");
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (
@@ -87,13 +88,39 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
       if (response.ok) {
         setFriendStatus("Pending");
       } else {
-        const errMsg = await response.text();
-        console.error("Error sending request:", errMsg);
+        const err = await response.text();
+        console.error("Error sending request:", err);
       }
     } catch (err) {
       console.error("Friend request error:", err);
     }
   };
+
+  const handleAddRecruiter = async () => {
+    try {
+      const response = await fetch(apiURL + `/api/Recruiter/CreateRecruiter`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userID: visitingUser.userID,
+          companyID: user.userID, // Assuming the company is the logged-in user
+        }),
+      });
+  
+      if (response.ok) {
+        queryClient.invalidateQueries(["isVisitingRecruiter", visitingUser.userID]);
+      } else {
+        const err = await response.text();
+        console.error("Failed to add recruiter: " + err);
+      }
+    } catch (err) {
+      console.error("Error adding recruiter:", err);
+    }
+  };
+  
 
   const { data: isRecruiter } = useQuery({
     queryKey: ["isRecruiter", user?.userID],
@@ -195,6 +222,7 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
               className={styles.editProfileButton}
               variant="contained"
               startIcon={<BadgeIcon />}
+              onClick={handleAddRecruiter}
             >
               Add Recruiter
             </Button>
