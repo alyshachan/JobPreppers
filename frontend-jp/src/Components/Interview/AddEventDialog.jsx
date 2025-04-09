@@ -139,7 +139,7 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
             </div>
 
             <div className={styles.input}>
-              <PermIdentityOutlinedIcon className={styles.icon} />
+              <PermIdentityOutlinedIcon className={`${styles.icon} mt-[-100px]`} />
               <div className={styles.inputField}>
                 Participants
                 <SearchParticipants />
