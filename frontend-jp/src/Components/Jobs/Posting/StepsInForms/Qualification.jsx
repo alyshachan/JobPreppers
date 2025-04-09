@@ -13,7 +13,6 @@ import AutoCompleteForm from "../Helper/AutoCompleteForm";
 import { useFormContext, Controller } from "react-hook-form";
 import styles from "../Posting.module.css";
 import { errorMessage } from "../Helper/ErrorMessage";
-
 export default function Qualification({ jobDescriptionData }) {
   const [skills, setSkills] = useState([
     "Communication",
@@ -33,6 +32,7 @@ export default function Qualification({ jobDescriptionData }) {
     register,
     control,
     setValue,
+    watch,
     formState: { errors },
   } = jobForm;
 
@@ -96,7 +96,6 @@ export default function Qualification({ jobDescriptionData }) {
     "PHD",
     "Doctorates",
   ];
-  /** Need to Implement  */
 
   useEffect(() => {
     console.log("In Qualification: ", jobDescriptionData);
@@ -119,8 +118,8 @@ export default function Qualification({ jobDescriptionData }) {
 
     const parseSkill = jobDescriptionData.skills;
     if (parseSkill && parseSkill.length > 0) {
-      console.log("Skills: ", parseSkill);
-      setValue("skills", parseSkill);
+      setValue("skills", jobDescriptionData.skills);
+      jobDescriptionData.skills = [];
     }
   }, [jobDescriptionData]);
 
@@ -171,35 +170,38 @@ export default function Qualification({ jobDescriptionData }) {
           control={control}
           name="skills"
           render={({ field }) => (
-            <Autocomplete
-              {...field}
-              multiple
-              freeSolo
-              autoSelect
-              options={skills}
-              value={field.value ?? []}
-              onChange={(_, value) => {
-                field.onChange(value);
-              }}
-              getOptionLabel={(option) =>
-                (typeof option === "object" ? option.label : option) || ""
-              }
-              // getOptionLabel={(option) => option.label || ""} // Adjust based on API response
-              onInputChange={(event, newInputValue) => {
-                if (newInputValue.length > 1) {
-                  fetchSkills(newInputValue);
+            console.log("field: ", field),
+            (
+              <Autocomplete
+                {...field}
+                multiple
+                freeSolo
+                autoSelect
+                options={skills}
+                value={Array.isArray(field.value) ? field.value : []}
+                onChange={(_, value) => {
+                  field.onChange(value);
+                }}
+                getOptionLabel={(option) =>
+                  (typeof option === "object" ? option.label : option) || ""
                 }
-              }}
-              renderInput={(params) => (
-                <TextField {...params} label="Search Skills *" />
-              )}
-            />
+                // getOptionLabel={(option) => option.label || ""} // Adjust based on API response
+                onInputChange={(event, newInputValue) => {
+                  if (newInputValue.length > 1) {
+                    fetchSkills(newInputValue);
+                  }
+                }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Search Skills *" />
+                )}
+              />
+            )
           )}
         />
         {errorMessage(errors.skills)}
       </div>
 
-      <div className={styles.inputField}>
+      {/* <div className={styles.inputField}>
         <h2>Ask these questions to the applicant?</h2>
         <FormGroup>
           <Controller
@@ -224,8 +226,8 @@ export default function Qualification({ jobDescriptionData }) {
               />
             )}
           />
-        </FormGroup>
-      </div>
+        </FormGroup> */}
+      {/* </div> */}
     </>
   );
 }

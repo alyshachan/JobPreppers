@@ -17,6 +17,7 @@ export default function FilterColumn({
   filters,
   setFilters,
   userCoordinate,
+  IsUserCompany,
 }) {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const containerRef = useRef(null);
@@ -26,8 +27,14 @@ export default function FilterColumn({
     const handleSearch = async () => {
       // e.preventDefault(); // Prevent default form submission
       console.log("Filter: ", { filters });
+      if (filters.userID == null || IsUserCompany == null) {
+        return;
+      }
       try {
-        const response = await fetch(apiURL + "/api/jobpost/filter", {
+        const endpoint = IsUserCompany
+          ? "/api/jobpost/filterCompanyView"
+          : "/api/jobpost/filter";
+        const response = await fetch(apiURL + endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(filters),

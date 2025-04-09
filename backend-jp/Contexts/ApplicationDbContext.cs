@@ -17,11 +17,15 @@ public partial class ApplicationDbContext : DbContext
     {
     }
 
+    public virtual DbSet<Application> Applications { get; set; }
+
     public virtual DbSet<Bookmark> Bookmarks { get; set; }
 
     public virtual DbSet<Company> Companies { get; set; }
 
     public virtual DbSet<Degree> Degrees { get; set; }
+
+    public virtual DbSet<DeleteJob> DeleteJobs { get; set; }
 
     public virtual DbSet<Event> Events { get; set; }
 
@@ -51,6 +55,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<UserEducation> UserEducations { get; set; }
 
+    public virtual DbSet<UserEmbedding> UserEmbeddings { get; set; }
+
     public virtual DbSet<UserExperience> UserExperiences { get; set; }
 
     public virtual DbSet<UserProject> UserProjects { get; set; }
@@ -61,14 +67,34 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<__EFMigrationsHistory> __EFMigrationsHistories { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("name=DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
+
+        modelBuilder.Entity<Application>(entity =>
+        {
+            entity.HasKey(e => new { e.userID, e.jobPostID })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity.HasIndex(e => e.jobPostID, "jobPostID");
+
+            entity.HasIndex(e => e.recruiterID, "recruiterID");
+
+            entity.HasOne(d => d.jobPost).WithMany(p => p.Applications)
+                .HasForeignKey(d => d.jobPostID)
+                .HasConstraintName("Applications_ibfk_3");
+
+            entity.HasOne(d => d.recruiter).WithMany(p => p.Applications)
+                .HasForeignKey(d => d.recruiterID)
+                .HasConstraintName("Applications_ibfk_2");
+
+            entity.HasOne(d => d.user).WithMany(p => p.Applications)
+                .HasForeignKey(d => d.userID)
+                .HasConstraintName("Applications_ibfk_1");
+        });
 
         modelBuilder.Entity<Bookmark>(entity =>
         {
@@ -116,6 +142,26 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("Degree");
 
             entity.Property(e => e.degree_name).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<DeleteJob>(entity =>
+        {
+            entity.HasKey(e => e.deleteID).HasName("PRIMARY");
+
+            entity.HasIndex(e => e.userID, "DeleteJobs_Users_fk");
+
+            entity.HasIndex(e => new { e.jobID, e.userID }, "DeleteJobs_pk_2").IsUnique();
+
+            entity.Property(e => e.deleteID).ValueGeneratedNever();
+
+            entity.HasOne(d => d.job).WithMany(p => p.DeleteJobs)
+                .HasForeignKey(d => d.jobID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("DeleteJobs_JobPosts_fk");
+
+            entity.HasOne(d => d.user).WithMany(p => p.DeleteJobs)
+                .HasForeignKey(d => d.userID)
+                .HasConstraintName("DeleteJobs_Users_fk");
         });
 
         modelBuilder.Entity<Event>(entity =>
@@ -237,6 +283,25 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.recruiterID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("JobPosts_Recruiters_recruiterID_fk");
+
+            entity.HasMany(d => d.users).WithMany(p => p.jobs)
+                .UsingEntity<Dictionary<string, object>>(
+                    "deleteJob",
+                    r => r.HasOne<User>().WithMany()
+                        .HasForeignKey("userID")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("deleteJobs_Users_userID_fk"),
+                    l => l.HasOne<JobPost>().WithMany()
+                        .HasForeignKey("jobID")
+                        .HasConstraintName("deleteJobs_JobPosts_postID_fk"),
+                    j =>
+                    {
+                        j.HasKey("jobID", "userID")
+                            .HasName("PRIMARY")
+                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                        j.ToTable("deleteJobs");
+                        j.HasIndex(new[] { "userID" }, "deleteJobs_Users_userID_fk");
+                    });
         });
 
         modelBuilder.Entity<JobQualification>(entity =>
@@ -360,6 +425,20 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.userID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("UserEducation_ibfk_1");
+        });
+
+        modelBuilder.Entity<UserEmbedding>(entity =>
+        {
+            entity.HasKey(e => e.userID).HasName("PRIMARY");
+
+            entity.ToTable("UserEmbedding");
+
+            entity.Property(e => e.userID).ValueGeneratedNever();
+            entity.Property(e => e.embedding).HasColumnType("json");
+
+            entity.HasOne(d => d.user).WithOne(p => p.UserEmbedding)
+                .HasForeignKey<UserEmbedding>(d => d.userID)
+                .HasConstraintName("UserEmbedding_Users_userID_fk");
         });
 
         modelBuilder.Entity<UserExperience>(entity =>

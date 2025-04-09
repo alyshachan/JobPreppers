@@ -8,6 +8,8 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
+using JobPreppersDemo.Services;
+
 
 namespace JobPreppersDemo.Controllers
 {
@@ -16,9 +18,13 @@ namespace JobPreppersDemo.Controllers
     public class UserExperienceController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public UserExperienceController(ApplicationDbContext context)
+        private readonly EmbeddedUser _embeddedUser;
+
+        public UserExperienceController(ApplicationDbContext context, JobsVectorDB vector)
         {
             _context = context;
+            _embeddedUser = new EmbeddedUser(context, vector);
+
         }
         public class UserExperienceDto
         {
@@ -121,6 +127,8 @@ namespace JobPreppersDemo.Controllers
 
                 await _context.UserExperiences.AddAsync(userExperience);
                 await _context.SaveChangesAsync();
+                await _embeddedUser.AddEmbeddedUser(experience.userID);
+
 
                 return Ok(new { message = "Experience added successfully", experienceID = userExperience.userExperienceID });
             }
@@ -172,6 +180,8 @@ namespace JobPreppersDemo.Controllers
 
                 _context.UserExperiences.Update(experience);
                 await _context.SaveChangesAsync();
+                await _embeddedUser.AddEmbeddedUser(experience.userID);
+
 
                 return Ok(new { message = "Experience updated successfully" });
             }
@@ -182,19 +192,24 @@ namespace JobPreppersDemo.Controllers
         }
 
         [HttpDelete("DeleteExperience/{experienceID}")]
-        public async Task<IActionResult> DeleteExperience(int experienceID){
-            try{
+        public async Task<IActionResult> DeleteExperience(int experienceID)
+        {
+            try
+            {
                 var experience = await _context.UserExperiences.FindAsync(experienceID);
-                if (experience == null){
+                if (experience == null)
+                {
                     return NotFound("Experience not found");
                 }
 
                 _context.UserExperiences.Remove(experience);
                 await _context.SaveChangesAsync();
+                await _embeddedUser.AddEmbeddedUser(experience.userID);
 
-                return Ok(new {message = "Experience deleted sucessfully"});
+                return Ok(new { message = "Experience deleted sucessfully" });
             }
-            catch(Exception ex){
+            catch (Exception ex)
+            {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

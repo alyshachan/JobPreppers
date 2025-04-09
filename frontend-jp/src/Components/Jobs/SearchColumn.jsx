@@ -20,6 +20,7 @@ function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
   const [isRecruiter, setIsRecruiter] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const { user } = useAuth(); // custom hook for authprovider
+  // const { jobToEdit, setJobToEdit } = useState(null);
 
   useEffect(() => {
     const getUserLocation = () => {
@@ -182,7 +183,11 @@ function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
         />
         {/* Eventually change to nav bar */}
         {isRecruiter ? (
-          <AddJobForm setJobs={setJobs} companyName={companyName} />
+          <AddJobForm
+            setJobs={setJobs}
+            companyName={companyName}
+            jobToEdit={false}
+          />
         ) : null}
       </div>
     </>

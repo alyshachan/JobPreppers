@@ -45,25 +45,13 @@ function ManageJobs() {
           }`}
         >
           <div className="content">
-            <div className="panelTransparent !p-0 items-center">
-              {/* <SearchColumn
-                setUserCoordinate={setUserCoordinate}
-                setFilters={setFilters}
-                setJobs={setJobs}
-              />
-              <FilterColumn
-                setJobs={setJobs}
-                jobs={jobs}
-                filters={filters}
-                setFilters={setFilters}
-                userCoordinate={userCoordinate}
-              /> */}
-
-              {}
-            </div>
             {jobs.length > 0 ? (
               <div className={styles.containerForCard}>
-                <ManageDescription setDrawerOpen={setDrawerOpen} jobs={jobs} />
+                <ManageDescription
+                  setDrawerOpen={setDrawerOpen}
+                  jobs={jobs}
+                  setJobs={setJobs}
+                />
               </div>
             ) : (
               <NoResultPage />
