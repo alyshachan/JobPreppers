@@ -21,7 +21,7 @@ namespace JobPreppersDemo.Controllers
         public class UserProjectDto
         {
             public int userID { get; set; }
-            public string projectTitle{ get; set; }
+            public string projectTitle { get; set; }
             public string description { get; set; }
         }
         public UserProjectController(ApplicationDbContext context)
@@ -47,6 +47,7 @@ namespace JobPreppersDemo.Controllers
                            .Where(up => up.userID == userID)
                            .Select(up => new
                            {
+                               UserProjectID = up.projectID,
                                ProjectTitle = up.project_title,
                                Description = up.description
                            })
@@ -75,15 +76,13 @@ namespace JobPreppersDemo.Controllers
             if (project == null)
             {
                 return BadRequest("Project Info not filled out");
-
-
             }
             try
             {
                 // Check if the project already exists
-        var existingProject = await _context.UserProjects
-            .FirstOrDefaultAsync(p => p.userID == project.userID &&
-                                      p.project_title.ToLower() == project.projectTitle.ToLower());
+                var existingProject = await _context.UserProjects
+                    .FirstOrDefaultAsync(p => p.userID == project.userID &&
+                                              p.project_title.ToLower() == project.projectTitle.ToLower());
 
                 if (existingProject != null)
                 {
@@ -97,13 +96,71 @@ namespace JobPreppersDemo.Controllers
                 };
                 await _context.UserProjects.AddAsync(newProject);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(CreateProject), new { id = newProject.projectID }, newProject);
+                return Ok(new { message = "Project added successfully", projectID = newProject.projectID });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-            
+
+        }
+
+        [HttpPut("EditProject/{projectID}")]
+        public async Task<IActionResult> EditProject(int projectID, [FromBody] UserProjectDto userProjectDto)
+        {
+            if (userProjectDto == null)
+            {
+                return BadRequest("Project information not filled out");
+            }
+            try
+            {
+                var project = await _context.UserProjects.FindAsync(projectID);
+                if (project == null){
+                    return NotFound("Project not found");
+                }
+
+                // Check if the project already exists
+                var duplicateProject = await _context.UserProjects
+                    .AnyAsync(p =>
+                        p.userID == userProjectDto.userID &&
+                        p.project_title.ToLower() == userProjectDto.projectTitle.ToLower() &&
+                        p.projectID != projectID);
+
+                if (duplicateProject)
+                {
+                    return Conflict("A project with the same title already exists for this user.");
+                }
+
+                project.project_title = userProjectDto.projectTitle;
+                project.description = userProjectDto.description;
+
+                _context.UserProjects.Update(project);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Project updated successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("DeleteProject/{projectID}")]
+        public async Task<IActionResult> DeleteProject(int projectID){
+            try{
+                var project = await _context.UserProjects.FindAsync(projectID);
+                if (project == null){
+                    return NotFound("Project not found");
+                }
+
+                _context.UserProjects.Remove(project);
+                await _context.SaveChangesAsync();
+
+                return Ok(new {message = "Project deleted sucessfully"});
+            }
+            catch(Exception ex){
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

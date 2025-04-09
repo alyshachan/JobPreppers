@@ -33,6 +33,7 @@ namespace JobPreppersDemo.Controllers
                           Username = user.username,
                           Name = user.first_name + " " + user.last_name,
                           Email = user.email,
+                          ProfilePicture = user.profile_pic,
                           SentAt = f.created_at
                       })
                 .ToListAsync();
@@ -59,7 +60,8 @@ namespace JobPreppersDemo.Controllers
                  Username = user.username,
                  Name = user.first_name + " " + user.last_name, 
                  Email = user.email,
-                 //ProfilePicture = user.profile_pic 
+                 ProfilePicture = user.profile_pic,
+                 Title = user.title
              })
        .ToListAsync();
 

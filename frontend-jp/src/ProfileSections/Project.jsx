@@ -3,67 +3,49 @@ import React, { useState, useEffect, useRef } from "react";
 import "../Components/JobPreppers.css";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
-
-const testProjDict = [
-  {
-    project_title: "raspberry pi ring doorbell",
-    description: "blah blah blah",
-  },
-  {
-    project_title: "raspberry pi ring doorbell",
-    description: "blah blah blah",
-  },
-  {
-    project_title: "raspberry pi ring doorbell",
-    description: "blah blah blah",
-  },
-  {
-    project_title: "raspberry pi ring doorbell",
-    description: "blah blah blah",
-  },
-];
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Project() {
-    const { user, setAuthData } = useAuth(); // custom hook for authprovider
-    const [projectDict, setProjectDict] = useState([]);
+  const { user, setAuthData } = useAuth(); // custom hook for authprovider
+  const [projectDict, setProjectDict] = useState([]);
 
-    useEffect(() => {
-  const requestProjects = async () => {
-    try {
-      const response = await fetch(
-        `https://jobpreppers.co/api/UserProject/${user.userID}`,
-        {
-          credentials: "include", // include cookies
+  useEffect(() => {
+    const requestProjects = async () => {
+      try {
+        const response = await fetch(
+          apiURL + `/api/UserProject/${user.userID}`,
+          {
+            credentials: "include", // include cookies
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("API Response: ", data); // Log the response to verify the structure
+
+          if (data) {
+            const newProjectDict = data.map((project) => ({
+              project_title: project.projectTitle,
+              description: project.description,
+            }));
+
+            setProjectDict((prevState) => {
+              if (
+                JSON.stringify(prevState) !== JSON.stringify(newProjectDict)
+              ) {
+                return newProjectDict;
+              }
+              return prevState;
+            });
+          }
         }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("API Response: ", data); // Log the response to verify the structure
-
-        if (data) {
-          const newProjectDict = data.map((project) => ({
-            project_title: project.projectTitle,
-            description: project.description,
-          }));
-
-          setProjectDict((prevState) => {
-            if (
-              JSON.stringify(prevState) !== JSON.stringify(newProjectDict)
-            ) {
-              return newProjectDict;
-            }
-            return prevState;
-          });
-        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    };
 
-  requestProjects();
-}, [user]);
+    requestProjects();
+  }, [user]);
   return (
     <div className="content">
       <div className="panelTransparent">
@@ -72,7 +54,7 @@ function Project() {
         </a>
         <h1>Projects</h1>
 
-          <div className="panel !w-full">
+        <div className="panel !w-full">
           {projectDict.map((project, index) => (
             <div key={index}>
               <div className={styles.project}>
@@ -91,8 +73,7 @@ function Project() {
               )}
             </div>
           ))}
-          </div>
-
+        </div>
       </div>
     </div>
   );

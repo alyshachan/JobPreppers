@@ -236,7 +236,12 @@ namespace JobPreppersProto.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchUsers([FromQuery] string? title, [FromQuery] string? name)
+        {
+            var query = _context.Users.AsQueryable();
 
+<<<<<<< HEAD
         [HttpGet("UserSearch")]
         public async Task<IActionResult> SearchUsers(
     [FromQuery] string? title,
@@ -262,6 +267,80 @@ namespace JobPreppersProto.Controllers
 
             var result = await users.ToListAsync();
             return Ok(result);
+=======
+            if (!string.IsNullOrEmpty(title))
+            {
+                query = query.Where(u => u.title.Contains(title));
+            }
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(u => u.first_name.Contains(name) || u.last_name.Contains(name));
+            }
+
+            var users = await query.Select(u => new
+            {
+                userId = u.userID,
+                profile_pic = u.profile_pic,
+                title = u.title,
+                first_name = u.first_name,
+                last_name = u.last_name,
+                username = u.username
+            }).ToListAsync();
+
+            if (!users.Any())
+            {
+                return NotFound("No users found matching the search criteria.");
+            }
+
+            return Ok(users);
+        }
+        [HttpGet("profile/{username}")]
+        public async Task<IActionResult> GetUserProfile(string username)
+        {
+            var user = await _context.Users
+                .Where(u => u.username == username)
+                .Select(u => new {
+                    userId = u.userID,
+                    profile_pic = u.profile_pic,
+                    title = u.title,
+                    first_name = u.first_name,
+                    last_name = u.last_name,
+                    username = u.username,
+                    location = u.location,
+                    description = u.description,
+                    website = u.website
+                })
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            return Ok(user);
+        }
+
+        [HttpGet("GetUserFromUsername/{username}")]
+        public async Task<IActionResult> GetUserFromUsername(string username)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.username == username);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            return Ok(new
+            {
+                userID = user.userID,
+                username = user.username,
+                first_name = user.first_name,
+                last_name = user.last_name,
+                email = user.email,
+                profile_pic = user.profile_pic
+            });
+>>>>>>> f0179805d36a812fc2518354f29e065a3ceda8df
         }
 
         // Define the request model

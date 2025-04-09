@@ -17,7 +17,15 @@ namespace JobPreppersDemo.Controllers
     {
         public int userID { get; set; }
         public int companyID { get; set; }
-       
+
+
+    }
+
+
+    public class RecruiterResponseDto
+    {
+        public bool IsRecruiter { get; set; }
+        public string? CompanyName { get; set; }
 
     }
     [Route("api/[controller]")]
@@ -44,7 +52,7 @@ namespace JobPreppersDemo.Controllers
                 {
                     userID = recruiterDto.userID,
                     companyID = recruiterDto.companyID
-                    
+
                 };
                 await _context.Recruiters.AddAsync(newRecruiter);
                 await _context.SaveChangesAsync();
@@ -56,7 +64,39 @@ namespace JobPreppersDemo.Controllers
             }
 
         }
+
+
+        [HttpGet("isRecruiter")]
+        public async Task<ActionResult<RecruiterResponseDto>> isRecruiter([FromQuery] int userID)
+        {
+
+            try
+            {
+                var recruiter = await _context.Recruiters
+                .Include(rec => rec.company)
+                .Where(rec => rec.userID == userID)
+                .Select(r => new { CompanyName = r.company.Name })
+                .FirstOrDefaultAsync();
+                bool isRec = recruiter != null;
+                string companyName = recruiter?.CompanyName ?? "Not Found";
+
+                var response = new RecruiterResponseDto
+                {
+                    IsRecruiter = isRec,
+                    CompanyName = companyName
+                };
+
+                Console.WriteLine($"The result of the query 1: {companyName}");
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }
+
+
 
 

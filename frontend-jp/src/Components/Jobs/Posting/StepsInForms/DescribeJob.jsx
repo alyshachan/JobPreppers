@@ -56,10 +56,36 @@ export default function DescribeJob({
     { value: 5, label: "Apprentices" },
   ];
 
-  useEffect(() => {
-    if (jobDescriptionData.companyName) {
-      setValue("company", jobDescriptionData.companyName);
+  const registerAddress = async (location) => {
+    try {
+      if (location) {
+        let lower = location.toLowerCase();
+        if (lower.match("remote")) {
+          setValue("latitude", null);
+          setValue("longitude", null);
+        } else {
+          const { lat, lon } = await submitAddress(location);
+          console.log("Fetched coordinates:", lat, lon);
+          if (lat && lon) {
+            setValue("latitude", lat);
+            setValue("longitude", lon);
+            setValue("location", location);
+          } else {
+            console.log("Please enter a correct location");
+          }
+        }
+      }
+    } catch (e) {
+      console.log("Couldn't find the address, please check spelling");
     }
+  };
+
+  useEffect(() => {
+    console.log("Set Job Description Value: ", jobDescriptionData);
+
+    // if (jobDescriptionData.companyName) {
+    //   setValue("company", jobDescriptionData.companyName);
+    // }
 
     if (jobDescriptionData.title) {
       setValue("title", jobDescriptionData.title);
@@ -82,8 +108,7 @@ export default function DescribeJob({
     if (jobDescriptionData.location) {
       const location = jobDescriptionData.location;
       try {
-        submitAddress(location);
-        setValue("location", location);
+        registerAddress(location);
       } catch (error) {
         console.log("Not right location");
       }
@@ -129,30 +154,7 @@ export default function DescribeJob({
                       label="Location *"
                       onBlur={async (e) => {
                         const location = e.target.value;
-                        try {
-                          if (location) {
-                            let lower = location.toLowerCase();
-                            if (lower.match("remote")) {
-                              setValue("latitude", null);
-                              setValue("longitude", null);
-                            } else {
-                              const { lat, lon } = await submitAddress(
-                                location
-                              );
-                              console.log("Fetched coordinates:", lat, lon);
-                              if (lat && lon) {
-                                setValue("latitude", lat);
-                                setValue("longitude", lon);
-                              } else {
-                                alert("Please enter a correct location");
-                              }
-                            }
-                          }
-                        } catch (e) {
-                          alert(
-                            "Couldn't find the address, please check spelling"
-                          );
-                        }
+                        registerAddress(location);
                       }}
                     />
                     {errorMessage(errors.location)}

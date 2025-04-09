@@ -22,10 +22,9 @@
   height: 56px; /* Fixed height to prevent resizing */
 }
 
-.drop-down .MuiInputLabel-root.Mui-focused, 
+.drop-down .MuiInputLabel-root.Mui-focused,
 .drop-down .MuiInputLabel-root.MuiFormLabel-filled,
-.drop-down .MuiInputLabel-root.MuiInputLabel-shrink
- {
+.drop-down .MuiInputLabel-root.MuiInputLabel-shrink {
   background-color: #e7f2ec; /*Background for dropdown title when selected*/
 }
 
@@ -52,6 +51,17 @@
   justify-content: space-between;
 }
 
+.selected-filter-button.MuiButton-outlined {
+  background-color: #4ba173;
+  color: white;
+  border: 2px solid #4ba173;
+  width: 200px;
+  min-width: 150px;
+  height: 56px;
+  display: flex;
+  justify-content: space-between;
+}
+
 .filter-button:hover {
   color: black;
   background-color: #f0fbf5;
@@ -62,7 +72,7 @@
   width: 30% !important;
 }
 
- .MuiPickersDay-root:hover {
+.MuiPickersDay-root:hover {
   background-color: black; /* Light gray background on hover */
   color: #000; /* Black text color */
 }

@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using ZstdSharp.Unsafe;
 
 class Test
 {
@@ -56,5 +57,26 @@ class Test
     }
 
 
+    public static void Skills()
+    {
+        HashSet<string> rawSkills = new HashSet<string>();
+        rawSkills.Add(" C# .NET, React, and cloud technologies");
+        rawSkills.Add(" CI/CD pipelines, containerization");
+        rawSkills.Add("SQL,");
+        rawSkills.Add("React and");
+        HashSet<string> finishedSkills = new HashSet<string>();
 
+        foreach (var skill in rawSkills)
+        {
+            var normalizeSkills = Regex.Split(skill, @"\s*,\s*|\s+and\s?|\s+or\s?", RegexOptions.IgnoreCase).Select(s => s.Trim())
+                                   .Where(s => !string.IsNullOrEmpty(s))  // Remove empty strings
+                                   .ToList();
+            foreach (var newSkill in normalizeSkills)
+            {
+                Console.WriteLine($"Input: {skill} -> Extracted skills: {newSkill}");
+                // Console.WriteLine("");
+                finishedSkills.Add(newSkill);
+            }
+        }
+    }
 }

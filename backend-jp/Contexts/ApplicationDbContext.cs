@@ -62,7 +62,11 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<__EFMigrationsHistory> __EFMigrationsHistories { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+<<<<<<< HEAD
         => optionsBuilder.UseMySql("name=ConnectionStrings:DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
+=======
+        => optionsBuilder.UseMySql("name=DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.39-mysql"));
+>>>>>>> f0179805d36a812fc2518354f29e065a3ceda8df
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -295,9 +299,8 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.skillID).HasName("PRIMARY");
 
-            entity.HasIndex(e => e.Name, "Name").IsUnique();
-
             entity.Property(e => e.Category).HasMaxLength(255);
+            entity.Property(e => e.Name).HasMaxLength(255);
         });
 
         modelBuilder.Entity<Study>(entity =>

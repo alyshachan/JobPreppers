@@ -18,6 +18,7 @@ const monthsOfYear = [
   "November",
   "December",
 ];
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Education() {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
@@ -27,7 +28,7 @@ function Education() {
     const requestEducation = async () => {
       try {
         const response = await fetch(
-          `https://jobpreppers.co/api/UserEducation/${user.userID}`,
+          apiURL + `/api/UserEducation/${user.userID}`,
           {
             credentials: "include", // include cookies
           }
@@ -95,7 +96,9 @@ function Education() {
                   <p className="title">{education.school_name}</p>
                   <p className="subtitle">
                     {education.degree_name}
-                    {(!education.degree_name || !education.study_name) ? "" : ", "}
+                    {!education.degree_name || !education.study_name
+                      ? ""
+                      : ", "}
                     {education.study_name}
                   </p>
                   <p className="subtitle">

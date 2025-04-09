@@ -6,7 +6,7 @@ import "@fontsource/roboto/700.css";
 
 import NavBar from "./Components/NavBar";
 import Messaging from "./Components/Messaging"
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Feed from "./Pages/Feed";
 import Jobs from "./Pages/Jobs";
 import Profile from "./Pages/Profile";
@@ -19,7 +19,12 @@ import Experience from "./ProfileSections/Experience";
 import Project from "./ProfileSections/Project";
 import Skills from "./ProfileSections/Skills";
 import VideoCall from "./Components/Interview/VideoCall";
+import Friends from "./ProfileSections/Friends"
 import { AuthProvider } from "./provider/authProvider";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import ManageJobs from "./Pages/ManageJobs";
+import BookmarkedJobs from "./Pages/BookmarkedJobs"; 
+const queryClient = new QueryClient();
 
 
 function App() {
@@ -40,22 +45,28 @@ function App() {
   console.log("AuthProvider:", AuthProvider);
   // console.log("ConnectionProvider:", ConnectionProvider);
 
+  //End Point: 107.23.196.38
+
   return (
     <>
+      <QueryClientProvider client={queryClient}>
       <AuthProvider>
-          <NavBar />
+      {!useLocation().pathname.includes("/VideoCall") && <NavBar />}
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Signup" element={<Signup />} />
 
-            <Route path="/Profile" element={<Profile />} />
+            <Route path="/Profile/:username" element={<Profile />} />
+            
             <Route path="/Feed" element={
               <div>
                 <Feed />
                 <Messaging />
               </div>} />
             <Route path="/Jobs" element={<Jobs />} />
+            <Route path="/Jobs/ManageJobs" element={<ManageJobs/>}/>
+            <Route path="/Jobs/BookmarkedJobs" element={<BookmarkedJobs/>}/>
             <Route path="/Interview" element={<Interview />} />
             <Route path="/Resume" element={<Resume />} />
 
@@ -64,9 +75,10 @@ function App() {
             <Route path="/Project" element={<Project />} />
             <Route path="/Skills" element={<Skills />} />
             <Route path="/VideoCall" element={<VideoCall />} />
-
-          </Routes>
+          <Route path="/Friends" element={<Friends />} />
+        </Routes>
       </AuthProvider>
+      </QueryClientProvider>
     </>
   );
 }

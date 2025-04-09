@@ -14,7 +14,7 @@
 //     //     const connectToHub = async () => {
 //     //         console.log("Attempting to connect to /DirectMessageHub");
 //     //         const connection = new signalR.HubConnectionBuilder()
-//     //             .withUrl("https://jobpreppers.co:5070/directMessageHub", {
+//     //             .withUrl("http://localhost:5000:5070/directMessageHub", {
 //     //                 accessTokenFactory: () => document.cookie.split('authToken=')[1] || '',
 //     //             })
 //     //             .withAutomaticReconnect()
@@ -48,17 +48,17 @@
 //         console.log("Attempting to connect to /DirectMessageHub");
 //         if (!signalRConnection) {
 //             const connection = new signalR.HubConnectionBuilder()
-//                 .withUrl("https://jobpreppers.co:5690/directMessageHub", {
+//                 .withUrl("http://localhost:5000:5690/directMessageHub", {
 //                     accessTokenFactory: () => document.cookie.split('authToken=')[1] || '',
 //                 })
 //                 .withAutomaticReconnect()
 //                 .build();
-    
+
 //             //configure the connection
 //             connection.onclose((error) => {
 //                 console.error('Something went horribly wrong');
 //             });
-    
+
 //             try {
 //                 console.log("Attempting to start connection");
 //                 await connection.start()
@@ -66,7 +66,7 @@
 //                         console.log('Connected to SignalR Hub');
 //                         setConnection(connection); // store the connection in a state
 //                     });
-    
+
 //             } catch (error) {
 //                 console.error('Connection failed or invoke error:', error);
 //             }
@@ -85,7 +85,6 @@
 //     const setSignalRConnection = (connection) => {
 //         setConnection(connection);
 //     };
-
 
 //     const contextValue = useMemo(() => ({ signalRConnection, setSignalRConnection, connectToHub, disconnectFromHub }), [signalRConnection]);
 
