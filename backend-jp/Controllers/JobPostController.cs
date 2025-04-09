@@ -236,8 +236,9 @@ namespace JobPreppersDemo.Controllers
                                         perks = job.perks,
                                         jobID = job.postID,
                                         score = jobSearch[job.postID],
-                                        profilePic = job.company != null && job.company.user != null ? job.company.user.profile_pic : null
-
+                                        profilePic = job!.company!.user!.profile_pic != null
+    ? "data:image/png;base64," + Convert.ToBase64String(job.company.user.profile_pic)
+    : null
 
                                     }
                                     )
@@ -517,8 +518,8 @@ namespace JobPreppersDemo.Controllers
                         perks = job.perks ?? "",
                         jobID = job.postID,
                         score = jobSearch[job.postID],
-                        profilePic = job.company != null && job.company.user != null && job.company.user.profile_pic != null
-    ? "data:image/jpeg;base64," + Convert.ToBase64String(job.company.user.profile_pic)
+                        profilePic = job!.company!.user!.profile_pic != null
+    ? "data:image/png;base64," + Convert.ToBase64String(job.company.user.profile_pic)
     : null
 
                     });
@@ -527,7 +528,6 @@ namespace JobPreppersDemo.Controllers
 
                 else
                 {
-
                     query = _context.JobPosts
                     .Include(job => job.company)
                     .Include(job => job.location)
@@ -549,8 +549,8 @@ namespace JobPreppersDemo.Controllers
                         perks = job.perks ?? "",
                         jobID = job.postID,
                         score = jobSearch[job.postID],
-                        profilePic = job.company != null && job.company.user != null && job.company.user.profile_pic != null
-    ? "data:image/jpeg;base64," + Convert.ToBase64String(job.company.user.profile_pic)
+                        profilePic = job!.company!.user!.profile_pic != null
+    ? "data:image/png;base64," + Convert.ToBase64String(job.company.user.profile_pic)
     : null
 
 
@@ -635,8 +635,8 @@ namespace JobPreppersDemo.Controllers
                         bonues = job.bonus ?? "",
                         perks = job.perks ?? "",
                         jobID = job.postID,
-                        profilePic = job.company != null && job.company.user != null && job.company.user.profile_pic != null
-    ? "data:image/jpeg;base64," + Convert.ToBase64String(job.company.user.profile_pic)
+                        profilePic = job!.company!.user!.profile_pic != null
+    ? "data:image/png;base64," + Convert.ToBase64String(job.company.user.profile_pic)
     : null
 
 
@@ -664,10 +664,9 @@ namespace JobPreppersDemo.Controllers
                         bonues = job.bonus ?? "",
                         perks = job.perks ?? "",
                         jobID = job.postID,
-                        profilePic = job.company != null && job.company.user != null && job.company.user.profile_pic != null
-    ? "data:image/jpeg;base64," + Convert.ToBase64String(job.company.user.profile_pic)
+                        profilePic = job!.company!.user!.profile_pic != null
+    ? "data:image/png;base64," + Convert.ToBase64String(job.company.user.profile_pic)
     : null
-
 
                     });
 

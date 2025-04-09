@@ -72,6 +72,9 @@ namespace JobPreppersDemo.Controllers
                                         location = b.Job.location.name,
                                         bonues = b.Job.bonus,
                                         perks = b.Job.perks,
+                                        profilePic = b.Job!.company!.user!.profile_pic != null
+    ? "data:image/png;base64," + Convert.ToBase64String(b.Job.company.user.profile_pic)
+    : null
                                     } : null
                                       )
                                       .ToListAsync();

@@ -35,13 +35,6 @@ function CompanyViewJobDescription({ setDrawerOpen, jobs }) {
     setSelectedJob(null);
   };
 
-  const userPicture = (job) => {
-    return job.profile_pic == null
-      ? defaultProfilePicture
-      : "data:image/png;base64," +
-          job.profile_pic.toString().toString("base64");
-  };
-
   return (
     <>
       {console.log(jobs)}
@@ -49,7 +42,10 @@ function CompanyViewJobDescription({ setDrawerOpen, jobs }) {
         <Card key={job.jobID} className={styles.card}>
           <CardHeader
             avatar={
-              <Avatar src={userPicture(job)} aria-label="Company Icon">
+              <Avatar
+                src={job.profilePic ?? defaultProfilePicture}
+                aria-label="Company Icon"
+              >
                 {job.company[0]}
               </Avatar>
             }

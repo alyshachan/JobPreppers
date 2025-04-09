@@ -74,7 +74,9 @@ namespace JobPreppersDemo.Controllers
                                     educationLevel = job.qualification.EducationLevel,
                                     minimumExperience = job.qualification.MinimumExperience,
                                     maximumExperience = job.qualification.MaximumExperience,
-
+                                    profilePic = job!.company!.user!.profile_pic != null
+    ? "data:image/png;base64," + Convert.ToBase64String(job.company.user.profile_pic)
+    : null
 
 
 

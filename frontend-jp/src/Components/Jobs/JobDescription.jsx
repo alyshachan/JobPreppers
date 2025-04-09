@@ -119,7 +119,9 @@ function JobDescription({ setDrawerOpen, jobs, setJobs }) {
       console.error("Error Deleting Job:", error);
     },
   });
-
+  {
+    jobs.map((job, index) => console.log("Profile Picture", job.profile_pic));
+  }
   return (
     <>
       {console.log(jobs)}
@@ -130,7 +132,7 @@ function JobDescription({ setDrawerOpen, jobs, setJobs }) {
               <CardHeader
                 avatar={
                   <Avatar
-                    src={job.profile_pic ?? defaultProfilePicture}
+                    src={job.profilePic ?? defaultProfilePicture}
                     aria-label="Company Picture"
                   >
                     {job.company[0]}
