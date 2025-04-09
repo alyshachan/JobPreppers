@@ -305,6 +305,56 @@ namespace JobPreppersProto.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpGet("GetUserInfo/{id}")]
+        public async Task<IActionResult> GetMinalUserInfo(int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.userID == id);
+            if (user == null)
+            {
+                return NotFound(new { message = "Invalid User" });
+            }
+
+
+            return Ok(new
+            {
+                first_name = user.first_name,
+                last_name = user.last_name,
+                title = user.title,
+                pfp = user.profile_pic
+            });
+        }
+        [HttpPost("UploadProfilePic/{userID}")]
+        public async Task<IActionResult> UploadProfilePic(int userID, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.userID == userID);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Optional: check for file type
+            var allowedTypes = new[] { "image/jpeg", "image/png" };
+            if (!allowedTypes.Contains(file.ContentType))
+            {
+                return BadRequest("Only PNG and JPEG files are allowed.");
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                user.profile_pic = memoryStream.ToArray(); // store as byte[]
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Profile picture uploaded successfully." });
+        }
+
         [HttpGet("search")]
         public async Task<IActionResult> SearchUsers([FromQuery] string? title, [FromQuery] string? name)
         {
@@ -382,6 +432,48 @@ namespace JobPreppersProto.Controllers
                 email = user.email,
                 profile_pic = user.profile_pic
             });
+        }
+
+        [HttpDelete("DeleteAllUserProfile/{userID}")]
+        public async Task<IActionResult> DeleteAllUserProfile(int userID)
+        {
+            try
+            {
+                var userExists = await _context.Users.AnyAsync(u => u.userID == userID);
+                if (!userExists)
+                {
+                    return NotFound("User not found");
+                }
+
+                var userEducations = await _context.UserEducations
+                    .Where(ue => ue.userID == userID)
+                    .ToListAsync();
+                var userSkills = await _context.UserSkills
+                    .Where(us => us.userID == userID)
+                    .ToListAsync();
+                var userExperiences = await _context.UserExperiences
+                    .Where(ue => ue.userID == userID)
+                    .ToListAsync();
+                var userProjects = await _context.UserProjects
+                    .Where(ue => ue.userID == userID)
+                    .ToListAsync();
+
+                if (userEducations.Any())
+                    _context.UserEducations.RemoveRange(userEducations);
+                if (userSkills.Any())
+                    _context.UserSkills.RemoveRange(userSkills);
+                if (userExperiences.Any())
+                    _context.UserExperiences.RemoveRange(userExperiences);
+                if (userProjects.Any())
+                    _context.UserProjects.RemoveRange(userProjects);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "All records deleted successfully for the user." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // Define the request model

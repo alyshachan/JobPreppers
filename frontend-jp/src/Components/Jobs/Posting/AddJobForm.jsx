@@ -11,27 +11,19 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 import ParseJobDescription from "./StepsInForms/ParseJobDescription";
 import ApplicationProcess from "./StepsInForms/ApplicationProcess";
 import DescribeJob from "./StepsInForms/DescribeJob";
 import Benefits from "./StepsInForms/Benefits";
 import Qualification from "./StepsInForms/Qualification";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { PostAdd } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import SectionHeader from "../../Profile/SectionHeader";
 import styles from "./Posting.module.css";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  parseJobSchema,
-  describeJobSchema,
-  benefitsSchema,
-  qualificationSchema,
-  applicationProcessSchema,
-} from "./Validation";
 import PacmanLoader from "../../Pacman/Pacman";
-import { useAuth } from "../../../provider/authProvider";
+import useJobForm from "./Helper/UseJobForm";
+import EditIcon from "@mui/icons-material/Edit";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
@@ -47,50 +39,71 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function AddJobForm({ setJobs, companyName }) {
-  const [jobDescriptionData, setjobDescriptionData] = useState({
-    benefits: [],
-    companyName: null,
-    educationLevel: null,
-    location: null,
-    maximumSalary: null,
-    minimumExperience: null,
-    minimumSalary: null,
-    skills: [],
-    title: null,
-    type: null,
-  });
-
-  const stepSchemas = [
-    parseJobSchema,
-    describeJobSchema,
-    benefitsSchema,
-    qualificationSchema,
-    applicationProcessSchema,
+export default function AddJobForm({ setJobs, companyName, jobToEdit }) {
+  const formSteps = [
+    { label: "Parse Job Description", component: ParseJobDescription },
+    { label: "Describe Job", component: DescribeJob },
+    { label: "Benefits & Perks", component: Benefits },
+    { label: "Qualifications", component: Qualification },
+    { label: "Application Process", component: ApplicationProcess },
   ];
-  // State
+
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({});
-  const { company, setCompany } = useState(null);
-  const { user } = useAuth(); // custom hook for authprovider
-  const [activeStep, setActiveStep] = useState(0);
-  const jobForm = useForm({
-    resolver: yupResolver(stepSchemas[activeStep]),
-    defaultValues: { currencies: "USD" },
-  });
+
+  const ifUndefined = (dbData) => {
+    if (dbData != undefined) {
+      const parseValue = JSON.parse(dbData);
+      return parseValue;
+    }
+    return dbData;
+  };
+
+  const {
+    jobForm,
+    activeStep,
+    handleNext,
+    handleBack,
+    formData,
+    setFormData,
+    jobDescriptionData,
+    isSubmitting,
+    isParseLoading,
+    mutateParse,
+    submitMutate,
+    isUpdate,
+    onSubmit,
+    setActiveStep,
+  } = useJobForm({ setJobs, companyName, jobToEdit, setOpen });
 
   const handleClickOpen = () => {
     setOpen(true);
+    if (jobToEdit) {
+      setActiveStep(1);
+      console.log("JobtoEdit : ", jobToEdit);
+      console.log("skills: ", jobToEdit.skills);
+      jobForm.setValue("company", jobToEdit.company);
+      jobForm.setValue("title", jobToEdit.title);
+      jobForm.setValue("location", jobToEdit.location.name);
+      jobForm.setValue("minimumSalary", jobToEdit.minimumSalary);
+      jobForm.setValue("maximumSalary", jobToEdit.maximumSalary);
+      jobForm.setValue("description", jobToEdit.description);
+      jobForm.setValue("location", jobToEdit.location);
+      jobDescriptionData.type = jobToEdit.type;
+      jobDescriptionData.perks = ifUndefined(jobToEdit.perks) || [];
+      jobDescriptionData.bonuses = ifUndefined(jobToEdit.bonues) || [];
+      jobDescriptionData.benefits = ifUndefined(jobToEdit.benefits) || [];
+      jobDescriptionData.skills = ifUndefined(jobToEdit.skills) || [];
+      jobDescriptionData.educationLevel = jobToEdit.educationLevel;
+      jobForm.setValue("postDate", jobToEdit.postDate);
+      jobForm.setValue("endDate", jobToEdit.endDate);
+      jobForm.setValue("applicationLink", jobToEdit.link);
+    }
     jobForm.setValue("company", companyName);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
-  const {
-    handleSubmit,
-    formState: { error, isSubmitting },
-  } = jobForm;
 
   const steps = [
     "Parse Job Description",
@@ -99,113 +112,6 @@ export default function AddJobForm({ setJobs, companyName }) {
     "Qualification for Position",
     "Application Process",
   ];
-
-  const handleNext = async () => {
-    const isValid = await jobForm.trigger(); // Validate current step before proceeding
-    if (!isValid) return;
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = async () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-  const fetchJobs = async () => {
-    try {
-      const res = await fetch(apiURL + "/api/jobpost");
-      if (res.ok) {
-        const data = await res.json();
-        console.log(data);
-        setJobs(data.jobs);
-      } else {
-        console.error("Failed to fetch jobs");
-      }
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
-    }
-  };
-
-  const parseDescription = async () => {
-    const res = await fetch(apiURL + "/api/textanalytics", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ description: jobForm.getValues("description") }),
-      credentials: "include",
-    });
-    if (!res.ok) {
-      throw new Error("Failed to Parse Job Description");
-    }
-    return res.json();
-  };
-
-  // Use Mutation for Post calls and anything involving user doing an action
-  const {
-    mutate,
-    isPending: isParseLoading,
-    isError,
-  } = useMutation({
-    mutationFn: parseDescription,
-    onSuccess: (data) => {
-      setjobDescriptionData(data);
-      handleNext();
-    },
-    onError: (error) => {
-      console.error("Error Parsing Job Description:", error);
-    },
-  });
-
-  const onSubmit = async (data, e) => {
-    const isValid = await jobForm.trigger(); // Validate current step before proceeding
-    if (!isValid) return;
-    const transformedData = {
-      title: data.title,
-      description: JSON.stringify(data.description),
-      userID: user.userID,
-      location: {
-        name: data.location,
-        longitude: data.longitude,
-        latitude: data.latitude,
-      },
-      type: data.type.label,
-      minimumSalary: data.minimumSalary,
-      maximumSalary: data.maximumSalary ? data.maximumSalary : null,
-      paymentType: data.payType,
-      postDate: data.postDate,
-      endDate: data.endDate,
-      perks: JSON.stringify(data.perks),
-      benefits: JSON.stringify(data.benefits),
-      bonus: JSON.stringify(data.bonuses),
-      link: data.applicationLink,
-      qualification: {
-        Skills: JSON.stringify(data.skills),
-        MinimumExperience: data.minimumExperience,
-        MaximumExperience: data.maximumExperience,
-        EducationLevel: data.education,
-      },
-    };
-    const response = await fetch(apiURL + "/api/jobpost/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(transformedData),
-      credentials: "include",
-    });
-  };
-
-  const {
-    mutate: submitMutate,
-    isPending: submitLoading,
-    isError: submitError,
-  } = useMutation({
-    mutationFn: (data) => onSubmit(data),
-    onSuccess: () => {
-      fetchJobs();
-      setActiveStep(0);
-      jobForm.reset();
-      handleClose();
-    },
-    onError: (error) => {
-      console.log("Error: ", { error });
-    },
-  });
 
   const pageDisplay = () => {
     switch (activeStep) {
@@ -252,31 +158,36 @@ export default function AddJobForm({ setJobs, companyName }) {
       case 4:
         return (
           <FormProvider {...jobForm}>
-            <form id="jobForm" onSubmit={handleSubmit(onSubmit)}>
-              {/* Wrap in form and use handleSubmit */}
-              <ApplicationProcess
-                formData={formData}
-                setFormData={setFormData}
-              />
-            </form>
+            {/* <form id="jobForm" onSubmit={handleSubmit}> */}
+            {/* Wrap in form and use handleSubmit */}
+            <ApplicationProcess formData={formData} setFormData={setFormData} />
+            {/* </form> */}
           </FormProvider>
         );
     }
   };
 
+  const { handleSubmit } = jobForm;
+
   return (
     <>
-      <Button
-        variant="filled"
-        onClick={handleClickOpen}
-        startIcon={<PostAdd />}
-      >
-        Add Job
-      </Button>
+      {jobToEdit ? (
+        <IconButton aria-label="edit button" onClick={handleClickOpen}>
+          <EditIcon />
+        </IconButton>
+      ) : (
+        <Button
+          variant="filled"
+          onClick={handleClickOpen}
+          startIcon={<PostAdd />}
+        >
+          Add Job
+        </Button>
+      )}
 
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <StyledDialog onClose={handleClose} open={open}>
-          {submitLoading && (
+          {isSubmitting && (
             <div className={styles.greyOverlay}>
               <div>
                 <h1 className="text-[3rem] text-[#ffffff]">Submitting...</h1>
@@ -323,7 +234,7 @@ export default function AddJobForm({ setJobs, companyName }) {
               <footer className="flex flex-row gap-2">
                 <button onClick={handleBack}>Back</button>
                 <button
-                  disabled={submitLoading}
+                  disabled={isSubmitting}
                   onClick={handleSubmit((data) => submitMutate(data))}
                   form="jobForm"
                 >
@@ -343,7 +254,10 @@ export default function AddJobForm({ setJobs, companyName }) {
                   </div>
                 ) : null}
                 <div className="grow-1">
-                  <button disabled={isParseLoading} onClick={() => mutate()}>
+                  <button
+                    disabled={isParseLoading}
+                    onClick={() => mutateParse()}
+                  >
                     Parse
                   </button>
                 </div>

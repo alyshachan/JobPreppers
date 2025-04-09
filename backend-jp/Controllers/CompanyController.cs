@@ -63,6 +63,29 @@ namespace JobPreppersDemo.Controllers
 
         }
 
+        [HttpGet("isCompany")]
+        public async Task<ActionResult<IsCompanyResponseDto>> isCompany([FromQuery] int userID)
+        {
+            try
+            {
+                Console.WriteLine("This went into the right function");
+                var company = await _context.Companies
+                .Where(c => c.userID == userID).AnyAsync();
+                Console.WriteLine($"Is this user a company: {company}");
+
+                var response = new IsCompanyResponseDto
+                {
+                    isCompany = company,
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetCompanyJobs([FromQuery] int userID)
         {
@@ -107,29 +130,6 @@ namespace JobPreppersDemo.Controllers
             }
         }
 
-
-        [HttpGet("isCompany")]
-        public async Task<ActionResult<IsCompanyResponseDto>> isCompany([FromQuery] int userID)
-        {
-            try
-            {
-                Console.WriteLine("This went into the right function");
-                var company = await _context.Companies
-                .Where(c => c.userID == userID).AnyAsync();
-                Console.WriteLine($"Is this user a company: {company}");
-
-                var response = new IsCompanyResponseDto
-                {
-                    isCompany = company,
-                };
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
 
 
     }

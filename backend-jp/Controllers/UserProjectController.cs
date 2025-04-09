@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
 using Google.Protobuf.Collections;
 using Mysqlx.Crud;
+using JobPreppersDemo.Services;
 
 namespace JobPreppersDemo.Controllers
 {
@@ -18,15 +19,19 @@ namespace JobPreppersDemo.Controllers
     public class UserProjectController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly EmbeddedUser _embeddedUser;
+
         public class UserProjectDto
         {
             public int userID { get; set; }
             public string projectTitle { get; set; }
             public string description { get; set; }
         }
-        public UserProjectController(ApplicationDbContext context)
+        public UserProjectController(ApplicationDbContext context, JobsVectorDB vector)
         {
             _context = context;
+            _embeddedUser = new EmbeddedUser(context, vector);
+
         }
 
         [HttpGet("{userID}")]
@@ -96,6 +101,7 @@ namespace JobPreppersDemo.Controllers
                 };
                 await _context.UserProjects.AddAsync(newProject);
                 await _context.SaveChangesAsync();
+                await _embeddedUser.AddEmbeddedUser(project.userID);
                 return Ok(new { message = "Project added successfully", projectID = newProject.projectID });
             }
             catch (Exception ex)
@@ -115,7 +121,8 @@ namespace JobPreppersDemo.Controllers
             try
             {
                 var project = await _context.UserProjects.FindAsync(projectID);
-                if (project == null){
+                if (project == null)
+                {
                     return NotFound("Project not found");
                 }
 
@@ -136,6 +143,7 @@ namespace JobPreppersDemo.Controllers
 
                 _context.UserProjects.Update(project);
                 await _context.SaveChangesAsync();
+                await _embeddedUser.AddEmbeddedUser(project.userID);
 
                 return Ok(new { message = "Project updated successfully" });
             }
@@ -146,19 +154,25 @@ namespace JobPreppersDemo.Controllers
         }
 
         [HttpDelete("DeleteProject/{projectID}")]
-        public async Task<IActionResult> DeleteProject(int projectID){
-            try{
+        public async Task<IActionResult> DeleteProject(int projectID)
+        {
+            try
+            {
                 var project = await _context.UserProjects.FindAsync(projectID);
-                if (project == null){
+                if (project == null)
+                {
                     return NotFound("Project not found");
                 }
-
+                var userID = project.userID;
                 _context.UserProjects.Remove(project);
                 await _context.SaveChangesAsync();
+                await _embeddedUser.AddEmbeddedUser(userID);
 
-                return Ok(new {message = "Project deleted sucessfully"});
+
+                return Ok(new { message = "Project deleted sucessfully" });
             }
-            catch(Exception ex){
+            catch (Exception ex)
+            {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

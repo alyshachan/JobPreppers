@@ -10,7 +10,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
-using JobPreppersDemo.Services;
+using Qdrant.Client;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+
+using JobPreppersDemo.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -124,6 +127,35 @@ else
         endpoint
     ));
 }
+
+builder.Services.AddSingleton<QdrantClient>(provider =>
+{
+
+    string? QDRANT_API_KEY = builder.Configuration["Qdrant:ApiKey"];
+    if (string.IsNullOrEmpty(QDRANT_API_KEY))
+    {
+        throw new InvalidOperationException("Error: QDRANT_API_KEY environment variable not set.");
+
+    }
+
+    return new QdrantClient(
+        host: "b9cf505f-e0e0-4759-b845-724f672e0551.us-west-2-0.aws.cloud.qdrant.io",
+        https: true,
+        apiKey: QDRANT_API_KEY
+    );
+});
+
+builder.Services.AddSingleton<OnnxModelService>(provider =>
+{
+    var modelPath = "model.onnx";
+    // var tokenPath = "onnx_env/tokenizer/tokenizer.json";
+    return new OnnxModelService(modelPath);
+});
+
+builder.Services.AddSingleton<JobsVectorDB>();
+builder.Services.AddSingleton<DocumentIntelligenceService>();
+builder.Services.AddSingleton<BlobStorageService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -158,7 +190,6 @@ builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {
