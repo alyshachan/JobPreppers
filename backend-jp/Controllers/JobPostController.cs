@@ -77,7 +77,7 @@ namespace JobPreppersDemo.Controllers
             public int jobID { get; set; }
             public int score { get; set; }
 
-            public byte[]? profilePic { get; set; }
+            public string? profilePic { get; set; }
 
         }
 
@@ -464,6 +464,8 @@ namespace JobPreppersDemo.Controllers
                 // Check Cache - should be there  --- maybe call other: 
                 Dictionary<int, int>? jobSearch = new Dictionary<int, int>();
                 var user = _context.UserEmbeddings.FirstOrDefault(ub => ub.userID == request.userID);
+
+
                 if (user == null)
                 {
                     // Nothing in cache need to add first 
@@ -515,7 +517,9 @@ namespace JobPreppersDemo.Controllers
                         perks = job.perks ?? "",
                         jobID = job.postID,
                         score = jobSearch[job.postID],
-                        profilePic = job.company != null && job.company.user != null ? job.company.user.profile_pic : null
+                        profilePic = job.company != null && job.company.user != null && job.company.user.profile_pic != null
+    ? "data:image/jpeg;base64," + Convert.ToBase64String(job.company.user.profile_pic)
+    : null
 
                     });
 
@@ -523,6 +527,7 @@ namespace JobPreppersDemo.Controllers
 
                 else
                 {
+
                     query = _context.JobPosts
                     .Include(job => job.company)
                     .Include(job => job.location)
@@ -544,7 +549,9 @@ namespace JobPreppersDemo.Controllers
                         perks = job.perks ?? "",
                         jobID = job.postID,
                         score = jobSearch[job.postID],
-                        profilePic = job.company != null && job.company.user != null ? job.company.user.profile_pic : null
+                        profilePic = job.company != null && job.company.user != null && job.company.user.profile_pic != null
+    ? "data:image/jpeg;base64," + Convert.ToBase64String(job.company.user.profile_pic)
+    : null
 
 
 
@@ -603,6 +610,8 @@ namespace JobPreppersDemo.Controllers
 
                 if (request.Latitude != null && request.Longitude != null && request.Distance != 0)
                 {
+
+
                     var distance = request.Distance * 1609.34;
                     query = _context.JobPosts.FromSqlInterpolated(
                         $@"
@@ -626,7 +635,9 @@ namespace JobPreppersDemo.Controllers
                         bonues = job.bonus ?? "",
                         perks = job.perks ?? "",
                         jobID = job.postID,
-                        profilePic = job.company != null && job.company.user != null ? job.company.user.profile_pic : null
+                        profilePic = job.company != null && job.company.user != null && job.company.user.profile_pic != null
+    ? "data:image/jpeg;base64," + Convert.ToBase64String(job.company.user.profile_pic)
+    : null
 
 
                     });
@@ -653,8 +664,9 @@ namespace JobPreppersDemo.Controllers
                         bonues = job.bonus ?? "",
                         perks = job.perks ?? "",
                         jobID = job.postID,
-                        profilePic = job.company != null && job.company.user != null ? job.company.user.profile_pic : null
-
+                        profilePic = job.company != null && job.company.user != null && job.company.user.profile_pic != null
+    ? "data:image/jpeg;base64," + Convert.ToBase64String(job.company.user.profile_pic)
+    : null
 
 
                     });

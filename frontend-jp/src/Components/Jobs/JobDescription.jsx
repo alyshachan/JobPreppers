@@ -68,13 +68,6 @@ function JobDescription({ setDrawerOpen, jobs, setJobs }) {
     }
   }, [user?.userID]);
 
-  const userPicture = (job) => {
-    return job.profile_pic == null
-      ? defaultProfilePicture
-      : "data:image/png;base64," +
-          job.profile_pic.toString().toString("base64");
-  };
-
   const deleteJob = async (job) => {
     const res = await fetch(apiURL + "/api/jobpost/delete", {
       method: "POST",
@@ -136,7 +129,10 @@ function JobDescription({ setDrawerOpen, jobs, setJobs }) {
             <Box className="flex-row w-2/3 max-h-full border-r-2">
               <CardHeader
                 avatar={
-                  <Avatar src={userPicture(job)} aria-label="Company Picture">
+                  <Avatar
+                    src={job.profile_pic ?? defaultProfilePicture}
+                    aria-label="Company Picture"
+                  >
                     {job.company[0]}
                   </Avatar>
                 }
