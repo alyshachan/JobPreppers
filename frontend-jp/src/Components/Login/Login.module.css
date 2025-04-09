@@ -49,6 +49,30 @@
     outline: none;
     box-shadow: 0 0 0 2px #e7f2ec;
   }
+
+  .lightButton {
+    background-color: #f0fbf5;
+    border: 2px solid #63d297;
+    color: #63d297;
+    width: 40%;
+    height: 3rem;
+  }
+
+  .lightButton:hover {
+    background-color: #edf2f7;
+  }
+
+  .activeButton{
+    background-color: #4BA173;
+    border: 2px solid #4BA173;
+    border-radius: 30px;
+    padding: 0px 10px;
+    color: white;
+    font-weight: bold;
+    line-height: 30px;
+    width: 40%;
+    height: 3rem;
+  }
   
   .errorMessage {
     color: #e11d48;
@@ -70,6 +94,16 @@
   
   .submitButton:hover {
     background-color: #085630;
+  }
+
+  .submitButton:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+  }
+
+  .submitButton:hover:disabled {
+    background-color: #7a7a7a;
+    cursor: not-allowed;
   }
   
   .orSeparator {

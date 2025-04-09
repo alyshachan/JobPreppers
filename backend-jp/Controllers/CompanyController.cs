@@ -24,6 +24,7 @@ namespace JobPreppersDemo.Controllers
     public class IsCompanyResponseDto
     {
         public bool isCompany { get; set; }
+
     }
     [Route("api/[controller]")]
     [ApiController]
@@ -84,6 +85,53 @@ namespace JobPreppersDemo.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCompanyJobs([FromQuery] int userID)
+        {
+            try
+            {
+
+                var companyJobs = await _context.JobPosts
+                                        .Include(job => job.company)
+                                        .Include(job => job.location)
+                                        .Where(job => job.company.userID == userID)
+                                        .Select(job => new
+                                        {
+                                            company = job.company.Name,
+                                            minimumSalary = job.minimumSalary,
+                                            benefits = job.benefits,
+                                            postDate = job.postDate,
+                                            endDate = job.endDate,
+                                            description = job.description,
+                                            title = job.title,
+                                            type = job.type,
+                                            link = job.link,
+                                            location = job.location.name,
+                                            bonues = job.bonus,
+                                            perks = job.perks,
+                                            jobID = job.postID
+
+
+                                        }
+                                    )
+                                        .ToListAsync();
+
+                // var jobs = await _context.JobPosts
+                //                          .Where(job => bookmarkedJobs.Contains(job.postID))
+                //                          .ToListAsync();
+
+                return Ok(companyJobs);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+
     }
 }
 

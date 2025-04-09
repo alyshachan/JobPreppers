@@ -44,6 +44,7 @@
   background-color: #f0fbf5 !important;
   border: 2px solid #63d297 !important;
   color: #63d297 !important;
+  line-height: 1 !important;
 }
 
 .editProfileButton:hover {
@@ -100,4 +101,10 @@
 
 .addNewSection:hover {
   background-color: #edf2f7;
+}
+
+.icon{
+  font-size: 2.5rem !important;
+  aspect-ratio: 1;
+  color: #085630;
 }
