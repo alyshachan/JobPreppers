@@ -1,19 +1,18 @@
-using JobPreppersDemo.Services;
+using System.Text.Json.Nodes;
 using JobPreppersDemo.Contexts;
 using JobPreppersDemo.Models;
-using Microsoft.EntityFrameworkCore;
+using JobPreppersDemo.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Stream;
 using Stream.Models;
 using StreamChat.Clients;
 using StreamChat.Models;
-using System.Text.Json.Nodes;
 
 namespace JobPreppersDemo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class ChatController : ControllerBase
     {
         private readonly StreamService _streamService;
@@ -48,12 +47,22 @@ namespace JobPreppersDemo.Controllers
         {
             try
             {
-                var channel = await _streamService.CreateDMChannelAsync(request.UserID1, request.UserID2);
+                var channel = await _streamService.CreateDMChannelAsync(
+                    request.UserID1,
+                    request.UserID2
+                );
                 Console.WriteLine(channel);
                 // string OkMsg = $"Created channel {channel.Channel.Cid} successfully with users {request.UserID1} and {request.UserID2}";
                 string OkMsg = "testing";
 
-                return Ok(new { OkMsg, channel.Members, channel.Channel.Cid });
+                return Ok(
+                    new
+                    {
+                        OkMsg,
+                        channel.Members,
+                        channel.Channel.Cid,
+                    }
+                );
             }
             catch (Exception error)
             {
@@ -61,7 +70,7 @@ namespace JobPreppersDemo.Controllers
                 var errorResponse = new
                 {
                     message = "An error occurred while creating the DM channel.",
-                    details = error.Message
+                    details = error.Message,
                 };
                 return NotFound(new { errorResponse });
             }
@@ -70,8 +79,8 @@ namespace JobPreppersDemo.Controllers
         [HttpGet("getAllChannels")]
         public async Task<IActionResult> getChannels()
         {
-
-            var channels = await _streamService.ChatChannelClient.QueryChannelsAsync(QueryChannelsOptions.Default
+            var channels = await _streamService.ChatChannelClient.QueryChannelsAsync(
+                QueryChannelsOptions.Default
             );
             // string OkMsg = $"Deleted channel ";
             return Ok(channels);

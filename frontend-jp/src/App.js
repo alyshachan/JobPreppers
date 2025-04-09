@@ -63,7 +63,7 @@ function App() {
             <Route path="/Feed" element={
               <div>
                 <Feed />
-                <Messaging />
+                {/* <Messaging /> */}
               </div>} />
             <Route path="/Jobs" element={<Jobs />} />
             <Route path="/Jobs/ManageJobs" element={<ManageJobs/>}/>
@@ -79,6 +79,7 @@ function App() {
           <Route path="/Friends" element={<Friends />} />
           <Route path="/ParseResume" element={<ParseResume/>}/>
         </Routes>
+        {!useLocation().pathname.includes("/VideoCall") && <Messaging />}
       </AuthProvider>
       </QueryClientProvider>
     </>

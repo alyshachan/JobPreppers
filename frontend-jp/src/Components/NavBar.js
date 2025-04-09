@@ -172,6 +172,24 @@ function NavBar() {
     } catch (err) {
       setError("An error occurred. Please try again."); // Catch and display any request error
     }
+
+    try {
+      const response = await fetch(
+        apiURL + `/api/Friend/SyncFriends/${user.userID}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+
+      if (response.ok) {
+        console.log("Friends synced");
+      }
+
+    }
+    catch (err) {
+      setError("An error occurred when syncing friends");
+    }
   };
 
   const handleDeclineFriend = async (friendID) => {
