@@ -23,5 +23,3 @@ Properties/
 node_modules/
 Models/__EFMigrationsHistory.cs
 build/
-!Models/onnx_env/
-!Models/onnx_env/**

@@ -146,7 +146,7 @@ builder.Services.AddSingleton<QdrantClient>(provider =>
 
 builder.Services.AddSingleton<OnnxModelService>(provider =>
 {
-    var modelPath = "onnx_env/all-MiniLM-L6-v2/onnx/model.onnx";
+    var modelPath = "Models/onnx_env/all-MiniLM-L6-v2/onnx/model.onnx";
     // var tokenPath = "onnx_env/tokenizer/tokenizer.json";
     return new OnnxModelService(modelPath);
 });
