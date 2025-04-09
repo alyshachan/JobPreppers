@@ -283,6 +283,25 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.recruiterID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("JobPosts_Recruiters_recruiterID_fk");
+
+            entity.HasMany(d => d.users).WithMany(p => p.jobs)
+                .UsingEntity<Dictionary<string, object>>(
+                    "deleteJob",
+                    r => r.HasOne<User>().WithMany()
+                        .HasForeignKey("userID")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("deleteJobs_Users_userID_fk"),
+                    l => l.HasOne<JobPost>().WithMany()
+                        .HasForeignKey("jobID")
+                        .HasConstraintName("deleteJobs_JobPosts_postID_fk"),
+                    j =>
+                    {
+                        j.HasKey("jobID", "userID")
+                            .HasName("PRIMARY")
+                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                        j.ToTable("deleteJobs");
+                        j.HasIndex(new[] { "userID" }, "deleteJobs_Users_userID_fk");
+                    });
         });
 
         modelBuilder.Entity<JobQualification>(entity =>

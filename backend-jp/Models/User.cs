@@ -54,4 +54,6 @@ public partial class User
     public virtual ICollection<UserProject> UserProjects { get; set; } = new List<UserProject>();
 
     public virtual ICollection<UserSkill> UserSkills { get; set; } = new List<UserSkill>();
+
+    public virtual ICollection<JobPost> jobs { get; set; } = new List<JobPost>();
 }

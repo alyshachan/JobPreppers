@@ -56,4 +56,6 @@ public partial class JobPost
     public virtual JobQualification qualification { get; set; } = null!;
 
     public virtual Recruiter recruiter { get; set; } = null!;
+
+    public virtual ICollection<User> users { get; set; } = new List<User>();
 }
