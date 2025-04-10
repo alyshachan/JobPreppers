@@ -14,7 +14,7 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import defaultProfilePicture from "../Components/defaultProfilePicture.png"
@@ -66,6 +66,18 @@ function NavBar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const [isOff, setIsOff] = useState(false);
+  const [buttonOff, setButtonOff] = useState(false);
+
+
+  const buttonRef = useRef(null);
+
+  const handleMouseLeave = (e) => {
+    // if (isOff && buttonOff)
+    buttonRef.current?.click();
+    // setButtonOff(false);
+    // setIsOpen(false);
+  };
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -237,6 +249,7 @@ function NavBar() {
       : "data:image/png;base64," +
         user.profile_pic.toString().toString("base64");
 
+
   return (
     <Disclosure as="nav" className="bg-[#4BA173] w-full padding ">
       <div className="mx-auto w-full px-2">
@@ -272,19 +285,65 @@ function NavBar() {
                   if (item.name === "Jobs") {
                     return (
                       <div className="relative group">
-                        <span
+                     <Menu as="div" className="relative group">
+  <MenuButton 
+  ref={buttonRef}
+    className="block data-[focus]:bg-[#0D7944] rounded-md px-3 py-2 text-base font-medium cursor-pointer"
+    onMouseEnter={(e) => e.target.click()}
+
+  >
+    Job
+  </MenuButton>
+
+  <MenuItems 
+    anchor="bottom" 
+    transition
+    onMouseLeave={handleMouseLeave}
+    // onMouseOut={(e) => e.target.click()}
+
+    className={`origin-top transition duration-200 ease-out z-50 rounded-md bg-white w-48`}  >
+    <MenuItem>
+      <Link
+        to="/Jobs"
+        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+      >
+        Job Board
+      </Link>
+    </MenuItem>
+
+    <MenuItem>
+      <Link
+        to="/Jobs/ManageJobs"
+        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+      >
+        Manage Jobs
+      </Link>
+    </MenuItem>
+
+    <MenuItem>
+      <Link
+        to="/Jobs/BookmarkedJobs"
+        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+      >
+        Bookmarked Jobs
+      </Link>
+    </MenuItem>
+  </MenuItems>
+</Menu>
+
+                        {/* <span
                           className={classNames(
-                            "block rounded-md px-3 py-2 text-base font-medium cursor-pointer",
+                            "block data-[focus]:bg-blue-100 rounded-md px-3 py-2 text-base font-medium cursor-pointer",
                             matchJobs
                               ? "bg-[#085630] text-white"
                               : "text-gray-300 group-hover:bg-[#0D7944] group-hover:text-white"
                           )}
                         >
                           Jobs
-                        </span>
+                        </span> */}
 
                         {/* Dropdown panel */}
-                        <div
+                        {/* <div
                           className="absolute left-0 z-50 mt-1 w-48 origin-top-left rounded-md bg-white shadow-lg 
                opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-opacity duration-200"
                         >
@@ -306,7 +365,7 @@ function NavBar() {
                           >
                             Bookmarked Jobs
                           </Link>
-                        </div>
+                        </div> */}
                       </div>
                     );
                   } else {
