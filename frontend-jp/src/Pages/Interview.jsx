@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../provider/authProvider";
-
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import SectionHeader from "../Components/Profile/SectionHeader";
 import Calendar from "../Components/Interview/Calendar";
 import AddEventDialog from "../Components/Interview/AddEventDialog";
 import UpcomingEvents from "../Components/Interview/UpcomingEvents";
 import InterviewerCard from "../Components/Interview/InterviewerCard";
+import AddInterviewerDialog from "../Components/Interview/AddInterviewerDialog";
 import moment from "moment";
 import "../Components/JobPreppers.css";
 const apiURL = process.env.REACT_APP_JP_API_URL;
@@ -15,6 +16,7 @@ function Interview() {
   const [events, setEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [openEventDialog, setOpenEventDialog] = useState(false);
+  const [openInterviewerDialog, setOpenInterviewerDialog] = useState(false);
 
   const requestEvents = async () => {
     try {
@@ -57,6 +59,14 @@ function Interview() {
 
   const handleCloseEventDialog = () => {
     setOpenEventDialog(false);
+  };
+
+  const handleOpenInterviewerDialog = () => {
+    setOpenInterviewerDialog(true);
+  };
+
+  const handleCloseInterviewerDialog = () => {
+    setOpenInterviewerDialog(false);
   };
 
   const handleEventSubmit = async (newEvent) => {
@@ -109,7 +119,6 @@ function Interview() {
             setSelectedDate={setSelectedDate}
           />
         </div>
-
         {openEventDialog && (
           <AddEventDialog
             open={openEventDialog}
@@ -133,7 +142,19 @@ function Interview() {
         </div>
 
         <div className="panelTransparent !p-0">
-          <h1 className="items-start">Schedule Mock Interview</h1>
+          <div className="flex justify-between items-center">
+            <h1 className="items-start">Schedule Mock Interview</h1>
+            <button onClick={handleOpenInterviewerDialog}>
+              <AssignmentIndIcon />
+              Sign up to be a mock interviewer
+            </button>
+          </div>
+          {openInterviewerDialog && (
+            <AddInterviewerDialog
+              open={openInterviewerDialog}
+              onClose={handleCloseInterviewerDialog}
+            />
+          )}
           <div className="flex flex-row overflow-x-auto pl-[50px] gap-x-[50px]">
             <InterviewerCard
               name="Justin Ellis"

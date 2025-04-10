@@ -22,7 +22,7 @@ namespace JobPreppersDemo.Controllers
     public class ManageController : Controller
     {
 
-        public class DeleteJobRequest
+        public class DeleteManagedJobRequest
         {
             public int jobID { get; set; }
             public int userID { get; set; }
@@ -107,7 +107,7 @@ namespace JobPreppersDemo.Controllers
 
         // Recruiter are able to delete the job they posted
         [HttpPost("delete")]
-        public async Task<IActionResult> deleteJobPost([FromBody] DeleteJobRequest request)
+        public async Task<IActionResult> deleteJobPost([FromBody] DeleteManagedJobRequest request)
         {
 
             try

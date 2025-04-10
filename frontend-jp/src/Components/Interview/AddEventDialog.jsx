@@ -16,7 +16,7 @@ import { styled } from "@mui/material/styles";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import SearchParticipants from "./SearchParticipants";
 import moment from "moment";
-import styles from "./AddEventDialog.module.css";
+import styles from "./AddDialog.module.css";
 
 import SectionHeader from "../../Components/Profile/SectionHeader";
 
