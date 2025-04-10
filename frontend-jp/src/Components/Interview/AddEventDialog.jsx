@@ -29,6 +29,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     maxWidth: "800px",
     minWidth: "800px",
   },
+  "& .css-si425x" : {
+    borderRadius: "30px",
+    padding: "0px 20px 20px",
+    overflow: "hidden",
+    maxWidth: "800px",
+    minWidth: "800px",
+  }
 }));
 
 function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
