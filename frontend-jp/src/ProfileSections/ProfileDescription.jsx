@@ -47,7 +47,7 @@ async function fetchRecruiterStatus(userID) {
 async function fetchFriendStatus(userId, friendId) {
   const response = await fetch(
     apiURL +
-      `/api/Friend/GetFriendStatus?userId=${userId}&friendId=${friendId}`,
+    `/api/Friend/GetFriendStatus?userId=${userId}&friendId=${friendId}`,
     { credentials: "include" }
   );
   if (response.ok) return await response.text();
@@ -109,7 +109,7 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
           companyID: user.userID, // Assuming the company is the logged-in user
         }),
       });
-  
+
       if (response.ok) {
         queryClient.invalidateQueries(["isVisitingRecruiter", visitingUser.userID]);
       } else {
@@ -120,7 +120,7 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
       console.error("Error adding recruiter:", err);
     }
   };
-  
+
 
   const { data: isRecruiter } = useQuery({
     queryKey: ["isRecruiter", user?.userID],
@@ -137,7 +137,7 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
   const { data: isVisitingRecruiter } = useQuery({
     queryKey: ["isVisitingRecruiter", visitingUser?.userID],
     queryFn: () => fetchRecruiterStatus(visitingUser.userID),
-    enabled: !!visitingUser?.userID, 
+    enabled: !!visitingUser?.userID,
   });
 
   const { data: isVisitingCompany } = useQuery({
@@ -150,8 +150,9 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
     visitingUser.profile_pic == null
       ? defaultProfilePicture
       : "data:image/png;base64," +
-        visitingUser.profile_pic.toString().toString("base64");
+      visitingUser.profile_pic.toString().toString("base64");
 
+  if (!visitingUser || !user) return <div>Loading user...</div>;
   return (
     <div className={styles.personalInfo}>
       <img className="profilePicture" alt="Profile Picture" src={userPic} />
@@ -201,22 +202,22 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
             style={
               friendStatus === "Friends"
                 ? {
-                    pointerEvents: "none",
-                    opacity: 1,
-                  }
+                  pointerEvents: "none",
+                  opacity: 1,
+                }
                 : {}
             }
           >
             {friendStatus === "Friends"
               ? "Friends"
               : friendStatus === "Pending"
-              ? "Pending"
-              : "Connect"}
+                ? "Pending"
+                : "Connect"}
           </Button>
         )}
         {isCompany &&
           !isVisitingCompany &&
-          !isVisitingRecruiter&&
+          !isVisitingRecruiter &&
           user.username != visitingUser.username && (
             <Button
               className={styles.editProfileButton}
