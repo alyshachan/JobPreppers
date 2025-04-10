@@ -13,6 +13,14 @@ import styles from "../Posting.module.css";
 import { errorMessage } from "../Helper/ErrorMessage";
 import { Controller } from "react-hook-form";
 import Autocomplete from "@mui/material/Autocomplete";
+import { styled } from "@mui/material/styles";
+
+const ToggleButtonFormWrap = styled(ToggleButtonForm)(({ theme }) => ({
+  display: "flex",
+  flexWrap: "wrap"
+}));
+
+
 export default function Benefits({ jobDescriptionData }) {
   // const rate = ["Hourly Rate", "Monthy Rate", "Annually"];
   const bonuses = ["Signing Bonus", "Tip", "Equity Package", "Commission"];
@@ -277,7 +285,7 @@ export default function Benefits({ jobDescriptionData }) {
 
               <div className={styles.inputField}>
                 <h2>Benefits</h2>
-                <ToggleButtonForm
+                <ToggleButtonFormWrap
                   name="benefits"
                   control={control}
                   options={benefits}
