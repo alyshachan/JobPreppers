@@ -182,12 +182,10 @@ button:hover{
   margin-top: 20px;
 }
 
-
 .job-results ul {
   list-style-type: none; /* Remove bullet points */
   padding: 0; /* Remove default padding */
 }
-
 
 .job-item {
   background-color: #f1f1f1; /* Light gray background */
@@ -199,11 +197,9 @@ button:hover{
   transition: background-color 0.3s; /* Smooth transitions */
 }
 
-
 .job-item:hover {
   background-color: #e1e1e1; /* Darker gray on hover */
 }
-
 
 .job-title {
   font-weight: bold; /* Bold job title */
