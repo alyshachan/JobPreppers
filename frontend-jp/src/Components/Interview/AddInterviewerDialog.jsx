@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { useAuth } from "../../provider/authProvider";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -12,6 +13,7 @@ import styles from "./AddDialog.module.css";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import SectionHeader from "../../Components/Profile/SectionHeader";
+const apiURL = process.env.REACT_APP_JP_API_URL;
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .css-10d30g3-MuiPaper-root-MuiDialog-paper": {
@@ -24,12 +26,50 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
+function AddInterviewerDialog({ open, onClose, onAdd }) {
+  const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [specialties, setSpecialties] = useState("");
   const [availibility, setAvailibility] = useState("");
 
-  const handleAddInterviewer = () => {
-    return;
+  const handleAddInterviewer = async () => {
+    const interviewerData = {
+      userID: user.userID,
+      specialties: specialties,
+      availability: availibility,
+      rating: null,
+    };
+
+    try {
+      const response = await fetch(
+        apiURL + `/api/InterviewSignUp/SignUpToInterview`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(interviewerData),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        onAdd({
+            firstName: user.first_name,
+            lastName: user.last_name,
+            username: user.username,
+            title: user.title,
+            specialties: data.specialties,
+            availability: data.availability,
+            signUpID: data.signUpID,
+          });
+        console.log("Interviewer added successfully");
+        onClose();
+      } else {
+        window.alert("Failed to add interviewer");
+      }
+    } catch (error) {
+      window.alert("Error during interviewer's sign up:", error);
+    }
   };
 
   return (
@@ -62,7 +102,9 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
                 />
               </div>
             </div>
-              <div className={styles.charCount}>Specialty Character Limit: {specialties.length}/45</div>
+            <div className={styles.charCount}>
+              Specialty Character Limit: {specialties.length}/45
+            </div>
 
             <div className={styles.input}>
               <EventAvailableIcon className={styles.icon} />
@@ -77,18 +119,20 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
                 />
               </div>
             </div>
-              <div className={styles.charCount}>Availibility Character Limit: {availibility.length}/45</div>
+            <div className={styles.charCount}>
+              Availibility Character Limit: {availibility.length}/45
+            </div>
           </div>
         </div>
       </DialogContent>
 
       <DialogActions>
         <button autoFocus onClick={handleAddInterviewer}>
-          Create Event
+          Sign Up
         </button>
       </DialogActions>
     </StyledDialog>
   );
 }
 
-export default AddEventDialog;
+export default AddInterviewerDialog;

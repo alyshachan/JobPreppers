@@ -17,6 +17,7 @@ function Interview() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [openEventDialog, setOpenEventDialog] = useState(false);
   const [openInterviewerDialog, setOpenInterviewerDialog] = useState(false);
+  const [interviewers, setInterviewers] = useState([]);
 
   const requestEvents = async () => {
     try {
@@ -49,8 +50,32 @@ function Interview() {
     }
   };
 
+  const fetchInterviewers = async () => {
+    try {
+      const response = await fetch(
+        apiURL + "/api/InterviewSignUp/GetAllInterviewers",
+        {
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setInterviewers(data);
+      } else {
+        console.error("Failed to fetch interviewers");
+      }
+    } catch (err) {
+      console.error("Error fetching interviewers:", err);
+    }
+  };
+
+  const updateInterviewers = (newInterviewer) => {
+    setInterviewers((prevState) => [...prevState, newInterviewer]);
+  };
+
   useEffect(() => {
     requestEvents();
+    fetchInterviewers();
   }, [user]);
 
   const handleOpenEventDialog = () => {
@@ -153,29 +178,28 @@ function Interview() {
             <AddInterviewerDialog
               open={openInterviewerDialog}
               onClose={handleCloseInterviewerDialog}
+              onAdd={updateInterviewers}
             />
           )}
           <div className="flex flex-row overflow-x-auto pl-[50px] gap-x-[50px]">
-            <InterviewerCard
-              name="Justin Ellis"
-              title="Recruiter @ T.D. Williamson"
-              rating="3.9"
-            />
-            <InterviewerCard
-              name="Jim De St. Germain"
-              title="Prof at Utah"
-              rating="4.2"
-            />
-            <InterviewerCard
-              name="David Bean"
-              title="Startup CTO, Industrial Adjunct Professor"
-              rating="5.0"
-            />
-            <InterviewerCard
-              name="Trang Tran"
-              title="CS Student at University of Utah"
-              rating="4.3"
-            />
+            {interviewers.length > 0 ? (
+              interviewers.map((interviewer) => (
+                <InterviewerCard
+                  key={interviewer.userID}
+                  name={`${interviewer.firstName} ${interviewer.lastName ? interviewer.lastName:""}`}
+                  username={interviewer.username}
+                  title={interviewer.title}
+                  specialties={interviewer.specialties}
+                  availibility={interviewer.availability}
+                />
+              ))
+            ) : (
+              <div className="flex w-full justify-center">
+                <h2 className="text-[#4BA173] text-center">
+                  No interviewers available yet
+                </h2>
+              </div>
+            )}
           </div>
         </div>
       </div>

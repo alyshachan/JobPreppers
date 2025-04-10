@@ -59,3 +59,9 @@
   color: #4ba173;
   padding: 20px 20px 20px 0px;
 }
+
+.viewProfileButton:hover,
+.scheduleButton:hover {
+  background-color: #edf2f7;
+
+}

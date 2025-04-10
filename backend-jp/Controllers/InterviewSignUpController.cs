@@ -24,16 +24,47 @@ namespace JobPreppersDemo.Controllers
     [ApiController]
     public class InterviewSignUpController : Controller
     {
-        
+
         private readonly ApplicationDbContext _context;
         public InterviewSignUpController(ApplicationDbContext context)
         {
             _context = context;
         }
-        [HttpPost("SignUpToInterview")]
-        public async Task<IActionResult> signUpToInterview([FromBody]signUpDto signUp)
+
+        [HttpGet("GetAllInterviewers")]
+        public async Task<IActionResult> GetAllInterviewers()
         {
-            if(signUp == null)
+            try
+            {
+                var interviewers = await _context.Interviewers
+                    .Join(_context.Users,
+                          interviewer => interviewer.userID,
+                          user => user.userID,
+                          (interviewer, user) => new
+                          {
+                              interviewer.userID,
+                              FirstName = user.first_name,
+                              LastName = user.last_name,
+                              Username = user.username,
+                              Title = user.title,
+                              interviewer.specialties,
+                              interviewer.availability,
+                          })
+                    .ToListAsync();
+
+                return Ok(interviewers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+        [HttpPost("SignUpToInterview")]
+        public async Task<IActionResult> signUpToInterview([FromBody] signUpDto signUp)
+        {
+            if (signUp == null)
             {
                 return BadRequest("Form was not filled out correctly");
             }
@@ -44,14 +75,22 @@ namespace JobPreppersDemo.Controllers
                     userID = signUp.userID,
                     specialties = JsonSerializer.Serialize(signUp.specialties),
                     availability = signUp.availability,
-                    rating = signUp.rating
+                    rating = null
 
                 };
                 await _context.Interviewers.AddAsync(newSignUp);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(signUpToInterview), newSignUp);
+                return Ok(new
+                {
+                    message = "Interviewer added successfully",
+                    signUpID = newSignUp.interviewerID,
+                    userID = newSignUp.userID,
+                    specialties = signUp.specialties,
+                    availability = signUp.availability,
+                    rating = newSignUp.rating
+                });
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
