@@ -1,6 +1,12 @@
 # Job Preppers README
 
-Overview
+Developed by:
+Alysha Chan
+Justin Ellis
+Trang Tran
+William Lin
+
+
 Job Preppers is a platform for job seekers and recruiters to connect. The application is divided into two main parts: the frontend and the backend.
 
 Prerequisites
