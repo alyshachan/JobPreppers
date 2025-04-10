@@ -9,7 +9,6 @@ function InterviewerCard({
   title,
   specialties,
   availibility,
-  onViewProfile,
   onSchedule,
 }) {
   const navigate = useNavigate();

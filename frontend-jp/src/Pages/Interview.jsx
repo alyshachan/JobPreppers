@@ -154,7 +154,7 @@ function Interview() {
         )}
 
         <div className="panel">
-          <SectionHeader header="Upcoming Events" />
+          <SectionHeader header="Upcoming Events" onAdd={() => handleOpenEventDialog(null)}/>
           <div className="overflow-x-auto">
             {events.length > 0 ? (
               <UpcomingEvents events={events} />
@@ -191,6 +191,7 @@ function Interview() {
                   title={interviewer.title}
                   specialties={interviewer.specialties}
                   availibility={interviewer.availability}
+                  onSchedule={() => handleOpenEventDialog(interviewer)}
                 />
               ))
             ) : (
