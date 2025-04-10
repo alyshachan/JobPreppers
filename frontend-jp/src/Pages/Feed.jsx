@@ -117,6 +117,7 @@ function Feed() {
                     : "data:image/png;base64," +
                       friend.profilePic.toString().toString("base64"),
               title: friend.title,
+              username: friend.username
             }));
 
             setRecDict((prevState) => {
@@ -220,7 +221,7 @@ function Feed() {
                       />
 
                       <div className="flex flex-col flex-grow">
-                        <b className="text-xl">{rec.name}</b>
+                        <a href={`/Profile/${rec.username}`} className="hover:underline"><b className="text-xl">{rec.name}</b></a>
                         <p className="subtitle"> {rec.title}</p>
 
                       </div>

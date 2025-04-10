@@ -104,7 +104,7 @@ function EducationSection({ educationDict, edit, onAdd }) {
         ))}
         {hasMoreItems && !edit && (
           <div className={styles.seeAllDiv}>
-            <a href="./Education">
+            <a href="/Education">
               <button className={styles.seeAll}>
                 See all Education <ArrowForwardIcon className="mt-1 ml-1" />
               </button>

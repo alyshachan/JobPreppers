@@ -49,7 +49,7 @@ function Project() {
   return (
     <div className="content">
       <div className="panelTransparent">
-        <a href="/Profile" className="text-[#0D7944] hover:underline mb-8">
+        <a href={`/Profile/${user.username}`} className="text-[#0D7944] hover:underline mb-8">
           <ArrowBackIcon /> Go back to Profile Page
         </a>
         <h1>Projects</h1>
