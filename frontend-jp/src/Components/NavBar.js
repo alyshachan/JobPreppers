@@ -306,7 +306,12 @@ function NavBar() {
                      <Menu as="div" className="relative group">
   <MenuButton 
   ref={buttonRef}
-    className="block data-[focus]:bg-[#0D7944] rounded-md px-3 py-2 text-base font-medium cursor-pointer"
+    className={classNames(
+      "block data-[focus]:bg-blue-100 rounded-md px-3 py-2 text-base font-medium cursor-pointer",
+      matchJobs
+        ? "bg-[#085630] text-white"
+        : "text-gray-300 group-hover:bg-[#0D7944] group-hover:text-white"
+    )}
     onMouseEnter={(e) => e.target.click()}
 
   >
