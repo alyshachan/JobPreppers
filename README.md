@@ -47,7 +47,7 @@ dotnet run
 ### Connecting to the application
 
 ```
-5. Connect to http://localhost:3000.
+5. Connect to http://localhost:3000
 ```
 
 ### Please visit https://jobpreppers.co for the deployed version! :)
