@@ -2,7 +2,7 @@ import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import "react-activity-feed/dist/index.css";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png"
+import defaultProfilePicture from "../Components/defaultProfilePicture.png";
 import {
   StreamApp,
   FlatFeed,
@@ -17,24 +17,23 @@ function Feed() {
   const [streamToken, setStreamToken] = useState("");
   const [recommendationDict, setRecDict] = useState([]);
   const [selectedFeed, setSelectedFeed] = useState("timeline");
+  const [feedRefreshKey, setFeedRefreshKey] = useState(0);
+
   useEffect(() => {
-    
     const fetchFeedData = async () => {
       try {
         const response = await fetch(
           apiURL + `/api/Friend/SyncFriends/${user.userID}`,
           {
             method: "POST",
-            headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json" },
           }
         );
 
         if (response.ok) {
           console.log("Friends synced");
         }
-
-      }
-      catch (err) {
+      } catch (err) {
         console.error(err);
       }
 
@@ -93,10 +92,9 @@ function Feed() {
     fetchFeedData();
   }, [user]);
 
-
   useEffect(() => {
     const requestRecommendations = async () => {
-      console.log("fetching")
+      console.log("fetching");
       try {
         const response = await fetch(
           apiURL + `/api/Feed/recommend/${user.userID}`,
@@ -113,17 +111,17 @@ function Feed() {
             const newRecDict = data.recommendations.map((friend) => ({
               userID: friend.userID,
               name: friend.name,
-              profilePic: friend.profilePic==null ? defaultProfilePicture
-                    : "data:image/png;base64," +
-                      friend.profilePic.toString().toString("base64"),
+              profilePic:
+                friend.profilePic == null
+                  ? defaultProfilePicture
+                  : "data:image/png;base64," +
+                    friend.profilePic.toString().toString("base64"),
               title: friend.title,
-              username: friend.username
+              username: friend.username,
             }));
 
             setRecDict((prevState) => {
-              if (
-                JSON.stringify(prevState) !== JSON.stringify(newRecDict)
-              ) {
+              if (JSON.stringify(prevState) !== JSON.stringify(newRecDict)) {
                 return newRecDict;
               }
               return prevState;
@@ -137,6 +135,15 @@ function Feed() {
 
     requestRecommendations();
   }, [user, recommendationDict]);
+
+  useEffect(() => {
+    const handleActivityPosted = () => {
+      setFeedRefreshKey(prev => prev + 1);
+    };
+  
+    document.addEventListener('activity-posted', handleActivityPosted);
+    return () => document.removeEventListener('activity-posted', handleActivityPosted);
+  }, []);
 
   const CustomActivity = ({ activity }) => {
     return (
@@ -166,13 +173,22 @@ function Feed() {
       >
         <div className="flex w-full p-4 space-x-4">
           <div className="w-2/3">
-            <StatusUpdateForm 
-            feedGroup={selectedFeed} 
-            userID={selectedFeed === "global" ? "global_feed" : user.userID.toString()} 
+            <StatusUpdateForm
+              feedGroup={selectedFeed}
+              userID={
+                selectedFeed === "global"
+                  ? "global_feed"
+                  : user.userID.toString()
+              }
+              onSuccess={() => {
+                document.dispatchEvent(new Event("activity-posted"));
+              }}
             />
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h1>{selectedFeed.charAt(0).toUpperCase() + selectedFeed.slice(1)}</h1>
+                <h1>
+                  {selectedFeed.charAt(0).toUpperCase() + selectedFeed.slice(1)}
+                </h1>
                 <select
                   // value={selectedOption}
                   onChange={(e) => setSelectedFeed(e.target.value)}
@@ -184,6 +200,7 @@ function Feed() {
                 </select>
               </div>
               <FlatFeed
+                key={feedRefreshKey}
                 classname="flat-feed"
                 feedGroup={selectedFeed === "global" ? "global" : selectedFeed}
                 options={{
@@ -212,32 +229,36 @@ function Feed() {
               ) : (
                 recommendationDict.map((rec, index) => (
                   <div key={index}>
-                  <div className="flex flex-col flex-grow">
-                    <div className="flex p-2 gap-4">
-                      <img
-                        className="rounded-full aspect-square w-20 h-20"
-                        alt={`${rec.name}'s Profile Picture`}
-                        src={rec.profilePic}
-                      />
+                    <div className="flex flex-col flex-grow">
+                      <div className="flex p-2 gap-4">
+                        <img
+                          className="rounded-full aspect-square w-20 h-20"
+                          alt={`${rec.name}'s Profile Picture`}
+                          src={rec.profilePic}
+                        />
 
-                      <div className="flex flex-col flex-grow">
-                        <a href={`/Profile/${rec.username}`} className="hover:underline"><b className="text-xl">{rec.name}</b></a>
-                        <p className="subtitle"> {rec.title}</p>
-
+                        <div className="flex flex-col flex-grow">
+                          <a
+                            href={`/Profile/${rec.username}`}
+                            className="hover:underline"
+                          >
+                            <b className="text-xl">{rec.name}</b>
+                          </a>
+                          <p className="subtitle"> {rec.title}</p>
+                        </div>
                       </div>
+                      {index < recommendationDict.length - 1 && (
+                        <hr className="border-t border-gray-300 -ml-[3px] my-2" />
+                      )}
                     </div>
-                    {index < recommendationDict.length - 1 && (
-                      <hr className="border-t border-gray-300 -ml-[3px] my-2" />
-                    )}
                   </div>
-                </div>
                 ))
               )}
             </div>
           </div>
         </div>
-
-      </StreamApp>)
+      </StreamApp>
+    )
   );
 }
 
