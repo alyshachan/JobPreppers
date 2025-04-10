@@ -17,8 +17,8 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png"
-
+import defaultProfilePicture from "../Components/defaultProfilePicture.png";
+import JobPreppersLogo_White from "../Components/JobPreppersLogo_White.png";
 
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
@@ -292,12 +292,12 @@ function NavBar() {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
               <img
-                alt="Your Company"
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tailwind_CSS_Logo.svg/512px-Tailwind_CSS_Logo.svg.png?20230715030042"
-                className="h-8 w-auto"
+                alt="Job Preppers"
+                src={JobPreppersLogo_White}
+                className="h-12 w-auto"
               />
             </div>
-            <div className="hidden sm:ml-6 sm:block">
+            <div className="hidden sm:ml-3 sm:block">
               <div className="flex space-x-4 justify-end">
                 {navigation.map((item) => {
                   if (item.name === "Jobs") {

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "../Components/JobPreppers.css";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
+import defaultSchoolCompany from "../Components/Profile/defaultSchoolCompany.png";
 
 const monthsOfYear = [
   "January",
@@ -116,10 +117,14 @@ function Experience() {
             <div key={index}>
               <div className={styles.sectionPictureContent}>
                 <div className={styles.experience}>
+                {experience.work_name == "University of Utah" ? (
                   <img
                     className="companyPicture"
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
                   />
+                ) : (
+                  <img className="companyPicture" src={defaultSchoolCompany} />
+                )}
 
                   <div className={styles.experienceContentLeft}>
                     <p className="title">{experience.job_title}</p>
