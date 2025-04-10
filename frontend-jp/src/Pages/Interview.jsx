@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../provider/authProvider";
-
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import SectionHeader from "../Components/Profile/SectionHeader";
 import Calendar from "../Components/Interview/Calendar";
 import AddEventDialog from "../Components/Interview/AddEventDialog";
 import UpcomingEvents from "../Components/Interview/UpcomingEvents";
 import InterviewerCard from "../Components/Interview/InterviewerCard";
+import AddInterviewerDialog from "../Components/Interview/AddInterviewerDialog";
 import moment from "moment";
 import "../Components/JobPreppers.css";
 const apiURL = process.env.REACT_APP_JP_API_URL;
@@ -15,6 +16,8 @@ function Interview() {
   const [events, setEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [openEventDialog, setOpenEventDialog] = useState(false);
+  const [openInterviewerDialog, setOpenInterviewerDialog] = useState(false);
+  const [interviewers, setInterviewers] = useState([]);
 
   const requestEvents = async () => {
     try {
@@ -47,8 +50,32 @@ function Interview() {
     }
   };
 
+  const fetchInterviewers = async () => {
+    try {
+      const response = await fetch(
+        apiURL + "/api/InterviewSignUp/GetAllInterviewers",
+        {
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setInterviewers(data);
+      } else {
+        console.error("Failed to fetch interviewers");
+      }
+    } catch (err) {
+      console.error("Error fetching interviewers:", err);
+    }
+  };
+
+  const updateInterviewers = (newInterviewer) => {
+    setInterviewers((prevState) => [...prevState, newInterviewer]);
+  };
+
   useEffect(() => {
     requestEvents();
+    fetchInterviewers();
   }, [user]);
 
   const handleOpenEventDialog = () => {
@@ -57,6 +84,14 @@ function Interview() {
 
   const handleCloseEventDialog = () => {
     setOpenEventDialog(false);
+  };
+
+  const handleOpenInterviewerDialog = () => {
+    setOpenInterviewerDialog(true);
+  };
+
+  const handleCloseInterviewerDialog = () => {
+    setOpenInterviewerDialog(false);
   };
 
   const handleEventSubmit = async (newEvent) => {
@@ -109,7 +144,6 @@ function Interview() {
             setSelectedDate={setSelectedDate}
           />
         </div>
-
         {openEventDialog && (
           <AddEventDialog
             open={openEventDialog}
@@ -120,7 +154,7 @@ function Interview() {
         )}
 
         <div className="panel">
-          <SectionHeader header="Upcoming Events" />
+          <SectionHeader header="Upcoming Events" onAdd={() => handleOpenEventDialog(null)}/>
           <div className="overflow-x-auto">
             {events.length > 0 ? (
               <UpcomingEvents events={events} />
@@ -133,28 +167,40 @@ function Interview() {
         </div>
 
         <div className="panelTransparent !p-0">
-          <h1 className="items-start">Schedule Mock Interview</h1>
+          <div className="flex justify-between items-center">
+            <h1 className="items-start">Schedule Mock Interview</h1>
+            <button onClick={handleOpenInterviewerDialog}>
+              <AssignmentIndIcon />
+              Sign up to be a mock interviewer
+            </button>
+          </div>
+          {openInterviewerDialog && (
+            <AddInterviewerDialog
+              open={openInterviewerDialog}
+              onClose={handleCloseInterviewerDialog}
+              onAdd={updateInterviewers}
+            />
+          )}
           <div className="flex flex-row overflow-x-auto pl-[50px] gap-x-[50px]">
-            <InterviewerCard
-              name="Justin Ellis"
-              title="Recruiter @ T.D. Williamson"
-              rating="3.9"
-            />
-            <InterviewerCard
-              name="Jim De St. Germain"
-              title="Prof at Utah"
-              rating="4.2"
-            />
-            <InterviewerCard
-              name="David Bean"
-              title="Startup CTO, Industrial Adjunct Professor"
-              rating="5.0"
-            />
-            <InterviewerCard
-              name="Trang Tran"
-              title="CS Student at University of Utah"
-              rating="4.3"
-            />
+            {interviewers.length > 0 ? (
+              interviewers.map((interviewer) => (
+                <InterviewerCard
+                  key={interviewer.userID}
+                  name={`${interviewer.firstName} ${interviewer.lastName ? interviewer.lastName:""}`}
+                  username={interviewer.username}
+                  title={interviewer.title}
+                  specialties={interviewer.specialties}
+                  availibility={interviewer.availability}
+                  onSchedule={() => handleOpenEventDialog(interviewer)}
+                />
+              ))
+            ) : (
+              <div className="flex w-full justify-center">
+                <h2 className="text-[#4BA173] text-center">
+                  No interviewers available yet
+                </h2>
+              </div>
+            )}
           </div>
         </div>
       </div>

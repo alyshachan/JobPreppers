@@ -1,8 +1,19 @@
 import "../JobPreppers.css";
+import { useNavigate } from "react-router-dom";
 import styles from "./InterviewerCard.module.css";
 import defaultProfilePicture from "../defaultProfilePicture.png";
 
-function InterviewerCard({ name, title, rating, onViewProfile, onSchedule }) {
+function InterviewerCard({
+  name,
+  username,
+  title,
+  specialties,
+  availibility,
+  onSchedule,
+}) {
+  const navigate = useNavigate();
+  const specialty = specialties?.replace(/^"|"$/g, "");
+
   return (
     <>
       <div className={styles.interviewerCard}>
@@ -13,14 +24,17 @@ function InterviewerCard({ name, title, rating, onViewProfile, onSchedule }) {
 
         <div className={styles.card}>
           <h1>{name}</h1>
-
           <p className="subtitle">{title}</p>
-          <p className={styles.rating}>⭐ {rating}</p>
-
+          <div className="flex flex-col justify-start">
+            <p className="font-bold">{specialty ? "Specialty: " : ""}</p>
+            <p> {specialty}</p>
+            <p className="font-bold">{availibility ? "Availibility: " : ""}</p>
+            <p>{availibility}</p>
+          </div>
           <div className={styles.cardButtons}>
             <button
               className={styles.viewProfileButton}
-              onClick={onViewProfile}
+              onClick={() => navigate(`/Profile/${username}`)}
             >
               View profile
             </button>

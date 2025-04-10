@@ -14,8 +14,9 @@ import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { styled } from "@mui/material/styles";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
+import SearchParticipants from "./SearchParticipants";
 import moment from "moment";
-import styles from "./AddEventDialog.module.css";
+import styles from "./AddDialog.module.css";
 
 import SectionHeader from "../../Components/Profile/SectionHeader";
 
@@ -37,7 +38,7 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
   );
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [eventParticipants, setEventParticipants] = useState("");
+  const [eventParticipants, setEventParticipants] = useState([]);
   const [eventDetails, setEventDetails] = useState("");
 
   const isFormValid = eventName && eventDate;
@@ -49,7 +50,7 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
         date: new Date(eventDate),
         start: startTime,
         end: endTime,
-        participants: eventParticipants,
+        participants: eventParticipants.map((p) => p.userId).join(","),
         details: eventDetails,
       };
       onCreateEvent(newEvent);
@@ -59,7 +60,7 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
 
   return (
     <StyledDialog onClose={onClose} open={open}>
-    <DialogTitle className={styles.addEventTitle}>
+      <DialogTitle className={styles.addEventTitle}>
         <SectionHeader header="Add Event" />
       </DialogTitle>
 
@@ -124,16 +125,12 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
 
           <div className={styles.eventFormRight}>
             {/* Right-side content */}
-            <div className={styles.input}>
-              <PermIdentityOutlinedIcon className={styles.icon} />
+            <div className={`${styles.input} !justify-start !items-start`}>
+              <PermIdentityOutlinedIcon className={`${styles.icon} mt-[20px]`} />
               <div className={styles.inputField}>
                 Participants
-                <TextField
-                  placeholder="Enter Participant Name(s)"
-                  className="w-full"
-                  value={eventParticipants}
-                  onChange={(e) => setEventParticipants(e.target.value)}
-                />
+                <SearchParticipants   participants={eventParticipants}
+  setParticipants={setEventParticipants}/>
               </div>
             </div>
 

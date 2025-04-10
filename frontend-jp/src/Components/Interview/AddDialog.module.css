@@ -70,3 +70,10 @@ textarea:focus {
   flex-direction: column;
   width: 100% !important;
 }
+
+.charCount {
+  font-size: 12px;
+  color: dimgray;
+  text-align: right;
+  margin-top: 4px;
+}
