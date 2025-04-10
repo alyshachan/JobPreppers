@@ -1,9 +1,9 @@
 # Job Preppers README
 
 Developed by:
-Alysha Chan
-Justin Ellis
-Trang Tran
+Alysha Chan,
+Justin Ellis,
+Trang Tran,
 William Lin
 
 
