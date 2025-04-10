@@ -58,6 +58,7 @@ function AddInterviewerDialog({ open, onClose, onAdd }) {
             lastName: user.last_name,
             username: user.username,
             title: user.title,
+            profilePic: user.profile_pic,
             specialties: data.specialties,
             availability: data.availability,
             signUpID: data.signUpID,

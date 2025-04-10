@@ -46,6 +46,7 @@ namespace JobPreppersDemo.Controllers
                               FirstName = user.first_name,
                               LastName = user.last_name,
                               Username = user.username,
+                              ProfilePic = user.profile_pic,
                               Title = user.title,
                               interviewer.specialties,
                               interviewer.availability,
