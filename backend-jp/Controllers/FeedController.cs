@@ -203,6 +203,7 @@ namespace JobPreppersDemo.Controllers
                     Id = u.userID,
                     Name = u.first_name + " " + u.last_name,
                     Title = u.title,
+                    Username = u.username,
                     Email = u.email,
                     ProfilePic = u.profile_pic,
                 })

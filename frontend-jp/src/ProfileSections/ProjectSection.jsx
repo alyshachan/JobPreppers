@@ -62,7 +62,7 @@ function ProjectSection({ projectDict, edit, onAdd }) {
           ))}
           {hasMoreItems && !edit && (
             <div className={styles.seeAllDiv}>
-              <a href="./Project">
+              <a href="/Project">
                 <button className={styles.seeAll}>
                   See all Projects
                   <ArrowForwardIcon className="mt-1 ml-1" />

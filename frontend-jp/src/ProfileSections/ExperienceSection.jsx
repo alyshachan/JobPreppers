@@ -153,7 +153,7 @@ function ExperienceSection({ experienceDict, edit, onAdd }) {
 
           {hasMoreItems && !edit && (
             <div className={styles.seeAllDiv}>
-              <a href="./Experience">
+              <a href="/Experience">
                 <button className={styles.seeAll}>
                   See all Experience <ArrowForwardIcon className="mt-1 ml-1" />
                 </button>

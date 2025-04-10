@@ -325,7 +325,7 @@ function ParseResume() {
       }
 
       setMessage("Profile successfully updated from resume.");
-      navigate("/Profile");
+      navigate(`/Profile/${user.username}`);
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
