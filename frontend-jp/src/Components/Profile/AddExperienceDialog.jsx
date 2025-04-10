@@ -92,9 +92,9 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userID: user.userID,
+          jobTitle: title,
           workName: work,
           location: location,
-          jobTitle: title,
           start_date: start,
           end_date: end,
           description: description,

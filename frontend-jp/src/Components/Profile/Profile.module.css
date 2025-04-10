@@ -44,6 +44,7 @@
   background-color: #f0fbf5 !important;
   border: 2px solid #63d297 !important;
   color: #63d297 !important;
+  line-height: 1 !important;
 }
 
 .editProfileButton:hover {
@@ -54,6 +55,23 @@
   font-size: xx-large;
   font-weight: bold;
   color: #757575;
+}
+
+.parseResume {
+  background-color: #4ba173;
+  border-radius: 15px;
+  width: 70%;
+  display: flex;
+  box-sizing: border-box;
+  padding: 30px 50px;
+  margin: 20px;
+  flex-direction: column;
+  align-items: center;
+
+  border-width: 4px;
+  font-weight: bold;
+  font-size: xx-large;
+  color: white;
 }
 
 .addNewSection {
@@ -75,10 +93,18 @@
   color: #4ba173;
 }
 
-.highlightedInfo .addNewSection {
+.highlightedInfo .addNewSection,
+.highlightedInfo .parseResume
+{
   width: 100%;
 }
 
 .addNewSection:hover {
   background-color: #edf2f7;
+}
+
+.icon{
+  font-size: 2.5rem !important;
+  aspect-ratio: 1;
+  color: #085630;
 }

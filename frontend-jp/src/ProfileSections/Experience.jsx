@@ -123,7 +123,13 @@ function Experience() {
 
                   <div className={styles.experienceContentLeft}>
                     <p className="title">{experience.job_title}</p>
-                    <p className="subtitle">{experience.work_name}</p>
+                    {experience.location ? (
+                      <p className="subtitle">
+                        {experience.work_name}, {experience.location}
+                      </p>
+                    ) : (
+                      <p className="subtitle">{experience.work_name}</p>
+                    )}
                   </div>
 
                   <div className={styles.experienceContentRight}>

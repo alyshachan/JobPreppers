@@ -48,15 +48,22 @@ namespace JobPreppersDemo.Controllers
             }
             try
             {
+                var company = await _context.Companies
+                            .FirstOrDefaultAsync(c => c.userID == recruiterDto.companyID);
+
+                if (company == null)
+                {
+                    return BadRequest("No company found for the provided userID.");
+                }
                 var newRecruiter = new Recruiter
                 {
                     userID = recruiterDto.userID,
-                    companyID = recruiterDto.companyID
+                    companyID = company.companyID
 
                 };
                 await _context.Recruiters.AddAsync(newRecruiter);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(CreateRecruiter), newRecruiter);
+                return Ok(new { message = "Recruiter added successfully", recruiterID = newRecruiter.recruiterID });
             }
             catch (Exception ex)
             {

@@ -153,7 +153,7 @@ function NavBar() {
   const handleAcceptFriend = async (friendID) => {
     try {
       const response = await fetch(
-        apiURL + `/api/Friend/AcceptFriendRequest/${user.userID}`,
+        apiURL + `/api/Friend/AcceptFriendRequest`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -172,12 +172,30 @@ function NavBar() {
     } catch (err) {
       setError("An error occurred. Please try again."); // Catch and display any request error
     }
+
+    try {
+      const response = await fetch(
+        apiURL + `/api/Friend/SyncFriends/${user.userID}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+
+      if (response.ok) {
+        console.log("Friends synced");
+      }
+
+    }
+    catch (err) {
+      setError("An error occurred when syncing friends");
+    }
   };
 
   const handleDeclineFriend = async (friendID) => {
     try {
       const response = await fetch(
-        apiURL + `/api/Friend/DenyFriendRequest/${user.userID}`,
+        apiURL + `/api/Friend/DenyFriendRequest`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -350,7 +368,7 @@ function NavBar() {
             className="w-10 h-10 rounded-full mr-2"
           />
           <div className="flex flex-col">
-            <span className="font-semibold">{`${user.first_name} ${user.last_name}`}</span>
+            <span className="font-semibold">{`${user.first_name} ${user.last_name ? user.last_name : ""}`}</span>
             <span className="text-sm text-gray-500">{user.title}</span>
           </div>
         </Link>
