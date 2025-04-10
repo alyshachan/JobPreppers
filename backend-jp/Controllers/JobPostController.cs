@@ -748,42 +748,6 @@ namespace JobPreppersDemo.Controllers
 
             }
 
-        }*/
-        [HttpGet("JobPostSearch")]
-        public async Task<ActionResult<IEnumerable<JobPost>>> JobPostSearch([FromQuery] string query)
-        {
-            if (string.IsNullOrWhiteSpace(query))
-            {
-                return BadRequest("Search query cannot be empty");
-            }
-            // Retrieve job posts based on the query
-            var jobs = await _context.JobPosts
-                .Where(job => job.title.Contains(query))
-                .Select(job => new
-                {
-                    job.title,
-                    job.location,
-                    job.description,
-                    job.companyID // Include the CompanyID for later lookup
-                })
-                .ToListAsync();
-
-            // Now retrieve the company names for the job posts
-            var companyIds = jobs.Select(j => j.companyID).Distinct().ToList();
-            var companies = await _context.Companies
-                .Where(c => companyIds.Contains(c.companyID))
-                .ToDictionaryAsync(c => c.companyID, c => c.Name); // Map to dictionary for quick access
-
-            // Create DTOs and populate company names
-            var jobDtos = jobs.Select(job => new JobPostDto
-            {
-                company = companies.ContainsKey(job.companyID) ? companies[job.companyID] : string.Empty, // Get the company name
-                title = job.title,
-           
-                description = job.description
-            }).ToList();
-
-            return Ok(jobDtos);
         }
 
         [HttpGet("JobPostSearch")]

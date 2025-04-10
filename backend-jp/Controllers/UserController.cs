@@ -360,33 +360,6 @@ namespace JobPreppersProto.Controllers
         {
             var query = _context.Users.AsQueryable();
 
-<<<<<<< HEAD
-        [HttpGet("UserSearch")]
-        public async Task<IActionResult> SearchUsers(
-    [FromQuery] string? title,
-    [FromQuery] string? firstName,
-    [FromQuery] string? lastName)
-        {
-            var users = _context.Users.AsQueryable();
-
-            if (!string.IsNullOrEmpty(title))
-            {
-                users = users.Where(u => u.title.Contains(title));
-            }
-
-            if (!string.IsNullOrEmpty(firstName))
-            {
-                users = users.Where(u => u.first_name.Contains(firstName));
-            }
-
-            if (!string.IsNullOrEmpty(lastName))
-            {
-                users = users.Where(u => u.last_name.Contains(lastName));
-            }
-
-            var result = await users.ToListAsync();
-            return Ok(result);
-=======
             if (!string.IsNullOrEmpty(title))
             {
                 query = query.Where(u => u.title.Contains(title));
@@ -459,7 +432,6 @@ namespace JobPreppersProto.Controllers
                 email = user.email,
                 profile_pic = user.profile_pic
             });
->>>>>>> f0179805d36a812fc2518354f29e065a3ceda8df
         }
 
         [HttpDelete("DeleteAllUserProfile/{userID}")]
@@ -520,12 +492,13 @@ namespace JobPreppersProto.Controllers
             public string Password { get; set; }
         }
 
-        public class DetailsRequest{
-            public int userID {get; set;}
-            public string title {get; set;}
-            public string location {get; set;}
-            public string website {get; set;}
-            public string description {get; set;}
+        public class DetailsRequest
+        {
+            public int userID { get; set; }
+            public string title { get; set; }
+            public string location { get; set; }
+            public string website { get; set; }
+            public string description { get; set; }
         }
 
         public class UserDTO
