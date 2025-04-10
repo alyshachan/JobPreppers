@@ -154,7 +154,10 @@ function Interview() {
         )}
 
         <div className="panel">
-          <SectionHeader header="Upcoming Events" onAdd={() => handleOpenEventDialog(null)}/>
+          <SectionHeader
+            header="Upcoming Events"
+            onAdd={() => handleOpenEventDialog(null)}
+          />
           <div className="overflow-x-auto">
             {events.length > 0 ? (
               <UpcomingEvents events={events} />
@@ -186,9 +189,14 @@ function Interview() {
               interviewers.map((interviewer) => (
                 <InterviewerCard
                   key={interviewer.userID}
-                  name={`${interviewer.firstName} ${interviewer.lastName ? interviewer.lastName:""}`}
+                  name={`${interviewer.firstName} ${
+                    interviewer.lastName ? interviewer.lastName : ""
+                  }`}
                   username={interviewer.username}
                   title={interviewer.title}
+                  profilePic={
+                    interviewer.profilePic
+                  }
                   specialties={interviewer.specialties}
                   availibility={interviewer.availability}
                   onSchedule={() => handleOpenEventDialog(interviewer)}

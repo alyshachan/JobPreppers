@@ -27,6 +27,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     maxWidth: "800px",
     minWidth: "800px",
   },
+  "& .css-si425x" : {
+    borderRadius: "30px",
+    padding: "0px 20px 20px",
+    overflow: "hidden",
+    maxWidth: "800px",
+    minWidth: "800px",
+  }
 }));
 const apiURL = process.env.REACT_APP_JP_API_URL;
 

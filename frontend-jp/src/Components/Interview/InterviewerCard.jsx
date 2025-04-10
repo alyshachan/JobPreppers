@@ -7,6 +7,7 @@ function InterviewerCard({
   name,
   username,
   title,
+  profilePic,
   specialties,
   availibility,
   onSchedule,
@@ -14,12 +15,18 @@ function InterviewerCard({
   const navigate = useNavigate();
   const specialty = specialties?.replace(/^"|"$/g, "");
 
+    const interviewerPic =
+      profilePic == null
+        ? defaultProfilePicture
+        : "data:image/png;base64," +
+        profilePic.toString().toString("base64");
+
   return (
     <>
       <div className={styles.interviewerCard}>
         <img
           className="profilePicture mb-[-100px] z-0"
-          src={defaultProfilePicture}
+          src={interviewerPic}
         />
 
         <div className={styles.card}>

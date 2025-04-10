@@ -25,7 +25,7 @@ function SkillsSection({ skillsDict, edit, onAdd }) {
   useEffect(() => {
     const handleResize = () => {
       if (containerRef.current) {
-        setIsNarrow(containerRef.current.offsetWidth < 750);
+        setIsNarrow(containerRef.current.offsetWidth < 550);
       }
     };
 

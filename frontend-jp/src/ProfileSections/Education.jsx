@@ -1,6 +1,7 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React, { useState, useEffect, useRef } from "react";
 import "../Components/JobPreppers.css";
+import defaultSchoolCompany from "../Components/Profile/defaultSchoolCompany.png";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
 
@@ -78,7 +79,10 @@ function Education() {
   return (
     <div className="content">
       <div className="panelTransparent">
-        <a href={`/Profile/${user.username}`} className="text-[#0D7944] hover:underline mb-8">
+        <a
+          href={`/Profile/${user.username}`}
+          className="text-[#0D7944] hover:underline mb-8"
+        >
           <ArrowBackIcon /> Go back to Profile Page
         </a>
         <h1>Education</h1>
@@ -87,10 +91,14 @@ function Education() {
           {educationDict.map((education, index) => (
             <div key={index}>
               <div className={styles.education}>
-                <img
-                  className="companyPicture"
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
-                />
+                {education.school_name == "University of Utah" ? (
+                  <img
+                    className="companyPicture"
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
+                  />
+                ) : (
+                  <img className="companyPicture" src={defaultSchoolCompany} />
+                )}
 
                 <div className={styles.sectionPictureContent}>
                   <p className="title">{education.school_name}</p>

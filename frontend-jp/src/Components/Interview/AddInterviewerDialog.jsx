@@ -24,6 +24,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     maxWidth: "800px",
     minWidth: "800px",
   },
+  "& .css-si425x" : {
+    borderRadius: "30px",
+    padding: "0px 20px 20px",
+    overflow: "hidden",
+    maxWidth: "800px",
+    minWidth: "800px",
+  }
 }));
 
 function AddInterviewerDialog({ open, onClose, onAdd }) {
@@ -58,6 +65,7 @@ function AddInterviewerDialog({ open, onClose, onAdd }) {
             lastName: user.last_name,
             username: user.username,
             title: user.title,
+            profilePic: user.profile_pic,
             specialties: data.specialties,
             availability: data.availability,
             signUpID: data.signUpID,
