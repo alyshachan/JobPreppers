@@ -88,12 +88,20 @@ export default function DescribeJob({
     }
 
     if (jobDescriptionData.type) {
+      console.log("went into type", jobDescriptionData.type);
       for (let option of employementTypeOptions) {
         const label = option.label;
-        if (
-          label.toLowerCase().includes(jobDescriptionData.type.toLowerCase())
-        ) {
-          // console.log("Went into the if");
+
+        const normalizeString = (str) =>
+          str.toLowerCase().replace(/[\s-]+/g, "");
+
+        const matchingOption = employementTypeOptions.find(
+          (option) =>
+            normalizeString(option.label) ===
+            normalizeString(jobDescriptionData.type)
+        );
+        if (matchingOption) {
+          console.log("Went into the if", option);
           setValue("type", option);
           break;
         }

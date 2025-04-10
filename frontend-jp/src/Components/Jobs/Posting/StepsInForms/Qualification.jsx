@@ -118,6 +118,7 @@ export default function Qualification({ jobDescriptionData }) {
 
     const parseSkill = jobDescriptionData.skills;
     if (parseSkill && parseSkill.length > 0) {
+      console.log("Job Description Data Skills: ", parseSkill);
       setValue("skills", jobDescriptionData.skills);
       jobDescriptionData.skills = [];
     }

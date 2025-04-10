@@ -41,7 +41,7 @@ namespace JobPreppersDemo.Services
             collectionName: $"{collection_name}",
             query: embeddedUser,
             searchParams: new SearchParams { Exact = false, HnswEf = 128 },
-            limit: 10
+            limit: 50
             );
             var extractedResults = results.Select(r => new SearchResult
             {

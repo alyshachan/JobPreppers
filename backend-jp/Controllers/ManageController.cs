@@ -30,6 +30,7 @@ namespace JobPreppersDemo.Controllers
         public class ManageDto
         {
             public int userID { get; set; }
+            public string Search_Query { get; set; } = string.Empty;
 
         }
         private readonly ApplicationDbContext _context;
@@ -43,18 +44,17 @@ namespace JobPreppersDemo.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllJobs([FromQuery] ManageDto request)
+        public async Task<IActionResult> GetAllJobs([FromQuery] int userID)
         {
 
             try
             {
 
-                // var jobs = await _context.Jobs.ToListAsync();
                 var jobs = await _context.JobPosts
                                 .Include(job => job.qualification)
                                 .Include(job => job.company)
                                 .Include(job => job.location)
-                                .Where(job => job.recruiter.userID == request.userID)
+                                .Where(job => job.recruiter.userID == userID)
                                 .Select(job => new
                                 {
                                     company = job.company.Name,
@@ -163,6 +163,73 @@ namespace JobPreppersDemo.Controllers
 
 
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> GetFilterJob([FromBody] ManageDto request)
+        {
+            Console.WriteLine("Went into post for the filters");
+            Console.WriteLine($"Hers the search query {request.Search_Query} and userID {request.userID}");
+
+            try
+            {
+
+                var jobs = await _context.JobPosts
+                                .Include(job => job.qualification)
+                                .Include(job => job.company)
+                                .Include(job => job.location)
+                                .Where(job => job.recruiter.userID == request.userID)
+                                .Where(job => job.title.Contains(request.Search_Query))
+                                .Select(job => new
+                                {
+                                    company = job.company.Name,
+                                    minimumSalary = job.minimumSalary,
+                                    benefits = job.benefits,
+                                    postDate = job.postDate,
+                                    endDate = job.endDate,
+                                    description = job.description,
+                                    title = job.title,
+                                    type = job.type,
+                                    link = job.link,
+                                    location = job.location.name,
+                                    bonues = job.bonus,
+                                    perks = job.perks,
+                                    jobID = job.postID,
+                                    skills = job.qualification.Skills,
+                                    educationLevel = job.qualification.EducationLevel,
+                                    minimumExperience = job.qualification.MinimumExperience,
+                                    maximumExperience = job.qualification.MaximumExperience,
+                                    profilePic = job!.company!.user!.profile_pic != null
+    ? "data:image/png;base64," + Convert.ToBase64String(job.company.user.profile_pic)
+    : null
+
+
+
+                                }
+                                )
+                                .ToListAsync();
+
+                if (jobs == null)
+                {
+                    return NotFound("No jobs found.");
+                }
+                return Ok(new { jobs });
+
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                    Console.WriteLine($"Inner Exception StackTrace: {ex.InnerException.StackTrace}");
+                }
+                return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
+
+
+            }
+
+        }
+
 
 
     }
