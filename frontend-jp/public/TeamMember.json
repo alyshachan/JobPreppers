@@ -1,0 +1,65 @@
+[
+
+    {
+        "name": "Alysha Chan",
+        "image": "/Images/Alysha.jpg",
+        "alt": "Alysha Chan Picture",
+        "email": "trang.t.tran00@gmail.com",
+        "linkedln": "https://www.linkedin.com/in/trang-thi-tran/",
+        "bio": [
+      "Trang is a software engineer passionate about frontend development and clean UI design.",
+      "She enjoys working with React, Tailwind, and Material UI, and loves collaborating with cross-functional teams."
+    ]
+
+    },
+
+
+    {
+        "name": "Justin Ellis",
+        "image": "/Images/Justin.jpg",
+        "alt": "Justin Ellis Picture",
+        "email": "justinellis15@outlook.com",
+        "linkedln": "https://www.linkedin.com/in/justin-elliscs/",
+        "bio": [
+          "I am Justin Ellis, a senior computer science student at the University of Utah.",
+          "I am a software engineering intern at TD Williamson, where I am gaining experience building real-world applications!",
+          "I am also a part of the Job Preppers capstone group, where we built innovative career prep tools for students and professionals.",
+          "My past experiences include working as a robotics intern at Fermilab, a web development intern at the U of U, and a software engineer at TDW.",
+          "I have a very well-rounded foundation in both hardware and software. I enjoy designing creative and user-friendly solutions.",
+          "I am always looking to improve my technical skills. Outside of school/tech, I am a huge basketball fan (the Knicks are my favorite team), golf, and track.",
+          "I also love to stay active by working out. I am always eager to take on new challenges that help me grow professionally and personally!"
+
+    ]
+
+    },
+
+    {
+        "name": "William Lin",
+        "image": "/Images/Will.jpg",
+        "alt": "William Lin Picture",
+        "email": "wlinn666@gmail.com",
+        "linkedln": "https://www.linkedin.com/in/william-lin-876365258/",
+        "bio": [
+          "William Lin is a senior computer science student at the University of Utah and a full stack developer in the JobPreppers capstone group.",
+          "He works at the University’s Center for High Performance Computing as a Networking and Monitoring Specialist, where he supports critical ",
+          "data center infrastructure and performance systems through code-driven solutions and data visualization.",
+          "William also brings hands-on experience as a former hardware technician, where he gained practical skills in computer systems and technical troubleshooting.",
+          "Outside of tech, William loves all forms of gaming, professional basketball, and maintaining an active lifestyle through fitness."
+    ]
+
+    },
+
+    {
+        "name": "Trang Tran",
+        "image": "/Images/Trang.jpg",
+        "alt": "Trang Tran Picture",
+        "email": "trang.t.tran00@gmail.com",
+        "linkedln": "https://www.linkedin.com/in/trang-thi-tran/",
+        "bio": [
+      "Trang is a software engineer passionate about frontend development and clean UI design.",
+      "She enjoys working with React, Tailwind, and Material UI, and loves collaborating with cross-functional teams."
+    ]
+
+    }
+
+]
