@@ -41,14 +41,14 @@
 }
 
 .editProfileButton{
-  background-color: #f0fbf5 !important;
-  border: 2px solid #63d297 !important;
-  color: #63d297 !important;
+  background-color: var(--jp-white) !important;
+  border: 2px solid var(--jp-secondary) !important;
+  color: var(--jp-secondary) !important;
   line-height: 1 !important;
 }
 
 .editProfileButton:hover {
-  background-color: #edf2f7;
+  background-color: var(--jp-white-hover);
 }
 
 .noProfileText{
@@ -58,7 +58,7 @@
 }
 
 .parseResume {
-  background-color: #4ba173;
+  background-color: var(--jp-primary);
   border-radius: 15px;
   width: 70%;
   display: flex;

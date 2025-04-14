@@ -81,7 +81,7 @@ function Education() {
       <div className="panelTransparent">
         <a
           href={`/Profile/${user.username}`}
-          className="text-[#0D7944] hover:underline mb-8"
+          className="text-[var(--jp-border)] hover:underline mb-8"
         >
           <ArrowBackIcon /> Go back to Profile Page
         </a>

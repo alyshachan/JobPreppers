@@ -1,5 +1,20 @@
+:root {
+  --jp-navbar: #fdfafa;
+  --jp-navbar-hover: #e4e4e4;
+  --jp-background: #f5efe8;
+  --jp-primary: #d1a0ee;
+  --jp-primary-hover: #bb84da;
+  --jp-secondary: #ffb81d;
+  --jp-secondary-hover: #dea11d;
+  --jp-border: #824d9a;
+  --jp-white: #fbf8f0;
+  --jp-white-hover: #eeece5;
+  --jp-gray: #757575;
+  --jp-gradient: linear-gradient(45deg, var(--jp-secondary), var(--jp-primary));
+}
+
 body {
-  background-color: #e7f2ec;
+  background-color: var(--jp-background);
   justify-content: center;
   color: black;
 }
@@ -16,14 +31,14 @@ h2 {
 
 hr {
   border: none;
-  border-top: 1px solid #757575;
+  border-top: 1px solid var(--jp-gray);
   margin-left: 10px;
   width: 100%;
 }
 
 button{
-  background-color: #4BA173;
-  border: 2px solid #4BA173;
+  background-color: var(--jp-primary);
+  border: 2px solid var(--jp-primary);
   border-radius: 30px;
   padding: 0px 10px;
   color: white;
@@ -32,7 +47,7 @@ button{
 }
 
 button:hover{
-  background-color: #3C805C;
+  background-color: var(--jp-primary-hover);
 }
 
 .content{
@@ -96,18 +111,19 @@ button:hover{
   }
   
   .subtitle {
-    color: #757575;
+    color: var(--jp-gray);
     margin-top: 0px;
   }
 
   .lightButton {
-    background-color: #f0fbf5;
-    border: 2px solid #63d297;
-    color: #63d297;
+    background-color: var(--jp-white);
+    border: 2px solid var(--jp-secondary);
+    color: var(--jp-secondary);
   }
 
   .lightButton:hover {
-    background-color: #edf2f7;
+    background-color: var(--jp-white-hover);
+    border: 2px solid var(--jp-secondary-hover);
   }
   
   .suggestionsBox {

@@ -169,7 +169,7 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
       <p className="subtitle">{visitingUser.location}</p>
       <a
         href="/Friends"
-        className="font-bold text-xl text-[#4ba173] hover:underline"
+        className="font-bold text-xl text-[var(--jp-border)] hover:underline"
       >
         {friendCount} connections
       </a>

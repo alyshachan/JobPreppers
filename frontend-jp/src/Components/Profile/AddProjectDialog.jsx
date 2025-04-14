@@ -113,9 +113,8 @@ function AddProjectDialog({ open, onClose, onAdd, project }) {
 
   return (
     <StyledDialog onClose={onClose} open={open}>
-      <DialogTitle className={styles.dialogTitle}>
+      <DialogTitle className={styles.dialogTitle}/>
         <SectionHeader header={project ? "Edit Project" : "Add Project"} />
-      </DialogTitle>
 
       <IconButton
         aria-label="close"

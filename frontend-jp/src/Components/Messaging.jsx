@@ -168,7 +168,7 @@ function Messaging() {
           bottom: chatOpened ? "calc(20px + 400px)" : "20px",
           right: "20px", // Places the button on the right
           padding: "10px",
-          backgroundColor: "#4ba173",
+          backgroundColor: "var(--jp-secondary)",
           color: "white",
           border: "none",
           borderRadius: "5px",
