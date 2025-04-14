@@ -202,7 +202,7 @@
 }
 
 .cardCompensation {
-  border: 2px solid #63d297;
+  border: 2px solid var(--jp-secondary);
 }
 
 .noResultContainer {

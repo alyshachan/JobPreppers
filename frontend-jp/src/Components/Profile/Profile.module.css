@@ -26,8 +26,8 @@
 }
 
 .actionButtons Button {
-  background-color: #4BA173;
-  border: 2px solid #4BA173;
+  background-color: var(--jp-secondary);
+  border: 2px solid var(--jp-secondary);
   border-radius: 30px;
   padding: 0px 10px;
   color: white;
@@ -54,7 +54,7 @@
 .noProfileText{
   font-size: xx-large;
   font-weight: bold;
-  color: #757575;
+  color: var(--jp-gray);
 }
 
 .parseResume {
@@ -87,10 +87,10 @@
 
   border-style: dashed;
   border-width: 4px;
-  border-color: #4ba173;
+  border-color: var(--jp-border);
   font-weight: bold;
   font-size: xx-large;
-  color: #4ba173;
+  color: var(--jp-border);
 }
 
 .highlightedInfo .addNewSection,
