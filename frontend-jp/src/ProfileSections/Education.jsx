@@ -1,7 +1,7 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React, { useState, useEffect, useRef } from "react";
 import "../Components/JobPreppers.css";
-import defaultSchoolCompany from "../Components/Profile/defaultSchoolCompany.png";
+import DefaultCompany from "../Components/Profile/JobPreppers_DefaultCompany.png";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
 
@@ -81,7 +81,7 @@ function Education() {
       <div className="panelTransparent">
         <a
           href={`/Profile/${user.username}`}
-          className="text-[#0D7944] hover:underline mb-8"
+          className="text-[var(--jp-border)] hover:underline mb-8"
         >
           <ArrowBackIcon /> Go back to Profile Page
         </a>
@@ -97,7 +97,7 @@ function Education() {
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
                   />
                 ) : (
-                  <img className="companyPicture" src={defaultSchoolCompany} />
+                  <img className="companyPicture" src={DefaultCompany} />
                 )}
 
                 <div className={styles.sectionPictureContent}>

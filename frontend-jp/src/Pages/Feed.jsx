@@ -2,7 +2,7 @@ import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import "react-activity-feed/dist/index.css";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png";
+import DefaultPic from "../Components/JobPreppers_DefaultPic.png";
 import {
   StreamApp,
   FlatFeed,
@@ -113,7 +113,7 @@ function Feed() {
               name: friend.name,
               profilePic:
                 friend.profilePic == null
-                  ? defaultProfilePicture
+                  ? DefaultPic
                   : "data:image/png;base64," +
                     friend.profilePic.toString().toString("base64"),
               title: friend.title,

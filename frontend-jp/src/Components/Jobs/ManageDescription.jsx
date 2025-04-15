@@ -22,7 +22,7 @@ import "../JobPreppers.css";
 import { useAuth } from "../../provider/authProvider";
 import { useMutation } from "@tanstack/react-query";
 import AddJobForm from "./Posting/AddJobForm";
-import defaultProfilePicture from "../defaultProfilePicture.png";
+import DefaultPic from "../../Components/JobPreppers_DefaultPic.png";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
@@ -97,8 +97,8 @@ function ManageDescription({ setDrawerOpen, jobs, setJobs, onRefresh }) {
           <CardHeader
             avatar={
               <Avatar
-                src={job.profilePic ?? defaultProfilePicture}
-                aria-label="recipe"
+                src={job.profilePic ?? DefaultPic}
+                aria-label="company picture"
               >
                 {job.company[0]}
               </Avatar>

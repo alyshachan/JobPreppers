@@ -9,18 +9,20 @@
 .addJobTitle {
   margin: 0 0 0 0;
   padding: 1rem 0 0 0;
-  border-top: 50px solid #4ba173;
+  background: var(--jp-gradient);
   left: -20px;
   position: relative;
   padding-left: 36px;
   width: calc(100% + 40px);
+  height: 50px;
+  margin-bottom: 10px !important;
 }
 
 .closeButton {
   position: absolute !important;
   top: 8px !important;
   right: 8px !important;
-  color: #085630 !important;
+  color: var(--jp-border) !important;
 }
 
 .dialogContent {
@@ -62,7 +64,7 @@
 }
 
 .label {
-  color: #4ba173;
+  color: var(--jp-primary);
   font-family: "Roboto", sans-serif;
   font-size: rem;
 }
@@ -96,8 +98,8 @@
 }
 
 .rateLabel {
-  color: #4ba173;
-  border: 1px solid #4ba173;
+  color: var(--jp-border);
+  border: 1px solid var(--jp-border);
   padding: 16px 16px;
   border-radius: 4px;
   display: inline-block;

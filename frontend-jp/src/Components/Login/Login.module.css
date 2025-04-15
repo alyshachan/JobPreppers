@@ -45,26 +45,26 @@
   }
   
   .inputField:focus {
-    border-color: #4ba173;
+    border-color: var(--jp-border);
     outline: none;
     box-shadow: 0 0 0 2px #e7f2ec;
   }
 
   .lightButton {
-    background-color: #f0fbf5;
-    border: 2px solid #63d297;
-    color: #63d297;
+    background-color: var(--jp-white);
+    border: 2px solid var(--jp-secondary);
+    color: var(--jp-secondary);
     width: 40%;
     height: 3rem;
   }
 
   .lightButton:hover {
-    background-color: #edf2f7;
+    background-color: var(--jp-white-hover);
   }
 
   .activeButton{
-    background-color: #4BA173;
-    border: 2px solid #4BA173;
+    background-color: var(--jp-secondary);
+    border: 2px solid var(--jp-secondary);
     border-radius: 30px;
     padding: 0px 10px;
     color: white;
@@ -72,6 +72,10 @@
     line-height: 30px;
     width: 40%;
     height: 3rem;
+  }
+
+  .activeButton:hover {
+    background-color: var(--jp-secondary-hover);
   }
   
   .errorMessage {
@@ -83,7 +87,7 @@
   .submitButton {
     width: 100%;
     padding: 0.75rem;
-    background-color: #4ba173;
+    background-color: var(--jp-primary);
     color: white;
     font-size: 1rem;
     font-weight: 600;
@@ -93,7 +97,7 @@
   }
   
   .submitButton:hover {
-    background-color: #085630;
+    background-color: var(--jp-primary-hover);
   }
 
   .submitButton:disabled {

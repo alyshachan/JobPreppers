@@ -27,7 +27,7 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import defaultProfilePicture from "../defaultProfilePicture.png";
+import DefaultPic from "../../Components/JobPreppers_DefaultPic.png";
 import { useMutation } from "@tanstack/react-query";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
@@ -113,11 +113,11 @@ function JobDescription({ setDrawerOpen, jobs, setJobs, setFilters }) {
       {jobs.map((job, index) => (
         <Card key={job.jobID} className={styles.card}>
           <Box className="flex w-full">
-            <Box className="flex-row w-2/3 max-h-full border-r-2">
+            <Box className="flex-row w-2/4 max-h-full border-r-2">
               <CardHeader
                 avatar={
                   <Avatar
-                    src={job.profilePic ?? defaultProfilePicture}
+                    src={job.profilePic ?? DefaultPic}
                     aria-label="Company Picture"
                   >
                     {job.company[0]}
@@ -172,7 +172,7 @@ function JobDescription({ setDrawerOpen, jobs, setJobs, setFilters }) {
                 </Box>
               </CardContent>
             </Box>
-            <Box className="flex-col p-2 justify-center w-1/3 h-full">
+            <Box className="flex-col p-1 justify-center w-2/4 h-full">
               <div className="flex justify-end">
                 <Bookmark
                   jobID={job.jobID}
@@ -187,32 +187,33 @@ function JobDescription({ setDrawerOpen, jobs, setJobs, setFilters }) {
                   <HighlightOffIcon />
                 </IconButton>
               </div>
-              <CircularProgressbar
-                value={job.score}
-                text={`${job.score}%`}
-                styles={buildStyles({
-                  // Rotation of path and trail, in number of turns (0-1)
-                  rotation: 0.25,
+              <div className="flex w-full h-52 p-4 bg-jp-gradient rounded-[15px]">
+                <CircularProgressbar
+                  value={job.score}
+                  text={`${job.score}%
+                  Match`}
+                  background
+                  styles={buildStyles({
+                    // Rotation of path and trail, in number of turns (0-1)
+                    rotation: 0.0,
 
-                  // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
-                  strokeLinecap: "butt",
+                    // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+                    strokeLinecap: "butt",
 
-                  // Text size
-                  textSize: "16px",
+                    // Text size
+                    textSize: "16px",
 
-                  // How long animation takes to go from one percentage to another, in seconds
-                  pathTransitionDuration: 0.5,
+                    // How long animation takes to go from one percentage to another, in seconds
+                    pathTransitionDuration: 0.5,
 
-                  // Can specify path transition in more detail, or remove it entirely
-                  // pathTransition: 'none',
-
-                  // Colors
-                  pathColor: `rgba(62, 152, 199, ${job.score / 100})`,
-                  textColor: "#f88",
-                  trailColor: "#d6d6d6",
-                  backgroundColor: "#3e98c7",
-                })}
-              />
+                    // Colors
+                    pathColor: `rgba(109, 76, 126, ${job.score / 100})`,
+                    textColor: "#6d4c7e",
+                    trailColor: "--jp-gray",
+                    backgroundColor: "white",
+                  })}
+                />
+              </div>
             </Box>
           </Box>
 

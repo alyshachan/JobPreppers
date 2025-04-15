@@ -36,7 +36,7 @@
   margin-left: -20px;
   margin-right: -20px;
   width: calc(100% + 40px);
-  border-top: 1px solid #757575;
+  border-top: 1px solid var(--jp-gray);
 }
 
 .viewProfileButton,
@@ -50,18 +50,18 @@
 }
 
 .viewProfileButton {
-  color: #757575;
-  border-right: 1px solid #757575;
+  color: var(--jp-gray);
+  border-right: 1px solid var(--jp-gray);
   padding: 20px 0px 20px 20px;
 }
 
 .scheduleButton {
-  color: #4ba173;
+  color: var(--jp-secondary);
   padding: 20px 20px 20px 0px;
 }
 
 .viewProfileButton:hover,
 .scheduleButton:hover {
-  background-color: #edf2f7;
+  background-color: var(--jp-white-hover);
 
 }

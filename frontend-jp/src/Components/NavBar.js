@@ -17,12 +17,10 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png";
-import JobPreppersLogo_White from "../Components/JobPreppersLogo_White.png";
-
+import DefaultPic from "../Components/JobPreppers_DefaultPic.png";
+import JobPreppersLogo from "../Components/JobPreppers.png";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
-
 
 const navigation = [
   { name: "Feed", href: "/Feed", current: true },
@@ -46,8 +44,8 @@ function CustomLink({ to, children, className, ...props }) {
         className={classNames(
           className,
           isActive
-            ? "bg-[#085630] text-white"
-            : "text-gray-300 hover:bg-[#0D7944] hover:text-white",
+            ? "bg-[var(--jp-navbar-hover)] text-[var(--jp-border)]"
+            : "text-[var(--jp-border)] hover:bg-[var(--jp-navbar-hover)] hover:text-[var(--jp-border)]",
           "block rounded-md px-3 py-2 text-base font-medium"
         )}
       >
@@ -68,7 +66,6 @@ function NavBar() {
   const [showResults, setShowResults] = useState(false);
   const [isOff, setIsOff] = useState(false);
   const [buttonOff, setButtonOff] = useState(false);
-
 
   const buttonRef = useRef(null);
 
@@ -92,29 +89,32 @@ function NavBar() {
 
     const fetchUsers = async () => {
       try {
-          const response = await fetch(`${apiURL}/api/Users/Search?name=${encodeURIComponent(searchQuery)}`, {
-              credentials: "include",
-          });
-
-          if (response.ok) {
-              const data = await response.json();
-              setSearchResults(data);
-              setShowResults(true);
-          } else {
-              // Handle case where no users are found
-              setSearchResults([]);
-              setShowResults(false);
+        const response = await fetch(
+          `${apiURL}/api/Users/Search?name=${encodeURIComponent(searchQuery)}`,
+          {
+            credentials: "include",
           }
-      } catch (error) {
-          console.error("Error fetching search results:", error);
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setSearchResults(data);
+          setShowResults(true);
+        } else {
+          // Handle case where no users are found
           setSearchResults([]);
           setShowResults(false);
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        setSearchResults([]);
+        setShowResults(false);
       }
-  };
+    };
 
-  const timeoutId = setTimeout(fetchUsers, 300); // Debounce API calls
-  return () => clearTimeout(timeoutId);
-}, [searchQuery]);
+    const timeoutId = setTimeout(fetchUsers, 300); // Debounce API calls
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
 
   useEffect(() => {
     const requestPendingFriends = async () => {
@@ -136,7 +136,7 @@ function NavBar() {
               name: pendingFriend.name,
               profilePic:
                 pendingFriend.profilePicture == null
-                  ? defaultProfilePicture
+                  ? DefaultPic
                   : "data:image/png;base64," +
                     pendingFriend.profilePicture.toString().toString("base64"),
               title: pendingFriend.title,
@@ -164,14 +164,11 @@ function NavBar() {
 
   const handleAcceptFriend = async (friendID) => {
     try {
-      const response = await fetch(
-        apiURL + `/api/Friend/AcceptFriendRequest`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: user.userID, friendId: friendID }),
-        }
-      );
+      const response = await fetch(apiURL + `/api/Friend/AcceptFriendRequest`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.userID, friendId: friendID }),
+      });
 
       if (response.ok) {
         setNotificationDict(
@@ -190,31 +187,26 @@ function NavBar() {
         apiURL + `/api/Friend/SyncFriends/${user.userID}`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" }
+          headers: { "Content-Type": "application/json" },
         }
       );
 
       if (response.ok) {
         console.log("Friends synced");
       }
-
-    }
-    catch (err) {
+    } catch (err) {
       setError("An error occurred when syncing friends");
     }
   };
 
   const handleDeclineFriend = async (friendID) => {
     try {
-      const response = await fetch(
-        apiURL + `/api/Friend/DenyFriendRequest`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ userId: user.userID, friendId: friendID }),
-        }
-      );
+      const response = await fetch(apiURL + `/api/Friend/DenyFriendRequest`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ userId: user.userID, friendId: friendID }),
+      });
 
       if (response.ok) {
         setNotificationDict(
@@ -263,13 +255,12 @@ function NavBar() {
 
   const userPic =
     user.profile_pic == null
-      ? defaultProfilePicture
+      ? DefaultPic
       : "data:image/png;base64," +
         user.profile_pic.toString().toString("base64");
 
-
   return (
-    <Disclosure as="nav" className="bg-[#4BA173] w-full padding ">
+    <Disclosure as="nav" className="bg-[var(--jp-navbar)] w-full padding ">
       <div className="mx-auto w-full px-2">
         <div className="relative flex h-24 items-center justify-between">
           {/* Mobile menu button */}
@@ -293,7 +284,7 @@ function NavBar() {
             <div className="flex shrink-0 items-center">
               <img
                 alt="Job Preppers"
-                src={JobPreppersLogo_White}
+                src={JobPreppersLogo}
                 className="h-12 w-auto"
               />
             </div>
@@ -303,92 +294,56 @@ function NavBar() {
                   if (item.name === "Jobs") {
                     return (
                       <div className="relative group">
-                     <Menu as="div" className="relative group">
-  <MenuButton 
-  ref={buttonRef}
-    className={classNames(
-      "block data-[focus]:bg-blue-100 rounded-md px-3 py-2 text-base font-medium cursor-pointer",
-      matchJobs
-        ? "bg-[#085630] text-white"
-        : "text-gray-300 group-hover:bg-[#0D7944] group-hover:text-white"
-    )}
-    onMouseEnter={(e) => e.target.click()}
-
-  >
-    Job
-  </MenuButton>
-
-  <MenuItems 
-    anchor="bottom" 
-    transition
-    onMouseLeave={handleMouseLeave}
-    // onMouseOut={(e) => e.target.click()}
-
-    className={`origin-top transition duration-200 ease-out z-50 rounded-md bg-white w-48`}  >
-    <MenuItem>
-      <Link
-        to="/Jobs"
-        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-      >
-        Job Board
-      </Link>
-    </MenuItem>
-
-    <MenuItem>
-      <Link
-        to="/Jobs/ManageJobs"
-        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-      >
-        Manage Jobs
-      </Link>
-    </MenuItem>
-
-    <MenuItem>
-      <Link
-        to="/Jobs/BookmarkedJobs"
-        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-      >
-        Bookmarked Jobs
-      </Link>
-    </MenuItem>
-  </MenuItems>
-</Menu>
-
-                        {/* <span
-                          className={classNames(
-                            "block data-[focus]:bg-blue-100 rounded-md px-3 py-2 text-base font-medium cursor-pointer",
-                            matchJobs
-                              ? "bg-[#085630] text-white"
-                              : "text-gray-300 group-hover:bg-[#0D7944] group-hover:text-white"
-                          )}
-                        >
-                          Jobs
-                        </span> */}
-
-                        {/* Dropdown panel */}
-                        {/* <div
-                          className="absolute left-0 z-50 mt-1 w-48 origin-top-left rounded-md bg-white shadow-lg 
-               opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-opacity duration-200"
-                        >
-                          <Link
-                            to="/Jobs"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        <Menu as="div" className="relative group">
+                          <MenuButton
+                            ref={buttonRef}
+                            className={classNames(
+                              "block data-[focus]:bg-blue-100 rounded-md px-3 py-2 text-base font-medium cursor-pointer",
+                              matchJobs
+                                ? "bg-[var(--jp-navbar-hover)] text-[var(--jp-border)] border-none hover:bg-red" 
+                                : "text-[var(--jp-border)] group-hover:bg-[var(--jp-navbar-hover)] group-hover:text-[var(--jp-border)] bg-[var(--jp-navbar)] hover:bg-red border-none"
+                            )}
+                            onMouseEnter={(e) => e.target.click()}
                           >
-                            Job Board
-                          </Link>
-                          <Link
-                            to="/Jobs/ManageJobs"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            Job
+                          </MenuButton>
+
+                          <MenuItems
+                            anchor="bottom"
+                            transition
+                            onMouseLeave={handleMouseLeave}
+                            // onMouseOut={(e) => e.target.click()}
+
+                            className={`origin-top transition duration-200 ease-out z-50 rounded-md bg-white w-48`}
                           >
-                            Manage Jobs
-                          </Link>
-                          <Link
-                            to="/Jobs/BookmarkedJobs"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            Bookmarked Jobs
-                          </Link>
-                        </div> */}
+                            <MenuItem>
+                              <Link
+                                to="/Jobs"
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              >
+                                Job Board
+                              </Link>
+                            </MenuItem>
+
+                            <MenuItem>
+                              <Link
+                                to="/Jobs/ManageJobs"
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              >
+                                Manage Jobs
+                              </Link>
+                            </MenuItem>
+
+                            <MenuItem>
+                              <Link
+                                to="/Jobs/BookmarkedJobs"
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              >
+                                Bookmarked Jobs
+                              </Link>
+                            </MenuItem>
+                          </MenuItems>
+                        </Menu>
                       </div>
                     );
                   } else {
@@ -403,52 +358,60 @@ function NavBar() {
             </div>
           </div>
 
-
-      {/* Search Bar */}
-<div className="relative w-64 ml-10"> {/* Adjust margin here as needed */}
-  <input
-    type="text"
-    placeholder="Search users..."
-    value={searchQuery}
-    onChange={handleSearchChange}
-    className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#0D7944]"
-  />
-  {showResults && searchResults.length > 0 && (
-    <div className="absolute top-full left-0 w-full bg-white shadow-md rounded-md mt-1 max-h-60 overflow-y-auto">
-      {searchResults.map((user) => (
-        <Link 
-          key={user.userId} 
-          to={`/Profile/${user.username}`} // Link to the user's profile
-          className="flex items-center p-2 hover:bg-gray-100 cursor-pointer"
-          onClick={() => {
-            // Hide the results and clear the search query
-            setShowResults(false);
-            setSearchQuery(""); // Optional: clear the input field after selection
-          }}
-        >
-          <img
-            src={user.profile_pic ? `data:image/png;base64,${user.profile_pic}` : defaultProfilePicture}
-            alt={`${user.first_name} ${user.last_name}`}
-            className="w-10 h-10 rounded-full mr-2"
-          />
-          <div className="flex flex-col">
-            <span className="font-semibold">{`${user.first_name} ${user.last_name ? user.last_name : ""}`}</span>
-            <span className="text-sm text-gray-500">{user.title}</span>
+          {/* Search Bar */}
+          <div className="relative w-64 ml-10">
+            {" "}
+            {/* Adjust margin here as needed */}
+            <input
+              type="text"
+              placeholder="Search users..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--jp-border)]"
+            />
+            {showResults && searchResults.length > 0 && (
+              <div className="absolute top-full left-0 w-full bg-white shadow-md rounded-md mt-1 max-h-60 overflow-y-auto">
+                {searchResults.map((user) => (
+                  <Link
+                    key={user.userId}
+                    to={`/Profile/${user.username}`} // Link to the user's profile
+                    className="flex items-center p-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => {
+                      // Hide the results and clear the search query
+                      setShowResults(false);
+                      setSearchQuery(""); // Optional: clear the input field after selection
+                    }}
+                  >
+                    <img
+                      src={
+                        user.profile_pic
+                          ? `data:image/png;base64,${user.profile_pic}`
+                          : DefaultPic
+                      }
+                      alt={`${user.first_name} ${user.last_name}`}
+                      className="w-10 h-10 rounded-full mr-2"
+                    />
+                    <div className="flex flex-col">
+                      <span className="font-semibold">{`${user.first_name} ${
+                        user.last_name ? user.last_name : ""
+                      }`}</span>
+                      <span className="text-sm text-gray-500">
+                        {user.title}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
-        </Link>
-      ))}
-    </div>
-  )}
-</div>
-
 
           {/* Profile dropdown and notification button */}
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <Menu as="div" className="relative ml-3">
-              <MenuButton>
+              <MenuButton className="bg-[var(--jp-navbar)] hover:bg-[var(--jp-navbar)] border-none">
                 <button
                   type="button"
-                  className="relative rounded-full bg-[#085630] p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                  className="relative rounded-full bg-jp-gradient hover:bg-[var(--jp-navbar-hover)] border-none p-1 hover:text-gray-400 text-[var(--jp-navbar-border)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">View notifications</span>
@@ -483,8 +446,21 @@ function NavBar() {
                           </p>
 
                           <div className="flex gap-2 pt-2 items-center justify-end flex-grow">
-                            <button onClick={() => handleAcceptFriend(notification.userID)}>Accept</button>
-                            <button className="lightButton" onClick={() => handleDeclineFriend(notification.userID)}>Decline</button>
+                            <button
+                              onClick={() =>
+                                handleAcceptFriend(notification.userID)
+                              }
+                            >
+                              Accept
+                            </button>
+                            <button
+                              className="lightButton"
+                              onClick={() =>
+                                handleDeclineFriend(notification.userID)
+                              }
+                            >
+                              Decline
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -499,7 +475,7 @@ function NavBar() {
 
             <Menu as="div" className="relative ml-3">
               <div>
-                <MenuButton className="relative flex rounded-full bg-[#4BA173] text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                <MenuButton className="relative flex rounded-full bg-[var(--jp-navbar)] border-none hover:bg-[var(--jp-navbar-hover)] text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
                   <img
@@ -515,18 +491,10 @@ function NavBar() {
               >
                 <MenuItem>
                   <Link
-                    to={`/Profile/${user.username}`} 
+                    to={`/Profile/${user.username}`}
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
                     Your Profile
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link
-                    to="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                  >
-                    Settings
                   </Link>
                 </MenuItem>
                 <MenuItem>

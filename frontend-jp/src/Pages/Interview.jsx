@@ -162,7 +162,7 @@ function Interview() {
             {events.length > 0 ? (
               <UpcomingEvents events={events} />
             ) : (
-              <h2 className="text-[#4BA173] text-center">
+              <h2 className="text-[var(--jp-primary)] text-center">
                 No upcoming events yet
               </h2>
             )}
@@ -204,7 +204,7 @@ function Interview() {
               ))
             ) : (
               <div className="flex w-full justify-center">
-                <h2 className="text-[#4BA173] text-center">
+                <h2 className="text-[var(--jp-primary)] text-center">
                   No interviewers available yet
                 </h2>
               </div>
