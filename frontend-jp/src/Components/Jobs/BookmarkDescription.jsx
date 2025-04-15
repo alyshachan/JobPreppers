@@ -21,7 +21,7 @@ import styles from "./Jobs.module.css";
 import "../JobPreppers.css";
 import Bookmark from "./Posting/Helper/Bookmark";
 import { useAuth } from "../../provider/authProvider";
-import defaultProfilePicture from "../defaultProfilePicture.png";
+import DefaultPic from "../../Components/JobPreppers_DefaultPic.png";
 
 function BookmarkDescription({
   setDrawerOpen,
@@ -50,7 +50,7 @@ function BookmarkDescription({
           <CardHeader
             avatar={
               <Avatar
-                src={job.profilePic ?? defaultProfilePicture}
+                src={job.profilePic ?? DefaultPic}
                 aria-label="Company Icon"
               >
                 {job.company[0]}

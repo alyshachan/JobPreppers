@@ -27,7 +27,7 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import defaultProfilePicture from "../defaultProfilePicture.png";
+import DefaultPic from "../../Components/JobPreppers_DefaultPic.png";
 import { useMutation } from "@tanstack/react-query";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
@@ -117,7 +117,7 @@ function JobDescription({ setDrawerOpen, jobs, setJobs, setFilters }) {
               <CardHeader
                 avatar={
                   <Avatar
-                    src={job.profilePic ?? defaultProfilePicture}
+                    src={job.profilePic ?? DefaultPic}
                     aria-label="Company Picture"
                   >
                     {job.company[0]}

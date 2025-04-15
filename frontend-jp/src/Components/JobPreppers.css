@@ -154,10 +154,13 @@ button:hover{
   display: none;
 }
 
+.bg-jp-gradient {
+  background-image: var(--jp-gradient);
+}
 
 .custom-file-button {
   display: inline-block;
-  background-color: #4BA173;
+  background-color: var(--jp-border);
   color: white;
   font-weight: bold;
   font-size: 16px;
@@ -176,11 +179,11 @@ button:hover{
 
 /* Hover and active states */
 .custom-file-button:hover {
-  background-color: #4BA173;
+  background-color: #6a3b80;
 }
 
 .custom-file-button:active {
-  background-color: #4BA173;
+  background-color: #6a3b80;
 }
 
 .str-video {

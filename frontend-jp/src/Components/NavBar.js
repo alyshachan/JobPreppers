@@ -17,8 +17,8 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png";
-import JobPreppersLogo_White from "../Components/JobPreppersLogo_White.png";
+import DefaultPic from "../Components/JobPreppers_DefaultPic.png";
+import JobPreppersLogo from "../Components/JobPreppers.png";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
@@ -136,7 +136,7 @@ function NavBar() {
               name: pendingFriend.name,
               profilePic:
                 pendingFriend.profilePicture == null
-                  ? defaultProfilePicture
+                  ? DefaultPic
                   : "data:image/png;base64," +
                     pendingFriend.profilePicture.toString().toString("base64"),
               title: pendingFriend.title,
@@ -255,7 +255,7 @@ function NavBar() {
 
   const userPic =
     user.profile_pic == null
-      ? defaultProfilePicture
+      ? DefaultPic
       : "data:image/png;base64," +
         user.profile_pic.toString().toString("base64");
 
@@ -284,7 +284,7 @@ function NavBar() {
             <div className="flex shrink-0 items-center">
               <img
                 alt="Job Preppers"
-                src={JobPreppersLogo_White}
+                src={JobPreppersLogo}
                 className="h-12 w-auto"
               />
             </div>
@@ -386,7 +386,7 @@ function NavBar() {
                       src={
                         user.profile_pic
                           ? `data:image/png;base64,${user.profile_pic}`
-                          : defaultProfilePicture
+                          : DefaultPic
                       }
                       alt={`${user.first_name} ${user.last_name}`}
                       className="w-10 h-10 rounded-full mr-2"
@@ -411,7 +411,7 @@ function NavBar() {
               <MenuButton className="bg-[var(--jp-navbar)] hover:bg-[var(--jp-navbar)] border-none">
                 <button
                   type="button"
-                  className="relative rounded-full bg-[var(--jp-navbar-hover)] hover:bg-[var(--jp-navbar-hover)] border-none p-1 text-gray-400 hover:text-[var(--jp-navbar-border)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                  className="relative rounded-full bg-jp-gradient hover:bg-[var(--jp-navbar-hover)] border-none p-1 hover:text-gray-400 text-[var(--jp-navbar-border)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">View notifications</span>
@@ -495,14 +495,6 @@ function NavBar() {
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
                     Your Profile
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link
-                    to="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                  >
-                    Settings
                   </Link>
                 </MenuItem>
                 <MenuItem>

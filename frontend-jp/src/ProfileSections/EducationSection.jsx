@@ -5,7 +5,7 @@ import styles from "../Components/Profile/ProfileSections.module.css";
 import "../Components/JobPreppers.css";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {useState } from "react";
-import defaultSchoolCompany from "../Components/Profile/defaultSchoolCompany.png";
+import DefaultCompany from "../Components/Profile/JobPreppers_DefaultCompany.png";
 import { IconButton } from "@mui/material";
 import AddEducationDialog from "../Components/Profile/AddEducationDialog";
 
@@ -61,7 +61,7 @@ function EducationSection({ educationDict, edit, onAdd }) {
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
                   />
                 ) : (
-                  <img className="companyPicture" src={defaultSchoolCompany} />
+                  <img className="companyPicture" src={DefaultCompany} />
                 )}
 
               <div className={styles.sectionPictureContent}>

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "../Components/JobPreppers.css";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png"
+import DefaultPic from "../Components/JobPreppers_DefaultPic.png";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Friends() {
@@ -29,7 +29,7 @@ function Friends() {
               userID: friend.userID,
               username: friend.username,
               name: friend.name,
-              profilePic: friend.profilePicture ? "data:image/png;base64," + friend.profilePicture.toString().toString("base64") : defaultProfilePicture,
+              profilePic: friend.profilePicture ? "data:image/png;base64," + friend.profilePicture.toString().toString("base64") : DefaultPic,
               title: friend.title,
             }));
 

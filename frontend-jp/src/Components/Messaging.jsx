@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../provider/authProvider";
 import * as signalR from "@microsoft/signalr";
 import "react-chat-elements/dist/main.css";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png";
+import DefaultPic from "../Components/JobPreppers_DefaultPic.png";
 // import { MessageList, SystemMessage, ChatList, Input, Button } from 'react-chat-elements'; // deprecrated 2/26
 import { styled } from "@mui/material/styles";
 import { StreamChat } from "stream-chat";
