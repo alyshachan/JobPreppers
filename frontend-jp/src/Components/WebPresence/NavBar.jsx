@@ -15,57 +15,37 @@ import {
 } from "@headlessui/react";
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
+import JobPreppersLogo from "../JobPreppers.png";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
-
-const navigation = [
-  { name: "Feed", href: "/Feed", current: true },
-  { name: "Jobs", href: "/Jobs", current: false },
-  { name: "Interview", href: "/Interview", current: false },
-  { name: "Resume", href: "/Resume", current: false },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-function CustomLink({ to, children, className, ...props }) {
-  const resolvedPath = useResolvedPath(to);
-  const isActive = useMatch({ path: resolvedPath.pathname, end: false });
-  return (
-    <div className={isActive ? "active" : ""}>
-      <Link
-        to={to}
-        {...props}
-        className={classNames(
-          className,
-          isActive
-            ? "bg-[#085630] text-white"
-            : "text-gray-300 hover:bg-[#0D7944] hover:text-white",
-          "block rounded-md px-3 py-2 text-base font-medium"
-        )}
-      >
-        {children}
-      </Link>
-    </div>
-  );
-}
 
 function NavBar() {
   const navigate = useNavigate();
 
   return (
-    <Disclosure as="nav" className="bg-[#4BA173] w-full padding ">
+    <Disclosure
+      as="nav"
+      style={{ backgroundImage: "var(--jp-navbar)" }}
+      className="bg-[var(--jp-navbar)] w-full p-2 "
+    >
       <div className="mx-auto w-full px-2">
         {/* Other content */}
-        <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <div className="flex shrink-0 items-center">
-            <img
-              alt="Job Preppers"
-              src={JobPreppersLogo_White}
-              className="h-12 w-auto"
-            />
-          </div>
+        <div className="flex flex-row justify-between w-full">
+          <img
+            alt="Job Preppers"
+            src={JobPreppersLogo}
+            className="h-12 w-auto"
+          />
+          <button
+            // style={{
+            //   backgroundImage: "var(--jp-gradient)",
+            //   borderColor: "var(--jp-border)",
+            // }}
+            className="relative rounded-full bg-jp-gradient hover:bg-[var(--jp-navbar-hover)] border-none p-1 hover:text-gray-200 text-[var(--jp-navbar-border)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 w-32"
+            onClick={() => navigate("/Login")}
+          >
+            Log In
+          </button>
         </div>
       </div>
     </Disclosure>

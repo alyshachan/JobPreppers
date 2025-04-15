@@ -5,8 +5,8 @@ import NavBar from "../Components/WebPresence/NavBar";
 function WebPresence() {
   return (
     <>
+      <NavBar />
       <div className="flex flex-col m-4">
-        <NavBar />
         <Summary />
         <Technologies />
         <TeamMemberDescription />

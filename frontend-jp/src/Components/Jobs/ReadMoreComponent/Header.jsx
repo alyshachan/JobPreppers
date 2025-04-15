@@ -1,8 +1,6 @@
 import { Typography, IconButton, Avatar, Button, Box } from "@mui/material";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CloseIcon from "@mui/icons-material/Close";
-import amazonIcon from "../Img/amazon-icon.png";
-import moment from "moment";
 import styles from "../Jobs.module.css";
 import { useAuth } from "../../../provider/authProvider";
 import React, { useState, useEffect } from "react"; // Import useState and useEffect
@@ -146,6 +144,12 @@ export default function Header({ job, onClose }) {
         >
           Apply
         </button>
+        <button
+          className={styles.applyButton}
+          onClick={() => setShowApplicants(true)}
+        >
+          View Applicants
+        </button>
 
         <Modal open={showApplicants} onClose={() => setShowApplicants(false)}>
           <Box
@@ -182,16 +186,11 @@ export default function Header({ job, onClose }) {
           </Box>
         </Modal>
         {/* Display the number of applicants */}
-        <Typography sx={{ mt: 1, ml: 1 }} variant="body2">
-          People who have clicked Apply: <strong>{applyCount}</strong>
-          <Button
-            sx={{ mt: 1 }}
-            variant="outlined"
-            onClick={() => setShowApplicants(true)}
-          >
-            View Applicants
-          </Button>
-        </Typography>
+        <div className="flex content-center">
+          <Typography sx={{ mt: 1, ml: 1 }} variant="body2">
+            People who have clicked Apply: <strong>{applyCount}</strong>
+          </Typography>
+        </div>
       </Box>
     </>
   );

@@ -98,7 +98,7 @@ function ManageDescription({ setDrawerOpen, jobs, setJobs, onRefresh }) {
             avatar={
               <Avatar
                 src={job.profilePic ?? DefaultPic}
-                aria-label="recipe"
+                aria-label="company picture"
               >
                 {job.company[0]}
               </Avatar>
