@@ -28,13 +28,13 @@
 }
 
 .startTime {
-  color: #4ba173;
+  color: var(--jp-primary);
   font-weight: bold;
   font-size: x-large;
 }
 
 .endTime {
-  color: #63d297;
+  color: var(--jp-secondary);
   font-weight: bold;
   font-size: x-large;
 }
@@ -55,7 +55,7 @@
 }
 
 .eventText.firstEvent {
-  background-color: #4ba173;
+  background-color: var(--jp-primary);
   color: white;
 }
 
@@ -67,7 +67,11 @@
 }
 
 .firstJoinCall {
-  background-color: #f0fbf5;
-  border: 2px solid #63d297;
-  color: #63d297;
+  background-color: var(--jp-white);
+  border: 2px solid var(--jp-secondary);
+  color: var(--jp-secondary);
+}
+
+.firstJoinCall:hover {
+  background-color: var(--jp-white-hover);
 }

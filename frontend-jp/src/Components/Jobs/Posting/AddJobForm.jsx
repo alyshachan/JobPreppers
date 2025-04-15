@@ -37,13 +37,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     minWidth: "1000px",
     overflowX: "hidden",
   },
-  "& .css-si425x" : {
+  "& .css-si425x": {
     borderRadius: "30px",
     padding: "0px 20px 20px",
     overflow: "hidden",
     maxWidth: "1000px",
     minWidth: "1000px",
-  }
+  },
 }));
 
 export default function AddJobForm({
@@ -208,9 +208,8 @@ export default function AddJobForm({
             </div>
           )}
 
-          <DialogTitle className={styles.addJobTitle}>
-            <SectionHeader header="Add Job Posting" />
-          </DialogTitle>
+          <DialogTitle className={styles.addJobTitle} />
+          <SectionHeader header="Add Job Posting" />
           <IconButton
             aria-label="close"
             onClick={handleClose}

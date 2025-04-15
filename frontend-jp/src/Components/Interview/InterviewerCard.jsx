@@ -1,7 +1,7 @@
 import "../JobPreppers.css";
 import { useNavigate } from "react-router-dom";
 import styles from "./InterviewerCard.module.css";
-import defaultProfilePicture from "../defaultProfilePicture.png";
+import DefaultPic from "../../Components/JobPreppers_DefaultPic.png";
 
 function InterviewerCard({
   name,
@@ -17,7 +17,7 @@ function InterviewerCard({
 
     const interviewerPic =
       profilePic == null
-        ? defaultProfilePicture
+        ? DefaultPic
         : "data:image/png;base64," +
         profilePic.toString().toString("base64");
 

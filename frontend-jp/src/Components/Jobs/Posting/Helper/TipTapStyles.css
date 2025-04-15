@@ -5,11 +5,12 @@
   padding: 0.2rem 0.3rem 0 0.3rem;
   overflow: auto;
   height: 15rem;
-  border: 1px solid #4ba173;
+  border: 1px solid #c1c3c5;
+  border-radius: 5px;
 }
 
 .control-group {
-  border: 1px solid #4ba173;
+  border: 1px solid #c1c3c5;
   border-radius: 5px;
   padding: 0.3rem 0.2rem 0.3rem 0;
   display: flex;
@@ -19,7 +20,12 @@
 }
 
 button.is-active {
-  background-color: #4ba173;
+  background-color: var(--jp-secondary);
+  color: white;
+}
+
+button.is-active:hover {
+  background-color: var(--jp-secondary-hover);
   color: white;
 }
 

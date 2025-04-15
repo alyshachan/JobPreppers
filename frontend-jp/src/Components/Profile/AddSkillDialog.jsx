@@ -28,13 +28,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     maxWidth: "800px",
     minWidth: "800px",
   },
-  "& .css-si425x" : {
+  "& .css-si425x": {
     borderRadius: "30px",
     padding: "0px 20px 20px",
     overflow: "hidden",
     maxWidth: "800px",
     minWidth: "800px",
-  }
+  },
 }));
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
@@ -59,7 +59,10 @@ function AddSkillDialog({ open, onClose, onAdd, skill }) {
     e.preventDefault(); // Prevent default form submission
     onClose();
     try {
-      const url = skill && skill.userSkillID ? `EditSkill/${skill.userSkillID}` : "AddSkillToUser";
+      const url =
+        skill && skill.userSkillID
+          ? `EditSkill/${skill.userSkillID}`
+          : "AddSkillToUser";
       const method = skill && skill.userSkillID ? "PUT" : "POST";
 
       const response = await fetch(apiURL + `/api/UserSkills/${url}`, {
@@ -116,9 +119,8 @@ function AddSkillDialog({ open, onClose, onAdd, skill }) {
 
   return (
     <StyledDialog onClose={onClose} open={open}>
-      <DialogTitle className={styles.dialogTitle}>
-        <SectionHeader header={skill ? "Edit Skill" : "Add Skill"} />
-      </DialogTitle>
+      <DialogTitle className={styles.dialogTitle} />
+      <SectionHeader header={skill ? "Edit Skill" : "Add Skill"} />
 
       <IconButton
         aria-label="close"

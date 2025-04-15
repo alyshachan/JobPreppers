@@ -1,5 +1,5 @@
 import "../Components/JobPreppers.css";
-import defaultSchoolCompany from "../Components/Profile/defaultSchoolCompany.png"
+import DefaultCompany from "../Components/Profile/JobPreppers_DefaultCompany.png";
 import React, { useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import { TextField } from "@mui/material";
@@ -484,7 +484,7 @@ function ParseResume() {
                         ) : (
                           <img
                             className="companyPicture"
-                            src={defaultSchoolCompany}
+                            src={DefaultCompany}
                           />
                         )}
 
@@ -697,7 +697,7 @@ function ParseResume() {
                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
                           />
                         ) : (
-                          <img className="companyPicture" src={defaultSchoolCompany} />
+                          <img className="companyPicture" src={DefaultCompany} />
                         )}
 
                         <div className={profileStyles.experienceContentLeft}>

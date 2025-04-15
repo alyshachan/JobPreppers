@@ -77,7 +77,7 @@ grid-template-columns: unset;
 
 .currentDay {
   color: white;
-  background-color: #4ba173;
+  background-color: var(--jp-primary);
   border-radius: 50%;
   aspect-ratio: 1;
 }

@@ -18,20 +18,21 @@ textarea:focus {
 }
 
 .addEventTitle {
-  margin: 0;
   padding: 0;
-  border-top: 50px solid #4ba173;
+  background: var(--jp-gradient);
   left: -20px;
   position: relative;
   padding-left: 36px;
   width: calc(100% + 40px);
+  height: 50px;
+  margin-bottom: 10px !important;
 }
 
 .closeButton {
   position: absolute !important;
   top: 8px !important;
   right: 8px !important;
-  color: #085630 !important;
+  color: var(--jp-border) !important;
 }
 
 .eventForm {
@@ -62,7 +63,7 @@ textarea:focus {
 .icon{
   font-size: 2.5rem !important;
   aspect-ratio: 1;
-  color: #4BA173;
+  color: var(--jp-secondary);
 }
 
 .inputField {

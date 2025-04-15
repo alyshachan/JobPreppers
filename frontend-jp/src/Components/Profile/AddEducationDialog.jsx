@@ -148,11 +148,10 @@ function AddEducationDialog({ open, onClose, onAdd, education }) {
 
   return (
     <StyledDialog onClose={onClose} open={open}>
-      <DialogTitle className={styles.dialogTitle}>
+      <DialogTitle className={styles.dialogTitle}/>
         <SectionHeader
           header={education ? "Edit Education" : "Add Education"}
         />
-      </DialogTitle>
 
       <IconButton
         aria-label="close"
