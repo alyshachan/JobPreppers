@@ -30,3 +30,23 @@ code {
 .raf-button.raf-button--info:hover {
   background-color: #4338ca;
 }
+
+
+.raf-button.raf-button--primary {
+
+  background-color: #4338ca !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  border-radius: 0.5rem !important;
+  border: none !important;
+  transition: background-color 0.2s ease !important;
+
+}
+
+.raf-button.raf-button--primary:hover {
+
+  background-color: #4338ca;
+
+}
+
