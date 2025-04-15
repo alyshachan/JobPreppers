@@ -80,7 +80,7 @@ export default function TeamMemberDescription() {
                   autoHideDuration={1200}
                   anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 />
-                <Button onClick={onClickUrl(member.Linkedln)} size="small">
+                <Button onClick={onClickUrl(member.linkedln)} size="small">
                   Linkedin
                 </Button>
               </CardActions>
