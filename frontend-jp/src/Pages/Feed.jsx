@@ -223,7 +223,7 @@ function Feed() {
                 <button className="lightButton">Load more</button>
               </div>
             </div> */}
-            <div className="panel justify-left !px-[20px] flex-grow !w-full overflow-y-auto">
+            <div className="panel justify-left !px-[20px] !w-full overflow-y-auto">
               {recommendationDict.length === 0 ? (
                 <p className="text-gray-500 italic">No recommendations found</p>
               ) : (
