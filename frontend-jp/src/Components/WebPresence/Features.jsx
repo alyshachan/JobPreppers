@@ -58,7 +58,7 @@ const Features = () => {
           <div>
             <h1>Job Board</h1>
             <p>
-              After filling out the profile and entering the job board page, a
+              After filling out your profile and entering the Job Board page, a
               score of how suited the user is for each job is presented. There,
               the user can filter out jobs to find the one that suits them best.
             </p>
@@ -74,9 +74,9 @@ const Features = () => {
             <div>
               <h1>Bookmark</h1>
               <p>
-                As the user looks through jobs on Job Board, they can save them
+                As the user looks through jobs on the Job Board, they can save them
                 to apply to later by clicking the bookmark icon. They can find
-                their saved jobs in the bookmarked job pages.
+                their saved jobs on the Bookmarked Jobs page.
               </p>
             </div>
             <img
@@ -89,11 +89,11 @@ const Features = () => {
             <div>
               <h1>Add Jobs</h1>
               <p>
-                Job preppers only let the recruiters add jobs. Located in Job
-                Board, the first step of the form is a job description parse
+                Job Preppers only lets the recruiters add jobs. Located in Job
+                Board, the first step of the form is a job description parser
                 designed to speed up the process of adding a job. After filling
                 out all the required fields and clicking submit. The new job
-                will be showcased on the job board and manage jobs.
+                will be showcased on the Job Board and Manage Jobs pages.
               </p>
             </div>
             <img
@@ -108,7 +108,7 @@ const Features = () => {
             <h1>Video Call</h1>
             <p>
               Schedule a mock interview or join public events! Click on the
-              calendar to add an event, or look for an interviewer that'd match
+              calendar to add an event, or look for an interviewer that matches
               your needs. Join the call in your upcoming events to start a video
               call, with features such as screenshare, reactions, and recording.
             </p>
