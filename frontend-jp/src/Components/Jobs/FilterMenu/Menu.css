@@ -4,12 +4,20 @@
 }
 
 .MuiInputLabel-root {
-  color: #4ba173 !important; /* Input Color */
+  color: var(--jp-primary) !important; /* Input Color */
+}
+
+.filter-column-container .MuiInputLabel-root:hover {
+  color: black
+}
+
+.filter-column-container .MuiInputLabel-root {
+  color: var(--jp-border) !important; /* Input Color */
 }
 
 .drop-down {
-  border: 2px solid #4ba173;
-  color: #4ba173;
+  border: 2px solid var(--jp-border);
+  color: var(--border);
   border-radius: 4px;
   width: 200px;
   min-width: 150px;
@@ -25,25 +33,25 @@
 .drop-down .MuiInputLabel-root.Mui-focused,
 .drop-down .MuiInputLabel-root.MuiFormLabel-filled,
 .drop-down .MuiInputLabel-root.MuiInputLabel-shrink {
-  background-color: #e7f2ec; /*Background for dropdown title when selected*/
+  background-color: var(--jp-background); /*Background for dropdown title when selected*/
 }
 
 .drop-down:hover {
   text-color: black !important;
-  background-color: #f0fbf5;
+  background-color: var(--jp-white-hover);
 }
 
 .drop-down:hover .MuiInputLabel-root {
-  color: #085630 !important; /* Change label color to black on hover */
+  color: var(--jp-border) !important; /* Change label color to black on hover */
 }
 
 .drop-down .MuiAutocomplete-popupIndicator {
-  color: #4ba173; /* Down arrow color */
+  color: var(--jp-border); /* Down arrow color */
 }
 
 .filter-button.MuiButton-outlined {
-  color: #4ba173;
-  border: 2px solid #4ba173;
+  color: var(--jp-border);
+  border: 2px solid var(--jp-border);
   width: 200px;
   min-width: 150px;
   height: 56px;
@@ -52,9 +60,9 @@
 }
 
 .selected-filter-button.MuiButton-outlined {
-  background-color: #4ba173;
+  background-color: var(--jp-primary);
   color: white;
-  border: 2px solid #4ba173;
+  border: 2px solid var(--jp-border);
   width: 200px;
   min-width: 150px;
   height: 56px;
@@ -64,8 +72,8 @@
 
 .filter-button:hover {
   color: black;
-  background-color: #f0fbf5;
-  border: 2px solid #4ba173;
+  background-color: var(--jp-white-hover);
+  border: 2px solid var(--jp-border);
 }
 
 .salary-menu .MuiMenu-paper {
@@ -79,17 +87,17 @@
 
 /* Selected day styling */
 .MuiPickersDay-root.Mui-selected {
-  background-color: #4ba173 !important; /* Blue circle for selected day */
+  background-color: var(--jp-primary) !important; /* Blue circle for selected day */
   color: white; /* White text inside selected day */
 }
 
 /* Hover effect on the selected day */
 .MuiPickersDay-root.Mui-selected:hover {
-  background-color: #4ba173 !important; /* Darker blue on hover */
+  background-color: var(--jp-primary) !important; /* Darker blue on hover */
 }
 
 /* Styling for today (current day) */
 .MuiPickersDay-root.MuiPickersDay-today {
-  border: 1px solid #1976d2; /* Blue border for today's date */
-  color: #4ba173; /* Blue text color */
+  border: 1px solid var(--jp-border); /* Blue border for today's date */
+  color: var(--jp-primary); /* Blue text color */
 }

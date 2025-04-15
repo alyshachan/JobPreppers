@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../provider/authProvider";
 import { TextField, Chip, Box } from "@mui/material";
-import defaultProfilePicture from "../defaultProfilePicture.png";
+import DefaultPic from "../../Components/JobPreppers_DefaultPic.png";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function SearchParticipants({participants, setParticipants}) {
@@ -87,7 +87,7 @@ function SearchParticipants({participants, setParticipants}) {
                   src={
                     user.profile_pic
                       ? `data:image/png;base64,${user.profile_pic}`
-                      : defaultProfilePicture
+                      : DefaultPic
                   }
                   alt={`${user.first_name} ${user.last_name}`}
                   className="w-10 h-10 rounded-full mr-2"
@@ -115,7 +115,7 @@ function SearchParticipants({participants, setParticipants}) {
                 src={
                   user.profile_pic
                     ? `data:image/png;base64,${user.profile_pic}`
-                    : defaultProfilePicture
+                    : DefaultPic
                 }
                 alt={`${user.first_name} ${user.last_name ?? ""}`}
                 style={{ width: 24, height: 24, borderRadius: "50%" }}

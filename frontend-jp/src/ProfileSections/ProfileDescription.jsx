@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import { Button } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png";
+import DefaultPic from "../Components/JobPreppers_DefaultPic.png";
 import EditIcon from "@mui/icons-material/Edit";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -148,7 +148,7 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
 
   const userPic =
     visitingUser.profile_pic == null
-      ? defaultProfilePicture
+      ? DefaultPic
       : "data:image/png;base64," +
       visitingUser.profile_pic.toString().toString("base64");
 
@@ -169,7 +169,7 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
       <p className="subtitle">{visitingUser.location}</p>
       <a
         href="/Friends"
-        className="font-bold text-xl text-[#4ba173] hover:underline"
+        className="font-bold text-xl text-[var(--jp-primary)] hover:underline"
       >
         {friendCount} connections
       </a>

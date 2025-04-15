@@ -15,7 +15,7 @@ import {
   ListItemAvatar,
   ListItemText,
 } from "@mui/material";
-import defaultProfilePicture from "../../defaultProfilePicture.png";
+import DefaultPic from "../../../Components/JobPreppers_DefaultPic.png";
 
 export default function Header({ job, onClose }) {
   const { user } = useAuth();
@@ -94,7 +94,7 @@ export default function Header({ job, onClose }) {
 
   const userPic =
     job.profile_pic == null
-      ? defaultProfilePicture
+      ? DefaultPic
       : "data:image/png;base64," +
         job.profile_pic.toString().toString("base64");
   return (

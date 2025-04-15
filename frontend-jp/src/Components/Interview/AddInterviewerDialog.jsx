@@ -24,13 +24,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     maxWidth: "800px",
     minWidth: "800px",
   },
-  "& .css-si425x" : {
+  "& .css-si425x": {
     borderRadius: "30px",
     padding: "0px 20px 20px",
     overflow: "hidden",
     maxWidth: "800px",
     minWidth: "800px",
-  }
+  },
 }));
 
 function AddInterviewerDialog({ open, onClose, onAdd }) {
@@ -61,15 +61,15 @@ function AddInterviewerDialog({ open, onClose, onAdd }) {
       if (response.ok) {
         const data = await response.json();
         onAdd({
-            firstName: user.first_name,
-            lastName: user.last_name,
-            username: user.username,
-            title: user.title,
-            profilePic: user.profile_pic,
-            specialties: data.specialties,
-            availability: data.availability,
-            signUpID: data.signUpID,
-          });
+          firstName: user.first_name,
+          lastName: user.last_name,
+          username: user.username,
+          title: user.title,
+          profilePic: user.profile_pic,
+          specialties: data.specialties,
+          availability: data.availability,
+          signUpID: data.signUpID,
+        });
         console.log("Interviewer added successfully");
         onClose();
       } else {
@@ -82,9 +82,8 @@ function AddInterviewerDialog({ open, onClose, onAdd }) {
 
   return (
     <StyledDialog onClose={onClose} open={open}>
-      <DialogTitle className={styles.addEventTitle}>
-        <SectionHeader header="Mock Interviewer Sign Up" />
-      </DialogTitle>
+      <DialogTitle className={styles.addEventTitle} />
+      <SectionHeader header="Mock Interviewer Sign Up" />
 
       <IconButton
         aria-label="close"

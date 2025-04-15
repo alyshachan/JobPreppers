@@ -30,13 +30,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     maxWidth: "800px",
     minWidth: "800px",
   },
-  "& .css-si425x" : {
+  "& .css-si425x": {
     borderRadius: "30px",
     padding: "0px 20px 20px",
     overflow: "hidden",
     maxWidth: "800px",
     minWidth: "800px",
-  }
+  },
 }));
 
 function AddExperienceDialog({ open, onClose, onAdd, experience }) {
@@ -149,11 +149,10 @@ function AddExperienceDialog({ open, onClose, onAdd, experience }) {
 
   return (
     <StyledDialog onClose={onClose} open={open}>
-      <DialogTitle className={styles.dialogTitle}>
-        <SectionHeader
-          header={experience ? "Edit Experience" : "Add Experience"}
-        />
-      </DialogTitle>
+      <DialogTitle className={styles.dialogTitle} />
+      <SectionHeader
+        header={experience ? "Edit Experience" : "Add Experience"}
+      />
 
       <IconButton
         aria-label="close"

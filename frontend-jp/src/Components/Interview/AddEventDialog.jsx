@@ -29,13 +29,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     maxWidth: "800px",
     minWidth: "800px",
   },
-  "& .css-si425x" : {
+  "& .css-si425x": {
     borderRadius: "30px",
     padding: "0px 20px 20px",
     overflow: "hidden",
     maxWidth: "800px",
     minWidth: "800px",
-  }
+  },
 }));
 
 function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
@@ -67,10 +67,8 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
 
   return (
     <StyledDialog onClose={onClose} open={open}>
-      <DialogTitle className={styles.addEventTitle}>
-        <SectionHeader header="Add Event" />
-      </DialogTitle>
-
+      <DialogTitle className={styles.addEventTitle} />
+      <SectionHeader header="Add Event" />
       <IconButton
         aria-label="close"
         onClick={onClose}
@@ -133,11 +131,15 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
           <div className={styles.eventFormRight}>
             {/* Right-side content */}
             <div className={`${styles.input} !justify-start !items-start`}>
-              <PermIdentityOutlinedIcon className={`${styles.icon} mt-[20px]`} />
+              <PermIdentityOutlinedIcon
+                className={`${styles.icon} mt-[20px]`}
+              />
               <div className={styles.inputField}>
                 Participants
-                <SearchParticipants   participants={eventParticipants}
-  setParticipants={setEventParticipants}/>
+                <SearchParticipants
+                  participants={eventParticipants}
+                  setParticipants={setEventParticipants}
+                />
               </div>
             </div>
 
