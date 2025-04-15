@@ -11,6 +11,7 @@ import {
   Fade,
   Snackbar,
 } from "@mui/material";
+import { motion } from "framer-motion";
 
 export default function TeamMemberDescription() {
   const [team, setTeam] = useState([]);
@@ -40,9 +41,13 @@ export default function TeamMemberDescription() {
   return (
     <>
       <h1> Meet The Team</h1>
+
       {team.map((member, index) => (
-        <div
+        <motion.div
           key={index}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: index * 0.2 }}
           className="flex flex-col content-center justify-center p-6 w-full"
         >
           <Card
@@ -86,7 +91,7 @@ export default function TeamMemberDescription() {
               </CardActions>
             </div>
           </Card>
-        </div>
+        </motion.div>
       ))}
     </>
   );
