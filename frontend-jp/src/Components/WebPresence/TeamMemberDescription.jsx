@@ -40,8 +40,10 @@ export default function TeamMemberDescription() {
 
   return (
     <>
-      <h1> Meet The Team</h1>
-
+      <div className="flex flex-col items-center">
+        <h1 className="text-6xl pt-10 pb-6 bg-gradient-to-r from-[var(--jp-secondary)] to-[var(--jp-primary)] bg-clip-text text-transparent">
+          Meet the Team
+        </h1>
       {team.map((member, index) => (
         <motion.div
           key={index}
@@ -93,6 +95,7 @@ export default function TeamMemberDescription() {
           </Card>
         </motion.div>
       ))}
+      </div>
     </>
   );
 }

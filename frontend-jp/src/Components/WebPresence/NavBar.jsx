@@ -41,7 +41,7 @@ function NavBar() {
             //   backgroundImage: "var(--jp-gradient)",
             //   borderColor: "var(--jp-border)",
             // }}
-            className="relative rounded-full bg-jp-gradient hover:bg-[var(--jp-navbar-hover)] border-none p-1 hover:text-gray-200 text-[var(--jp-navbar-border)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 w-32"
+            className="relative rounded-full bg-jp-gradient hover:bg-[var(--jp-navbar-hover)] border-none p-1 hover:text-gray-200 text-[var(--jp-navbar)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 w-32"
             onClick={() => navigate("/Login")}
           >
             Log In

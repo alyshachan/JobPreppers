@@ -4,7 +4,10 @@ import { Typography } from "@mui/material";
 const Technologies = () => {
   return (
     <>
-      <h1>Used Technologies</h1>
+      <div className="flex flex-col items-center">
+        <h1 className="text-6xl pb-6 bg-gradient-to-r from-[var(--jp-secondary)] to-[var(--jp-primary)] bg-clip-text text-transparent">
+          Used Technologies
+        </h1>
       <div className="flex flex-row justify-evenly">
         <Typography>
           <strong>Project/Task Manager:</strong>{" "}
@@ -156,6 +159,7 @@ const Technologies = () => {
           />
         </Slider.Slide>
       </Slider>
+      </div>
     </>
   );
 };
