@@ -160,3 +160,17 @@
   position: absolute;
   background: rgba(0, 0, 0, 0.9);
 }
+
+.addButton {
+  padding: 5px 15px;
+  /* margin-top: 10px;
+  margin-right: 5px; */
+  background: var(--jp-gradient) !important;
+  border-color: var(--jp-border) !important;
+  color: var(--jp-white) !important;
+}
+
+.addButton:hover {
+  background: var(--jp-white-hover) !important;
+  color: var(--jp-secondary) !important;
+}
