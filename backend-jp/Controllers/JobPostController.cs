@@ -356,7 +356,8 @@ namespace JobPreppersDemo.Controllers
                     StringBuilder sb = new StringBuilder(request.qualification.Skills);
                     sb.Append(" ");
                     var description = JsonDocument.Parse(request.description);
-                    sb.Append(description);
+                    // Console.WriteLine($"description: {description.RootElement}");
+                    sb.Append(description.RootElement);
                     string combine = sb.ToString();
                     await _vector.AddToJobVector(combine, newJobPost.postID);
                 }
