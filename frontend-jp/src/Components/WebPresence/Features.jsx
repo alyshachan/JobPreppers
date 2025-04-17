@@ -1,15 +1,26 @@
 import "../JobPreppers.css";
+import Feed_Tutorial from "./Gif/Feed_Tutorial.gif";
+import { Skeleton } from "@mui/material";
+import { useState } from "react";
 const Features = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
   return (
     <>
       <div className="content">
         <h1 className="text-6xl pb-6 bg-gradient-to-r from-[var(--jp-secondary)] to-[var(--jp-primary)] bg-clip-text text-transparent">
           Features
         </h1>
+
         <div className="panel !flex-row items-center">
+          {!isLoaded && (
+            <Skeleton variant="rectangular" width={210} height={118} />
+          )}
           <img
-            src="/Images/temp-features/Feed_Image.png"
-            className="object-contain w-[200%]"
+            src={Feed_Tutorial}
+            className={`object-contain w-[75%] ${
+              isLoaded ? "opacity-100" : "opacity-0 absolute"
+            }`}
+            onLoad={() => setIsLoaded(true)}
           />
           <div>
             <h1>Feed</h1>
@@ -74,9 +85,9 @@ const Features = () => {
             <div>
               <h1>Bookmark</h1>
               <p>
-                As the user looks through jobs on the Job Board, they can save them
-                to apply to later by clicking the bookmark icon. They can find
-                their saved jobs on the Bookmarked Jobs page.
+                As the user looks through jobs on the Job Board, they can save
+                them to apply to later by clicking the bookmark icon. They can
+                find their saved jobs on the Bookmarked Jobs page.
               </p>
             </div>
             <img
