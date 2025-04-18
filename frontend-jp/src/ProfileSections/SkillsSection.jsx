@@ -6,7 +6,7 @@ import SectionHeader from "../Components/Profile/SectionHeader";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import AddSkillDialog from "../Components/Profile/AddSkillDialog";
 
-function SkillsSection({ skillsDict, edit, onAdd }) {
+function SkillsSection({ skillsDict, edit, onAdd, visitingUser }) {
   const [openSkillDialog, setOpenSkillDialog] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [isNarrow, setIsNarrow] = useState(false);
@@ -63,7 +63,7 @@ function SkillsSection({ skillsDict, edit, onAdd }) {
         </div>
         {hasMoreItems && !edit && (
           <div className={styles.seeAllDiv}>
-            <a href="/Skills">
+            <a href={`/Skills/${visitingUser}`}>
               <button className={styles.seeAll}>
                 See all Skills <ArrowForwardIcon className="mt-1 ml-1" />
               </button>

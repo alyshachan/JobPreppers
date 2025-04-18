@@ -266,6 +266,7 @@ function User() {
                 educationDict={educationDict}
                 edit={edit}
                 onAdd={fetchEducation}
+                visitingUser={visitingUser.username}
               />
             ) : (
               edit && (
@@ -283,6 +284,7 @@ function User() {
                 skillsDict={skillsDict}
                 edit={edit}
                 onAdd={fetchSkills}
+                visitingUser={visitingUser.username}
               />
             ) : (
               edit && (
@@ -303,6 +305,7 @@ function User() {
           experienceDict={experienceDict}
           edit={edit}
           onAdd={fetchExperience}
+          visitingUser={visitingUser.username}
         />
       ) : (
         edit && (
@@ -320,6 +323,7 @@ function User() {
           projectDict={projectDict}
           edit={edit}
           onAdd={fetchProject}
+          visitingUser={visitingUser.username}
         />
       ) : (
         edit && (
