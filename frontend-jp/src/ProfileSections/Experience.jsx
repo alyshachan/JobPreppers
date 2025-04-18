@@ -4,6 +4,7 @@ import "../Components/JobPreppers.css";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
 import DefaultCompany from "../Components/Profile/JobPreppers_DefaultCompany.png";
+import { useParams } from "react-router-dom";
 
 const monthsOfYear = [
   "January",
@@ -48,14 +49,38 @@ function calculateDate(startDate, endDate) {
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Experience() {
-  const { user, setAuthData } = useAuth(); // custom hook for authprovider
+  const { username } = useParams();
+  const [visitingUser, setUser] = useState(null);
   const [experienceDict, setExperienceDict] = useState([]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(
+          apiURL + `/api/Users/GetUserFromUsername/${username}`,
+          { credentials: "include" }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+          setExperienceDict([]);
+        } else {
+          throw new Error("Failed to fetch user");
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
+  }, [username, apiURL]);
 
   useEffect(() => {
     const requestExperience = async () => {
       try {
         const response = await fetch(
-          apiURL + `/api/UserExperience/${user.userID}`,
+          apiURL + `/api/UserExperience/${visitingUser.userID}`,
           {
             credentials: "include", // include cookies
           }
@@ -97,17 +122,20 @@ function Experience() {
     };
 
     requestExperience();
-  }, [user]);
+  }, [visitingUser]);
 
   // Display loading state until user is available
-  if (user == null) {
+  if (visitingUser == null) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="content">
       <div className="panelTransparent">
-        <a href={`/Profile/${user.username}`} className="text-[var(--jp-border)] hover:underline mb-8">
+        <a
+          href={`/Profile/${visitingUser.username}`}
+          className="text-[var(--jp-border)] hover:underline mb-8"
+        >
           <ArrowBackIcon /> Go back to Profile Page
         </a>
         <h1>Experience</h1>
@@ -117,14 +145,14 @@ function Experience() {
             <div key={index}>
               <div className={styles.sectionPictureContent}>
                 <div className={styles.experience}>
-                {experience.work_name == "University of Utah" ? (
-                  <img
-                    className="companyPicture"
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
-                  />
-                ) : (
-                  <img className="companyPicture" src={DefaultCompany} />
-                )}
+                  {experience.work_name == "University of Utah" ? (
+                    <img
+                      className="companyPicture"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
+                    />
+                  ) : (
+                    <img className="companyPicture" src={DefaultCompany} />
+                  )}
 
                   <div className={styles.experienceContentLeft}>
                     <p className="title">{experience.job_title}</p>

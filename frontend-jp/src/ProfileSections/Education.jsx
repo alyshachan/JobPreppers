@@ -4,6 +4,7 @@ import "../Components/JobPreppers.css";
 import DefaultCompany from "../Components/Profile/JobPreppers_DefaultCompany.png";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
+import { useParams } from "react-router-dom";
 
 const monthsOfYear = [
   "January",
@@ -22,14 +23,38 @@ const monthsOfYear = [
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Education() {
-  const { user, setAuthData } = useAuth(); // custom hook for authprovider
+  const { username } = useParams();
+  const [visitingUser, setUser] = useState(null);
   const [educationDict, setEducationDict] = useState([]);
+
+    useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const response = await fetch(
+            apiURL + `/api/Users/GetUserFromUsername/${username}`,
+            { credentials: "include" }
+          );
+  
+          if (response.ok) {
+            const data = await response.json();
+            setUser(data);
+            setEducationDict([]);
+          } else {
+            throw new Error("Failed to fetch user");
+          }
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        }
+      };
+  
+      fetchUser();
+    }, [username, apiURL]);
 
   useEffect(() => {
     const requestEducation = async () => {
       try {
         const response = await fetch(
-          apiURL + `/api/UserEducation/${user.userID}`,
+          apiURL + `/api/UserEducation/${visitingUser.userID}`,
           {
             credentials: "include", // include cookies
           }
@@ -69,10 +94,10 @@ function Education() {
     };
 
     requestEducation();
-  }, [user]);
+  }, [visitingUser]);
 
   // Display loading state until user is available
-  if (user == null) {
+  if (visitingUser == null) {
     return <div>Loading...</div>;
   }
 
@@ -80,7 +105,7 @@ function Education() {
     <div className="content">
       <div className="panelTransparent">
         <a
-          href={`/Profile/${user.username}`}
+          href={`/Profile/${visitingUser.username}`}
           className="text-[var(--jp-border)] hover:underline mb-8"
         >
           <ArrowBackIcon /> Go back to Profile Page

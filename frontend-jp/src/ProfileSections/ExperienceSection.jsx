@@ -8,7 +8,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useState } from "react";
 import AddExperienceDialog from "../Components/Profile/AddExperienceDialog";
 
-function ExperienceSection({ experienceDict, edit, onAdd }) {
+function ExperienceSection({ experienceDict, edit, onAdd, visitingUser }) {
   const [openExperienceDialog, setOpenExperienceDialog] = useState(false);
   const [selectedExperience, setSelectedExperience] = useState(null);
 
@@ -158,7 +158,7 @@ function ExperienceSection({ experienceDict, edit, onAdd }) {
 
           {hasMoreItems && !edit && (
             <div className={styles.seeAllDiv}>
-              <a href="/Experience">
+              <a href={`/Experience/${visitingUser}`}>
                 <button className={styles.seeAll}>
                   See all Experience <ArrowForwardIcon className="mt-1 ml-1" />
                 </button>

@@ -8,7 +8,7 @@ import {useState } from "react";
 
 import AddProjectDialog from "../Components/Profile/AddProjectDialog";
 
-function ProjectSection({ projectDict, edit, onAdd }) {
+function ProjectSection({ projectDict, edit, onAdd, visitingUser }) {
   const [openProjectDialog, setOpenProjectDialog] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
 
@@ -62,7 +62,7 @@ function ProjectSection({ projectDict, edit, onAdd }) {
           ))}
           {hasMoreItems && !edit && (
             <div className={styles.seeAllDiv}>
-              <a href="/Project">
+              <a href={`/Project/${visitingUser}`}>
                 <button className={styles.seeAll}>
                   See all Projects
                   <ArrowForwardIcon className="mt-1 ml-1" />

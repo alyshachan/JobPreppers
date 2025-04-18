@@ -72,12 +72,12 @@ function App() {
             <Route path="/Interview" element={<Interview />} />
             <Route path="/Resume" element={<Resume />} />
 
-            <Route path="/Education" element={<Education />} />
-            <Route path="/Experience" element={<Experience />} />
-            <Route path="/Project" element={<Project />} />
-            <Route path="/Skills" element={<Skills />} />
+            <Route path="/Education/:username/" element={<Education />} />
+            <Route path="/Experience/:username" element={<Experience />} />
+            <Route path="/Project/:username" element={<Project />} />
+            <Route path="/Skills/:username" element={<Skills />} />
             <Route path="/VideoCall" element={<VideoCall />} />
-          <Route path="/Friends" element={<Friends />} />
+          <Route path="/Friends/:username" element={<Friends />} />
           <Route path="/ParseResume" element={<ParseResume/>}/>
         </Routes>
         {!useLocation().pathname.includes("/VideoCall") && <Messaging />}
