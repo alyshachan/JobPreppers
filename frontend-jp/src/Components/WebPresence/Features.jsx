@@ -1,5 +1,6 @@
 import "../JobPreppers.css";
 import Feed_Tutorial from "./Gif/Feed_Tutorial.gif";
+import Interview_Tutorial from "./Gif/Interview_Tutorial.gif";
 import { Skeleton } from "@mui/material";
 import { useState } from "react";
 const Features = () => {
@@ -76,7 +77,7 @@ const Features = () => {
           </div>
           <img
             src="Images/temp-features/Jobs_Image.png"
-            className="object-contain w-[100%]"
+            className="object-contain w-[75%]"
           />
         </div>
 
@@ -124,10 +125,7 @@ const Features = () => {
               call, with features such as screenshare, reactions, and recording.
             </p>
           </div>
-          <img
-            src="Images/temp-features/Interview_Image.png"
-            className="object-contain w-[100%]"
-          />
+          <img src={Interview_Tutorial} className="object-contain w-[75%]" />
         </div>
 
         <div className="panel !flex-row items-center">
@@ -142,7 +140,7 @@ const Features = () => {
           </div>
           <img
             src="Images/temp-features/Resume_Image.png"
-            className="object-contain w-[100%]"
+            className="object-contain w-[75%]"
           />
         </div>
       </div>
