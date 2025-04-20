@@ -130,7 +130,10 @@ namespace JobPreppersProto.Controllers
                 first_name = user.first_name,
                 last_name = user.last_name,
                 email = user.email,
-                profile_pic = user.profile_pic
+                profile_pic = user.profile_pic,
+                title = user.title,
+                location = user.location,
+                website = user.website
             });
         }
 
@@ -268,29 +271,30 @@ namespace JobPreppersProto.Controllers
         }
 
 
-        [HttpPost("AddUserDetails")]
-        public async Task<IActionResult> AddUserDetails([FromBody] DetailsRequest request)
+        [HttpPost("EditUserDetails/{userID}")]
+        public async Task<IActionResult> EditUserDetails(int userID, [FromBody] DetailsRequest request)
         {
-            if (request == null ||
-            request.userID == 0)
+            if (request == null)
             {
-                return BadRequest("UserID is invalid.");
+                return BadRequest("No request was received.");
             }
 
             try
             {
                 //check if user already exits
-                var user = await _context.Users.FirstOrDefaultAsync(s => s.userID == request.userID);
+                var user = await _context.Users.FirstOrDefaultAsync(s => s.userID == userID);
                 if (user == null)
                 {
                     return NotFound("User not found");
                 }
                 else
                 {
-                    user.title = request.title;
-                    user.location = request.location;
-                    user.website = request.website;
-                    user.description = request.description;
+                    user.first_name = request.FirstName;
+                    user.last_name = request.LastName;
+                    user.title = request.Title;
+                    user.location = request.Location;
+                    user.website = request.Website;
+
                     await _context.SaveChangesAsync();
                 }
                 return Ok(new
@@ -392,7 +396,8 @@ namespace JobPreppersProto.Controllers
         {
             var user = await _context.Users
                 .Where(u => u.username == username)
-                .Select(u => new {
+                .Select(u => new
+                {
                     userId = u.userID,
                     profile_pic = u.profile_pic,
                     title = u.title,
@@ -430,7 +435,10 @@ namespace JobPreppersProto.Controllers
                 first_name = user.first_name,
                 last_name = user.last_name,
                 email = user.email,
-                profile_pic = user.profile_pic
+                profile_pic = user.profile_pic,
+                title = user.title,
+                location = user.location,
+                website = user.website,
             });
         }
 
@@ -494,11 +502,11 @@ namespace JobPreppersProto.Controllers
 
         public class DetailsRequest
         {
-            public int userID { get; set; }
-            public string title { get; set; }
-            public string location { get; set; }
-            public string website { get; set; }
-            public string description { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Title { get; set; }
+            public string Location { get; set; }
+            public string Website { get; set; }
         }
 
         public class UserDTO

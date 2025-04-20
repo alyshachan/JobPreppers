@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }) => {
               profile_pic: data.profile_pic,
               title: data.title,
               location: data.location,
+              website: data.website,
             };
             setUser(newUser);
           }
