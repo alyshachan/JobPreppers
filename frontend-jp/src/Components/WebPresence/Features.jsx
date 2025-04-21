@@ -1,6 +1,8 @@
 import "../JobPreppers.css";
 import Feed_Tutorial from "./Gif/Feed_Tutorial.gif";
 import Interview_Tutorial from "./Gif/Interview_Tutorial.gif";
+import Resume_Tutorial from "./Gif/Resume_Tutorial.gif";
+import Jobs_Tutorial from "./Gif/Jobs_Tutorial.gif";
 import { Skeleton } from "@mui/material";
 import { useState } from "react";
 const Features = () => {
@@ -53,7 +55,7 @@ const Features = () => {
               </p>
             </div>
             <img
-              src="Images/temp-features/Chat_Image.png"
+              src="Images/temp-features/ChatFeed.png"
               className="object-contain w-[100%] h-[30%] md:h-auto"
             />
           </div>
@@ -68,10 +70,7 @@ const Features = () => {
               the user can filter out jobs to find the one that suits them best.
             </p>
           </div>
-          <img
-            src="Images/temp-features/Jobs_Image.png"
-            className="w-full md:w-[75%] object-contain h-[30%] md:h-auto"
-          />
+          <img src={Jobs_Tutorial} className="w-full md:w-[75%] object-contain h-[30%] md:h-auto" />
         </div>
 
         <div className="w-full md:w-[70%] flex flex-col md:flex-row md:items-stretch items-center">
@@ -84,13 +83,15 @@ const Features = () => {
                 find their saved jobs on the Bookmarked Jobs page.
               </p>
             </div>
-            <img
-              src="Images/temp-features/Bookmark_Image.png"
-              className="object-contain w-[200%] h-[30%] md:h-auto"
-            />
+            <div className=" flex flex-col h-[100%] content-center justify-center">
+              <img
+                src="Images/temp-features/BookmarkedJob.png"
+                className="object-contain w-[100%] h-[30%] md:h-auto"
+              />
+            </div>
           </div>
 
-          <div className="panel w-auto items-center md:flex-1 md:h-inherit flex-grow">
+          <div className="panel w-auto items-center gap-4 md:flex-1 md:h-inherit flex-grow">
             <div>
               <h1>Add Jobs</h1>
               <p>
@@ -102,8 +103,8 @@ const Features = () => {
               </p>
             </div>
             <img
-              src="Images/temp-features/Add_Job_Image.png"
-              className="object-contain w-[300%] h-[30%] md:h-auto"
+              src="Images/temp-features/AddJob.png"
+              className="object-contain w-[100%] h-auto block"
             />
           </div>
         </div>
@@ -123,7 +124,7 @@ const Features = () => {
 
         <div className="panel !flex-col-reverse items-center md:!flex-row">
           <img
-            src="Images/temp-features/Resume_Image.png"
+            src={Resume_Tutorial}
             className="w-full md:w-[75%] object-contain h-[30%] md:h-auto"
           />
           <div>
