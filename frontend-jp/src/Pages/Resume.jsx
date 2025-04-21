@@ -231,7 +231,7 @@ function Resume() {
             <h2>Recommended Skills, Projects, Keywords</h2>
             <ul>
               {suggestions.map((item, index) => (
-                <li key={index}>{item}</li>
+                <li key={index} className="transparent-bullets">{item}</li>
               ))}
             </ul>
           </div>

@@ -58,6 +58,7 @@ function SkillsSection({ skillsDict, edit, onAdd, visitingUser }) {
               sliceItems={!edit}
               showAllItems={edit}
               onEdit={handleOpenSkillDialog}
+              visitingUser={visitingUser}
             />
           ))}
         </div>
