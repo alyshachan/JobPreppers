@@ -43,7 +43,8 @@ function AddProfileDetailsDialog({ open, onClose, onAdd }) {
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [website, setWebsite] = useState("");
-  const [profilePicture, setProfilePicture] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePictureFile, setProfilePictureFile] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -53,21 +54,21 @@ function AddProfileDetailsDialog({ open, onClose, onAdd }) {
       setTitle(user.title || "");
       setLocation(user.location || "");
       setWebsite(user.website || "");
-      setProfilePicture(user.profile_pic || "");
+      setProfilePicture(user.profile_pic || null);
     } else {
       setFirstName("");
       setLastName("");
       setTitle("");
       setLocation("");
       setWebsite("");
-      setProfilePicture("");
+      setProfilePicture(null);
     }
   }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     try {
-      const response = await fetch(
+      const profileResponse = await fetch(
         apiURL + `/api/Users/EditUserDetails/` + user.userID,
         {
           method: "POST",
@@ -83,15 +84,35 @@ function AddProfileDetailsDialog({ open, onClose, onAdd }) {
         }
       );
 
-      if (response.ok) {
-        onAdd();
-        onClose();
-        setError(""); // Clear any previous error message
-      } else {
-        const errorData = await response.json();
+      if (!profileResponse.ok) {
+        const errorData = await profileResponse.json();
         window.alert("Your input has invalid characters, please try again.");
         setError(errorData.message); // Show error message from the backend
       }
+
+      if (profilePictureFile) {
+        const formData = new FormData();
+        formData.append("file", profilePictureFile);
+
+        const profilePicResponse = await fetch(
+          apiURL + `/api/Users/UploadProfilePic/` + user.userID,
+          {
+            method: "POST",
+            body: formData,
+            credentials: "include",
+          }
+        );
+
+        if (!profilePicResponse.ok) {
+          const errorData = await profilePicResponse.json();
+          window.alert("Failed to upload profile picture");
+          setError(errorData.message); // Show error message from the backend
+        }
+      }
+
+      onAdd();
+      onClose();
+      setError("");
     } catch (err) {
       setError("An error occurred. Please try again."); // Catch and display any request error
     }
@@ -121,29 +142,28 @@ function AddProfileDetailsDialog({ open, onClose, onAdd }) {
             <div
               className={`${styles.dialogContentLeft} flex flex-col items-center gap-5`}
             >
-              {profilePicture && (
-                <img
-                  src={userPic}
-                  alt="Profile Preview"
-                  className="profilePicture"
-                />
-              )}
+              <img
+                src={userPic}
+                alt="Profile Preview"
+                className="profilePicture"
+              />
               <input
                 type="file"
                 accept="image/png, image/jpeg"
                 id="fileInput"
                 className="hidden-file-input"
                 onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        const dataUrl = (reader.result).toString();
-                        const base64 = dataUrl.split(',')[1];
-                        setProfilePicture(base64);
-                      };
-                      reader.readAsDataURL(file);
-                    }
+                  const file = e.target.files[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      const dataUrl = reader.result.toString();
+                      const base64 = dataUrl.split(",")[1];
+                      setProfilePicture(base64);
+                      setProfilePictureFile(file);
+                    };
+                    reader.readAsDataURL(file);
+                  }
                 }}
               />
               <label htmlFor="fileInput" className="custom-file-button">

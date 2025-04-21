@@ -96,6 +96,24 @@ function User() {
     }
   };
 
+  const fetchProfileDescription = async () => {
+    try {
+      const response = await fetch(
+        apiURL + `/api/Users/GetUserFromUsername/${username}`,
+        { credentials: "include" }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data);
+      } else {
+        throw new Error("Failed to fetch user");
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
+
   const fetchEducation = async () => {
     fetchData("UserEducation", setEducationDict, (data) =>
       data.map(
@@ -237,6 +255,7 @@ function User() {
           edit={edit}
           setEdit={setEdit}
           friendCount={friendCount}
+          onAdd={fetchProfileDescription}
         />
         {!edit &&
         educationDict.length === 0 &&

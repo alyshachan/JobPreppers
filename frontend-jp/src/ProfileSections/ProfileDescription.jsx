@@ -55,7 +55,7 @@ async function fetchFriendStatus(userId, friendId) {
   else throw new Error("Failed to fetch friend status");
 }
 
-function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
+function ProfileDescription({ visitingUser, edit, setEdit, friendCount, onAdd }) {
   const { user, setAuthData } = useAuth(); // custom hook for authprovider
   const [friendStatus, setFriendStatus] = useState("None");
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
@@ -182,6 +182,7 @@ function ProfileDescription({ visitingUser, edit, setEdit, friendCount }) {
             <AddProfileDetailsDialog
               open={openProfileDialog}
               onClose={handleCloseProfileDialog}
+              onAdd={onAdd}
             />
           </>
         )}
