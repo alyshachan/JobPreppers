@@ -20,7 +20,7 @@ export default function Summary() {
         Job Preppers
       </h1>
 
-      <div className="flex flex-col md:flex-row items-center w-full gap-6">
+      <div className="flex flex-col md:flex-row items-center justify-evenly w-full gap-6">
         <CardContent className="md:w-1/2 w-full">
           <Typography
             variant="body1"
