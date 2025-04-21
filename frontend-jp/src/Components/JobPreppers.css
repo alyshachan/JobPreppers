@@ -36,7 +36,7 @@ hr {
   width: 100%;
 }
 
-button{
+button {
   background-color: var(--jp-primary);
   border: 2px solid var(--jp-primary);
   border-radius: 30px;
@@ -46,109 +46,108 @@ button{
   line-height: 30px;
 }
 
-button:hover{
+button:hover {
   background-color: var(--jp-primary-hover);
 }
 
-.content{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 50px;
-    margin-bottom: 50px;
-  }
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
 
-  .panel {
-    background-color: white;
-    border-radius: 15px;
-    width: 70%;
-    display: flex;
-    box-sizing: border-box;
-    padding: 20px 50px;
-    margin: 20px;
-    box-shadow: 2px 2px 25px -2px rgba(0, 0, 0, 0.25);
-    flex-direction: column;
-  }
+.panel {
+  background-color: white;
+  border-radius: 15px;
+  width: 70%;
+  display: flex;
+  box-sizing: border-box;
+  padding: 20px 50px;
+  margin: 20px;
+  box-shadow: 2px 2px 25px -2px rgba(0, 0, 0, 0.25);
+  flex-direction: column;
+}
 
-  .panelTransparent {
-    border-radius: 15px;
-    width: 70%;
-    display: flex;
-    box-sizing: border-box;
-    padding: 20px 50px;
-    margin: 20px;
-    flex-direction: column;
-  }
+.panelTransparent {
+  border-radius: 15px;
+  width: 70%;
+  display: flex;
+  box-sizing: border-box;
+  padding: 20px 50px;
+  margin: 20px;
+  flex-direction: column;
+}
 
-  .profilePicture {
-    border-radius: 50%;
-    width: 200px;
-    height: 200px;
-  }
+.profilePicture {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+}
 
-  .companyPicture{
-    width: 50px;
-    height: 50px;
-  }
+.companyPicture {
+  width: 50px;
+  height: 50px;
+}
 
-  .rect {
-    background-color: red;
-    width: 50px;
-    height: 50px;
-  }
+.rect {
+  background-color: red;
+  width: 50px;
+  height: 50px;
+}
 
-  .circle {
-    background-color: red;
-    border-radius: 50%;
-    width: 200px;
-    height: 200px;
-  }
+.circle {
+  background-color: red;
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+}
 
-  .title {
-    font-size: large;
-    font-weight: bold;
-  }
-  
-  .subtitle {
-    color: var(--jp-gray);
-    margin-top: 0px;
-  }
+.title {
+  font-size: large;
+  font-weight: bold;
+}
 
-  .lightButton {
-    background-color: var(--jp-white);
-    border: 2px solid var(--jp-secondary);
-    color: var(--jp-secondary);
-  }
+.subtitle {
+  color: var(--jp-gray);
+  margin-top: 0px;
+}
 
-  .lightButton:hover {
-    background-color: var(--jp-white-hover);
-    border: 2px solid var(--jp-secondary-hover);
-  }
-  
-  .suggestionsBox {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    margin-top: 16px;
+.lightButton {
+  background-color: var(--jp-white);
+  border: 2px solid var(--jp-secondary);
+  color: var(--jp-secondary);
+}
+
+.lightButton:hover {
+  background-color: var(--jp-white-hover);
+  border: 2px solid var(--jp-secondary-hover);
+}
+
+.suggestionsBox {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
 }
 
 .suggestionsBox h2 {
-    margin-bottom: 8px;
-    font-size: 1.2em;
-    font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 1.2em;
+  font-weight: bold;
 }
 
 .suggestionsBox ul {
-    list-style-type: disc;
-    margin-left: 20px;
+  list-style-type: disc;
+  margin-left: 20px;
 }
 
 .suggestionsBox ul li {
-    margin: 4px 0;
+  margin: 4px 0;
 }
-
 
 .hidden-file-input {
   display: none;
@@ -164,7 +163,7 @@ button:hover{
   color: white;
   font-weight: bold;
   font-size: 16px;
-  padding: 8px 20px; 
+  padding: 8px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -173,7 +172,7 @@ button:hover{
 }
 
 .custom-file-button {
-  height: 38px; 
+  height: 38px;
   line-height: 20px;
 }
 
@@ -225,8 +224,24 @@ button:hover{
   font-size: 18px; /* Larger font size */
 }
 
-
 .job-company {
   color: #555; /* Dark gray for company name */
   font-size: 14px; /* Slightly smaller font size */
+}
+
+.greyOverlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  pointer-events: none;
+  gap: 4rem;
+  z-index: 2;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.9);
 }

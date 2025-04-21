@@ -45,10 +45,10 @@ textarea:focus {
   display: flex;
   flex-direction: row;
   column-gap: 50px;
-  width:100%;
+  width: 100%;
 }
 
-.dialogContentLeft{
+.dialogContentLeft {
   flex: 1;
 }
 
@@ -66,7 +66,7 @@ textarea:focus {
   justify-content: space-between;
 }
 
-.icon{
+.icon {
   font-size: 2.5rem !important;
   aspect-ratio: 1;
   color: var(--jp-secondary);
@@ -76,4 +76,21 @@ textarea:focus {
   display: flex;
   flex-direction: column;
   width: 100% !important;
+}
+
+.greyOverlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  pointer-events: none;
+  gap: 4rem;
+  z-index: 2;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.9);
 }
