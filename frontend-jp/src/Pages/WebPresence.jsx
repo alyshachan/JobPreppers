@@ -10,7 +10,7 @@ function WebPresence() {
   return (
     <>
     {user == null ? <NavBar /> : <></>}
-      <div className="flex flex-col m-4">
+      <div className="flex flex-col m-4 overflow-x-hidden">
         <Summary />
         <Technologies />
         <TeamMemberDescription />

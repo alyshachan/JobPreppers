@@ -41,7 +41,7 @@ export default function TeamMemberDescription() {
   return (
     <>
       <div className="flex flex-col items-center">
-        <h1 className="text-6xl pt-10 pb-6 bg-gradient-to-r from-[var(--jp-secondary)] to-[var(--jp-primary)] bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-6xl pb-6 text-center bg-gradient-to-r from-[var(--jp-secondary)] to-[var(--jp-primary)] bg-clip-text text-transparent">
           Meet the Team
         </h1>
       {team.map((member, index) => (
@@ -50,12 +50,12 @@ export default function TeamMemberDescription() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: index * 0.2 }}
-          className="flex flex-col content-center justify-center p-6 w-full"
+          className="flex flex-col items-center justify-center p-6 w-full"
         >
           <Card
-            className={`flex md:flex-row ${
+            className={`flex flex-col md:flex-row ${
               index % 2 === 1 ? "md:flex-row-reverse" : "md:flex-row"
-            } w-full`}
+            } w-full max-w-[80%]`}
           >
             <CardMedia
               component="img"

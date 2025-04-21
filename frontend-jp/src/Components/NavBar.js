@@ -282,11 +282,13 @@ function NavBar() {
           {/* Other content */}
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
+              <Link to="/">
               <img
                 alt="Job Preppers"
                 src={JobPreppersLogo}
                 className="h-12 w-auto"
               />
+              </Link>
             </div>
             <div className="hidden sm:ml-3 sm:block">
               <div className="flex space-x-4 justify-end">
@@ -300,7 +302,7 @@ function NavBar() {
                             className={classNames(
                               "block data-[focus]:bg-blue-100 rounded-md px-3 py-2 text-base font-medium cursor-pointer",
                               matchJobs
-                                ? "bg-[var(--jp-navbar-hover)] text-[var(--jp-border)] border-none hover:bg-red" 
+                                ? "bg-[var(--jp-navbar-hover)] text-[var(--jp-border)] border-none hover:bg-red"
                                 : "text-[var(--jp-border)] group-hover:bg-[var(--jp-navbar-hover)] group-hover:text-[var(--jp-border)] bg-[var(--jp-navbar)] hover:bg-red border-none"
                             )}
                             onMouseEnter={(e) => e.target.click()}
@@ -423,53 +425,55 @@ function NavBar() {
                 transition
                 className="absolute right-0 z-10 mt-2 w-[30rem] overflow-y-auto origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
-                {notificationDict.map((notification, index) => (
-                  <MenuItem>
-                    <div className="flex flex-col">
-                      <div
-                        className="flex p-2 gap-4"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <img
-                          className="rounded-full aspect-square w-20 h-20"
-                          alt={`${notification.name}'s Profile Picture`}
-                          src={notification.profilePic}
-                        />
+                {notificationDict.length == 0
+                  ? <p className="subtitle">No notifications</p>
+                  : notificationDict.map((notification, index) => (
+                      <MenuItem>
+                        <div className="flex flex-col">
+                          <div
+                            className="flex p-2 gap-4"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <img
+                              className="rounded-full aspect-square w-20 h-20"
+                              alt={`${notification.name}'s Profile Picture`}
+                              src={notification.profilePic}
+                            />
 
-                        <div className="flex flex-col flex-grow">
-                          <p>
-                            <b>{notification.name}</b> sent a friend request
-                          </p>
-                          <p className="subtitle">
-                            Request sent on{" "}
-                            {notification.sentAt.toLocaleDateString()}
-                          </p>
+                            <div className="flex flex-col flex-grow">
+                              <p>
+                                <b>{notification.name}</b> sent a friend request
+                              </p>
+                              <p className="subtitle">
+                                Request sent on{" "}
+                                {notification.sentAt.toLocaleDateString()}
+                              </p>
 
-                          <div className="flex gap-2 pt-2 items-center justify-end flex-grow">
-                            <button
-                              onClick={() =>
-                                handleAcceptFriend(notification.userID)
-                              }
-                            >
-                              Accept
-                            </button>
-                            <button
-                              className="lightButton"
-                              onClick={() =>
-                                handleDeclineFriend(notification.userID)
-                              }
-                            >
-                              Decline
-                            </button>
+                              <div className="flex gap-2 pt-2 items-center justify-end flex-grow">
+                                <button
+                                  onClick={() =>
+                                    handleAcceptFriend(notification.userID)
+                                  }
+                                >
+                                  Accept
+                                </button>
+                                <button
+                                  className="lightButton"
+                                  onClick={() =>
+                                    handleDeclineFriend(notification.userID)
+                                  }
+                                >
+                                  Decline
+                                </button>
+                              </div>
+                            </div>
                           </div>
+                          {index < notificationDict.length - 1 && (
+                            <hr className="border-t border-gray-300 -ml-[3px] my-2" />
+                          )}
                         </div>
-                      </div>
-                      {index < notificationDict.length - 1 && (
-                        <hr className="border-t border-gray-300 -ml-[3px] my-2" />
-                      )}
-                    </div>
-                  </MenuItem>
-                ))}
+                      </MenuItem>
+                    ))}
               </MenuItems>
             </Menu>
 

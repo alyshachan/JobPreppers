@@ -4,24 +4,17 @@ import Interview_Tutorial from "./Gif/Interview_Tutorial.gif";
 import { Skeleton } from "@mui/material";
 import { useState } from "react";
 const Features = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
   return (
     <>
       <div className="content">
-        <h1 className="text-6xl pb-6 bg-gradient-to-r from-[var(--jp-secondary)] to-[var(--jp-primary)] bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-6xl pb-6 text-center bg-gradient-to-r from-[var(--jp-secondary)] to-[var(--jp-primary)] bg-clip-text text-transparent">
           Features
         </h1>
 
-        <div className="panel !flex-row items-center">
-          {!isLoaded && (
-            <Skeleton variant="rectangular" width={210} height={118} />
-          )}
+        <div className="panel !flex-col-reverse items-center md:!flex-row">
           <img
             src={Feed_Tutorial}
-            className={`object-contain w-[75%] ${
-              isLoaded ? "opacity-100" : "opacity-0 absolute"
-            }`}
-            onLoad={() => setIsLoaded(true)}
+            className="w-full md:w-[75%] object-contain h-[30%] md:h-auto"
           />
           <div>
             <h1>Feed</h1>
@@ -34,8 +27,8 @@ const Features = () => {
           </div>
         </div>
 
-        <div className="w-[70%] flex flex-row">
-          <div className="panel w-auto items-center">
+        <div className="w-full md:w-[70%] flex flex-col md:flex-row md:items-stretch items-center">
+          <div className="panel w-auto items-center  md:flex-1">
             <div>
               <h1>Meet New People</h1>
               <p>
@@ -46,11 +39,11 @@ const Features = () => {
             </div>
             <img
               src="Images/temp-features/Feed_Discover_temp.png"
-              className="object-contain w-[75%]"
+              className="object-contain w-[75%] h-[30%] md:h-auto"
             />
           </div>
 
-          <div className="panel w-auto items-center">
+          <div className="panel w-auto items-center md:flex-1 md:h-inherit flex-grow">
             <div>
               <h1>Chat</h1>
               <p>
@@ -61,12 +54,12 @@ const Features = () => {
             </div>
             <img
               src="Images/temp-features/Chat_Image.png"
-              className="object-contain w-[100%]"
+              className="object-contain w-[100%] h-[30%] md:h-auto"
             />
           </div>
         </div>
 
-        <div className="panel !flex-row items-center">
+        <div className="panel !flex-col items-center md:!flex-row">
           <div>
             <h1>Job Board</h1>
             <p>
@@ -77,12 +70,12 @@ const Features = () => {
           </div>
           <img
             src="Images/temp-features/Jobs_Image.png"
-            className="object-contain w-[75%]"
+            className="w-full md:w-[75%] object-contain h-[30%] md:h-auto"
           />
         </div>
 
-        <div className="w-[70%] flex flex-row">
-          <div className="panel w-auto items-center">
+        <div className="w-full md:w-[70%] flex flex-col md:flex-row md:items-stretch items-center">
+          <div className="panel w-auto items-center  md:flex-1">
             <div>
               <h1>Bookmark</h1>
               <p>
@@ -93,11 +86,11 @@ const Features = () => {
             </div>
             <img
               src="Images/temp-features/Bookmark_Image.png"
-              className="object-contain w-[200%]"
+              className="object-contain w-[200%] h-[30%] md:h-auto"
             />
           </div>
 
-          <div className="panel w-auto items-center">
+          <div className="panel w-auto items-center md:flex-1 md:h-inherit flex-grow">
             <div>
               <h1>Add Jobs</h1>
               <p>
@@ -110,12 +103,12 @@ const Features = () => {
             </div>
             <img
               src="Images/temp-features/Add_Job_Image.png"
-              className="object-contain w-[300%]"
+              className="object-contain w-[300%] h-[30%] md:h-auto"
             />
           </div>
         </div>
 
-        <div className="panel !flex-row items-center">
+        <div className="panel !flex-col items-center md:!flex-row">
           <div>
             <h1>Video Call</h1>
             <p>
@@ -125,10 +118,14 @@ const Features = () => {
               call, with features such as screenshare, reactions, and recording.
             </p>
           </div>
-          <img src={Interview_Tutorial} className="object-contain w-[75%]" />
+          <img src={Interview_Tutorial} className="w-full md:w-[75%] object-contain h-[30%] md:h-auto" />
         </div>
 
-        <div className="panel !flex-row items-center">
+        <div className="panel !flex-col-reverse items-center md:!flex-row">
+          <img
+            src="Images/temp-features/Resume_Image.png"
+            className="w-full md:w-[75%] object-contain h-[30%] md:h-auto"
+          />
           <div>
             <h1>AI Resume Tailor</h1>
             <p>
@@ -138,10 +135,6 @@ const Features = () => {
               Then update resume based on suggestions
             </p>
           </div>
-          <img
-            src="Images/temp-features/Resume_Image.png"
-            className="object-contain w-[75%]"
-          />
         </div>
       </div>
     </>
