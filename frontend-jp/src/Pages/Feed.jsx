@@ -182,7 +182,7 @@ function Feed() {
                 <h1>
                   {selectedFeed.charAt(0).toUpperCase() + selectedFeed.slice(1)}
                 </h1>
-                <select
+                {/* <select
                   // value={selectedOption}
                   onChange={(e) => setSelectedFeed(e.target.value)}
                   className="ml-4 p-2 border rounded-md w-32"
@@ -190,7 +190,7 @@ function Feed() {
                   <option value="timeline">Timeline</option>
                   <option value="global">Global</option>
                   <option value="recruiter">Recruiter</option>
-                </select>
+                </select> */}
               </div>
               <FlatFeed
                 key={feedRefreshKey}
