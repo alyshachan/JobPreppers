@@ -98,8 +98,6 @@ export default function Qualification({ jobDescriptionData }) {
   ];
 
   useEffect(() => {
-    console.log("In Qualification: ", jobDescriptionData);
-
     const minExp = jobDescriptionData.minimumExperience;
     if (minExp) {
       setValue("minimumExperience", minExp);
@@ -118,7 +116,6 @@ export default function Qualification({ jobDescriptionData }) {
 
     const parseSkill = jobDescriptionData.skills;
     if (parseSkill && parseSkill.length > 0) {
-      console.log("Job Description Data Skills: ", parseSkill);
       setValue("skills", jobDescriptionData.skills);
       jobDescriptionData.skills = [];
     }
@@ -171,7 +168,6 @@ export default function Qualification({ jobDescriptionData }) {
           control={control}
           name="skills"
           render={({ field }) => (
-            console.log("field: ", field),
             (
               <Autocomplete
                 {...field}

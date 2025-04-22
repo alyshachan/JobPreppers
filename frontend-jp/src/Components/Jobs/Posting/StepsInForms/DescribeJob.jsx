@@ -14,7 +14,6 @@ export default function DescribeJob({
 }) {
   const jobForm = useFormContext();
   const onSubmit = (data) => {
-    console.log(data);
     setFormData({ ...formData, ...data });
   };
 
@@ -65,7 +64,6 @@ export default function DescribeJob({
           setValue("longitude", null);
         } else {
           const { lat, lon } = await submitAddress(location);
-          console.log("Fetched coordinates:", lat, lon);
           if (lat && lon) {
             setValue("latitude", lat);
             setValue("longitude", lon);
@@ -81,14 +79,11 @@ export default function DescribeJob({
   };
 
   useEffect(() => {
-    console.log("Set Job Description Value: ", jobDescriptionData);
-
     if (jobDescriptionData.title) {
       setValue("title", jobDescriptionData.title);
     }
 
     if (jobDescriptionData.type) {
-      console.log("went into type", jobDescriptionData.type);
       for (let option of employementTypeOptions) {
         const label = option.label;
 
@@ -101,7 +96,6 @@ export default function DescribeJob({
             normalizeString(jobDescriptionData.type)
         );
         if (matchingOption) {
-          console.log("Went into the if", option);
           setValue("type", option);
           break;
         }

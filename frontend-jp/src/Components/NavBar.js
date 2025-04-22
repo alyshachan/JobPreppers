@@ -128,7 +128,6 @@ function NavBar() {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("fetched friends: ", data);
           if (data) {
             const newPendingFriendDict = data.map((pendingFriend) => ({
               userID: pendingFriend.id,
@@ -191,8 +190,8 @@ function NavBar() {
         }
       );
 
-      if (response.ok) {
-        console.log("Friends synced");
+      if (!response.ok) {
+        console.log("Friends unable to be synced");
       }
     } catch (err) {
       setError("An error occurred when syncing friends");

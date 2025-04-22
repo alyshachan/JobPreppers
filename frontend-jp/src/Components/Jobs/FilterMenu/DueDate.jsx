@@ -31,10 +31,8 @@ export default function DueDate({ setFilters }) {
   const handleSearch = () => {
     const formattedDate = selectedDate ? selectedDate.toISOString() : null;
 
-    console.log("Date in DueDate: ", { selectedDate });
     setFilters((prev) => {
       const updatedFilters = { ...prev, date: formattedDate };
-      console.log("Updated Filters: ", updatedFilters);
       return updatedFilters;
     });
     setSetlected(true);

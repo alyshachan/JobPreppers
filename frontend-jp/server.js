@@ -30,7 +30,6 @@ app.get("/get-token", (req, res) => {
       
         
         axios.request(tokenRequest).then(function (response) {
-            console.log(response.data);
             res.json(response.data);
         }).catch(function (error) {
             console.error("Error fetching token:", error);

@@ -47,8 +47,6 @@ function Friends() {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("API Response: ", data); // Log the response to verify the structure
-
           if (data) {
             const newFriendsDict = data.map((friend) => ({
               userID: friend.userID,

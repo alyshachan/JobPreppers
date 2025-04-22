@@ -76,8 +76,6 @@ function AddSkillDialog({ open, onClose, onAdd, skill }) {
       });
 
       const responseData = await response.json();
-      console.log("Response Data:", responseData);
-
       if (response.ok) {
         onAdd();
         onClose();

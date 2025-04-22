@@ -9,7 +9,6 @@ connection.start().then(function () {
 });
 
 connection.on("ReceiveMessage", function (user, message) {
-    console.log("something happened :D");
 	var content = `<b>${user} - </b>${message}`;
 	$('#messagesList').append(`<li>${content}</li>`);
 });

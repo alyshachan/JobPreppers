@@ -90,7 +90,6 @@ export default function useJobForm({
   const { mutate: mutateParse, isPending: isParseLoading } = useMutation({
     mutationFn: parseDescription,
     onSuccess: (data) => {
-      console.log("Parse Data: ", data);
       setjobDescriptionData(data);
       handleNext();
     },

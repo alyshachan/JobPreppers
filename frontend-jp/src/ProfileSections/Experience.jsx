@@ -88,8 +88,6 @@ function Experience() {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("API Response: ", data); // Log the response to verify the structure
-
           if (data) {
             const newExperienceDict = data.map((experience) => ({
               work_name: experience.workName,

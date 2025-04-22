@@ -29,7 +29,6 @@ export default function FilterColumn({
   useEffect(() => {
     const handleSearch = async () => {
       // e.preventDefault(); // Prevent default form submission
-      console.log("Filter: ", { filters });
       if (filters.userID == null || IsUserCompany == null) {
         return;
       }
@@ -46,7 +45,6 @@ export default function FilterColumn({
 
         if (response.ok) {
           const { newJobs, totalCount } = await response.json();
-          console.log("Data: ", { newJobs });
           setJobs(newJobs);
           setPageSize(Math.ceil(totalCount / NumberPerPage));
           setTotal(totalCount);

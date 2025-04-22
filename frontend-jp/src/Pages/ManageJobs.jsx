@@ -22,8 +22,6 @@ function ManageJobs() {
   const [jobName, setJobName] = useState("");
 
   const fetchJobs = async () => {
-    console.log("Went into fetch job for manage job");
-
     try {
       const res = await fetch(apiURL + `/api/Manage`, {
         method: "POST",
@@ -37,7 +35,6 @@ function ManageJobs() {
 
       if (res.ok) {
         const data = await res.json();
-        console.log("Manage Job: ", data.jobs);
         setJobs(data.jobs);
         return data;
       }

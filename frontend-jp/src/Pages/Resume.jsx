@@ -79,7 +79,6 @@ function Resume() {
         setMessage(`Error: ${errorText}`);
       } else {
         const jsonResponse = await response.json(); // Parse JSON response
-        console.log("Full API Response:", jsonResponse);
         const suggestionsList =
           jsonResponse.choices[0]?.message?.content.split("\n") || [];
         setSuggestions(suggestionsList); // Store suggestions as an array

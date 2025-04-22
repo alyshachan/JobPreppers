@@ -61,7 +61,6 @@ function AddEventDialog({ open, onClose, onCreateEvent, selectedDate }) {
         details: eventDetails,
       };
       onCreateEvent(newEvent);
-      console.log(newEvent);
     }
   };
 
