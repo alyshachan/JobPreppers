@@ -167,11 +167,8 @@ function Feed() {
         <div className="flex w-full p-4 space-x-4">
           <div className="w-2/3">
             <StatusUpdateForm
-              feedGroup={selectedFeed}
-              userID={
-                selectedFeed === "global"
-                  ? "global_feed"
-                  : user.userID.toString()
+              feedGroup="user"
+              userID={user.userID.toString()
               }
               onSuccess={() => {
                 document.dispatchEvent(new Event("activity-posted"));
@@ -188,14 +185,14 @@ function Feed() {
                   className="ml-4 p-2 border rounded-md w-32"
                 >
                   <option value="timeline">Timeline</option>
-                  <option value="global">Global</option>
+                  <option value="user">User</option>
                   <option value="recruiter">Recruiter</option>
                 </select> */}
               </div>
               <FlatFeed
                 key={feedRefreshKey}
                 classname="flat-feed"
-                feedGroup={selectedFeed === "global" ? "global" : selectedFeed}
+                feedGroup="timeline"
                 options={{
                   enrich: true,
                   limit: 10,
