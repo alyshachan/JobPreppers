@@ -30,25 +30,6 @@ const queryClient = new QueryClient();
 
 
 function App() {
-  console.log("NavBar:", NavBar);
-  console.log("Messaging:", Messaging);
-  console.log("Feed:", Feed);
-  console.log("Jobs:", Jobs);
-  console.log("Profile:", Profile);
-  console.log("Resume:", Resume);
-  console.log("Interview:", Interview);
-  console.log("Login:", Login);
-  console.log("Signup:", Signup);
-  console.log("Education:", Education);
-  console.log("Experience:", Experience);
-  console.log("Project:", Project);
-  console.log("Skills:", Skills);
-  console.log("VideoCall:", VideoCall);
-  console.log("AuthProvider:", AuthProvider);
-  // console.log("ConnectionProvider:", ConnectionProvider);
-
-  //End Point: 107.23.196.38
-
   return (
     <>
       <QueryClientProvider client={queryClient}>

@@ -70,8 +70,6 @@ function Skills() {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("API Response: ", data);
-
           if (data) {
             let newSkillsDict = {};
             for (var userSkillID in data) {

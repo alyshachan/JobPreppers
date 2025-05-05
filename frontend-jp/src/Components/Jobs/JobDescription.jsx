@@ -98,7 +98,6 @@ function JobDescription({ setDrawerOpen, jobs, setJobs, setFilters }) {
       return deleteJob(data);
     },
     onSuccess: (data) => {
-      console.log("Sucessful");
       setFilters((prev) => ({
         ...prev,
       }));

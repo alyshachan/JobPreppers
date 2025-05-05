@@ -26,8 +26,6 @@ export default function Login() {
       if (response.ok) {
         const data = await response.json();
         if (data.user) {
-          console.log("setting auth data");
-
           setAuthData({
             userID: data.user.userID,
             username: data.user.username,
@@ -39,7 +37,6 @@ export default function Login() {
             location: data.user.location,
           });
 
-          console.log("auth data set");
           // Show a success popup
           navigate(`/profile/${data.user.username}`);
           window.alert(data.message); // Displays "Login successful."

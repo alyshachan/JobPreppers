@@ -20,8 +20,6 @@ export default function Company({ setFilters, jobs }) {
       ...prev,
       company: newValue.map((company) => company.value),
     }));
-
-    console.log(newValue);
   };
 
   useEffect(() => {
@@ -29,8 +27,6 @@ export default function Company({ setFilters, jobs }) {
       const response = await fetch(apiURL + "/api/jobpost/company"); // Replace with your actual API
       if (response.ok) {
         const data = await response.json();
-
-        console.log("Fetch Company", data);
         const uniqueCompanies = [
           ...new Set(data.jobs.map((job) => job.company)),
         ].map((company) => ({ id: company, value: company }));

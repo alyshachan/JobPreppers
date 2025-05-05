@@ -28,7 +28,6 @@ export default function Header({ job, onClose }) {
       axios
         .get(`${apiURL}/api/Application/applicants/${job.jobID}`)
         .then((res) => {
-          console.log("Applicants:", applicants);
           setApplicants(res.data);
         })
         .catch((err) => console.error("Failed to fetch applicants", err));
@@ -67,12 +66,6 @@ export default function Header({ job, onClose }) {
         recruiterID: 1,
         postID: job.jobID,
       };
-      console.log("Job Object:", JSON.stringify(job, null, 2));
-      console.log(`Payload to be sent: 
-        userID: ${payload.userID}, 
-        recruiterID: ${payload.recruiterID}, 
-        postID: ${payload.postID}
-      `);
       const response = await axios.post(
         `${apiURL}/api/Application/ClickedApply`,
         payload
@@ -133,7 +126,6 @@ export default function Header({ job, onClose }) {
             await handleApplyClick(e);
 
             // Now check if there is a job link and open it
-            console.log("job: ", job);
             if (job.link) {
               window.open(job.link);
             } else {

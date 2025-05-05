@@ -58,7 +58,6 @@ export default function Distance({ setFilters, userCoordinate }) {
   };
 
   const handleShowResult = () => {
-    console.log(`Distance: ${sliderValue}miles`);
     handleClose();
     const userLong = userCoordinate.longitude;
     const userLat = userCoordinate.latitude;

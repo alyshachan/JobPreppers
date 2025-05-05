@@ -59,7 +59,6 @@ function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
   };
 
   const submitAddress = async () => {
-    console.log("Location: ", { location });
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
       location
     )}&format=json`;
@@ -122,7 +121,6 @@ function SearchColumn({ setUserCoordinate, setFilters, setJobs }) {
 
         if (res.ok) {
           const data = await res.json();
-          console.log(user.userID);
           setIsRecruiter(data.isRecruiter);
           setCompanyName(data.companyName);
         }

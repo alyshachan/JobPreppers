@@ -22,8 +22,6 @@ function ManageJobs() {
   const [jobName, setJobName] = useState("");
 
   const fetchJobs = async () => {
-    console.log("Went into fetch job for manage job");
-
     try {
       const res = await fetch(apiURL + `/api/Manage`, {
         method: "POST",
@@ -37,7 +35,6 @@ function ManageJobs() {
 
       if (res.ok) {
         const data = await res.json();
-        console.log("Manage Job: ", data.jobs);
         setJobs(data.jobs);
         return data;
       }
@@ -74,7 +71,7 @@ function ManageJobs() {
           }`}
         >
           <div className="content">
-            <div className="flex flex-col w-full p-5">
+            <div className="flex flex-col w-full items-center p-5">
               <TextField
                 label="Search"
                 id="search-input"
@@ -97,8 +94,8 @@ function ManageJobs() {
               />
 
               {jobs.length > 0 ? (
-                <div>
-                  <Typography variant="subtitle1" sx={{ color: "grey" }}>
+                <div className="w-full">
+                  <Typography variant="subtitle1" sx={{ color: "grey", textAlign: "center", paddingRight: "40rem" }}>
                     {" "}
                     {jobs.length} job{jobs.length !== 1 ? "s" : ""} were found.
                   </Typography>

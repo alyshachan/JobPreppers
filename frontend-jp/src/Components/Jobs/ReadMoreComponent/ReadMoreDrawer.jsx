@@ -33,9 +33,6 @@ export default function ReadMoreDrawer({ open, job, onClose }) {
   const drawerWidth = isNarrow ? "100%" : "600px";
 
   const sanitizeDescription = (description) => {
-    // console.log("Description:", job.description);
-    // console.log("Type of description:", typeof job.description);
-
     if (typeof description === "string") {
       try {
         const decodedDescription = JSON.parse(description);

@@ -11,7 +11,8 @@ function ListBox({
   edit,
   sliceItems = true,
   showAllItems = false,
-  onEdit
+  onEdit,
+  visitingUser
 }) {
   const displayedItems = sliceItems ? list.slice(0, 4) : list;
   const hasMoreItems = list.length > 4 && !showAllItems;
@@ -47,7 +48,7 @@ function ListBox({
         {hasMoreItems && !showAllItems && (
           <div className={styles.skillMoreList}>
             ...
-            <a href="./Skills">
+            <a href={`/Skills/${visitingUser}`}>
               <button className="lightButton">See more</button>
             </a>
           </div>

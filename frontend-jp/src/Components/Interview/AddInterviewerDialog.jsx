@@ -70,7 +70,6 @@ function AddInterviewerDialog({ open, onClose, onAdd }) {
           availability: data.availability,
           signUpID: data.signUpID,
         });
-        console.log("Interviewer added successfully");
         onClose();
       } else {
         window.alert("Failed to add interviewer");

@@ -91,8 +91,6 @@ export default function AddJobForm({
     setOpen(true);
     if (jobToEdit) {
       setActiveStep(1);
-      console.log("JobtoEdit : ", jobToEdit);
-      console.log("skills: ", jobToEdit.skills);
       jobForm.setValue("company", jobToEdit.company);
       jobForm.setValue("title", jobToEdit.title);
       jobForm.setValue("location", jobToEdit.location.name);

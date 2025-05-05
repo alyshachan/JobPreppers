@@ -31,7 +31,6 @@ function VideoCall() {
 
     const fetchVideoCallData = async () => {
       try {
-        console.log("requesting user token");
         const response = await fetch(
           apiURL + `/api/VideoCall/token/${user.userID}`,
           {

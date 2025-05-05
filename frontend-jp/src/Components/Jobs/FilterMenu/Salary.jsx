@@ -62,7 +62,6 @@ export default function Salary({ setFilters }) {
   };
 
   const handleShowResult = () => {
-    console.log("slider value", { sliderValue });
     setFilters((prev) => {
       const updatedFilters = { ...prev, min_salary: sliderValue };
       return updatedFilters;

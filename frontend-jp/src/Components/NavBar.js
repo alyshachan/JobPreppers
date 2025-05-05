@@ -17,6 +17,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import DefaultPic from "../Components/JobPreppers_DefaultPic.png";
 import JobPreppersLogo from "../Components/JobPreppers.png";
 
@@ -53,6 +54,22 @@ function CustomLink({ to, children, className, ...props }) {
       </Link>
     </div>
   );
+}
+
+async function fetchRecruiterStatus(userID) {
+  const response = await fetch(
+    apiURL + `/api/Recruiter/isRecruiter/?userID=${userID}`,
+    {
+      credentials: "include",
+    }
+  );
+
+  if (response.ok) {
+    let result = await response.json();
+    return result.isRecruiter;
+  } else {
+    throw new Error("Failed to fetch recruiter status");
+  }
 }
 
 function NavBar() {
@@ -128,7 +145,6 @@ function NavBar() {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("fetched friends: ", data);
           if (data) {
             const newPendingFriendDict = data.map((pendingFriend) => ({
               userID: pendingFriend.id,
@@ -191,8 +207,8 @@ function NavBar() {
         }
       );
 
-      if (response.ok) {
-        console.log("Friends synced");
+      if (!response.ok) {
+        console.log("Friends unable to be synced");
       }
     } catch (err) {
       setError("An error occurred when syncing friends");
@@ -248,6 +264,12 @@ function NavBar() {
       setError("An error occurred. Please try again."); // Catch and display any request error
     }
   };
+
+  const { data: isRecruiter } = useQuery({
+    queryKey: ["isRecruiter", user?.userID],
+    queryFn: () => fetchRecruiterStatus(user.userID),
+    enabled: !!user?.userID,
+  });
 
   if (user == null) {
     return;
@@ -327,6 +349,7 @@ function NavBar() {
                               </Link>
                             </MenuItem>
 
+                            {isRecruiter && (
                             <MenuItem>
                               <Link
                                 to="/Jobs/ManageJobs"
@@ -335,6 +358,7 @@ function NavBar() {
                                 Manage Jobs
                               </Link>
                             </MenuItem>
+                            )}
 
                             <MenuItem>
                               <Link

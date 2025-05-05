@@ -30,15 +30,14 @@ function Feed() {
           }
         );
 
-        if (response.ok) {
-          console.log("Friends synced");
+        if (!response.ok) {
+          console.log("Friends couldn't be synced");
         }
       } catch (err) {
         console.error(err);
       }
 
       try {
-        console.log("requesting user token");
         const response = await fetch(
           apiURL + `/api/Feed/getFeedToken/${user.userID}`
         );
@@ -46,7 +45,6 @@ function Feed() {
           const data = await response.json();
           const token = data.token;
           setStreamToken(token);
-          console.log("stream client authorized");
         }
       } catch (e) {
         console.error(e);
@@ -64,8 +62,6 @@ function Feed() {
           }
         );
 
-        console.log("HELP");
-
         if (response.ok) {
           const data = await response.json();
 
@@ -81,7 +77,6 @@ function Feed() {
               }
             );
           }
-          console.log("stream user acquired :)");
         } else {
           console.error("Error getting/creating stream user");
         }
@@ -94,7 +89,6 @@ function Feed() {
 
   useEffect(() => {
     const requestRecommendations = async () => {
-      console.log("fetching");
       try {
         const response = await fetch(
           apiURL + `/api/Feed/recommend/${user.userID}`,
@@ -107,7 +101,6 @@ function Feed() {
           const data = await response.json();
 
           if (data) {
-            console.log(data);
             const newRecDict = data.recommendations.map((friend) => ({
               userID: friend.userID,
               name: friend.name,
@@ -174,11 +167,8 @@ function Feed() {
         <div className="flex w-full p-4 space-x-4">
           <div className="w-2/3">
             <StatusUpdateForm
-              feedGroup={selectedFeed}
-              userID={
-                selectedFeed === "global"
-                  ? "global_feed"
-                  : user.userID.toString()
+              feedGroup="user"
+              userID={user.userID.toString()
               }
               onSuccess={() => {
                 document.dispatchEvent(new Event("activity-posted"));
@@ -189,20 +179,20 @@ function Feed() {
                 <h1>
                   {selectedFeed.charAt(0).toUpperCase() + selectedFeed.slice(1)}
                 </h1>
-                <select
+                {/* <select
                   // value={selectedOption}
                   onChange={(e) => setSelectedFeed(e.target.value)}
                   className="ml-4 p-2 border rounded-md w-32"
                 >
                   <option value="timeline">Timeline</option>
-                  <option value="global">Global</option>
+                  <option value="user">User</option>
                   <option value="recruiter">Recruiter</option>
-                </select>
+                </select> */}
               </div>
               <FlatFeed
                 key={feedRefreshKey}
                 classname="flat-feed"
-                feedGroup={selectedFeed === "global" ? "global" : selectedFeed}
+                feedGroup="timeline"
                 options={{
                   enrich: true,
                   limit: 10,

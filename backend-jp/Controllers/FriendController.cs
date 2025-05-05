@@ -209,6 +209,9 @@ namespace JobPreppersDemo.Controllers
 
             var client = _streamService.Client;
             var timelineFeed = client.Feed("timeline", sUserID);
+            var userUserFeed = client.Feed("user", sUserID);
+            await timelineFeed.FollowFeedAsync("user", sUserID);
+            Console.WriteLine("reached here");
 
             foreach (var friend in friends)
             {

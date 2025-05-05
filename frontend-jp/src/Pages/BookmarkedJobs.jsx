@@ -41,30 +41,6 @@ function BookmarkedJobs() {
     fetchJobs();
   }, [user?.userID]);
 
-  // useEffect(() => {
-  //   const fetchBookmarkedJobs = async () => {
-  //     try {
-  //       const res = await fetch(
-  //         `http://localhost:5000/api/Bookmark/getBookmark/?userID=${user.userID}`,
-  //         { credentials: "include" }
-  //       );
-
-  //       if (res.ok) {
-  //         const data = await res.json();
-  //         console.log("Bookmarked: ", data);
-  //         console.log("Current Jobs: ", jobs);
-  //         setJobs(data.jobs);
-  //         setBookmarkedJobs(data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error Getting Jobs:", error);
-  //     }
-  //   };
-  //   if (user?.userID) {
-  //     fetchBookmarkedJobs();
-  //   }
-  // }, [user?.userID]);
-
   return (
     <>
       <Box className={styles.jobs}>

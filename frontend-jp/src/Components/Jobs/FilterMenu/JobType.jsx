@@ -28,8 +28,6 @@ export default function JobType({ setFilters }) {
       ...prev,
       type: newValue.map((type) => type.value),
     }));
-
-    console.log(newValue);
   };
 
 

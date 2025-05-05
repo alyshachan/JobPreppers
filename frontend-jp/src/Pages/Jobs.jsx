@@ -49,7 +49,6 @@ function Jobs() {
   const [pageSize, setPageSize] = useState(1);
 
   async function fetchCompanyStatus(userID) {
-    console.log("user id in fetchStatus: ", userID);
     const res = await fetch(
       apiURL + `/api/Company/isCompany/?userID=${userID}`,
       {

@@ -35,7 +35,6 @@ export const AuthProvider = ({ children }) => {
         });
 
         if (response.ok) {
-          console.log("Auth OK");
           const data = await response.json();
           if (data) {
             const newUser = {

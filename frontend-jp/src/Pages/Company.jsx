@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import { Button, Box } from "@mui/material";
 import { useParams } from "react-router-dom";
-
 import ProfileDescription from "../ProfileSections/ProfileDescription";
 import styles from "../Components/Jobs/Jobs.module.css";
 import "../Components/JobPreppers.css";
@@ -16,26 +15,19 @@ function User() {
   const { username } = useParams();
   const [user, setUser] = useState(null);
   const { initialUser, setIntialUser } = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [friendCount, setFriendCount] = useState(0);
+  const [jobs, setJobs] = useState([]);
+  const apiURL = process.env.REACT_APP_JP_API_URL;
   const [edit, setEdit] = useState(() => {
     return localStorage.getItem("editMode") === "true";
   });
-  const [friendCount, setFriendCount] = useState(0);
   const [openDialog, setOpenDialog] = useState({
     education: false,
     skill: false,
     experience: false,
     project: false,
   });
-  const [message, setMessage] = useState("");
-  const [receiverID, setReceiverID] = useState("");
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const [jobs, setJobs] = useState([]);
-  const apiURL = process.env.REACT_APP_JP_API_URL;
-
-  const toggleDialog = (type, state) => {
-    setOpenDialog((prev) => ({ ...prev, [type]: state }));
-  };
 
   useEffect(() => {
     localStorage.setItem("editMode", edit);
@@ -52,6 +44,7 @@ function User() {
         if (response.ok) {
           const data = await response.json();
           setUser(data);
+          setFriendCount(0);
         } else {
           throw new Error("Failed to fetch user");
         }
@@ -111,6 +104,24 @@ function User() {
     fetchJobs();
   }, [user?.userID]);
 
+  const fetchProfileDescription = async () => {
+    try {
+      const response = await fetch(
+        apiURL + `/api/Users/GetUserFromUsername/${username}`,
+        { credentials: "include" }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data);
+      } else {
+        throw new Error("Failed to fetch user");
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
+
   if (!user) return <div>Loading user...</div>;
 
   return (
@@ -121,6 +132,7 @@ function User() {
           edit={edit}
           setEdit={setEdit}
           friendCount={friendCount}
+          onAdd={fetchProfileDescription}
         />
         <div className="flex-col justify-between w-full">
           <SectionHeader header="Job Postings" />
