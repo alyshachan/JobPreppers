@@ -1,0 +1,73 @@
+import React, { useState, useEffect } from "react";
+import { Box } from "@mui/material";
+import SearchColumn from "../Components/Jobs/SearchColumn";
+import "../Components/JobPreppers.css";
+import styles from "../Components/Jobs/Jobs.module.css";
+import FilterColumn from "../Components/Jobs/FilterColumn";
+import ReadMore from "../Components/Jobs/ReadMoreComponent/ReadMoreDrawer";
+import NoResultPage from "../Components/Jobs/Posting/NoResultPage";
+import { useAuth } from "../provider/authProvider";
+import ManageDescription from "../Components/Jobs/ManageDescription";
+const apiURL = process.env.REACT_APP_JP_API_URL;
+
+function ManageJobs() {
+  const { user } = useAuth();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [jobs, setJobs] = useState([]);
+  useEffect(() => {
+    if (!user?.userID) return;
+
+    const fetchJobs = async () => {
+      try {
+        const res = await fetch(apiURL + `/api/Manage/?userID=${user.userID}`, {
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setJobs(data.jobs);
+        }
+      } catch (error) {
+        console.error("Error Getting Jobs:", error);
+      }
+    };
+
+    fetchJobs();
+  }, [user?.userID]);
+
+  return (
+    <>
+      <Box className={styles.jobs}>
+        {/* Main Content Area */}
+        <Box
+          className={`${styles.mainContent} ${
+            drawerOpen ? styles.drawerOpen : ""
+          }`}
+        >
+          <div className="content">
+            {jobs.length > 0 ? (
+              <div className={styles.containerForCard}>
+                <ManageDescription
+                  setDrawerOpen={setDrawerOpen}
+                  jobs={jobs}
+                  setJobs={setJobs}
+                />
+              </div>
+            ) : (
+              <NoResultPage />
+            )}
+          </div>
+        </Box>
+
+        {/* Drawer Area */}
+        <Box
+          className={`${styles.drawer} ${drawerOpen ? styles.drawerOpen : ""}`}
+        >
+          <ReadMore />
+        </Box>
+      </Box>
+    </>
+  );
+}
+
+export default ManageJobs;

@@ -1,5 +1,24 @@
 # Job Preppers
 
+## How to run files
+### Frontend:
+job-preppers/frontend-jp
+```
+npm i
+npm run start
+```
+
+### Backend:
+job-preppers/backend-jp
+```
+dotnet run
+```
+
+### Chat Server:
+job-preppers/chatServer_jp
+```
+dotnet run
+```
 
 
 ## Getting started

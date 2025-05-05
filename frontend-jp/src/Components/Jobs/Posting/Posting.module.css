@@ -1,0 +1,160 @@
+[type="number"]:focus {
+  box-shadow: none !important;
+}
+
+[type="url"]:focus {
+  box-shadow: none !important;
+}
+
+.addJobTitle {
+  margin: 0 0 0 0;
+  padding: 1rem 0 0 0;
+  border-top: 50px solid #4ba173;
+  left: -20px;
+  position: relative;
+  padding-left: 36px;
+  width: calc(100% + 40px);
+}
+
+.closeButton {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  color: #085630 !important;
+}
+
+.dialogContent {
+  display: flex;
+  flex-direction: row;
+  column-gap: 50px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.dialogContentLeft {
+  flex: 1;
+}
+
+.dialogContentRight {
+  flex: 1;
+  height: 100%;
+}
+
+.required::after {
+  content: " *";
+  color: red;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 10px;
+  justify-content: space-between;
+  width: 100% !important;
+}
+
+.inputField {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100% !important;
+}
+
+.label {
+  color: #4ba173;
+  font-family: "Roboto", sans-serif;
+  font-size: rem;
+}
+
+.expectedPay {
+  border: solid 2px #e5e7eb;
+  padding: 20px;
+  width: 100%;
+}
+
+.payRangeDetails {
+  display: grid;
+  grid-auto-flow: row;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.payExactDetails {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.twoGrid {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+}
+
+.rateLabel {
+  color: #4ba173;
+  border: 1px solid #4ba173;
+  padding: 16px 16px;
+  border-radius: 4px;
+  display: inline-block;
+  font-family: "Roboto", sans-serif;
+}
+
+.error {
+  color: red;
+  display: flex;
+  justify-content: start;
+  width: 100%;
+  gap: 3px;
+}
+
+.parseTextEditor {
+  display: flex;
+  border: 1px solid #4ba173;
+  min-height: 15rem;
+  width: 100%;
+  /* padding: 0.5rem 0 0 0.2rem; */
+}
+
+.MuiYearPicker-root {
+  max-height: 200px !important;
+  /* position: fixed !important; */
+}
+
+.MuiPaper-root {
+  overflow: visible;
+}
+
+.parseJobContainer {
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+}
+
+.parseHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.greyOverlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  pointer-events: none;
+  gap: 4rem;
+  z-index: 2;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.9);
+}

@@ -1,0 +1,36 @@
+[type="text"]:focus {
+  box-shadow: none !important;
+}
+
+/* Filter Column */
+.filter-column-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centers horizontally */
+  margin: 15px;
+  flex-direction: column;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  transition: justify-content 0.3s ease;
+  min-height: 100px;
+}
+
+.filter-column-container.overflow-x {
+  align-items: start;
+}
+
+.filter-column-container .MuiOutlinedInput-root fieldset {
+  border-color: transparent !important;
+}
+
+.description-box {
+  display: flex;
+  gap: 8px; /* Space between icon and text */
+  justify-content: flex-start; /* Horizontally center the icon and text */
+  width: 100%; /* Ensure the box takes up the full width */
+  align-items: center;
+}
+.cardCompensation {
+  border: 2px solid #63d297;
+}
