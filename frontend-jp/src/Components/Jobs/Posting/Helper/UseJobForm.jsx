@@ -19,6 +19,7 @@ export default function useJobForm({
   companyName,
   jobToEdit = null,
   setOpen,
+  setFilters,
 }) {
   const [activeStep, setActiveStep] = useState(0);
   const [jobDescriptionData, setjobDescriptionData] = useState({
@@ -89,6 +90,7 @@ export default function useJobForm({
   const { mutate: mutateParse, isPending: isParseLoading } = useMutation({
     mutationFn: parseDescription,
     onSuccess: (data) => {
+      console.log("Parse Data: ", data);
       setjobDescriptionData(data);
       handleNext();
     },
@@ -98,18 +100,9 @@ export default function useJobForm({
   });
 
   const fetchJobs = async () => {
-    try {
-      const res = await fetch(apiURL + `/api/jobpost/?userID=${user.userID}`);
-      if (res.ok) {
-        const data = await res.json();
-        console.log(data);
-        setJobs(data.jobs);
-      } else {
-        console.error("Failed to fetch jobs");
-      }
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
-    }
+    setFilters((prev) => ({
+      ...prev,
+    }));
   };
 
   const onSubmit = async (data, e) => {

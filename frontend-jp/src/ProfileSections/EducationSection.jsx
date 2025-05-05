@@ -5,7 +5,7 @@ import styles from "../Components/Profile/ProfileSections.module.css";
 import "../Components/JobPreppers.css";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {useState } from "react";
-
+import DefaultCompany from "../Components/Profile/JobPreppers_DefaultCompany.png";
 import { IconButton } from "@mui/material";
 import AddEducationDialog from "../Components/Profile/AddEducationDialog";
 
@@ -55,10 +55,14 @@ function EducationSection({ educationDict, edit, onAdd }) {
         {displayedItems.map((education, index) => (
           <div key={index}>
             <div className={styles.education}>
-              <img
-                className="companyPicture"
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
-              />
+                {education.school_name == "University of Utah" ? (
+                  <img
+                    className="companyPicture"
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
+                  />
+                ) : (
+                  <img className="companyPicture" src={DefaultCompany} />
+                )}
 
               <div className={styles.sectionPictureContent}>
                 <p className="title">{education.school_name}</p>
@@ -104,7 +108,7 @@ function EducationSection({ educationDict, edit, onAdd }) {
         ))}
         {hasMoreItems && !edit && (
           <div className={styles.seeAllDiv}>
-            <a href="./Education">
+            <a href="/Education">
               <button className={styles.seeAll}>
                 See all Education <ArrowForwardIcon className="mt-1 ml-1" />
               </button>

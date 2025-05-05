@@ -19,7 +19,7 @@ import amazonIcon from "./Img/amazon-icon.png";
 import ReadMoreDrawer from "./ReadMoreComponent/ReadMoreDrawer";
 import styles from "./Jobs.module.css";
 import "../JobPreppers.css";
-import defaultProfilePicture from "../defaultProfilePicture.png";
+import DefaultPic from "../../Components/JobPreppers_DefaultPic.png";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
@@ -37,13 +37,12 @@ function CompanyViewJobDescription({ setDrawerOpen, jobs }) {
 
   return (
     <>
-      {console.log(jobs)}
       {jobs.map((job, index) => (
         <Card key={job.jobID} className={styles.card}>
           <CardHeader
             avatar={
               <Avatar
-                src={job.profilePic ?? defaultProfilePicture}
+                src={job.profilePic ?? DefaultPic}
                 aria-label="Company Icon"
               >
                 {job.company[0]}

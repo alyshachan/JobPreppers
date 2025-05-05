@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../provider/authProvider";
 import * as signalR from "@microsoft/signalr";
 import "react-chat-elements/dist/main.css";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png";
+import DefaultPic from "../Components/JobPreppers_DefaultPic.png";
 // import { MessageList, SystemMessage, ChatList, Input, Button } from 'react-chat-elements'; // deprecrated 2/26
 import { styled } from "@mui/material/styles";
 import { StreamChat } from "stream-chat";
@@ -50,18 +50,7 @@ import {
 function Messaging() {
   const { user, setAuthData } = useAuth();
   // /* div render booleans */
-  // const [chatListOpened, setChatListOpened] = useState(false);
-  // const [convoOpened, setConvoOpened] = useState(false);
-  // /* messaging react states */
-  // const [messages, setMessages] = useState([]);
-  // const [receiverID, setReceiverID] = useState("");
-  // // const [signalRConnection, setSignalRConnection] = useState(null);
-  // /* system message states */
-  // const [showSystemMessage, setShowSystemMessage] = useState(false);
-  // const [currentSystemMessage, setSystemMessage] = useState("");
-
-  // const messageListReference = React.createRef();
-  // const inputReference = React.createRef();
+  const [chatOpened, setChatOpened] = useState(false);
 
   const [chatToken, setChatToken] = useState(null);
   const [chatClient, setChatClient] = useState(null);
@@ -146,7 +135,7 @@ function Messaging() {
   }, [chatToken, user, chatClient]);
 
   if (!user || !chatClient) {
-    return <div>Loading user data...</div>;
+    return <div></div>;
   }
 
   if (
@@ -169,30 +158,93 @@ function Messaging() {
     connection_id: chatClient.wsConnection.connectionID,
   };
   return (
-    chatClient &&
-    chatClient.user &&
-    chatClient.wsConnection && (
-      <div>
-        <Chat client={chatClient}>
-          <ChannelList
-            filters={{
-              type: "messaging",
-              members: { $in: [user.userID.toString()] },
+    <div>
+      <button
+        onClick={() => setChatOpened(!chatOpened)}
+        style={{
+          // position: "fixed", // Fixes the button in place
+          position: "fixed", // Always fixed
+          top: "auto",
+          bottom: chatOpened ? "calc(20px + 400px)" : "20px",
+          right: "20px", // Places the button on the right
+          padding: "10px",
+          backgroundColor: "var(--jp-secondary)",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Messaging
+      </button>
+
+      {chatClient &&
+        chatClient.user &&
+        chatClient.wsConnection &&
+        chatOpened && (
+          <div
+            style={{
+              position: "fixed",
+              bottom: "20px",
+              right: "20px",
+              width: "700px", // Adjust width as needed
+              height: "400px", // Adjust height as needed
+              background: "white",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              borderRadius: "10px",
+              display: "flex",
+              flexDirection: "row"
             }}
-            options={options}
-            connectionID={chatClient.wsConnection.connectionID}
-          />
-          <Channel>
-            <Window>
-              <ChannelHeader />
-              <MessageList />
-              <MessageInput />
-            </Window>
-            <Thread />
-          </Channel>
-        </Chat>
-      </div>
-    )
+          >
+            <Chat client={chatClient} style={{ height: "100%" }}>
+              <ChannelList
+                filters={{
+                  type: "messaging",
+                  members: { $in: [user.userID.toString()] },
+                }}
+                options={options}
+                connectionID={chatClient.wsConnection.connectionID}
+                style={{
+                  // flexShrink: 0, // Prevent ChannelList from shrinking
+                  height: "250px", // Adjust height for ChannelList
+                  width: "600px",
+                  overflowY: "auto", // Allow scrolling if there are many channels
+                }}
+              />
+              <div
+                style={{
+                  // height: "300px",
+                  // width: "300px",
+                  flexDirection: "row",
+                  borderRadius: "10px",
+                  flexGrow: 1,
+                }}>
+                <Channel>
+                  <Window>
+                    <ChannelHeader />
+                    <MessageList
+                      style={{
+                        height: "150px",
+                        position: "fixed",
+                        overflowY: "auto", // Makes the message list scrollable
+                      }}
+                    />
+                    <MessageInput
+                      style={{
+                        marginTop: "auto", // Keep MessageInput at the bottom
+                      }}
+                    />
+                  </Window>
+                  <Thread />
+                </Channel>
+              </div>
+
+            </Chat>
+          </div>
+
+        )
+      }
+    </div >
   );
   /*
     HANDLERS

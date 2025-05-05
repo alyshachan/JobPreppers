@@ -2,6 +2,7 @@ import SectionHeader from "../Components/Profile/SectionHeader";
 import EditIcon from "@mui/icons-material/Edit";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import "../Components/JobPreppers.css";
+import DefaultCompany from "../Components/Profile/JobPreppers_DefaultCompany.png";
 import { IconButton } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useState } from "react";
@@ -87,10 +88,14 @@ function ExperienceSection({ experienceDict, edit, onAdd }) {
                 <div
                   className={`${styles.experience} ${edit ? "!w-full" : ""}`}
                 >
+                {experience.work_name == "University of Utah" ? (
                   <img
                     className="companyPicture"
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
                   />
+                ) : (
+                  <img className="companyPicture" src={DefaultCompany} />
+                )}
 
                   <div className={styles.experienceContentLeft}>
                     <p className="title">{experience.job_title}</p>
@@ -153,7 +158,7 @@ function ExperienceSection({ experienceDict, edit, onAdd }) {
 
           {hasMoreItems && !edit && (
             <div className={styles.seeAllDiv}>
-              <a href="./Experience">
+              <a href="/Experience">
                 <button className={styles.seeAll}>
                   See all Experience <ArrowForwardIcon className="mt-1 ml-1" />
                 </button>

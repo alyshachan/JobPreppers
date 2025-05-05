@@ -24,12 +24,18 @@ import SectionHeader from "./SectionHeader";
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .css-10d30g3-MuiPaper-root-MuiDialog-paper": {
     borderRadius: "30px",
-    margin: "-20px",
     padding: "0px 20px 20px",
     overflow: "hidden",
     maxWidth: "800px",
     minWidth: "800px",
   },
+  "& .css-si425x" : {
+    borderRadius: "30px",
+    padding: "0px 20px 20px",
+    overflow: "hidden",
+    maxWidth: "800px",
+    minWidth: "800px",
+  }
 }));
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
@@ -142,11 +148,10 @@ function AddEducationDialog({ open, onClose, onAdd, education }) {
 
   return (
     <StyledDialog onClose={onClose} open={open}>
-      <DialogTitle className={styles.dialogTitle}>
+      <DialogTitle className={styles.dialogTitle}/>
         <SectionHeader
           header={education ? "Edit Education" : "Add Education"}
         />
-      </DialogTitle>
 
       <IconButton
         aria-label="close"

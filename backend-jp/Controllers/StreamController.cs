@@ -1,15 +1,14 @@
-using JobPreppersDemo.Services;
+using System.Text.RegularExpressions;
+using System.Web;
 using JobPreppersDemo.Contexts;
 using JobPreppersDemo.Models;
-using Microsoft.EntityFrameworkCore;
+using JobPreppersDemo.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Stream;
 using Stream.Models;
 using StreamChat;
 using StreamChat.Clients;
-using System.Web;
-using System.Text.RegularExpressions;
-
 
 namespace JobPreppersDemo.Controllers
 {
@@ -19,7 +18,6 @@ namespace JobPreppersDemo.Controllers
     {
         private readonly StreamService _streamService;
         private readonly ApplicationDbContext _context;
-
 
         public StreamController(StreamService streamService, ApplicationDbContext context)
         {
@@ -43,7 +41,9 @@ namespace JobPreppersDemo.Controllers
             // var chatClient = _streamService.ChatClientFactory.GetUserClient();
             try
             {
-                var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
+                var jpUser = await _context.Users.FirstOrDefaultAsync(u =>
+                    u.userID == int.Parse(userID)
+                );
                 try
                 {
                     var streamUser = await client.Users.GetAsync(userID);
@@ -54,21 +54,27 @@ namespace JobPreppersDemo.Controllers
                 {
                     string jpUsername = jpUser.first_name + " " + jpUser.last_name;
                     Dictionary<string, object> userData = new Dictionary<string, object>
-                        {
-                        {"name", $"{jpUsername}" },
-                        };
+                    {
+                        { "name", $"{jpUsername}" },
+                    };
                     await client.Users.AddAsync(userID, userData); // Feed user
                     // await factory.Get
                     string OkMsg = $"Stream user {userID} did not exist, created new one";
                     var newStreamUser = await client.Users.GetAsync(userID);
-                    return Ok(new { OkMsg, newStreamUser.Id, newStreamUser.Data });
+                    return Ok(
+                        new
+                        {
+                            OkMsg,
+                            newStreamUser.Id,
+                            newStreamUser.Data,
+                        }
+                    );
                 }
             }
             catch
             {
                 return NotFound();
             }
-
         }
 
         [HttpPost("update/{userID}")]
@@ -77,15 +83,14 @@ namespace JobPreppersDemo.Controllers
             // api calls go here
             var client = _streamService.Client;
             Console.WriteLine("Client good");
-            var jpUser = await _context.Users.FirstOrDefaultAsync(u => u.userID == int.Parse(userID));
-
+            var jpUser = await _context.Users.FirstOrDefaultAsync(u =>
+                u.userID == int.Parse(userID)
+            );
 
             if (jpUser != null)
             {
                 string jpUsername = jpUser.first_name + " " + jpUser.last_name;
-                var userData = new Dictionary<string, object> {
-                    {"name", $"{jpUsername}"}
-                };
+                var userData = new Dictionary<string, object> { { "name", $"{jpUsername}" } };
 
                 var streamUser = await client.Users.GetAsync(userID);
                 await client.Users.UpdateAsync(streamUser.Id, userData);

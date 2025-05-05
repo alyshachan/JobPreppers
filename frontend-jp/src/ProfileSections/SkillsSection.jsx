@@ -25,7 +25,7 @@ function SkillsSection({ skillsDict, edit, onAdd }) {
   useEffect(() => {
     const handleResize = () => {
       if (containerRef.current) {
-        setIsNarrow(containerRef.current.offsetWidth < 750);
+        setIsNarrow(containerRef.current.offsetWidth < 550);
       }
     };
 
@@ -63,7 +63,7 @@ function SkillsSection({ skillsDict, edit, onAdd }) {
         </div>
         {hasMoreItems && !edit && (
           <div className={styles.seeAllDiv}>
-            <a href="./Skills">
+            <a href="/Skills">
               <button className={styles.seeAll}>
                 See all Skills <ArrowForwardIcon className="mt-1 ml-1" />
               </button>

@@ -49,6 +49,12 @@ namespace JobPreppersDemo.Controllers
 
             public int userID { get; set; }
 
+            public string Search_Query { get; set; } = string.Empty;
+
+            public int page { get; set; }
+            public int Number_Per_Page { get; set; }
+
+
 
         }
 
@@ -78,6 +84,8 @@ namespace JobPreppersDemo.Controllers
             public int score { get; set; }
 
             public string? profilePic { get; set; }
+            public string? link { get; set; }
+
 
         }
 
@@ -517,6 +525,7 @@ namespace JobPreppersDemo.Controllers
                         bonues = job.bonus ?? "",
                         perks = job.perks ?? "",
                         jobID = job.postID,
+                        link = job.link,
                         score = jobSearch[job.postID],
                         profilePic = job!.company!.user!.profile_pic != null
     ? "data:image/png;base64," + Convert.ToBase64String(job.company.user.profile_pic)
@@ -548,6 +557,7 @@ namespace JobPreppersDemo.Controllers
                         bonues = job.bonus ?? "",
                         perks = job.perks ?? "",
                         jobID = job.postID,
+                        link = job.link,
                         score = jobSearch[job.postID],
                         profilePic = job!.company!.user!.profile_pic != null
     ? "data:image/png;base64," + Convert.ToBase64String(job.company.user.profile_pic)
@@ -571,6 +581,12 @@ namespace JobPreppersDemo.Controllers
                     query = query.Where(job => request.Type.Contains(job.type));
                 }
 
+                if (!request.Search_Query.IsNullOrEmpty())
+                {
+
+                    query = query.Where(job => job.title.Contains(request.Search_Query));
+                }
+
                 if (request.Company != null && request.Company.Any())
                 {
                     query = query.Where(job => request.Company.Contains(job.company));
@@ -581,16 +597,16 @@ namespace JobPreppersDemo.Controllers
                     query = query.Where(job => job.minimumSalary >= request.Min_Salary);
                 }
 
-
-                var filteredJobs = await query.ToListAsync();
+                var totalCount = query.Count();
+                var filteredJobs = await query.Skip((request.page - 1) * request.Number_Per_Page).Take(request.Number_Per_Page).ToListAsync();
                 Console.WriteLine($"Jobs in Filters: {filteredJobs}");
 
                 if (filteredJobs == null || filteredJobs.Count == 0)
                 {
-                    return Ok(new List<Job>()); // Return an empty list with HTTP 200
+                    return Ok(new { newJobs = new List<Job>(), totalCount }); // Return an empty list with HTTP 200
                 }
 
-                return Ok(filteredJobs);
+                return Ok(new { newJobs = filteredJobs, totalCount });
             }
             catch (Exception error)
             {
@@ -635,6 +651,7 @@ namespace JobPreppersDemo.Controllers
                         bonues = job.bonus ?? "",
                         perks = job.perks ?? "",
                         jobID = job.postID,
+                        link = job.link,
                         profilePic = job!.company!.user!.profile_pic != null
     ? "data:image/png;base64," + Convert.ToBase64String(job.company.user.profile_pic)
     : null
@@ -664,6 +681,7 @@ namespace JobPreppersDemo.Controllers
                         bonues = job.bonus ?? "",
                         perks = job.perks ?? "",
                         jobID = job.postID,
+                        link = job.link,
                         profilePic = job!.company!.user!.profile_pic != null
     ? "data:image/png;base64," + Convert.ToBase64String(job.company.user.profile_pic)
     : null
@@ -694,16 +712,29 @@ namespace JobPreppersDemo.Controllers
                     query = query.Where(job => job.minimumSalary >= request.Min_Salary);
                 }
 
+                if (request.Type != null && request.Type.Any())
+                {
 
-                var filteredJobs = await query.ToListAsync();
+                    query = query.Where(job => request.Type.Contains(job.type));
+                }
+
+                if (!request.Search_Query.IsNullOrEmpty())
+                {
+
+                    query = query.Where(job => job.title.Contains(request.Search_Query));
+                }
+
+
+                var totalCount = query.Count();
+                var filteredJobs = await query.Skip((request.page - 1) * request.Number_Per_Page).Take(request.Number_Per_Page).ToListAsync();
                 Console.WriteLine($"Jobs in Filters: {filteredJobs}");
 
                 if (filteredJobs == null || filteredJobs.Count == 0)
                 {
-                    return Ok(new List<Job>()); // Return an empty list with HTTP 200
+                    return Ok(new { newJobs = new List<Job>(), totalCount }); // Return an empty list with HTTP 200
                 }
 
-                return Ok(filteredJobs);
+                return Ok(new { newJobs = filteredJobs, totalCount });
             }
             catch (Exception error)
             {

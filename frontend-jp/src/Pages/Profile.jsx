@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import User from "./User";
 import Company from "./Company";
-import defaultProfilePicture from "../Components/defaultProfilePicture.png";
+import DefaultPic from "../Components/JobPreppers_DefaultPic.png";
 import { useParams } from "react-router-dom";
 import "../Components/JobPreppers.css";
 import { useQuery } from "@tanstack/react-query";

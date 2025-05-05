@@ -1,4 +1,5 @@
 import "../Components/JobPreppers.css";
+import DefaultCompany from "../Components/Profile/JobPreppers_DefaultCompany.png";
 import React, { useState } from "react";
 import { useAuth } from "../provider/authProvider";
 import { TextField } from "@mui/material";
@@ -325,7 +326,7 @@ function ParseResume() {
       }
 
       setMessage("Profile successfully updated from resume.");
-      navigate("/Profile");
+      navigate(`/Profile/${user.username}`);
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
@@ -475,10 +476,17 @@ function ParseResume() {
                   <div className={styles.dialogContentRight}>
                     <div key={index}>
                       <div className={profileStyles.education}>
-                        <img
-                          className="companyPicture"
-                          src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
-                        />
+                        {edu.school == "University of Utah" ? (
+                          <img
+                            className="companyPicture"
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
+                          />
+                        ) : (
+                          <img
+                            className="companyPicture"
+                            src={DefaultCompany}
+                          />
+                        )}
 
                         <div className={profileStyles.sectionPictureContent}>
                           <p className="title">{edu.school}</p>
@@ -683,10 +691,14 @@ function ParseResume() {
                   <div className={styles.dialogContentRight}>
                     <div className={profileStyles.sectionPictureContent}>
                       <div className={profileStyles.experience}>
-                        <img
-                          className="companyPicture"
-                          src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
-                        />
+                        {exp.companyName == "University of Utah" ? (
+                          <img
+                            className="companyPicture"
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
+                          />
+                        ) : (
+                          <img className="companyPicture" src={DefaultCompany} />
+                        )}
 
                         <div className={profileStyles.experienceContentLeft}>
                           <p className="title">{exp.jobTitle}</p>

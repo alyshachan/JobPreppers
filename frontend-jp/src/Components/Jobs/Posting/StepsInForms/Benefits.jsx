@@ -13,6 +13,14 @@ import styles from "../Posting.module.css";
 import { errorMessage } from "../Helper/ErrorMessage";
 import { Controller } from "react-hook-form";
 import Autocomplete from "@mui/material/Autocomplete";
+import { styled } from "@mui/material/styles";
+
+const ToggleButtonFormWrap = styled(ToggleButtonForm)(({ theme }) => ({
+  display: "flex",
+  flexWrap: "wrap"
+}));
+
+
 export default function Benefits({ jobDescriptionData }) {
   // const rate = ["Hourly Rate", "Monthy Rate", "Annually"];
   const bonuses = ["Signing Bonus", "Tip", "Equity Package", "Commission"];
@@ -47,6 +55,25 @@ export default function Benefits({ jobDescriptionData }) {
     formState: { errors },
   } = jobForm;
   const payType = watch("payType");
+
+  const UpdateIncentive = (inputDescriptionData, options) => {
+    if (
+      Array.isArray(inputDescriptionData) &&
+      inputDescriptionData.length > 0
+    ) {
+      const List = [];
+      for (const option of options) {
+        for (const input of inputDescriptionData) {
+          const regex = new RegExp(`\\b${option}\\b`, "i"); // i make it not case sensitive
+          if (regex.test(input)) {
+            List.push(option);
+          }
+        }
+      }
+      return List;
+    }
+    return null;
+  };
 
   const [currencies, setCurrencies] = useState([]);
   useEffect(() => {
@@ -96,43 +123,24 @@ export default function Benefits({ jobDescriptionData }) {
       }
     }
 
-    if (jobDescriptionData.benefits) {
-      const benefitList = [];
-      for (const benefit of benefits) {
-        for (const input of jobDescriptionData.benefits) {
-          const regex = new RegExp(`\\b${benefit}\\b`, "i"); // i make it not case sensitive
-          if (regex.test(input)) {
-            benefitList.push(benefit);
-          }
-        }
-      }
-      setValue("benefits", benefitList);
+    const benefitResult = UpdateIncentive(
+      jobDescriptionData.benefits,
+      benefits
+    );
+    if (benefitResult != null) {
+      setValue("benefits", benefitResult);
+      jobDescriptionData.benefits = [];
+    }
+    const bonusResult = UpdateIncentive(jobDescriptionData.bonus, bonuses);
+    if (bonusResult != null) {
+      setValue("bonuses", bonusResult);
+      jobDescriptionData.bonuses = [];
     }
 
-    if (jobDescriptionData.bonuses) {
-      const bonusList = [];
-      for (const bonus of bonuses) {
-        for (const input of jobDescriptionData.bonuses) {
-          const regex = new RegExp(`\\b${bonus}\\b`, "i"); // i make it not case sensitive
-          if (regex.test(input)) {
-            bonusList.push(bonus);
-          }
-        }
-      }
-      setValue("bonuses", bonusList);
-    }
-
-    if (jobDescriptionData.bonuses) {
-      const perkList = [];
-      for (const perk of perks) {
-        for (const input of jobDescriptionData.perks) {
-          const regex = new RegExp(`\\b${perk}\\b`, "i"); // i make it not case sensitive
-          if (regex.test(input)) {
-            perkList.push(perk);
-          }
-        }
-      }
-      setValue("perks", perkList);
+    const perkResult = UpdateIncentive(jobDescriptionData.perks, perks);
+    if (perkResult != null) {
+      setValue("perks", perkResult);
+      jobDescriptionData.perks = [];
     }
   }, [jobDescriptionData]);
 
@@ -277,7 +285,7 @@ export default function Benefits({ jobDescriptionData }) {
 
               <div className={styles.inputField}>
                 <h2>Benefits</h2>
-                <ToggleButtonForm
+                <ToggleButtonFormWrap
                   name="benefits"
                   control={control}
                   options={benefits}

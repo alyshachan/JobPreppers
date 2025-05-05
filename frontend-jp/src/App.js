@@ -25,6 +25,7 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import ManageJobs from "./Pages/ManageJobs";
 import BookmarkedJobs from "./Pages/BookmarkedJobs"; 
 import ParseResume from "./Pages/ParseResume";
+import WebPresence from "./Pages/WebPresence"
 const queryClient = new QueryClient();
 
 
@@ -54,7 +55,7 @@ function App() {
       <AuthProvider>
       {!useLocation().pathname.includes("/VideoCall") && <NavBar />}
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<WebPresence />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Signup" element={<Signup />} />
 
@@ -63,7 +64,7 @@ function App() {
             <Route path="/Feed" element={
               <div>
                 <Feed />
-                <Messaging />
+                {/* <Messaging /> */}
               </div>} />
             <Route path="/Jobs" element={<Jobs />} />
             <Route path="/Jobs/ManageJobs" element={<ManageJobs/>}/>
@@ -79,6 +80,7 @@ function App() {
           <Route path="/Friends" element={<Friends />} />
           <Route path="/ParseResume" element={<ParseResume/>}/>
         </Routes>
+        {!useLocation().pathname.includes("/VideoCall") && <Messaging />}
       </AuthProvider>
       </QueryClientProvider>
     </>

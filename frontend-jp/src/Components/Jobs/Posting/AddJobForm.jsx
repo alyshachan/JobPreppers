@@ -37,9 +37,21 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     minWidth: "1000px",
     overflowX: "hidden",
   },
+  "& .css-si425x": {
+    borderRadius: "30px",
+    padding: "0px 20px 20px",
+    overflow: "hidden",
+    maxWidth: "1000px",
+    minWidth: "1000px",
+  },
 }));
 
-export default function AddJobForm({ setJobs, companyName, jobToEdit }) {
+export default function AddJobForm({
+  setJobs,
+  companyName,
+  jobToEdit,
+  setFilters,
+}) {
   const formSteps = [
     { label: "Parse Job Description", component: ParseJobDescription },
     { label: "Describe Job", component: DescribeJob },
@@ -73,7 +85,7 @@ export default function AddJobForm({ setJobs, companyName, jobToEdit }) {
     isUpdate,
     onSubmit,
     setActiveStep,
-  } = useJobForm({ setJobs, companyName, jobToEdit, setOpen });
+  } = useJobForm({ setJobs, companyName, jobToEdit, setOpen, setFilters });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -196,9 +208,8 @@ export default function AddJobForm({ setJobs, companyName, jobToEdit }) {
             </div>
           )}
 
-          <DialogTitle className={styles.addJobTitle}>
-            <SectionHeader header="Add Job Posting" />
-          </DialogTitle>
+          <DialogTitle className={styles.addJobTitle} />
+          <SectionHeader header="Add Job Posting" />
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -262,7 +273,9 @@ export default function AddJobForm({ setJobs, companyName, jobToEdit }) {
                   </button>
                 </div>
                 <div className="grow-1">
-                  <button onClick={handleNext}>Skip</button>
+                  <button onClick={handleNext} disabled={isParseLoading}>
+                    Skip
+                  </button>
                 </div>
               </footer>
             </DialogActions>

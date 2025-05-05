@@ -27,6 +27,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     maxWidth: "800px",
     minWidth: "800px",
   },
+  "& .css-si425x" : {
+    borderRadius: "30px",
+    padding: "0px 20px 20px",
+    overflow: "hidden",
+    maxWidth: "800px",
+    minWidth: "800px",
+  }
 }));
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
@@ -106,9 +113,8 @@ function AddProjectDialog({ open, onClose, onAdd, project }) {
 
   return (
     <StyledDialog onClose={onClose} open={open}>
-      <DialogTitle className={styles.dialogTitle}>
+      <DialogTitle className={styles.dialogTitle}/>
         <SectionHeader header={project ? "Edit Project" : "Add Project"} />
-      </DialogTitle>
 
       <IconButton
         aria-label="close"

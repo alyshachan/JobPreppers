@@ -183,6 +183,19 @@
   margin-right: 5px;
 }
 
+.applyButton {
+  padding: 5px 15px;
+  margin-top: 10px;
+  margin-right: 5px;
+  background: var(--jp-white) !important;
+  border-color: var(--jp-secondary) !important;
+  color: var(--jp-secondary) !important;
+}
+
+.applyButton:hover {
+  background: var(--jp-white-hover) !important;
+}
+
 .drawer {
   width: 100%;
   transition: width 0.3s ease-in-out;
@@ -202,7 +215,7 @@
 }
 
 .cardCompensation {
-  border: 2px solid #63d297;
+  border: 2px solid var(--jp-secondary);
 }
 
 .noResultContainer {

@@ -22,13 +22,14 @@ import "../JobPreppers.css";
 import { useAuth } from "../../provider/authProvider";
 import { useMutation } from "@tanstack/react-query";
 import AddJobForm from "./Posting/AddJobForm";
-import defaultProfilePicture from "../defaultProfilePicture.png";
+import DefaultPic from "../../Components/JobPreppers_DefaultPic.png";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
-function ManageDescription({ setDrawerOpen, jobs, setJobs }) {
+function ManageDescription({ setDrawerOpen, jobs, setJobs, onRefresh }) {
   const { user } = useAuth();
   const [selectedJob, setSelectedJob] = useState(null); // Track the currently selected job
+
   const handleOpenDrawer = (job) => {
     setSelectedJob(job);
     setDrawerOpen(true); // Open the drawer when "Learn More" is clicked
@@ -39,9 +40,6 @@ function ManageDescription({ setDrawerOpen, jobs, setJobs }) {
     setSelectedJob(null);
   };
   const deleteJob = async (job) => {
-    console.log("Job from the frontend: ", job);
-    console.log("JobID from the frontend: ", job.jobID);
-
     const res = await fetch(apiURL + "/api/Manage/delete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,8 +83,7 @@ function ManageDescription({ setDrawerOpen, jobs, setJobs }) {
       return deleteJob(data);
     },
     onSuccess: (data) => {
-      console.log("Sucessful");
-      fetchJobs();
+      onRefresh();
     },
     onError: (error) => {
       console.error("Error Deleting Job:", error);
@@ -95,14 +92,13 @@ function ManageDescription({ setDrawerOpen, jobs, setJobs }) {
 
   return (
     <>
-      {console.log("jobs: ", jobs)}
       {jobs.map((job, index) => (
         <Card key={job.jobID} className={styles.card}>
           <CardHeader
             avatar={
               <Avatar
-                src={job.profilePic ?? defaultProfilePicture}
-                aria-label="recipe"
+                src={job.profilePic ?? DefaultPic}
+                aria-label="company picture"
               >
                 {job.company[0]}
               </Avatar>
