@@ -4,11 +4,13 @@ import ListBox from "./ListBox";
 import "../Components/JobPreppers.css";
 import styles from "../Components/Profile/ProfileSections.module.css";
 import { useAuth } from "../provider/authProvider";
+import { useParams } from "react-router-dom";
+
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Skills() {
-  const { user, setAuthData } = useAuth(); // custom hook for authprovider
-
+  const { username } = useParams();
+  const [visitingUser, setUser] = useState(null);
   // Declare hooks unconditionally at the top level
   const [initialUser, setInitialUser] = useState(null);
   const [skillsDict, setSkillsDict] = useState({});
@@ -29,14 +31,38 @@ function Skills() {
     return () => window.removeEventListener("resize", handleResize);
   }, []); // Only set up the event listener once on mount
 
+  
+      useEffect(() => {
+        const fetchUser = async () => {
+          try {
+            const response = await fetch(
+              apiURL + `/api/Users/GetUserFromUsername/${username}`,
+              { credentials: "include" }
+            );
+    
+            if (response.ok) {
+              const data = await response.json();
+              setUser(data);
+              setSkillsDict([]);
+            } else {
+              throw new Error("Failed to fetch user");
+            }
+          } catch (error) {
+            console.error("Error fetching user:", error);
+          }
+        };
+    
+        fetchUser();
+      }, [username, apiURL]);
+
   // Fetch skills on user change (only runs if user is not null)
   useEffect(() => {
-    if (!user) return; // Return early if no user exists
+    if (!visitingUser) return; // Return early if no user exists
 
     const requestSkills = async () => {
       try {
         const response = await fetch(
-          apiURL + `/api/UserSkills/${user.userID}`,
+          apiURL + `/api/UserSkills/${visitingUser.userID}`,
           {
             credentials: "include", // include cookies
           }
@@ -76,17 +102,17 @@ function Skills() {
     };
 
     requestSkills(); // fetch skills when user changes
-  }, [user]); // Only re-run when user changes
+  }, [visitingUser]); // Only re-run when user changes
 
   // Display loading state until user is available
-  if (user == null) {
+  if (visitingUser == null) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="content">
       <div className="panelTransparent">
-        <a href={`/Profile/${user.username}`} className="text-[var(--jp-border)] hover:underline mb-8">
+        <a href={`/Profile/${visitingUser.username}`} className="text-[var(--jp-border)] hover:underline mb-8">
           <ArrowBackIcon /> Go back to Profile Page
         </a>
         <h1>Skills</h1>

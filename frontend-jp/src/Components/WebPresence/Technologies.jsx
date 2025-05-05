@@ -5,10 +5,10 @@ const Technologies = () => {
   return (
     <>
       <div className="flex flex-col items-center">
-        <h1 className="text-6xl pb-6 bg-gradient-to-r from-[var(--jp-secondary)] to-[var(--jp-primary)] bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-6xl pb-6 text-center bg-gradient-to-r from-[var(--jp-secondary)] to-[var(--jp-primary)] bg-clip-text text-transparent">
           Used Technologies
         </h1>
-      <div className="flex flex-row justify-evenly">
+      <div className="flex flex-col md:flex-row justify-evenly w-full gap-6 mb-8 text-sm md:text-base text-center md:text-left">
         <Typography>
           <strong>Project/Task Manager:</strong>{" "}
           <a

@@ -190,6 +190,7 @@ export default function AddJobForm({
       ) : (
         <Button
           variant="filled"
+          className={styles.addButton}
           onClick={handleClickOpen}
           startIcon={<PostAdd />}
         >

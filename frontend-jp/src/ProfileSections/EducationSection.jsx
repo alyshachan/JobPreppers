@@ -9,7 +9,7 @@ import DefaultCompany from "../Components/Profile/JobPreppers_DefaultCompany.png
 import { IconButton } from "@mui/material";
 import AddEducationDialog from "../Components/Profile/AddEducationDialog";
 
-function EducationSection({ educationDict, edit, onAdd }) {
+function EducationSection({ educationDict, edit, onAdd, visitingUser }) {
   const [openEducationDialog, setOpenEducationDialog] = useState(false);
   const [selectedEducation, setSelectedEducation] = useState(null);
 
@@ -108,7 +108,7 @@ function EducationSection({ educationDict, edit, onAdd }) {
         ))}
         {hasMoreItems && !edit && (
           <div className={styles.seeAllDiv}>
-            <a href="/Education">
+            <a href={`/Education/${visitingUser}`}>
               <button className={styles.seeAll}>
                 See all Education <ArrowForwardIcon className="mt-1 ml-1" />
               </button>

@@ -21,6 +21,8 @@ import PlaceIcon from "@mui/icons-material/Place";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import PacmanLoader from "../Components/Pacman/Pacman";
 
 const apiURL = process.env.REACT_APP_JP_API_URL;
 const monthsOfYear = [
@@ -176,49 +178,33 @@ function ParseResume() {
   const fetchParsedResume = async () => {
     if (!file) {
       setMessage("Please select a file.");
-      return;
+      throw new Error("No file selected.");
     }
 
     if (!user?.userID) {
       setMessage("User authentication error. Please log in again.");
-      return;
+      throw new Error("User not authenticated.");
     }
 
     const formData = new FormData();
     formData.append("file", file);
     formData.append("userID", user.userID);
 
-    try {
-      const response = await fetch(
-        apiURL + `/api/DocumentIntelligence/PostFile`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setMessage("Resume parsed successfully!");
-        setParsedData(data); // This is the object with userID and parsedResult
-        const fields = data.parsedResult.documents[0].fields;
-
-        setResumeFields({
-          firstName: fields.firstName?.content || "",
-          lastName: fields.lastName?.content || "",
-          location: fields.location?.content || "",
-          website: fields.website?.content || "",
-          education: fields.Education?.content || [],
-          skills: fields.Skills?.content || [],
-          experience: fields.Experience?.content || [],
-          projects: fields.Project?.content || [],
-        });
-      } else {
-        const errorText = await response.text();
-        setMessage(`Error: ${errorText}`);
+    const response = await fetch(
+      apiURL + `/api/DocumentIntelligence/PostFile`,
+      {
+        method: "POST",
+        body: formData,
       }
-    } catch (error) {
-      setMessage(`Error: ${error.message}`);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || "Failed to parse resume");
     }
+
+    const data = await response.json();
+    return data;
   };
 
   const uploadResumeToProfile = async () => {
@@ -228,109 +214,144 @@ function ParseResume() {
 
     if (!confirm) return;
 
-    try {
-      const deleteResponse = await fetch(
-        apiURL + `/api/Users/DeleteAllUserProfile/${user.userID}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      if (!deleteResponse.ok) {
-        const errText = await deleteResponse.text();
-        window.alert("Failed to delete profile details");
-        setMessage(`Failed to clear profile: ${errText}`);
-        return;
+    const deleteResponse = await fetch(
+      apiURL + `/api/Users/DeleteAllUserProfile/${user.userID}`,
+      {
+        method: "DELETE",
       }
+    );
 
-      // Loop through resumeFields to add to profile
-      for (const edu of resumeFields.education) {
-        const parsedStart = parseMonthYear(edu.start);
-        const parsedEnd = parseMonthYear(edu.end);
-        await fetch(apiURL + `/api/UserEducation/CreateEducation`, {
+    if (!deleteResponse.ok) {
+      const errText = await deleteResponse.text();
+      window.alert("Failed to delete profile details");
+      setMessage(`Failed to clear profile: ${errText}`);
+      throw new Error(`Failed to clear profile: ${errText}`);
+    }
+
+    // Loop through resumeFields to add to profile
+    for (const edu of resumeFields.education) {
+      const parsedStart = parseMonthYear(edu.start);
+      const parsedEnd = parseMonthYear(edu.end);
+      await fetch(apiURL + `/api/UserEducation/CreateEducation`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userID: user.userID,
+          schoolName: edu.school,
+          degreeName: edu.degree,
+          studyName: edu.study,
+          start_date:
+            !parsedStart || parsedStart.toDateString === new Date().toDateString
+              ? null
+              : moment(parsedStart).format("YYYY-MM-DD"),
+          end_date:
+            !parsedEnd || parsedEnd.toDateString === new Date().toDateString
+              ? null
+              : moment(parsedEnd).format("YYYY-MM-DD"),
+          description: edu.description || "",
+        }),
+      });
+    }
+
+    for (const skill of resumeFields.skills) {
+      const skillNames = (skill.skillName || "")
+        .split(",")
+        .map((name) => name.trim())
+        .filter(Boolean);
+
+      for (const name of skillNames) {
+        await fetch(apiURL + `/api/UserSkills/AddSkillToUser`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            userID: user.userID,
-            schoolName: edu.school,
-            degreeName: edu.degree,
-            studyName: edu.study,
-            start_date:
-              !parsedStart ||
-              parsedStart.toDateString === new Date().toDateString
-                ? null
-                : moment(parsedStart).format("YYYY-MM-DD"),
-            end_date:
-              !parsedEnd || parsedEnd.toDateString === new Date().toDateString
-                ? null
-                : moment(parsedEnd).format("YYYY-MM-DD"),
-            description: edu.description || "",
+            UserID: user.userID,
+            Category: skill.category || "Skills",
+            SkillName: name,
           }),
         });
       }
+    }
 
-      for (const skill of resumeFields.skills) {
-        const skillNames = (skill.skillName || "")
-          .split(",")
-          .map((name) => name.trim())
-          .filter(Boolean);
+    for (const exp of resumeFields.experience) {
+      const parsedStart = parseMonthYear(exp.start);
+      const parsedEnd = parseMonthYear(exp.end);
+      await fetch(apiURL + `/api/UserExperience/CreateExperience`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userID: user.userID,
+          jobTitle: exp.jobTitle,
+          workName: exp.companyName,
+          location: exp.location,
+          start_date:
+            !parsedStart || parsedStart.toDateString === new Date().toDateString
+              ? null
+              : moment(parsedStart).format("YYYY-MM-DD"),
+          end_date:
+            !parsedEnd || parsedEnd.toDateString === new Date().toDateString
+              ? null
+              : moment(parsedEnd).format("YYYY-MM-DD"),
+          description: exp.description || "",
+        }),
+      });
+    }
 
-        for (const name of skillNames) {
-          await fetch(apiURL + `/api/UserSkills/AddSkillToUser`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              UserID: user.userID,
-              Category: skill.category || "Skills",
-              SkillName: name,
-            }),
-          });
-        }
-      }
-
-      for (const exp of resumeFields.experience) {
-        const parsedStart = parseMonthYear(exp.start);
-        const parsedEnd = parseMonthYear(exp.end);
-        await fetch(apiURL + `/api/UserExperience/CreateExperience`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userID: user.userID,
-            jobTitle: exp.jobTitle,
-            workName: exp.companyName,
-            location: exp.location,
-            start_date:
-              !parsedStart ||
-              parsedStart.toDateString === new Date().toDateString
-                ? null
-                : moment(parsedStart).format("YYYY-MM-DD"),
-            end_date:
-              !parsedEnd || parsedEnd.toDateString === new Date().toDateString
-                ? null
-                : moment(parsedEnd).format("YYYY-MM-DD"),
-            description: exp.description || "",
-          }),
-        });
-      }
-
-      for (const project of resumeFields.projects) {
-        await fetch(apiURL + `/api/UserProject/CreateProject`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userID: user.userID,
-            projectTitle: project.title,
-            description: project.description || "",
-          }),
-        });
-      }
-
-      setMessage("Profile successfully updated from resume.");
-      navigate(`/Profile/${user.username}`);
-    } catch (error) {
-      setMessage(`Error: ${error.message}`);
+    for (const project of resumeFields.projects) {
+      await fetch(apiURL + `/api/UserProject/CreateProject`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userID: user.userID,
+          projectTitle: project.title,
+          description: project.description || "",
+        }),
+      });
     }
   };
+
+  const {
+    mutate: uploadResume,
+    isPending: isUploading,
+    isError: isUploadError,
+    error: uploadError,
+  } = useMutation({
+    mutationFn: uploadResumeToProfile,
+    onSuccess: () => {
+      setMessage("Profile successfully updated from resume.");
+      navigate(`/Profile/${user.username}`);
+    },
+    onError: (error) => {
+      setMessage(`Error: ${error.message}`);
+    },
+  });
+
+  const {
+    mutate: fetchResume,
+    isPending: isParseLoading,
+    isError,
+    error,
+  } = useMutation({
+    mutationFn: fetchParsedResume,
+    onSuccess: (data) => {
+      setMessage("Resume parsed successfully!");
+      setParsedData(data); // This is the object with userID and parsedResult
+      const fields = data.parsedResult.documents[0].fields;
+
+      setResumeFields({
+        firstName: fields.firstName?.content || "",
+        lastName: fields.lastName?.content || "",
+        location: fields.location?.content || "",
+        website: fields.website?.content || "",
+        education: fields.Education?.content || [],
+        skills: fields.Skills?.content || [],
+        experience: fields.Experience?.content || [],
+        projects: fields.Project?.content || [],
+      });
+    },
+    onError: (error) => {
+      setMessage(`Error: ${error.message}`);
+    },
+  });
 
   return (
     <div className="content">
@@ -349,9 +370,17 @@ function ParseResume() {
       {file && <p className="file-name">Selected File: {file.name}</p>}
       <br />
 
-      <button className="button" onClick={fetchParsedResume}>
+      <button className="button" onClick={() => fetchResume()}>
         Parse Resume
       </button>
+      {isParseLoading && (
+        <div className={styles.greyOverlay}>
+          <div>
+            <h1 className="text-[3rem] text-[#ffffff]">Parsing...</h1>
+          </div>
+          <PacmanLoader size={100} />
+        </div>
+      )}
 
       {message && <p className="message">{message}</p>}
 
@@ -697,7 +726,10 @@ function ParseResume() {
                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Utah_Utes_-_U_logo.svg/1121px-Utah_Utes_-_U_logo.svg.png"
                           />
                         ) : (
-                          <img className="companyPicture" src={DefaultCompany} />
+                          <img
+                            className="companyPicture"
+                            src={DefaultCompany}
+                          />
                         )}
 
                         <div className={profileStyles.experienceContentLeft}>
@@ -834,12 +866,20 @@ function ParseResume() {
             ))}
 
             <div className="flex justify-end">
-              <button onClick={uploadResumeToProfile}>
+              <button onClick={() => uploadResume()}>
                 Upload to Profile
                 <ArrowForwardIcon className="mt-1 ml-1" />
               </button>
             </div>
           </div>
+          {isUploading && (
+            <div className={styles.greyOverlay}>
+              <div>
+                <h1 className="text-[3rem] text-[#ffffff]">Uploading...</h1>
+              </div>
+              <PacmanLoader size={100} />
+            </div>
+          )}
         </>
       )}
     </div>

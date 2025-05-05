@@ -1,6 +1,7 @@
 import "../Components/JobPreppers.css";
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../provider/authProvider";
+import PacmanLoader from "../Components/Pacman/Pacman";
 const apiURL = process.env.REACT_APP_JP_API_URL;
 
 function Resume() {
@@ -10,6 +11,7 @@ function Resume() {
   const [jobDescription, setJobDescription] = useState(""); // Add jobDescription state
   const [suggestions, setSuggestions] = useState([]); // Update suggestions to an array
   const [loading, setLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
   const [jobResults, setJobResults] = useState([]); // Job search results
   const [searchQuery, setSearchQuery] = useState(""); // Search query state (added here)
   const handleFileChange = (e) => {
@@ -94,7 +96,7 @@ function Resume() {
       setJobResults([]); // Clear results if the query is empty
       return;
     }
-    setLoading(true);
+    setSearchLoading(true);
     try {
       const response = await fetch(
         apiURL +
@@ -115,7 +117,7 @@ function Resume() {
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     } finally {
-      setLoading(false); // Stop loading
+      setSearchLoading(false); // Stop loading
     }
   };
 
@@ -147,7 +149,9 @@ function Resume() {
         />
 
         {/* Display Job Search Results */}
-        {jobResults.length > 0 && (
+        {/* {searchLoading && <p>Finding Job Description</p>} */}
+
+        {jobResults.length > 0 ? (
           <div className="job-results">
             <h2>Job Search Results</h2>
             <ul>
@@ -163,7 +167,11 @@ function Resume() {
               ))}
             </ul>
           </div>
-        )}
+        ) : jobResults.length == 0 &&
+          searchQuery.length !== 0 &&
+          !searchLoading ? (
+          <p>No Job Description found with the input</p>
+        ) : null}
         {/* PDF Upload */}
         <input
           type="file"
@@ -185,6 +193,7 @@ function Resume() {
         <button className="button" onClick={uploadResume} disabled={loading}>
           Upload Resume
         </button>
+
         <br></br>
         {/* Job Description Input */}
         <textarea
@@ -203,8 +212,16 @@ function Resume() {
         </button>
 
         {/* Loading Spinner */}
-        {loading && <div className="loading-spinner">Loading...</div>}
-
+        {loading && (
+          <div className="greyOverlay">
+            <div>
+              <h1 className="text-[3rem] text-[#ffffff]">
+                Generating Suggestion...
+              </h1>
+            </div>
+            <PacmanLoader size={100} />
+          </div>
+        )}
         {/* Display Messages */}
         {message && <p className="message">{message}</p>}
 

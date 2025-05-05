@@ -207,7 +207,7 @@ function JobDescription({ setDrawerOpen, jobs, setJobs, setFilters }) {
                     pathTransitionDuration: 0.5,
 
                     // Colors
-                    pathColor: `rgba(109, 76, 126, ${job.score / 100})`,
+                    pathColor: `rgba(109, 76, 126, ${job.score})`,
                     textColor: "#6d4c7e",
                     trailColor: "--jp-gray",
                     backgroundColor: "white",

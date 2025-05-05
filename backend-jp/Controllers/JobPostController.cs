@@ -353,11 +353,11 @@ namespace JobPreppersDemo.Controllers
                 await _context.SaveChangesAsync();
                 if (!string.IsNullOrEmpty(request.description))
                 {
-                    StringBuilder sb = new StringBuilder(request.description);
+                    StringBuilder sb = new StringBuilder(request.qualification.Skills);
                     sb.Append(" ");
-                    sb.Append(request.qualification.Skills);
-                    sb.Append(" ");
-                    sb.Append(request.qualification.EducationLevel);
+                    var description = JsonDocument.Parse(request.description);
+                    // Console.WriteLine($"description: {description.RootElement}");
+                    sb.Append(description.RootElement);
                     string combine = sb.ToString();
                     await _vector.AddToJobVector(combine, newJobPost.postID);
                 }

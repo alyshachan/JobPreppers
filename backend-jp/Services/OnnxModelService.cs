@@ -37,7 +37,7 @@ namespace JobPreppersDemo.Services
         // sentence = sentence.Substring(0, Math.Min(sentence.Length, 300));
         // var encoded = _tokenizer.Encode(384, sentence);
 
-        int maxWords = 50;  // Adjust based on estimated tokens per word
+        int maxWords = 30;  // Adjust based on estimated tokens per word
         List<string> sentenceChunks = new List<string>();
 
         string[] words = newString.Split(' ');
@@ -58,7 +58,7 @@ namespace JobPreppersDemo.Services
             if (string.IsNullOrWhiteSpace(chunk)) continue;
 
             var encoded = _tokenizer.Encode(384, chunk);
-            if (encoded.Count == 0) continue;
+            if (encoded.Count == 0 || encoded == null) continue;
 
 
             inputIds.Add(encoded.Select(t => t.InputIds).ToArray());
